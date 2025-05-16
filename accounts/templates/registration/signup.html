@@ -1,0 +1,137 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up | InfiniHumanizer</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            background-color: #0e0e11;
+            color: #e6e6e6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .signup-box {
+            background-color: #1a1a1a;
+            padding: 2rem 2rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .signup-box h1 {
+            text-align: center;
+            color: #fff;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .signup-box h1 span {
+            color: #00ffff;
+        }
+
+        .signup-box h2 {
+            text-align: center;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            color: #bbb;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        input {
+            padding: 0.65rem;
+            border: 1px solid #333;
+            background-color: #121212;
+            color: #fff;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .errorlist {
+            color: #ff4c4c;
+            font-size: 0.85rem;
+            margin-top: -0.5rem;
+            margin-bottom: 0.75rem;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        button {
+            background-color: #00ffff;
+            color: #000;
+            font-weight: bold;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #00cccc;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .login-link a {
+            color: #00ffff;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="signup-box">
+    <h1>Infini<span>Humanizer</span></h1>
+    <h2>📝 Create Your Account</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {% for field in form %}
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+                <ul class="errorlist">
+                    {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endfor %}
+
+        <button type="submit">Register</button>
+    </form>
+
+    <div class="login-link">
+        Already have an account? <a href="{% url 'login' %}">Login here</a>
+    </div>
+</div>
+</body>
+</html>

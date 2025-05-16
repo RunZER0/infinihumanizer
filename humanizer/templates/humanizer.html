@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<h1>🤖 InfiniAi-Humanizer</h1>
+<p>Turn robotic AI text into real, natural, human-sounding writing.</p>
+
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<div class="form-wrapper">
+    <form method="post" class="input-form">
+        {% csrf_token %}
+        <textarea name="text" id="inputText" rows="10" placeholder="Paste your AI-generated academic text here (Max: 10,000 characters)">{{ input_text }}</textarea>
+        <p class="meta-info"><strong>{{ word_count }} Words</strong> | <strong>{{ word_balance }} Words Left</strong></p>
+        <button type="submit">🔁 Humanize / Re-Humanize Text</button>
+    </form>
+</div>
+
+{% if output_text %}
+    <div class="output-area">
+        <h2>✍️ Humanized Output</h2>
+        <div class="output-wrapper">
+            <textarea id="outputTextArea" rows="12" readonly>{{ output_text }}</textarea>
+            <button class="copy-btn" onclick="copyOutput()">📋 Copy</button>
+        </div>
+        <p class="meta-info"><strong>📊 Output Word Count:</strong> {{ output_text|wordcount }}</p>
+        <a href="#" download="humanized_output.txt">
+            <button>💾 Download Output</button>
+        </a>
+    </div>
+{% endif %}
+
+<p><strong>Version 4.5</strong></p>
+<hr>
+
+<div class='features-grid'>
+    <div class='feature'>
+        <strong>✍️ Natural Cadence:</strong><br>
+        Your words flow like a real student — no rigid AI rhythm.
+    </div>
+    <div class='feature'>
+        <strong>🔁 Structured Variance:</strong><br>
+        Paragraphs are well balanced for human clarity.
+    </div>
+    <div class='feature'>
+        <strong>📚 Academic Realism:</strong><br>
+        The tone mimics thoughtful effort, not perfect computation.
+    </div>
+</div>
+
+<div class='features-grid'>
+    <div class='comment'>
+        <em>"This actually sounds like I wrote it after a long study night."</em><br><strong>- Joseph</strong>
+    </div>
+    <div class='comment'>
+        <em>"Passed the AI check with flying colors. And my professor said it felt authentic."</em><br><strong>- Kate</strong>
+    </div>
+</div>
+
+<!-- Copy to Clipboard Script -->
+<script>
+function copyOutput() {
+    const textArea = document.getElementById('outputTextArea');
+    textArea.select();
+    textArea.setSelectionRange(0, 99999); // Mobile support
+    document.execCommand('copy');
+    alert("✅ Copied to clipboard!");
+}
+</script>
+
+{% endblock %}
