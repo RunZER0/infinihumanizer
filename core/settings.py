@@ -55,6 +55,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             BASE_DIR / 'humanizer' / 'templates',  # ✅ your custom location
+            BASE_DIR / 'accounts' / 'templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
