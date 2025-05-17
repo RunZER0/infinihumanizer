@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 700px; color: #fff;">
+    <h2 class="text-center mb-4" style="font-weight: bold;">Account Settings</h2>
+
+    <div class="mb-3">
+        <strong>Account type:</strong> PRO <span class="text-danger">(Thank you! ❤️)</span>
+    </div>
+
+    <div class="mb-3">
+        <strong>Words used:</strong>
+        <div class="progress" style="height: 18px;">
+            <div class="progress-bar bg-info" role="progressbar"
+                style="width: {{ percent_used }}%;" aria-valuenow="{{ percent_used }}"
+                aria-valuemin="0" aria-valuemax="100">
+                {{ profile.words_used|intcomma }} of {{ profile.word_quota|intcomma }} monthly words
+            </div>
+        </div>
+        <small class="text-muted">Used words will be reset on the first day of every month.</small>
+    </div>
+
+    <div class="mb-3">
+        <strong>Email:</strong> {{ request.user.email }}
+    </div>
+
+    <div class="mb-3">
+        <strong>Password:</strong> <a href="{% url 'password_change' %}">Change</a>
+    </div>
+
+    <div class="mb-3">
+        <strong>Subscription:</strong> <a href="#">Update</a> / <a href="#">Cancel</a>
+    </div>
+</div>
+{% endblock %}

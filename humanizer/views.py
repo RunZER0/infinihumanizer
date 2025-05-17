@@ -65,10 +65,14 @@ def contact_view(request):
 
 @login_required
 def settings_view(request):
-    profile = request.user.profile
-    percent_used = int((profile.words_used / profile.word_quota) * 100) if profile.word_quota else 0
+    try:
+        profile = request.user.profile
+        percent_used = int((profile.words_used / profile.word_quota) * 100) if profile.word_quota else 0
 
-    return render(request, "settings.html", {
-        "profile": profile,
-        "percent_used": percent_used,
-    })
+        return render(request, "settings.html", {
+            "profile": profile,
+            "percent_used": percent_used,
+        })
+
+    except Exception as e:
+        return HttpResponse(f"<pre>SETTINGS VIEW ERROR:\n{e}</pre>", status=500)

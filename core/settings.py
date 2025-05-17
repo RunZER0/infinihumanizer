@@ -27,9 +27,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',  # ✅ correct and comma added
 
     # Your apps
-    'accounts',
+    'accounts',  # ✅ only once
     'humanizer',
 ]
 
