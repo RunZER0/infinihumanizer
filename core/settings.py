@@ -22,6 +22,7 @@ ALLOWED_HOSTS = ['*']  # You can restrict this to your Render domain in producti
 
 # APPLICATIONS
 INSTALLED_APPS = [
+    'core.apps.CoreConfig',  # ✅ load signals via CoreConfig
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
