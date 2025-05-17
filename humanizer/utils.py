@@ -1,10 +1,13 @@
 import openai
+import os
 import random
 import textstat
 import re
-from django.conf import settings
-openai.api_key = settings.OPENAI_API_KEY
+from dotenv import load_dotenv
 
+load_dotenv()  # Load from .env
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
 # Step 1: Vocab simplification dictionary
 SYNONYMS = {
     "utilize": "use",
