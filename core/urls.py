@@ -3,30 +3,25 @@ URL configuration for core project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  #path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path
 
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect
+from django.contrib.auth.models import User  # Required for superuser creation
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
-
-    # ✅ Add this:
     path('humanizer/', include('humanizer.urls')),
-
-path('', lambda request: redirect('humanizer')),  # ✅ redirect root to /humanizer/,
+    path('', lambda request: redirect('humanizer')),  # Redirect root to /humanizer/
 ]
+
+# ✅ Temporary superuser creation (remove after use!)
+def create_admin_user():
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_superuser('admin', 'admin@example.com', 'admin1234')
+        print("✅ Superuser created.")
+
+create_admin_user()
