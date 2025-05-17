@@ -105,9 +105,9 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 
 # SECURITY OPTIONS — dev override
-#SECURE_SSL_REDIRECT = True
-#SESSION_COOKIE_SECURE = True
-#CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # Override for local development
 if socket.gethostname() == 'localhost' or DEBUG:
