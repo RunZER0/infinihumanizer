@@ -18,10 +18,3 @@ urlpatterns = [
     path('', lambda request: redirect('humanizer')),  # Redirect root to /humanizer/
 ]
 
-# ✅ Temporary superuser creation (remove after use!)
-def create_admin_user():
-    if not User.objects.filter(username='admin').exists():
-        User.objects.create_superuser('admin', 'admin@example.com', 'admin1234')
-        print("✅ Superuser created.")
-
-create_admin_user()

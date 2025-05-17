@@ -10,6 +10,7 @@ load_dotenv()  # Load environment variables from .env
 import os
 import socket
 from pathlib import Path
+import dj_database_url
 
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,10 +28,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.humanize',  # ✅ correct and comma added
+    'django.contrib.humanize',
 
     # Your apps
-    'accounts',  # ✅ only once
+    'accounts',
     'humanizer',
 ]
 
@@ -54,7 +55,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'humanizer' / 'templates',  # ✅ your custom location
+            BASE_DIR / 'humanizer' / 'templates',
             BASE_DIR / 'accounts' / 'templates',
         ],
         'APP_DIRS': True,
@@ -71,12 +72,11 @@ TEMPLATES = [
 # WSGI
 WSGI_APPLICATION = 'core.wsgi.application'
 
-# DATABASE
+# DATABASE (PostgreSQL via dj-database-url)
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=os.getenv("DATABASE_URL", "postgresql://infini_db_user:8obiD9eiAnc0oSs0isFGgXn77Nhunq6b@dpg-d0k9sjbuibrs739bm63g-a/infini_db")
+    )
 }
 
 # PASSWORD VALIDATORS
@@ -105,7 +105,7 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 # CUSTOM ENV VARS
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 
-# SECURITY OPTIONS — dev override
+# SECURITY OPTIONS
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
@@ -116,5 +116,12 @@ if socket.gethostname() == 'localhost' or DEBUG:
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
 
-# PRIMARY KEY TYPE
+# CSRF Trusted Origins
+CSRF_TRUSTED_ORIGINS = [
+    'https://infinihumanizer.onrender.com',
+    'https://infiniaihumanizer.live',
+    'https://www.infiniaihumanizer.live',
+]
+
+# Default Primary Key Field Type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
