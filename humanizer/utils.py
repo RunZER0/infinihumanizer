@@ -1,14 +1,21 @@
+import streamlit as st
 import openai
-import os
 import random
 import textstat
 import re
-from dotenv import load_dotenv
 
-load_dotenv()  # Load from .env
+# Set OpenAI API key via Streamlit secret
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
-# Step 1: Vocab simplification dictionary
+# Session states for persistence
+if "human_output" not in st.session_state:
+    st.session_state.human_output = ""
+if "previous_inputs" not in st.session_state:
+    st.session_state.previous_inputs = {}
+if "last_input_text" not in st.session_state:
+    st.session_state.last_input_text = ""
+
+# === Vocabulary simplification dictionary ===
 SYNONYMS = {
     "utilize": "use",
     "therefore": "so",
@@ -34,45 +41,54 @@ SYNONYMS = {
     "torsional": "twisting",
 }
 
-def downgrade_vocab(text):
-    for word, replacement in SYNONYMS.items():
-        text = re.sub(rf"\b{word}\b", replacement, text, flags=re.IGNORECASE)
-    return text
-
-def light_split(text):
-    return re.sub(r'(?<=[.!?])\s+(?=[A-Z])', '. ', text)
-
 def humanize_text(text):
-    simplified = downgrade_vocab(text)
-    prepped = light_split(simplified)
+    prepped = text
 
-    prompt = (
-        "You rewrite text in basic, fourth grade English. Do not smooth the text or improve grammar unless it is broken. Keep sentence structure choppy with long sentences only for readability. Add slight repetition on key phrases. Do not add transitions, polish, or rhetorical flair. Preserve the original structure and ideas but rephrase the wording. Do not explain anything or summarize. Do not simplify concepts. You write like a college student with average fluency and effort. Do not sound fluent or elegant. Introduce small errors. No rhetorical questions. No formatting. Just plain sentences. Use short complete sentences and include some repetitive or awkward phrasing. the reading style of the output should be human - like.\n\n"
-        f"{prepped}"
-    )
+    # Strict, professional GPT prompt
+    system_prompt = """
+You are a rewriting system designed to simplify text using strict structural rules. Follow these rules exactly. Your output must be neutral, mechanical, and rigid. Do not try to sound human, elegant, or natural. Follow these instructions:
 
-    response = openai.ChatCompletion.create(
+1. Replace adjectives with descriptive phrases. (e.g., "brutal attack" → "attack with brutality")
+2. Break all long sentences. One idea per sentence. No more than one subordinate clause per sentence.
+3. Use plain English words only. Do not use expressive, emotional, or figurative language.
+4. Strictly forbid the phrase “with [adjective] nature.” Never use it. Always rephrase it. This pattern is banned completely.
+5. Use "also", "as well as", "but", "along with", or "furthermore" instead of "and". Do not use "plus."
+6. Use hyphens to list related ideas or items. (e.g., "violence - fear - death")
+7. Avoid contractions, idioms, or casual tone.
+8. Sentence rhythm must vary. Use a mix of short and long sentences. Include fragments, repetition, and unnatural rhythm.
+9. Sentence structure must be functional and repetitive. Avoid elegance, variety, or transitions.
+10. Passive voice is allowed. Repetition is allowed. Fragmented or awkward phrasing is allowed.
+11. Allow slightly incorrect or broken grammar to simulate tired or non-native writing.
+12. Do not clean up odd logic. Redundant or clunky phrasing is okay if it preserves meaning.
+13. Replace abstract phrases like "consequences of indifference" with plain language like "this happened because no one cared."
+14. Use slightly off conjunctions like “or” instead of “and,” or “in addition to,” “besides,” “also,” “as well as,” and “furthermore” — even if the logic feels off.
+15. Use sentence openers like “About...,” “As for...,” “This change...,” or “Concerning...” to create disjointed rhythm.
+16. Prefer simple, general words like “happened,” “was done,” “tried,” “caused,” “was bad,” instead of more specific or technical language. Reuse them freely.
+
+Always follow these rules. No exceptions. Do not attempt to polish the output.
+"""
+
+    user_prompt = f""" Rewrite the following text using the defined rules.
+
+Example Input:
+The war caused brutal damage across many cities. Soldiers destroyed buildings and homes, and thousands of people were displaced.
+
+Example Output:
+The war brought damage with cruelty to many cities. Buildings were destroyed by soldiers - homes too. Thousands of people faced displacement.
+
+Example Output:
+The war brought damage with cruelty to many cities. Buildings were destroyed by soldiers - homes too. Thousands of people faced displacement.
+
+Text to humanize:
+{prepped}
+"""
+    response = openai.chat.completions.create(
         model="gpt-4o",
         messages=[
-            {
-                "role": "system",
-                "content": """You are a professional human writer and editor. Rewrite the following text to make it sound natural, human-written, and free from the patterns typical of AI-generated content.
-
-Guidelines:
-- Use a casual but clear tone.
-- Vary sentence structure and length—avoid patterns.
-- Replace overly formal or common AI-generated phrases with natural, real-life equivalents.
-- Simplify complex vocabulary with more familiar synonyms, unless a technical term is essential.
-- Break up long sentences into shorter, conversational ones.
-- Avoid robotic phrasing, generic intros, or conclusions.
-- Keep the meaning the same but express it in a unique and engaging way."""
-            },
-            {
-                "role": "user",
-                "content": prompt
-            }
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
         ],
-        temperature=0.4,
+        temperature=0.0,
         max_tokens=1600
     )
 
