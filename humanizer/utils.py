@@ -1,3 +1,4 @@
+import os
 import openai
 import random
 import textstat
