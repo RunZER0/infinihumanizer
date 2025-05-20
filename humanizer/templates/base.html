@@ -4,6 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}InfiniHumanizer{% endblock %}</title>
+
+    <!-- Favicon links -->
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}">
+    <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}">
+    <link rel="manifest" href="{% static 'site.webmanifest' %}">
+
+    <!-- Stylesheet -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
@@ -14,12 +22,9 @@
             <a href="{% url 'about' %}">About</a>
             <a href="{% url 'contact' %}">Contact</a>
             <a href="{% url 'settings' %}">Settings</a>
-
             <form method="post" action="{% url 'logout' %}" style="display:inline;">
                 {% csrf_token %}
-                <button type="submit" class="logout-link">
-                    Logout
-                </button>
+                <button type="submit" class="logout-link">Logout</button>
             </form>
         </nav>
     </header>
