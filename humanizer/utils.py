@@ -7,14 +7,6 @@ import re
 # Set OpenAI API key via Streamlit secret
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
-# Session states for persistence
-if "human_output" not in st.session_state:
-    st.session_state.human_output = ""
-if "previous_inputs" not in st.session_state:
-    st.session_state.previous_inputs = {}
-if "last_input_text" not in st.session_state:
-    st.session_state.last_input_text = ""
-
 # === Vocabulary simplification dictionary ===
 SYNONYMS = {
     "utilize": "use",
@@ -72,9 +64,6 @@ Always follow these rules. No exceptions. Do not attempt to polish the output.
 
 Example Input:
 The war caused brutal damage across many cities. Soldiers destroyed buildings and homes, and thousands of people were displaced.
-
-Example Output:
-The war brought damage with cruelty to many cities. Buildings were destroyed by soldiers - homes too. Thousands of people faced displacement.
 
 Example Output:
 The war brought damage with cruelty to many cities. Buildings were destroyed by soldiers - homes too. Thousands of people faced displacement.
