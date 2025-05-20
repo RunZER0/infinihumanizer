@@ -71,7 +71,7 @@ The war brought damage with cruelty to many cities. Buildings were destroyed by 
 Text to humanize:
 {prepped}
 """
-    response = openai.chat.completions.create(
+    response = openai.ChatCompletion.create(
         model="gpt-4o",
         messages=[
             {"role": "system", "content": system_prompt},
