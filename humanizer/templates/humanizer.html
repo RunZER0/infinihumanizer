@@ -24,17 +24,17 @@
 </div>
 
 {% if output_text %}
-    <div class="output-area">
-        <h2>✍️ Humanized Output</h2>
-        <div class="output-wrapper">
-            <textarea id="outputTextArea" rows="12" readonly>{{ output_text }}</textarea>
-            <button class="copy-btn" onclick="copyOutput()">📋 Copy</button>
-        </div>
-        <p class="meta-info"><strong>📊 Output Word Count:</strong> {{ output_text|wordcount }}</p>
-        <a href="#" download="humanized_output.txt">
-            <button>💾 Download Output</button>
-        </a>
+   <div class="output-area">
+    <h2>✍️ Humanized Output</h2>
+    <div class="output-wrapper">
+        <textarea id="outputTextArea" rows="12" readonly>{{ output_text }}</textarea>
+        <button class="copy-btn" onclick="copyOutput(this)">📋</button>
     </div>
+    <p class="meta-info"><strong>📊 Output Word Count:</strong> {{ output_text|wordcount }}</p>
+    <a href="#" download="humanized_output.txt">
+        <button>💾 Download Output</button>
+    </a>
+</div>
 {% endif %}
 
 <p><strong>Version 4.5</strong></p>
@@ -66,13 +66,42 @@
 
 <!-- Copy to Clipboard Script -->
 <script>
-function copyOutput() {
+function copyOutput(button) {
     const textArea = document.getElementById('outputTextArea');
-    textArea.select();
-    textArea.setSelectionRange(0, 99999); // Mobile support
-    document.execCommand('copy');
-    alert("✅ Copied to clipboard!");
+    
+    // Copy the text using Clipboard API
+    navigator.clipboard.writeText(textArea.value)
+        .then(() => {
+            // Change button text temporarily
+            const originalText = button.innerHTML;
+            button.innerHTML = "✅ Copied";
+            button.disabled = true;
+
+            // Revert after 1.5 seconds
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 1500);
+        })
+        .catch(err => {
+            console.error('Copy failed', err);
+        });
 }
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('inputText');
+    const wordCountDisplay = document.querySelector('.meta-info');
+
+    input.addEventListener('input', () => {
+        const text = input.value.trim();
+        const wordCount = text ? text.split(/\s+/).length : 0;
+        const wordLimit = 10000;
+        const wordsLeft = wordLimit - wordCount;
+        wordCountDisplay.innerHTML = `<strong>${wordCount} Words</strong> | <strong>${wordsLeft} Words Left</strong>`;
+    });
+});
 </script>
 
 {% endblock %}
