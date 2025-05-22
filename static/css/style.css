@@ -72,7 +72,6 @@ body {
 .input-form {
     display: flex;
     flex-direction: column;
-    align-items: center;
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
@@ -297,29 +296,31 @@ button:disabled {
     margin-bottom: 3rem;
 }
 
+/* Pricing Layout */
 .pricing-grid {
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
-    gap: 2rem;
-    padding: 0 2rem;
-}
-
-.plan {
-    background-color: #181818;
+    gap: 0;
+    max-width: 1000px;
+    margin: 3rem auto;
     border: 1px solid #333;
     border-radius: 12px;
-    padding: 2rem;
-    width: 100%;
-    max-width: 320px;
-    color: #e6e6e6;
-    box-shadow: 0 0 8px rgba(0, 255, 255, 0.05);
-    transition: transform 0.3s ease;
-    text-align: center;
+    overflow: hidden;
+    background-color: #181818;
 }
 
-.plan:hover {
-    transform: translateY(-5px);
+/* Plan Cards */
+.plan {
+    flex: 1;
+    padding: 2rem;
+    color: #e6e6e6;
+    text-align: center;
+    background-color: #181818;
+    border-right: 1px solid #333;
+}
+
+.plan:last-child {
+    border-right: none;
 }
 
 .plan .price {
@@ -347,12 +348,13 @@ button:disabled {
 .select-btn {
     background-color: #00ffff;
     color: black;
-    border: none;
     padding: 0.8rem 1.5rem;
     border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
+    border: none;
     transition: background-color 0.3s ease;
+    margin-top: 1rem;
 }
 
 .select-btn:hover {
@@ -360,7 +362,7 @@ button:disabled {
 }
 
 .featured {
-    border: 2px solid #00ffff;
+    background-color: #202020;
     position: relative;
 }
 
@@ -373,12 +375,13 @@ button:disabled {
     border-radius: 4px;
     margin-left: 0.5rem;
 }
+
+/* Custom Plan Section */
 .custom-request {
-    margin-top: 4rem;
     text-align: center;
-    padding: 2rem;
-    background-color: #111;
-    border-radius: 12px;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #333;
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
@@ -409,5 +412,3 @@ button:disabled {
 .custom-btn:hover {
     background-color: #00cccc;
 }
-
-
