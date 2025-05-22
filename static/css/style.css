@@ -50,7 +50,7 @@ body {
 /* Content Wrapper */
 .content {
     padding: 2rem;
-    max-width: 960px;
+    max-width: 1400px;
     margin: 0 auto;
     text-align: center;
 }
@@ -82,27 +82,27 @@ body {
 /* Textareas */
 textarea {
     width: 100%;
-    max-width: 100%;
+    max-width: 1200px;
     min-height: 300px;
-    font-size: 16px;
+    padding: 20px;
+    font-size: 18px;
     line-height: 1.6;
     font-family: 'Segoe UI', Tahoma, sans-serif;
-    background-color: #181818;
-    border: 1px solid #00ffff;
+    background-color: #1a1a1d;
+    color: #e6e6e6;
+    border: 2px solid #00bfff;
     border-radius: 10px;
-    padding: 20px;
-    color: #eaeaea;
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.15);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 0 0 2px transparent;
+    transition: all 0.3s ease;
     resize: vertical;
     box-sizing: border-box;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
 }
 
 textarea:focus {
     outline: none;
-    border-color: #00cccc;
-    box-shadow: 0 0 12px rgba(0, 255, 255, 0.3);
+    border-color: #00ffff;
+    box-shadow: 0 0 8px #00ffff;
 }
 
 /* Buttons */
@@ -210,3 +210,47 @@ a:hover {
     color: #ccc;
     margin-top: 1rem;
 }
+
+/* Responsive adjustments for mobile (≤768px) */
+@media (max-width: 768px) {
+    .form-wrapper,
+    .output-wrapper,
+    .input-form,
+    .input-wrapper {
+        padding: 1rem;
+        width: 100%;
+    }
+
+    textarea {
+        min-height: 220px;
+        font-size: 1rem;
+        padding: 15px;
+    }
+
+    button {
+        width: 100%;
+        font-size: 1rem;
+        padding: 0.8rem;
+    }
+
+    h1, h2, h3, p {
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    .meta-info {
+        font-size: 0.85rem;
+        text-align: center;
+    }
+
+    .features-grid {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .feature, .comment {
+        font-size: 0.9rem;
+        text-align: center;
+    }
+}
+

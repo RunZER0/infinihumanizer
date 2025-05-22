@@ -15,7 +15,7 @@
 {% endif %}
 
 <div class="form-wrapper">
-    <form method="post" class="input-form">
+    <form method="post" class="input-form" id="rehumanizerForm">
         {% csrf_token %}
         <textarea name="text" id="inputText" rows="10" placeholder="Paste your AI-generated academic text here (Max: 10,000 characters)">{{ input_text }}</textarea>
         <p class="meta-info"><strong>{{ word_count }} Words</strong> | <strong>{{ word_balance }} Words Left</strong></p>
@@ -23,19 +23,22 @@
     </form>
 </div>
 
+<!-- Output section to update dynamically -->
+<div id="outputContainer">
 {% if output_text %}
-   <div class="output-area">
-    <h2>✍️ Humanized Output</h2>
-    <div class="output-wrapper">
-        <textarea id="outputTextArea" rows="12" readonly>{{ output_text }}</textarea>
-        <button class="copy-btn" onclick="copyOutput(this)">📋</button>
+    <div class="output-area">
+        <h2>✍️ Humanized Output</h2>
+        <div class="output-wrapper">
+            <textarea id="outputTextArea" rows="12" readonly>{{ output_text }}</textarea>
+            <button class="copy-btn" onclick="copyOutput(this)">📋</button>
+        </div>
+        <p class="meta-info"><strong>📊 Output Word Count:</strong> {{ output_text|wordcount }}</p>
+        <a href="#" download="humanized_output.txt">
+            <button>💾 Download Output</button>
+        </a>
     </div>
-    <p class="meta-info"><strong>📊 Output Word Count:</strong> {{ output_text|wordcount }}</p>
-    <a href="#" download="humanized_output.txt">
-        <button>💾 Download Output</button>
-    </a>
-</div>
 {% endif %}
+</div>
 
 <p><strong>Version 4.5</strong></p>
 <hr>
@@ -97,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
     input.addEventListener('input', () => {
         const text = input.value.trim();
         const wordCount = text ? text.split(/\s+/).length : 0;
-        const wordLimit = 10000;
+        const wordLimit = 2000;
         const wordsLeft = wordLimit - wordCount;
         wordCountDisplay.innerHTML = `<strong>${wordCount} Words</strong> | <strong>${wordsLeft} Words Left</strong>`;
     });
