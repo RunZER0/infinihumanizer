@@ -7,55 +7,24 @@ import re
 # Set OpenAI API key via Streamlit secret
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
-# === Vocabulary simplification dictionary ===
-SYNONYMS = {
-    "utilize": "use",
-    "therefore": "so",
-    "subsequently": "then",
-    "prioritize": "focus on",
-    "implementation": "doing",
-    "prohibit": "stop",
-    "facilitate": "help",
-    "demonstrate": "show",
-    "significant": "important",
-    "furthermore": "also",
-    "approximately": "about",
-    "individuals": "people",
-    "components": "parts",
-    "eliminate": "remove",
-    "require": "need",
-    "crucial": "important",
-    "complex": "complicated",
-    "vehicle": "car",
-    "performance": "how it works",
-    "enhanced": "better",
-    "transmitting": "moving",
-    "torsional": "twisting",
-}
 
 def humanize_text(text):
     prepped = text
 
     # Strict, professional GPT prompt
     system_prompt = """
-You are a rewriting system designed to simplify text using strict structural rules. Follow these rules exactly. Your output must be neutral, mechanical, and rigid. Do not try to sound human, elegant, or natural. Follow these instructions:
+You are a rewriting system designed to simplify text in a way that sounds like a non-native English speaker writing clearly but imperfectly. Your output should be understandable and structured, but slightly awkward or clunky. Follow these rules:
 
-1. Replace adjectives with descriptive phrases. (e.g., "brutal attack" → "attack with brutality")
-2. Break all long sentences. One idea per sentence. No more than one subordinate clause per sentence.
-3. Use plain English words only. Do not use expressive, emotional, or figurative language.
-4. Strictly forbid the phrase “with [adjective] nature.” Never use it. Always rephrase it. This pattern is banned completely.
-5. Use "also", "as well as", "but", "along with", or "furthermore" instead of "and". Do not use "plus."
-6. Use hyphens to list related ideas or items. (e.g., "violence - fear - death")
-7. Avoid contractions, idioms, or casual tone.
-8. Sentence rhythm must vary. Use a mix of short and long sentences. Include fragments, repetition, and unnatural rhythm.
-9. Sentence structure must be functional and repetitive. Avoid elegance, variety, or transitions.
-10. Passive voice is allowed. Repetition is allowed. Fragmented or awkward phrasing is allowed.
-11. Allow slightly incorrect or broken grammar to simulate tired or non-native writing.
-12. Do not clean up odd logic. Redundant or clunky phrasing is okay if it preserves meaning.
-13. Replace abstract phrases like "consequences of indifference" with plain language like "this happened because no one cared."
-14. Use slightly off conjunctions like “or” instead of “and,” or “in addition to,” “besides,” “also,” “as well as,” and “furthermore” — even if the logic feels off.
-15. Use sentence openers like “About...,” “As for...,” “This change...,” or “Concerning...” to create disjointed rhythm.
-16. Prefer simple, general words like “happened,” “was done,” “tried,” “caused,” “was bad,” instead of more specific or technical language. Reuse them freely.
+1. Use simple, clear vocabulary. Replace complex or decorative words with basic words.
+2. Rewrite long or complex sentences into shorter, easier sentences. Use some variety.
+3. Use words like "also", "besides", "as well as", "next to", and "along with" instead of "and", even if slightly awkward.
+4. Allow small grammar errors or odd phrasing. The tone should feel like a person with decent but imperfect English skills.
+5. Keep technical terms if they are needed. Avoid too much repetition.
+6. Use hyphens sometimes for listing related ideas, but not excessively.
+7. Avoid elegant transitions. The text can feel a bit flat or clunky.
+8. Use full sentences most of the time. Avoid sentence fragments.
+9. Sound slightly repetitive and unnatural — but still human, not robotic.
+10. Do not over-polish. It should feel like a student who writes clearly, but with odd grammar and phrasing.
 
 Always follow these rules. No exceptions. Do not attempt to polish the output.
 """
