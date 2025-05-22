@@ -17,13 +17,14 @@
 <div class="form-wrapper">
     <form method="post" class="input-form" id="rehumanizerForm">
         {% csrf_token %}
-        <textarea name="text" id="inputText" rows="10" placeholder="Paste your AI-generated academic text here (Max: 10,000 characters)">{{ input_text }}</textarea>
+        <div class="input-wrapper">
+            <textarea name="text" id="inputText" rows="10" placeholder="Paste your AI-generated academic text here (Max: 10,000 characters)">{{ input_text }}</textarea>
+        </div>
         <p class="meta-info"><strong>{{ word_count }} Words</strong> | <strong>{{ word_balance }} Words Left</strong></p>
-        <button type="submit">🔁 Humanize / Re-Humanize Text</button>
+        <button type="submit" id="submitBtn">🔁 Humanize / Re-Humanize Text</button>
     </form>
 </div>
 
-<!-- Output section to update dynamically -->
 <div id="outputContainer">
 {% if output_text %}
     <div class="output-area">
@@ -67,7 +68,6 @@
     </div>
 </div>
 
-<!-- Copy to Clipboard Script -->
 <script>
 function copyOutput(button) {
     const textArea = document.getElementById('outputTextArea');
@@ -111,9 +111,15 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('rehumanizerForm');
     const outputContainer = document.getElementById('outputContainer');
+    const submitBtn = document.getElementById('submitBtn');
 
     form.addEventListener('submit', function (e) {
-        e.preventDefault(); // Prevent full page reload
+        e.preventDefault();
+
+        // 🔁 Show loading state in button
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '⏳ humanizing<span class="dots">...</span>';
+        submitBtn.disabled = true;
 
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         const inputText = document.getElementById('inputText').value;
@@ -128,16 +134,24 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => response.text())
         .then(html => {
-            // Parse the response and update just the #outputContainer
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = html;
             const newOutput = tempDiv.querySelector('#outputContainer');
             if (newOutput) {
                 outputContainer.innerHTML = newOutput.innerHTML;
             }
+
+            // ✅ Restore button to original state
+            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = false;
         })
         .catch(error => {
-            console.error('AJAX form submission failed:', error);
+            console.error('AJAX submission failed:', error);
+            submitBtn.innerHTML = '❌ Try Again';
+            setTimeout(() => {
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+            }, 2000);
         });
     });
 });
