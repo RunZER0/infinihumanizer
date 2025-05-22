@@ -30,7 +30,7 @@
     <div class="output-area">
         <h2>✍️ Humanized Output</h2>
         <div class="output-wrapper">
-            <textarea id="outputTextArea" rows="12" readonly>{{ output_text }}</textarea>
+            <textarea id="outputTextArea" rows="10" readonly>{{ output_text }}</textarea>
             <button class="copy-btn" onclick="copyOutput(this)">📋</button>
         </div>
         <p class="meta-info"><strong>📊 Output Word Count:</strong> {{ output_text|wordcount }}</p>

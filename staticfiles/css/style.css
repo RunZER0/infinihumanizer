@@ -161,8 +161,8 @@ button:hover {
 .copy-btn {
     position: absolute;
     top: 10px;
-    right: 10px;
-    background-color: #000000;
+    right: 20px;
+    background-color: #A52A2A;
     color: black;
     border: none;
     padding: 6px 10px;
@@ -170,6 +170,7 @@ button:hover {
     font-size: 0.8rem;
     cursor: pointer;
     opacity: 0.85;
+    z-index: 2; /* Make sure it's above the textarea */
     transition: opacity 0.2s ease, background-color 0.3s ease;
 }
 
