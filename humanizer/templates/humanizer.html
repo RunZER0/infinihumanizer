@@ -107,4 +107,40 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('rehumanizerForm');
+    const outputContainer = document.getElementById('outputContainer');
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault(); // Prevent full page reload
+
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const inputText = document.getElementById('inputText').value;
+
+        fetch(window.location.href, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrfToken
+            },
+            body: new URLSearchParams({ 'text': inputText })
+        })
+        .then(response => response.text())
+        .then(html => {
+            // Parse the response and update just the #outputContainer
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            const newOutput = tempDiv.querySelector('#outputContainer');
+            if (newOutput) {
+                outputContainer.innerHTML = newOutput.innerHTML;
+            }
+        })
+        .catch(error => {
+            console.error('AJAX form submission failed:', error);
+        });
+    });
+});
+</script>
+
 {% endblock %}

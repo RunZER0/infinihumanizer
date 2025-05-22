@@ -50,7 +50,7 @@ body {
 /* Content Wrapper */
 .content {
     padding: 2rem;
-    max-width: 1400px;
+    max-width: 1500px;
     margin: 0 auto;
     text-align: center;
 }
@@ -74,7 +74,7 @@ body {
 
 /* Input Field Container */
 .input-wrapper {
-    max-width: 1000px;
+    max-width: min(90vw, 1200px);
     width: 100%;
     margin: 0 auto;
 }
@@ -82,8 +82,8 @@ body {
 /* Textareas */
 textarea {
     width: 100%;
-    max-width: 1200px;
-    min-height: 300px;
+    max-width: 1500px;
+    min-height: 400px;
     padding: 20px;
     font-size: 18px;
     line-height: 1.6;
@@ -130,7 +130,7 @@ button:hover {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    max-width: 1000px;
+    max-width: min(90vw, 1200px);
     margin: 0 auto 2rem;
 }
 
