@@ -1,5 +1,62 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block content %}
-<h2>💳 Pricing Page</h2>
-<p>Plan details and upgrade options coming soon.</p>
+
+<h1 class="page-title">📦 Choose Your Plan</h1>
+<p class="page-subtitle">Flexible word-based pricing for every kind of writer.</p>
+
+<div class="pricing-grid">
+
+    <!-- Standard Plan -->
+    <div class="plan">
+        <h2>Standard</h2>
+        <p class="price">$30</p>
+        <p class="words">100,000 words</p>
+        <ul>
+            <li>Unlimited rehumanizations</li>
+            <li>GPT-4 refinement engine</li>
+            <li>Word usage tracking</li>
+            <li>Copy + download tools</li>
+        </ul>
+        <button class="select-btn">Select Standard</button>
+    </div>
+
+    <!-- Pro Plan -->
+    <div class="plan featured">
+        <h2>Pro <span class="badge">Best Value</span></h2>
+        <p class="price">$75</p>
+        <p class="words">300,000 words</p>
+        <ul>
+            <li>Everything in Standard</li>
+            <li>Enhanced human tone detection</li>
+            <li>Batch processing for larger chunks</li>
+            <li>Priority email support</li>
+        </ul>
+        <button class="select-btn">Select Pro</button>
+    </div>
+
+    <!-- Enterprise Plan -->
+    <div class="plan">
+        <h2>Enterprise</h2>
+        <p class="price">$150</p>
+        <p class="words">1,000,000 words</p>
+        <ul>
+            <li>Everything in Pro</li>
+            <li>Team access (invite support)</li>
+            <li>Bulk document handling (coming soon)</li>
+            <li>Early access to new features</li>
+        </ul>
+        <button class="select-btn">Select Enterprise</button>
+    </div>
+
+</div>
+
+<!-- Custom Plan Request Section -->
+<div class="custom-request">
+    <h2>Need Something Else?</h2>
+    <p>Have a specific use case or word volume? We’re happy to customize a plan for you.</p>
+    <a href="{% url 'contact' %}" class="custom-btn">📝 Request a Custom Plan</a>
+</div>
+
 {% endblock %}

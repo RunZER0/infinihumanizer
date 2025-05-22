@@ -116,6 +116,10 @@ document.addEventListener('DOMContentLoaded', function () {
     form.addEventListener('submit', function (e) {
         e.preventDefault();
 
+        // 🔁 Hide output while generating
+        outputContainer.style.opacity = '0';
+        outputContainer.style.pointerEvents = 'none';
+
         // 🔁 Show loading state in button
         const originalBtnText = submitBtn.innerHTML;
         submitBtn.innerHTML = '⏳ humanizing<span class="dots">...</span>';
@@ -139,9 +143,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const newOutput = tempDiv.querySelector('#outputContainer');
             if (newOutput) {
                 outputContainer.innerHTML = newOutput.innerHTML;
+
+                // ✅ Fade output back in
+                outputContainer.style.opacity = '1';
+                outputContainer.style.pointerEvents = 'auto';
             }
 
-            // ✅ Restore button to original state
+            // ✅ Restore button
             submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
         })
@@ -151,6 +159,8 @@ document.addEventListener('DOMContentLoaded', function () {
             setTimeout(() => {
                 submitBtn.innerHTML = originalBtnText;
                 submitBtn.disabled = false;
+                outputContainer.style.opacity = '1';
+                outputContainer.style.pointerEvents = 'auto';
             }, 2000);
         });
     });
