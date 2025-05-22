@@ -156,6 +156,7 @@ button:hover {
     box-shadow: 0 0 0 2px transparent;
     resize: vertical;
     box-sizing: border-box;
+    padding-top: 2.5rem; /* space for the button */
 }
 
 .copy-btn {
