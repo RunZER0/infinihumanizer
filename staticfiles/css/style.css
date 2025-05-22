@@ -89,7 +89,7 @@ body {
 textarea {
     width: 100%;
     max-width: 100%;
-    min-height: 350px;
+    min-height: 340px;
     padding: 20px;
     font-size: 18px;
     line-height: 1.6;
@@ -123,6 +123,8 @@ button {
     transition: all 0.3s ease-in-out;
     cursor: pointer;
     font-size: 1rem;
+    width: auto;              /* 🔧 This prevents full-width stretch */
+    align-self: center;       /* 🔧 This keeps it centered in the flex column */
 }
 
 button:hover {
@@ -136,15 +138,15 @@ button:hover {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    max-width: min(90vw, 1200px);
+    max-width: 1200px;
     margin: 0 auto 2rem;
 }
 
 .copy-btn {
     position: absolute;
-    bottom: 10px;
+    top: 10px;
     right: 10px;
-    background-color: #00cccc;
+    background-color: #F0F8FF;
     color: black;
     border: none;
     padding: 6px 10px;
