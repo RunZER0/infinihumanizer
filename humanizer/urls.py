@@ -4,7 +4,9 @@ from .views import (
     pricing_view,
     about_view,
     contact_view,
-    settings_view,  # ✅ add this
+    settings_view,
+    start_payment,  # ✅ add this
+    verify_payment
 )
 
 urlpatterns = [
@@ -13,4 +15,6 @@ urlpatterns = [
     path('about/', about_view, name='about'),
     path('contact/', contact_view, name='contact'),
     path('settings/', settings_view, name='settings'),
+    path('start-payment/', start_payment, name='start-payment'),
+    path('verify-payment/', verify_payment, name='verify-payment'),
 ]

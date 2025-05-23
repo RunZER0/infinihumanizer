@@ -19,37 +19,44 @@
             <li>Word usage tracking</li>
             <li>Copy + download tools</li>
         </ul>
-        <button class="select-btn">Select Standard</button>
+        <button class="select-btn" data-plan="Standard" data-amount="30">Select Standard</button>
     </div>
 
     <!-- Pro Plan -->
     <div class="plan featured">
         <h2>Pro <span class="badge">Best Value</span></h2>
         <p class="price">$75</p>
-        <p class="words">300,000 words</p>
+        <p class="words">250,000 words</p>
         <ul>
             <li>Everything in Standard</li>
             <li>Enhanced human tone detection</li>
             <li>Batch processing for larger chunks</li>
             <li>Priority email support</li>
         </ul>
-        <button class="select-btn">Select Pro</button>
+        <button class="select-btn" data-plan="Pro" data-amount="75">Select Pro</button>
     </div>
 
     <!-- Enterprise Plan -->
     <div class="plan">
         <h2>Enterprise</h2>
         <p class="price">$150</p>
-        <p class="words">700,000 words</p>
+        <p class="words">600,000 words</p>
         <ul>
             <li>Everything in Pro</li>
             <li>Team access (invite support)</li>
             <li>Bulk document handling (coming soon)</li>
             <li>Early access to new features</li>
         </ul>
-        <button class="select-btn">Select Enterprise</button>
+        <button class="select-btn" data-plan="Enterprise" data-amount="150">Select Enterprise</button>
     </div>
 
+</div>
+
+<div class="currency-disclaimer">
+  <p>
+    💡 All prices are shown in USD for clarity. However, your card will be charged in Kenyan Shillings (KES).  
+    The approximate exchange rate is <strong>1 USD ≈ 135 KES</strong>. Your bank will convert it automatically and may apply a small international fee (1–3%).
+  </p>
 </div>
 
 <!-- Custom Plan Request Section -->
@@ -58,5 +65,61 @@
     <p>Have a specific use case or word volume? We’re happy to customize a plan for you.</p>
     <a href="{% url 'contact' %}" class="custom-btn">📝 Request a Custom Plan</a>
 </div>
+
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<script>
+let userCurrencyLabel = 'USD';     // What the user sees
+let backendCurrency = 'KES';       // What we send to Paystack
+
+fetch('https://ipapi.co/json')
+  .then(res => res.json())
+  .then(data => {
+    const country = data.country_code;
+    if (country === 'KE') {
+      document.querySelectorAll('.price').forEach(p => {
+        const usd = parseInt(p.textContent.replace('$', ''));
+        p.textContent = 'KSh ' + (usd * 135).toLocaleString();  // optional local display
+      });
+      userCurrencyLabel = 'KES';  // purely visual if needed
+    }
+  });
+
+document.querySelectorAll('.select-btn').forEach(btn => {
+  btn.addEventListener('click', function () {
+    const plan = this.getAttribute('data-plan');
+    const amount = this.getAttribute('data-amount');
+
+    fetch('/humanizer/start-payment/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': '{{ csrf_token }}'
+      },
+      body: `email={{ request.user.email }}&amount=${amount}&currency=${backendCurrency}`
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status) {
+        const handler = PaystackPop.setup({
+          key: '{{ PAYSTACK_PUBLIC_KEY }}',
+          email: '{{ request.user.email }}',
+          amount: data.amount,  // Charged KES * 100 from backend
+          currency: 'KES',      // Always KES for compatibility
+          label: `${plan} Plan - $${amount}`,  // Display USD to user
+          callback: function(response) {
+            window.location.href = `/humanizer/verify-payment/?reference=${response.reference}&amount=${amount}`;
+          },
+          onClose: function() {
+            alert('❌ Payment was not completed.');
+          }
+        });
+        handler.openIframe();
+      } else {
+        alert('⚠️ Error: ' + data.message);
+      }
+    });
+  });
+});
+</script>
 
 {% endblock %}

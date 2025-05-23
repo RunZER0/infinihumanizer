@@ -17,8 +17,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "unsafe-dev-key")
+PAYSTACK_PUBLIC_KEY = os.getenv("PAYSTACK_PUBLIC_KEY")
+PAYSTACK_SECRET_KEY = os.getenv("PAYSTACK_SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "False") == "True"
-ALLOWED_HOSTS = ['*']  # You can restrict this to your Render domain in production
+ALLOWED_HOSTS = [
+    'infinihumanizer.onrender.com',
+    'infiniaihumanizer.live',
+    'www.infiniaihumanizer.live'
+]
 
 # APPLICATIONS
 INSTALLED_APPS = [
@@ -75,10 +81,17 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 # DATABASE (PostgreSQL via dj-database-url)
 DATABASES = {
-    'default': dj_database_url.config(
+   'default': dj_database_url.config(
         default=os.getenv("DATABASE_URL", "postgresql://infini_db_user:8obiD9eiAnc0oSs0isFGgXn77Nhunq6b@dpg-d0k9sjbuibrs739bm63g-a/infini_db")
     )
 }
+
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+#}
 
 # PASSWORD VALIDATORS
 AUTH_PASSWORD_VALIDATORS = [
