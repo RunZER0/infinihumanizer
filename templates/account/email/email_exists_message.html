@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    body { background: #0e0e11; color: #ccc; font-family: 'Segoe UI', sans-serif; padding: 2rem; }
+    .box { background: #1c1c1c; padding: 2rem; border-radius: 8px; border-left: 4px solid #00ffff; }
+    h2 { color: #00ffff; }
+    a { color: #00ffff; text-decoration: none; font-weight: bold; }
+    .btn {
+      display: inline-block; margin-top: 1rem; background: #00ffff; color: #000;
+      padding: 0.6rem 1rem; border-radius: 5px; text-decoration: none;
+    }
+    .footer { font-size: 0.8rem; color: #666; margin-top: 2rem; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>Account Already Exists</h2>
+    <p>Hey there,</p>
+    <p>It looks like someone tried to sign up using <strong>{{ email }}</strong>, but that account already exists.</p>
+    <p>If you forgot your password, you can reset it below:</p>
+    <a href="{{ password_reset_url }}" class="btn">Reset My Password</a>
+    <div class="footer">Thanks for using InfiniHumanizer!</div>
+  </div>
+</body>
+</html>

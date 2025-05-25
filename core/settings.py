@@ -19,16 +19,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "unsafe-dev-key")
 PAYSTACK_PUBLIC_KEY = os.getenv("PAYSTACK_PUBLIC_KEY")
 PAYSTACK_SECRET_KEY = os.getenv("PAYSTACK_SECRET_KEY")
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "Infiniai <noreply@infiniaihumanizer.live>")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = [
     'infinihumanizer.onrender.com',
     'infiniaihumanizer.live',
-    'www.infiniaihumanizer.live'
+    'www.infiniaihumanizer.live',
+    '127.0.0.1',
+    '192.168.0.105',
 ]
 
-# APPLICATIONS
 INSTALLED_APPS = [
-    'core.apps.CoreConfig',  # ✅ load signals via CoreConfig
+    'core.apps.CoreConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -37,19 +41,45 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
 
+    # Required by django-allauth
+    'django.contrib.sites',
+
+    # Allauth apps
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',  # Optional but harmless
+
     # Your apps
     'accounts',
     'humanizer',
 ]
 
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Still required
+ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
+ACCOUNT_ADAPTER = 'accounts.adapters.CustomAccountAdapter'
+ACCOUNT_FORMS = {
+    'login': 'accounts.forms.CustomLoginForm'
+}
+
 # MIDDLEWARE
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Serve static files in production
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'allauth.account.middleware.AccountMiddleware',  # ← add this
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -64,6 +94,7 @@ TEMPLATES = [
         'DIRS': [
             BASE_DIR / 'humanizer' / 'templates',
             BASE_DIR / 'accounts' / 'templates',
+            BASE_DIR / "templates",  # Important
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -110,12 +141,16 @@ USE_TZ = True
 # STATIC FILES
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+if DEBUG:
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+else:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATICFILES_DIRS = [ BASE_DIR / 'static' ]
 
 # AUTH REDIRECTS
 LOGIN_REDIRECT_URL = '/humanizer/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
+ACCOUNT_ADAPTER = 'accounts.adapters.CustomAccountAdapter'
 
 # CUSTOM ENV VARS
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
@@ -140,3 +175,10 @@ CSRF_TRUSTED_ORIGINS = [
 
 # Default Primary Key Field Type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ✅ EMAIL SETTINGS (using Brevo / Sendinblue)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp-relay.brevo.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+SITE_NAME = "Infiniai Assistant"

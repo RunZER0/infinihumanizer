@@ -8,12 +8,20 @@
 </h1>
 
 <div class="account-box">
-  <div class="tier-badge {{ profile.account_type|lower }}">
-    {{ profile.account_type|upper }}
-    {% if profile.account_type == "PRO" %}
-      <span class="badge-heart">❤️</span>
-    {% endif %}
-  </div>
+ {% with profile.account_type|default:"free"|lower as tier %}
+  <p class="account-type-line">
+    <strong>Account type:</strong>
+    <span class="tier-badge {{ tier }}">
+      {% if tier == "free" %} 🆓 Free
+      {% elif tier == "standard" %} ⭐ Standard
+      {% elif tier == "pro" %} ❤️ Pro
+      {% elif tier == "enterprise" %} 🏢 Enterprise
+      {% else %} ❓ Unknown
+      {% endif %}
+    </span>
+  </p>
+{% endwith %}
+
 
   <p class="words-used"><strong>Words used:</strong> {{ profile.words_used }} / {{ profile.word_quota }}</p>
 

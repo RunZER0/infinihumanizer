@@ -5,7 +5,7 @@ from .views import (
     about_view,
     contact_view,
     settings_view,
-    start_payment,  # ✅ add this
+    start_payment,
     verify_payment
 )
 

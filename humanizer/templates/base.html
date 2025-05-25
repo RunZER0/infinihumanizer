@@ -13,7 +13,7 @@
     <link rel="manifest" href="{% static 'site.webmanifest' %}">
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=2">
 </head>
 <body>
     <header class="navbar">
@@ -23,7 +23,7 @@
             <a href="{% url 'about' %}">About</a>
             <a href="{% url 'contact' %}">Contact</a>
             <a href="{% url 'settings' %}">Settings</a>
-            <form method="post" action="{% url 'logout' %}" style="display:inline;">
+           <form method="post" action="{% url 'account_logout' %}" style="display:inline;">
                 {% csrf_token %}
                 <button type="submit" class="logout-link">Logout</button>
             </form>

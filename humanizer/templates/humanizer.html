@@ -6,14 +6,6 @@
 <h1>🤖 InfiniAi-Humanizer</h1>
 <p>Turn robotic AI text into real, natural, human-sounding writing.</p>
 
-{% if messages %}
-    <div class="messages">
-        {% for message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
-    </div>
-{% endif %}
-
 <div class="form-wrapper">
     <form method="post" class="input-form" id="rehumanizerForm">
         {% csrf_token %}

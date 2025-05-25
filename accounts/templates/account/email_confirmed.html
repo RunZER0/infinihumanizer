@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+/>
+
+<style>
+  body {
+    background: #f4f6f9;
+  }
+  .card-success {
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  }
+  .btn-signin {
+    background-color: #198754;
+    color: #fff;
+    font-weight: 600;
+  }
+  .btn-signin:hover {
+    background-color: #157347;
+  }
+</style>
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+  <div class="card card-success p-4 text-center" style="max-width: 400px; width:100%;">
+    <div class="mb-3">
+      <div class="display-4 text-success">✅</div>
+      <h2 class="fw-bold">Email Confirmed</h2>
+    </div>
+    <p class="text-muted">
+      Thank you! Your email has been successfully verified.
+    </p>
+    <a href="{% url 'account_login' %}" class="btn btn-signin btn-lg mt-3">
+      Sign In to Your Account
+    </a>
+  </div>
+</div>
+{% endblock %}

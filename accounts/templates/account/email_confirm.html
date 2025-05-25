@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<style>
+  .confirm-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Changed from center */
+    padding-top: 10vh;        /* Push it down slightly */
+    min-height: 90vh;
+    background-color: #111;
+    color: #f0f0f0;
+    font-family: "Segoe UI", sans-serif;
+  }
+
+  .confirm-box {
+    background-color: #1c1c1c;
+    padding: 2.5rem;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 255, 128, 0.1);
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+  }
+
+  .confirm-box h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .confirm-box p {
+    font-size: 1rem;
+    color: #ccc;
+    margin-bottom: 1.5rem;
+  }
+
+  .confirm-box strong {
+    color: #fff;
+  }
+
+  .confirm-button {
+    background-color: #00d084;
+    color: #000;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+  }
+
+  .confirm-button:hover {
+    background-color: #00a76b;
+  }
+
+  .links {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #aaa;
+  }
+
+  .links a {
+    color: #00d084;
+    text-decoration: none;
+  }
+
+  .links a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<div class="confirm-wrapper">
+  <div class="confirm-box">
+    <h2>📧 Confirm Your Email</h2>
+    <p>
+      Please confirm that <strong>{{ email }}</strong> is your email address.
+    </p>
+
+    <form method="post" action="">
+      {% csrf_token %}
+      <button type="submit" class="confirm-button">Confirm Email</button>
+    </form>
+
+    <div class="links">
+      <p>
+        Need help? <a href="{% url 'account_login' %}">Log In</a> or
+        <a href="{% url 'account_signup' %}">Sign Up</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

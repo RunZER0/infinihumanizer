@@ -1,51 +1,53 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+from allauth.account.models import EmailAddress
+from django.contrib import messages
+
 from accounts.models import Profile
 from .utils import humanize_text
-
+import requests
 
 @login_required
 def humanizer_view(request):
+    # 💡 Clear any leftover messages (like "Successfully signed in as...")
+    storage = messages.get_messages(request)
+    list(storage)
+
+    input_text = ""
+    output_text = ""
+    word_count = 0
+    error = ""
+    word_balance = None
+
+    user = request.user
     try:
-        user = request.user
-        try:
-            profile = user.profile
-        except Profile.DoesNotExist:
-            return HttpResponse("<pre>POST ERROR: Profile does not exist for this user.</pre>", status=500)
+        profile = user.profile
+    except Profile.DoesNotExist:
+        return HttpResponse("<pre>Profile does not exist for this user.</pre>", status=500)
 
-        word_balance = profile.word_quota - profile.words_used
+    word_balance = profile.word_quota - profile.words_used
 
-        input_text = ""
-        output_text = ""
-        word_count = 0
+    if request.method == "POST":
+        input_text = request.POST.get("text", "").strip()
+        word_count = len(input_text.split())
 
-        if request.method == "POST":
-            input_text = request.POST.get("text", "").strip()
-            word_count = len(input_text.split())
-
-            if word_count > word_balance:
-                return render(request, "humanizer.html", {
-                    "input_text": input_text,
-                    "output_text": "",
-                    "word_balance": word_balance,
-                    "word_count": word_count,
-                    "error": f"You've exceeded your word balance ({word_balance} words left).",
-                })
-
+        if word_count > word_balance:
+            error = f"You've exceeded your word balance ({word_balance} words left)."
+        else:
             output_text = humanize_text(input_text)
             profile.words_used += word_count
             profile.save()
 
-        return render(request, "humanizer.html", {
-            "input_text": input_text,
-            "output_text": output_text,
-            "word_balance": word_balance,
-            "word_count": word_count,
-        })
-
-    except Exception as e:
-        return HttpResponse(f"<pre>POST ERROR: {e}</pre>", status=500)
+    return render(request, "humanizer.html", {
+        "input_text": input_text,
+        "output_text": output_text,
+        "word_count": word_count,
+        "word_balance": word_balance,
+        "error": error,
+    })
 
 
 @login_required
@@ -53,6 +55,7 @@ def pricing_view(request):
     return render(request, "pricing.html", {
         "PAYSTACK_PUBLIC_KEY": settings.PAYSTACK_PUBLIC_KEY
     })
+
 
 @login_required
 def about_view(request):
@@ -78,17 +81,19 @@ def settings_view(request):
     except Exception as e:
         return HttpResponse(f"<pre>SETTINGS VIEW ERROR:\n{e}</pre>", status=500)
 
-import requests
-from django.conf import settings
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import redirect
 
 PLAN_WORD_QUOTAS = {
     30: 100_000,
     75: 250_000,
     150: 600_000,
 }
+
+PLAN_TIERS = {
+    30: 'STANDARD',
+    75: 'PRO',
+    150: 'ENTERPRISE'
+}
+
 
 @csrf_exempt
 def start_payment(request):
@@ -97,13 +102,12 @@ def start_payment(request):
         usd_amount = int(request.POST.get('amount'))
         currency = request.POST.get('currency', 'USD')
 
-        # Always convert USD to KES using fixed rate
-        kes_amount = usd_amount * 135 * 100  # Paystack requires amount in cents
+        kes_amount = usd_amount * 135 * 100
 
         data = {
             "email": email,
             "amount": int(kes_amount),
-            "currency": "KES",  # Always charge in KES
+            "currency": "KES",
             "callback_url": f"http://localhost:8000/humanizer/verify-payment/?amount={usd_amount}"
         }
 
@@ -118,6 +122,7 @@ def start_payment(request):
         return JsonResponse(res_data)
 
     return JsonResponse({'error': 'Invalid request method'}, status=400)
+
 
 @login_required
 def verify_payment(request):
@@ -134,9 +139,10 @@ def verify_payment(request):
 
     if res_data['status'] and res_data['data']['status'] == 'success':
         profile = request.user.profile
-        plan_quota = PLAN_WORD_QUOTAS.get(amount, 0)
-        profile.word_quota = plan_quota
+        profile.word_quota = PLAN_WORD_QUOTAS.get(amount, 0)
         profile.words_used = 0
+        profile.is_paid = True
+        profile.account_type = PLAN_TIERS.get(amount, 'FREE')
         profile.save()
         return redirect('humanizer')
 

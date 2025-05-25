@@ -1,3 +1,7 @@
+.plan {
+  border: 2px dashed red !important;
+}
+
 /* Base Reset and Typography */
 * {
     margin: 0;
@@ -223,17 +227,32 @@ a:hover {
   box-shadow: 0 0 10px rgba(0, 255, 255, 0.05);
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .pricing-grid {
     flex-direction: column;
     align-items: center;
     padding: 0 1rem;
+    gap: 1.5rem;
   }
 
   .plan {
     width: 100%;
-    max-width: 360px;
+    max-width: 90%;
+    padding: 1.5rem;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.15);
+  }
+
+  .plan h2,
+  .plan .price,
+  .plan .words,
+  .plan ul,
+  .plan button {
+    text-align: center;
+  }
+
+  .plan ul {
+    padding-left: 0;
+    list-style-position: inside;
   }
 
   .select-btn {

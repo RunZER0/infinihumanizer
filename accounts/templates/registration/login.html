@@ -10,26 +10,28 @@
             background-color: #0e0e11;
             color: #e6e6e6;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 2rem 1rem;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            min-height: 100vh;
+            box-sizing: border-box;
         }
 
         .login-box {
             background-color: #1a1a1a;
-            padding: 3rem;
-            border-radius: 15px;
-            box-shadow: 0 0 25px rgba(0, 255, 255, 0.15);
+            padding: 2rem 2rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
             width: 100%;
-            max-width: 400px;
-            text-align: center;
+            max-width: 420px;
         }
 
         .login-box h1 {
-            font-size: 2rem;
-            color: #ffffff;
+            text-align: center;
+            color: #fff;
+            font-size: 1.8rem;
             margin-bottom: 0.5rem;
         }
 
@@ -38,73 +40,187 @@
         }
 
         .login-box h2 {
-            margin: 1rem 0 2rem;
-            font-size: 1.3rem;
-            color: #cccccc;
+            text-align: center;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            color: #bbb;
         }
 
-        .login-box label {
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
             text-align: left;
-            display: block;
-            margin-bottom: 0.25rem;
-            font-weight: 500;
         }
 
-        .login-box input[type="text"],
-        .login-box input[type="password"] {
-            width: 100%;
-            padding: 0.7rem;
-            margin-bottom: 1.2rem;
-            border: 1px solid #444;
-            border-radius: 8px;
+        input {
+            padding: 0.65rem;
+            border: 1px solid #333;
             background-color: #121212;
-            color: #ffffff;
+            color: #fff;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
         }
 
-        .login-box button {
-            width: 100%;
+        .errorlist {
+            color: #ff4c4c;
+            font-size: 0.85rem;
+            margin-top: -0.5rem;
+            margin-bottom: 0.75rem;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        button {
             background-color: #00ffff;
             color: #000;
             font-weight: bold;
-            padding: 0.75rem;
             border: none;
-            border-radius: 8px;
+            padding: 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
             font-size: 1rem;
             transition: background-color 0.3s ease;
-            cursor: pointer;
         }
 
-        .login-box button:hover {
+        button:hover {
             background-color: #00cccc;
         }
 
-        .login-box p {
-            margin-top: 1.5rem;
+        .links {
+            text-align: center;
+            margin-top: 1rem;
             font-size: 0.9rem;
         }
 
-        .login-box a {
+        .links a {
             color: #00ffff;
             text-decoration: none;
         }
 
-        .login-box a:hover {
+        .links a:hover {
             text-decoration: underline;
+        }
+
+        @media screen and (max-width: 480px) {
+            .login-box {
+                padding: 1.5rem;
+                box-shadow: none;
+                font-size: 0.95rem;
+            }
+
+            input,
+            button {
+                font-size: 1rem;
+            }
+        }
+
+        .login-box {
+            animation: fadeSlideIn 0.8s ease forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        @keyframes fadeSlideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-8px); }
+            80% { transform: translateX(8px); }
+            100% { transform: translateX(0); }
+        }
+
+        .login-box.shake {
+            animation: shake 0.4s ease;
+        }
+
+        .resend-box {
+            margin-top: 1rem;
+            background: #222;
+            padding: 1rem;
+            border-left: 4px solid #00ffff;
+            border-radius: 8px;
+        }
+
+        .resend-box p {
+            margin: 0 0 0.5rem;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        .resend-box form button {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
-    <div class="login-box">
-        <h1>Infini<span>Humanizer</span></h1>
-        <h2>🔐 Login to continue</h2>
+<div class="login-box{% if form.errors %} shake{% endif %}">
 
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Login</button>
-        </form>
+    {% if messages %}
+        <div class="errorlist shake" id="verify-warning">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
 
-        <p>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
+{% with "test@example.com" as test_email %}
+  <div class="resend-box">
+      <p>Test mode – showing resend block for {{ test_email }}</p>
+      <form method="post" action="{% url 'resend_verification' %}">
+          {% csrf_token %}
+          <button type="submit">🔁 Resend Verification Email</button>
+      </form>
+  </div>
+{% endwith %}
+
+    <h1>Infini<span>Humanizer</span></h1>
+    <h2>🔐 Login to continue</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+                <ul class="errorlist">
+                    {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endfor %}
+        <button type="submit">Login</button>
+    </form>
+
+    <div class="links">
+        <p><a href="{% url 'account_reset_password' %}">Forgot your password?</a></p>
+        <p>Don't have an account? <a href="{% url 'account_signup' %}">Sign up</a></p>
     </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const box = document.querySelector('.login-box');
+        const warning = document.getElementById('verify-warning');
+        if (warning) {
+            box.classList.add('shake');
+        }
+    });
+</script>
 </body>
 </html>

@@ -431,3 +431,181 @@ button:disabled {
 .custom-btn:hover {
     background-color: #00cccc;
 }
+
+@media (max-width: 768px) {
+  .pricing-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .plan {
+    flex: none !important;  /* 🔥 THIS is the missing piece */
+    width: 100%;
+    max-width: 90%;
+    border-right: none;
+    border-bottom: 1px solid #333;
+    margin-bottom: 1rem;
+  }
+
+  .plan:last-child {
+    border-bottom: none;
+  }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem;
+        gap: 0.5rem;
+    }
+
+    .navbar nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.2rem;
+        margin-top: 0.5rem;
+    }
+
+    .navbar nav a {
+        margin-left: 0; /* override desktop spacing */
+        font-size: 1.1rem;
+    }
+
+    .navbar form {
+        display: inline-block;
+    }
+
+    .logout-link {
+        background-color: #00ffff;
+        color: black;
+        font-weight: bold;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        border: none;
+        margin-top: 0.5rem;
+        font-size: 1rem;
+        cursor: pointer;
+    }
+
+    .logout-link:hover {
+        background-color: #00cccc;
+    }
+}
+
+/* Account Settings Page */
+
+.account-settings-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #1a1a1d;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 255, 255, 0.1);
+    text-align: center;
+}
+
+.account-settings-container h1 {
+    color: #00ffff;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.account-settings-container h1 i {
+    margin-right: 0.5rem;
+    color: #ccc;
+}
+
+.account-info {
+    font-size: 1.05rem;
+    color: #e6e6e6;
+    line-height: 2;
+    margin-top: 1rem;
+}
+
+.account-info strong {
+    color: #ffffff;
+}
+
+.account-info a {
+    color: #00ffff;
+    font-weight: bold;
+    text-decoration: none;
+    margin: 0 0.5rem;
+    transition: color 0.2s ease;
+}
+
+.account-info a:hover {
+    color: #00cccc;
+    text-decoration: underline;
+}
+
+/* Progress Bar Enhancements */
+.progress-bar {
+    background-color: #2a2a2a;
+    border-radius: 30px;
+    overflow: hidden;
+    height: 16px;
+    width: 100%;
+    max-width: 400px; /* 🎯 LIMIT width */
+    margin: 1rem auto;
+    box-shadow: inset 0 0 6px rgba(0, 255, 255, 0.1);
+}
+
+.progress-bar .progress {
+    background-color: #00ffff;
+    height: 100%;
+    transition: width 0.5s ease;
+    border-radius: 30px;
+}
+
+/* Shared badge base */
+.tier-badge {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: white;
+    border-radius: 20px;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+    animation: pulseGlow 2s infinite; /* ✅ add this */
+}
+
+.tier-badge.free {
+    background-color: #555;
+}
+
+.tier-badge.standard {
+    background-color: #007acc; /* Rich blue */
+}
+
+.tier-badge.pro {
+    background-color: #00ffff; /* Aqua */
+    color: #000;
+    animation: pulseGlow 2s infinite;
+}
+
+.tier-badge.enterprise {
+    background-color: #f5c518; /* Gold */
+    color: #000;
+}
+
+@keyframes pulseGlow {
+    0%   { box-shadow: 0 0 5px #00ffff; }
+    50%  { box-shadow: 0 0 12px #00ffff; }
+    100% { box-shadow: 0 0 5px #00ffff; }
+}
+
+.account-type-line {
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: #ccc;
+    text-align: center;
+}
+
+.account-type-line strong {
+    color: #e6e6e6;
+}
