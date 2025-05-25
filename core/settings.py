@@ -74,8 +74,7 @@ ACCOUNT_FORMS = {
 
 # MIDDLEWARE
 MIDDLEWARE = [
-MIDDLEWARE = [
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ ADD THIS LINE FIRST
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ added this
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
