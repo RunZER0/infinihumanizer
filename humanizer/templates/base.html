@@ -3,17 +3,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}InfiniHumanizer{% endblock %}</title>
-
-    <!-- Favicon links -->
-    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
-    <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}">
-    <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}">
-    <link rel="manifest" href="{% static 'site.webmanifest' %}">
-
-    <!-- Stylesheet -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_head %}{% endblock %}
 </head>
 <body>
     <header class="navbar">
@@ -23,7 +15,7 @@
             <a href="{% url 'about' %}">About</a>
             <a href="{% url 'contact' %}">Contact</a>
             <a href="{% url 'settings' %}">Settings</a>
-           <form method="post" action="{% url 'account_logout' %}" style="display:inline;">
+            <form method="post" action="{% url 'account_logout' %}" style="display:inline;">
                 {% csrf_token %}
                 <button type="submit" class="logout-link">Logout</button>
             </form>

@@ -1,78 +1,694 @@
 {% extends "base.html" %}
+{% block extra_head %}
+<style>
+/* Enhanced Base Styles with Modern Aesthetics */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+    color: #e6e6e6;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Animated background particles */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0, 191, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(0, 255, 255, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+    animation: float 20s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    33% { transform: translateY(-20px) rotate(1deg); }
+    66% { transform: translateY(10px) rotate(-1deg); }
+}
+
+/* Enhanced Navbar */
+.navbar {
+    background: rgba(13, 13, 13, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 1.2rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1.6rem;
+    letter-spacing: 1px;
+    text-decoration: none;
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+    text-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+}
+
+.logo span {
+    color: #00ffff;
+    background: linear-gradient(45deg, #00ffff, #00bfff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.navbar nav a {
+    color: #e6e6e6;
+    margin-left: 2rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+}
+
+.navbar nav a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(0, 255, 255, 0.1), rgba(0, 191, 255, 0.1));
+    border-radius: 8px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.navbar nav a:hover::before {
+    opacity: 1;
+}
+
+.navbar nav a:hover {
+    color: #00ffff;
+    transform: translateY(-2px);
+}
+
+.logout-link {
+    background: linear-gradient(45deg, #00ffff, #00bfff);
+    color: #000;
+    font-weight: 600;
+    padding: 0.6rem 1.2rem;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+}
+
+.logout-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 255, 255, 0.4);
+}
+
+/* Main Content Container */
+.content {
+    padding: 3rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Hero Section */
+.hero-section {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.hero-section h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #00ffff 0%, #00bfff 50%, #ffffff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 40px rgba(0, 255, 255, 0.3);
+    animation: glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from { filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.3)); }
+    to { filter: drop-shadow(0 0 30px rgba(0, 255, 255, 0.6)); }
+}
+
+.hero-section p {
+    font-size: 1.3rem;
+    color: #b3b3b3;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+/* Enhanced Form Container */
+.form-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 1300px;
+    margin: 0 auto 3rem;
+    padding: 0 1rem;
+}
+
+.input-section, .output-section {
+    background: rgba(26, 26, 29, 0.8);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.input-section::before, .output-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #00ffff, #00bfff, #0080ff);
+    border-radius: 20px 20px 0 0;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.section-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #00ffff;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.section-subtitle {
+    font-size: 0.9rem;
+    color: #999;
+    margin-top: 0.3rem;
+}
+
+/* Enhanced Textarea */
+.textarea-container {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+textarea {
+    width: 100%;
+    min-height: 300px;
+    padding: 1.5rem;
+    font-size: 1rem;
+    line-height: 1.7;
+    font-family: 'Segoe UI', sans-serif;
+    background: rgba(13, 13, 20, 0.9);
+    color: #e6e6e6;
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    border-radius: 12px;
+    resize: vertical;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #00ffff;
+    box-shadow: 
+        inset 0 2px 10px rgba(0, 0, 0, 0.3),
+        0 0 0 3px rgba(0, 255, 255, 0.2),
+        0 0 20px rgba(0, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+textarea::placeholder {
+    color: #666;
+    font-style: italic;
+}
+
+/* Word Count Display */
+.word-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    background: rgba(0, 255, 255, 0.1);
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.word-count {
+    color: #00ffff;
+}
+
+.word-limit {
+    color: #b3b3b3;
+}
+
+/* Enhanced Buttons */
+.btn-primary {
+    background: linear-gradient(135deg, #00ffff 0%, #00bfff 100%);
+    color: #000;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 
+        0 6px 20px rgba(0, 255, 255, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+    min-width: 200px;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+        0 10px 30px rgba(0, 255, 255, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.btn-primary:active {
+    transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Copy Button */
+.copy-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(165, 42, 42, 0.9);
+    color: white;
+    border: none;
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    z-index: 10;
+}
+
+.copy-btn:hover {
+    background: #00ffff;
+    color: #000;
+    transform: scale(1.05);
+}
+
+/* Output Section Specific */
+.output-section {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+}
+
+.output-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.download-btn {
+    background: rgba(0, 255, 255, 0.1);
+    color: #00ffff;
+    border: 2px solid #00ffff;
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.download-btn:hover {
+    background: #00ffff;
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+}
+
+/* Features Section */
+.features-section {
+    margin-top: 4rem;
+    text-align: center;
+}
+
+.version-badge {
+    display: inline-block;
+    background: linear-gradient(45deg, #00ffff, #00bfff);
+    color: #000;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.feature-card {
+    background: rgba(26, 26, 29, 0.6);
+    backdrop-filter: blur(20px);
+    border-radius: 15px;
+    padding: 2rem;
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #00ffff, #00bfff);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover::before {
+    transform: scaleX(1);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2);
+    border-color: rgba(0, 255, 255, 0.4);
+}
+
+.feature-title {
+    color: #00ffff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.testimonials {
+    margin-top: 3rem;
+}
+
+.testimonial-card {
+    background: rgba(13, 13, 20, 0.8);
+    backdrop-filter: blur(20px);
+    border-radius: 15px;
+    padding: 2rem;
+    border-left: 4px solid #00ffff;
+    font-style: italic;
+    color: #ccc;
+    position: relative;
+}
+
+.testimonial-card::before {
+    content: '"';
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    font-size: 4rem;
+    color: #00ffff;
+    opacity: 0.3;
+}
+
+.testimonial-author {
+    text-align: right;
+    margin-top: 1rem;
+    font-weight: 700;
+    color: #00ffff;
+}
+
+/* Loading Animation */
+.dots {
+    display: inline-block;
+}
+
+.dots::after {
+    content: '';
+    animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: ''; }
+    40% { content: '.'; }
+    60% { content: '..'; }
+    80%, 100% { content: '...'; }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .form-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1rem;
+    }
+    
+    .navbar nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+    }
+    
+    .navbar nav a {
+        margin-left: 0;
+    }
+    
+    .content {
+        padding: 2rem 1rem;
+    }
+    
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-section p {
+        font-size: 1.1rem;
+    }
+    
+    .input-section, .output-section {
+        padding: 1.5rem;
+    }
+    
+    textarea {
+        min-height: 250px;
+        padding: 1rem;
+    }
+    
+    .btn-primary {
+        width: 100%;
+        padding: 1rem;
+    }
+}
+
+/* Smooth transitions for output container */
+#outputContainer {
+    transition: all 0.5s ease;
+}
+
+#outputContainer.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+    </style>
+{% endblock %}
+
+
 {% load static %}
 
 {% block content %}
 
-<h1>🤖 InfiniAi-Humanizer</h1>
-<p>Turn robotic AI text into real, natural, human-sounding writing.</p>
+<section class="hero-section">
+    <h1>🤖 InfiniAi-Humanizer</h1>
+    <p>Transform robotic AI text into natural, human-sounding writing with advanced algorithms and intelligent processing.</p>
+</section>
 
-<div class="form-wrapper">
-    <form method="post" class="input-form" id="rehumanizerForm">
-        {% csrf_token %}
-        <div class="input-wrapper">
-            <textarea name="text" id="inputText" rows="10" placeholder="Paste your AI-generated academic text here (Max: 10,000 characters)">{{ input_text }}</textarea>
+<div class="form-container">
+    <div class="input-section">
+        <div class="section-header">
+            <div>
+                <div class="section-title">📝 Input Text</div>
+                <div class="section-subtitle">Paste your AI-generated content here</div>
+            </div>
         </div>
-        <p class="meta-info"><strong>{{ word_count }} Words</strong> | <strong>{{ word_balance }} Words Left</strong></p>
-        <button type="submit" id="submitBtn">🔁 Humanize / Re-Humanize Text</button>
-    </form>
+        
+        <form method="post" id="rehumanizerForm">
+            {% csrf_token %}
+            <div class="textarea-container">
+                <textarea 
+                    name="text" 
+                    id="inputText" 
+                    placeholder="Paste your AI-generated academic text here (Max: 10,000 characters)"
+                >{{ input_text }}</textarea>
+            </div>
+            
+            <div class="word-stats">
+                <span class="word-count">{{ word_count }} Words</span>
+                <span class="word-limit">{{ word_balance }} Words Left</span>
+            </div>
+            
+            <button type="submit" class="btn-primary" id="submitBtn">
+                🔁 Humanize / Re-Humanize Text
+            </button>
+        </form>
+    </div>
+
+    <div class="output-section{% if output_text %} visible{% endif %}" id="outputContainer">
+        {% if output_text %}
+            <div class="section-header">
+                <div>
+                    <div class="section-title">✍️ Humanized Output</div>
+                    <div class="section-subtitle">Your transformed, natural-sounding text</div>
+                </div>
+            </div>
+            
+            <div class="textarea-container">
+                <textarea id="outputTextArea" readonly>{{ output_text }}</textarea>
+                <button class="copy-btn" onclick="copyOutput(this)">📋 Copy</button>
+            </div>
+            
+            <div class="word-stats">
+                <span class="word-count">Output: {{ output_text|wordcount }} Words</span>
+                <span>Quality: Premium</span>
+            </div>
+            
+            <a href="#" download="humanized_output.txt">
+                <button class="download-btn">💾 Download Output</button>
+            </a>
+        {% else %}
+            <div class="section-header">
+                <div>
+                    <div class="section-title">✍️ Humanized Output</div>
+                    <div class="section-subtitle">Your transformed text will appear here</div>
+                </div>
+            </div>
+            
+            <div class="textarea-container">
+                <textarea id="outputTextArea" readonly placeholder="Click 'Humanize Text' to see your results here..."></textarea>
+            </div>
+        {% endif %}
+    </div>
 </div>
 
-<div id="outputContainer">
-{% if output_text %}
-    <div class="output-area">
-        <h2>✍️ Humanized Output</h2>
-        <div class="output-wrapper">
-            <textarea id="outputTextArea" rows="10">{{ output_text }}</textarea>
-            <button class="copy-btn" onclick="copyOutput(this)">📋</button>
+<section class="features-section">
+    <div class="version-badge">Version 4.5</div>
+    
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-title">✍️ Natural Cadence</div>
+            <p>Your words flow like a real student — no rigid AI rhythm. Advanced algorithms ensure natural pacing and rhythm.</p>
         </div>
-        <p class="meta-info"><strong>📊 Output Word Count:</strong> {{ output_text|wordcount }}</p>
-        <a href="#" download="humanized_output.txt">
-            <button>💾 Download Output</button>
-        </a>
+        <div class="feature-card">
+            <div class="feature-title">🔁 Structured Variance</div>
+            <p>Paragraphs are well balanced for human clarity. Intelligent variation in sentence length and structure.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-title">📚 Academic Realism</div>
+            <p>The tone mimics thoughtful effort, not perfect computation. Maintains academic integrity while sounding human.</p>
+        </div>
     </div>
-{% endif %}
-</div>
 
-<p><strong>Version 4.5</strong></p>
-<hr>
-
-<div class='features-grid'>
-    <div class='feature'>
-        <strong>✍️ Natural Cadence:</strong><br>
-        Your words flow like a real student — no rigid AI rhythm.
+    <div class="testimonials">
+        <div class="features-grid">
+            <div class="testimonial-card">
+                <p>This actually sounds like I wrote it after a long study night. The naturalness is incredible!</p>
+                <div class="testimonial-author">- Joseph</div>
+            </div>
+            <div class="testimonial-card">
+                <p>Passed the AI check with flying colors. And my professor said it felt authentic and well-written.</p>
+                <div class="testimonial-author">- Kate</div>
+            </div>
+        </div>
     </div>
-    <div class='feature'>
-        <strong>🔁 Structured Variance:</strong><br>
-        Paragraphs are well balanced for human clarity.
-    </div>
-    <div class='feature'>
-        <strong>📚 Academic Realism:</strong><br>
-        The tone mimics thoughtful effort, not perfect computation.
-    </div>
-</div>
-
-<div class='features-grid'>
-    <div class='comment'>
-        <em>"This actually sounds like I wrote it after a long study night."</em><br><strong>- Joseph</strong>
-    </div>
-    <div class='comment'>
-        <em>"Passed the AI check with flying colors. And my professor said it felt authentic."</em><br><strong>- Kate</strong>
-    </div>
-</div>
+</section>
 
 <script>
+// Copy functionality
 function copyOutput(button) {
     const textArea = document.getElementById('outputTextArea');
     
-    // Copy the text using Clipboard API
     navigator.clipboard.writeText(textArea.value)
         .then(() => {
-            // Change button text temporarily
             const originalText = button.innerHTML;
             button.innerHTML = "✅ Copied";
             button.disabled = true;
 
-            // Revert after 1.5 seconds
             setTimeout(() => {
                 button.innerHTML = originalText;
                 button.disabled = false;
@@ -82,25 +698,27 @@ function copyOutput(button) {
             console.error('Copy failed', err);
         });
 }
-</script>
 
-<script>
+// Word counting functionality
 document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('inputText');
-    const wordCountDisplay = document.querySelector('.meta-info');
+    const wordStats = document.querySelector('.word-stats');
 
-    input.addEventListener('input', () => {
+    function updateWordCount() {
         const text = input.value.trim();
         const wordCount = text ? text.split(/\s+/).length : 0;
         const wordLimit = 2000;
         const wordsLeft = wordLimit - wordCount;
-        wordCountDisplay.innerHTML = `<strong>${wordCount} Words</strong> | <strong>${wordsLeft} Words Left</strong>`;
-    });
-});
-</script>
+        
+        wordStats.innerHTML = `
+            <span class="word-count">${wordCount} Words</span>
+            <span class="word-limit">${wordsLeft} Words Left</span>
+        `;
+    }
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
+    input.addEventListener('input', updateWordCount);
+
+    // Form submission with loading states
     const form = document.getElementById('rehumanizerForm');
     const outputContainer = document.getElementById('outputContainer');
     const submitBtn = document.getElementById('submitBtn');
@@ -108,13 +726,14 @@ document.addEventListener('DOMContentLoaded', function () {
     form.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        // 🔁 Hide output while generating
+        // Hide output while generating
+        outputContainer.classList.remove('visible');
         outputContainer.style.opacity = '0';
         outputContainer.style.pointerEvents = 'none';
 
-        // 🔁 Show loading state in button
+        // Show loading state in button
         const originalBtnText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '⏳ humanizing<span class="dots">...</span>';
+        submitBtn.innerHTML = '⏳ Humanizing<span class="dots"></span>';
         submitBtn.disabled = true;
 
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
@@ -135,13 +754,18 @@ document.addEventListener('DOMContentLoaded', function () {
             const newOutput = tempDiv.querySelector('#outputContainer');
             if (newOutput) {
                 outputContainer.innerHTML = newOutput.innerHTML;
-
-                // ✅ Fade output back in
+                outputContainer.classList.add('visible');
                 outputContainer.style.opacity = '1';
                 outputContainer.style.pointerEvents = 'auto';
+                
+                // Smooth scroll to output
+                outputContainer.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
             }
 
-            // ✅ Restore button
+            // Restore button
             submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
         })
@@ -156,6 +780,29 @@ document.addEventListener('DOMContentLoaded', function () {
             }, 2000);
         });
     });
+});
+
+// Smooth animations on scroll
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, observerOptions);
+
+// Observe feature cards for animation
+document.querySelectorAll('.feature-card, .testimonial-card').forEach(card => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px)';
+    card.style.transition = 'all 0.6s ease';
+    observer.observe(card);
 });
 </script>
 
