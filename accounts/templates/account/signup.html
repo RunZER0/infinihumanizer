@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <title>Sign Up | InfiniHumanizer</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
@@ -292,75 +293,71 @@
             width: 100%;
         }
 
-        /* Responsive for single page */
-        @media screen and (max-height: 700px) {
+        /* Mobile responsive - keep form centered */
+        @media screen and (max-width: 480px) {
+            body {
+                padding: 1rem;
+            }
+            
             .signup-box {
-                padding: 1.5rem 2rem 1.25rem;
+                padding: 2rem 1.5rem 1.5rem;
+                max-width: 100%;
+                font-size: 0.95rem;
             }
             
             .signup-box h1 {
                 font-size: 1.6rem;
-                margin-bottom: 0.25rem;
             }
             
             .signup-box h2 {
-                margin-bottom: 1.25rem;
                 font-size: 0.9rem;
-            }
-            
-            input {
-                padding: 0.6rem 1rem;
-                margin-bottom: 0.8rem;
-            }
-            
-            button {
-                padding: 0.6rem;
-            }
-        }
-
-        @media screen and (max-width: 480px) {
-            .signup-box {
-                padding: 1.5rem;
-                font-size: 0.95rem;
+                margin-bottom: 1.5rem;
             }
             
             input,
             button {
                 font-size: 1rem;
+                padding: 0.75rem 1rem;
+            }
+            
+            button {
+                padding: 0.75rem;
             }
         }
 
+        /* For very short screens, maintain centering */
         @media screen and (max-height: 600px) {
             body {
                 padding: 0.5rem;
             }
             
             .signup-box {
-                padding: 1.25rem 1.75rem 1rem;
+                padding: 1.5rem;
             }
             
             .signup-box h1 {
-                font-size: 1.4rem;
+                font-size: 1.5rem;
+                margin-bottom: 0.4rem;
             }
             
             .signup-box h2 {
-                margin-bottom: 1rem;
+                margin-bottom: 1.2rem;
                 font-size: 0.85rem;
             }
             
             input {
-                padding: 0.5rem 0.75rem;
-                margin-bottom: 0.7rem;
+                padding: 0.6rem 0.8rem;
+                margin-bottom: 0.8rem;
             }
             
             button {
-                padding: 0.5rem;
-                font-size: 0.9rem;
+                padding: 0.6rem;
+                font-size: 0.95rem;
             }
             
             .login-link {
-                margin-top: 0.75rem;
-                font-size: 0.8rem;
+                margin-top: 0.8rem;
+                font-size: 0.85rem;
             }
         }
     </style>
