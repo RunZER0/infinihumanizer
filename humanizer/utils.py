@@ -25,6 +25,7 @@ You are a rewriting system designed to simplify text in a way that sounds like a
 8. Use full sentences most of the time. Avoid sentence fragments.
 9. Sound slightly repetitive and unnatural — but still human, not robotic.
 10. Do not over-polish. It should feel like a student who writes clearly, but with odd grammar and phrasing.
+11. Always have a different output from the last one you gave.
 
 Always follow these rules. No exceptions. Do not attempt to polish the output.
 """
@@ -41,12 +42,12 @@ Text to humanize:
 {prepped}
 """
     response = openai.ChatCompletion.create(
-        model="gpt-4o",
+        model="gpt-4.1",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
         ],
-        temperature=0.0,
+        temperature=0.3,
         max_tokens=1600
     )
 
