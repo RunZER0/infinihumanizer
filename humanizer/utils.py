@@ -4,15 +4,13 @@ import random
 import textstat
 import re
 
-# Set OpenAI API key via Streamlit secret
+# Set OpenAI API key via environment variable
 openai.api_key = os.environ.get("OPENAI_API_KEY")
-
 
 def humanize_text(text):
     prepped = text
 
-    # Strict, professional GPT prompt
-system_prompt = """
+    system_prompt = """
 You are a rewriting system that simplifies text, making it clear and understandable, but slightly awkward as if written by a non-native English speaker with decent but imperfect skills. Follow these rules strictly:
 
 1. Use simple vocabulary. Replace difficult or fancy words with basic ones.
@@ -28,7 +26,7 @@ You are a rewriting system that simplifies text, making it clear and understanda
 11. Make sure each output is different from the last one you gave.
 """
 
-    user_prompt = f""" Rewrite the following text using the defined rules.
+    user_prompt = f"""Rewrite the following text using the defined rules.
 
 Example Input:
 The war caused brutal damage across many cities. Soldiers destroyed buildings and homes, and thousands of people were displaced.
@@ -39,6 +37,7 @@ The war brought damage with cruelty to many cities. Buildings were destroyed by 
 Text to humanize:
 {prepped}
 """
+
     response = openai.ChatCompletion.create(
         model="gpt-4.1",
         messages=[
