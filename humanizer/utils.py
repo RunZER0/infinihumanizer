@@ -12,7 +12,7 @@ def humanize_text(text):
     prepped = text
 
     # Strict, professional GPT prompt
-   system_prompt = """
+system_prompt = """
 You are a rewriting system that simplifies text, making it clear and understandable, but slightly awkward as if written by a non-native English speaker with decent but imperfect skills. Follow these rules strictly:
 
 1. Use simple vocabulary. Replace difficult or fancy words with basic ones.
