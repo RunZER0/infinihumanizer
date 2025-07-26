@@ -10,6 +10,7 @@ openai.api_key = os.environ.get("OPENAI_API_KEY")
 def humanize_text(text):
     prepped = text
 
+    # Strict, professional GPT prompt
     system_prompt = """
 You are a rewriting system that simplifies text, making it clear and understandable, but slightly awkward as if written by a non-native English speaker with decent but imperfect skills. Follow these rules strictly:
 
@@ -37,7 +38,6 @@ The war brought damage with cruelty to many cities. Buildings were destroyed by 
 Text to humanize:
 {prepped}
 """
-
     response = openai.ChatCompletion.create(
         model="gpt-4.1",
         messages=[
