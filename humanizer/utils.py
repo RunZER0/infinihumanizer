@@ -23,6 +23,7 @@ You are a rewriting system that simplifies text while maintaining **clarity, pro
 7. The tone should still be **formal** but with **slight imperfections**, like a non-native speaker trying to express complex ideas without full mastery.
 8. **Small, random typos** or **misspellings** should appear occasionally but should not undermine readability or professionalism.
 9. Unpredictably vary the sentence lengths from small to medium to long, just make sure the sentences are always full even if so short.
+10. Sound slightly repetitive and unnatural — but still human, not robotic.
 """
 
     user_prompt = f"""Rewrite the following text using the defined rules.
@@ -42,7 +43,7 @@ Text to humanize:
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
         ],
-        temperature=0.4,
+        temperature=0.5,
         max_tokens=1600
     )
 
