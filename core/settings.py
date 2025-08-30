@@ -114,16 +114,12 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # DATABASE (PostgreSQL via dj-database-url)
 DATABASES = {
    'default': dj_database_url.config(
-        default=os.getenv("DATABASE_URL", "postgresql://infini_db_user:8obiD9eiAnc0oSs0isFGgXn77Nhunq6b@dpg-d0k9sjbuibrs739bm63g-a/infini_db")
+        default=os.getenv(
+            "DATABASE_URL",
+            "postgresql://postgres.lbgowbtsxonniutjxcmv:6mOO4TupU1bE82pr@aws-1-us-east-2.pooler.supabase.com:5432/postgres"
+        )
     )
 }
-
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': BASE_DIR / 'db.sqlite3',
-#    }
-#}
 
 # PASSWORD VALIDATORS
 AUTH_PASSWORD_VALIDATORS = [
