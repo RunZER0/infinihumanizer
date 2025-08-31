@@ -687,9 +687,7 @@ body .content {
                 <span>Quality: Premium</span>
             </div>
             
-            <a href="#" download="humanized_output.txt">
-                <button class="download-btn">💾 Download Output</button>
-            </a>
+            <button type="button" class="download-btn" id="downloadPdfBtn" data-pdf-download>💾 Download PDF</button>
         {% else %}
             <div class="section-header">
                 <div>
@@ -863,6 +861,77 @@ document.querySelectorAll('.feature-card, .testimonial-card').forEach(card => {
     card.style.transition = 'all 0.6s ease';
     observer.observe(card);
 });
+
+// PDF Download (client-side)
+function setupPdfDownload() {
+    const btn = document.getElementById('downloadPdfBtn');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+        const txt = document.getElementById('outputTextArea')?.value || '';
+        if (!txt.trim()) {
+            btn.textContent = '⚠️ No text';
+            setTimeout(()=> btn.textContent = '💾 Download PDF', 1500);
+            return;
+        }
+        btn.disabled = true;
+        btn.textContent = '⌛ Building PDF...';
+        // Lazy-load jsPDF if not already
+        const ensureJsPdf = () => {
+            return new Promise((resolve, reject) => {
+                if (window.jspdf) return resolve(window.jspdf.jsPDF);
+                const s = document.createElement('script');
+                s.src = 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js';
+                s.onload = () => resolve(window.jspdf.jsPDF);
+                s.onerror = () => reject(new Error('Failed to load jsPDF'));
+                document.head.appendChild(s);
+            });
+        };
+        ensureJsPdf()
+            .then(JS => {
+                const doc = new JS({ unit: 'pt', format: 'a4' });
+                const margin = 40;
+                const lineHeight = 16;
+                const maxWidth = 515; // A4 width (595) - margins *2
+                const lines = doc.splitTextToSize(txt, maxWidth);
+                let y = margin;
+                doc.setFont('Times', 'Normal');
+                doc.setFontSize(12);
+                lines.forEach(line => {
+                    if (y > 800 - margin) { // create new page
+                        doc.addPage();
+                        y = margin;
+                    }
+                    doc.text(line, margin, y);
+                    y += lineHeight;
+                });
+                const filename = 'humanized_output_' + new Date().toISOString().slice(0,10) + '.pdf';
+                doc.save(filename);
+                btn.textContent = '✅ PDF Saved';
+            })
+            .catch(err => {
+                console.error(err);
+                btn.textContent = '❌ Error';
+            })
+            .finally(() => {
+                setTimeout(()=> {
+                    btn.textContent = '💾 Download PDF';
+                    btn.disabled = false;
+                }, 2000);
+            });
+    });
+}
+
+// Re-run setup after AJAX form submission updates output container
+const originalFetch = window.fetch;
+window.fetch = function() {
+    return originalFetch.apply(this, arguments).then(resp => {
+        // slight delay to allow DOM update
+        setTimeout(setupPdfDownload, 150);
+        return resp;
+    });
+};
+
+document.addEventListener('DOMContentLoaded', setupPdfDownload);
 </script>
 
 {% endblock %}
