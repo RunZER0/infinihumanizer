@@ -657,15 +657,14 @@ body .content {
                     placeholder="Paste your AI-generated academic text here (Max: 10,000 characters)"
                 >{{ input_text }}</textarea>
             </div>
-            
+            <button type="submit" class="btn-primary" id="submitBtn" style="margin-bottom:1rem;">
+                🔁 Humanize / Re-Humanize Text
+            </button>
+
             <div class="word-stats">
                 <span class="word-count">{{ word_count }} Words</span>
                 <span class="word-limit">{{ word_balance }} Words Left</span>
             </div>
-            
-            <button type="submit" class="btn-primary" id="submitBtn">
-                🔁 Humanize / Re-Humanize Text
-            </button>
         </form>
     </div>
 
@@ -679,7 +678,7 @@ body .content {
             </div>
             
             <div class="textarea-container">
-                <textarea id="outputTextArea" readonly>{{ output_text }}</textarea>
+                <textarea id="outputTextArea">{{ output_text }}</textarea>
                 <button class="copy-btn" onclick="copyOutput(this)">📋 Copy</button>
             </div>
             
@@ -700,7 +699,7 @@ body .content {
             </div>
             
             <div class="textarea-container">
-                <textarea id="outputTextArea" readonly placeholder="Click 'Humanize Text' to see your results here..."></textarea>
+                <textarea id="outputTextArea" placeholder="Click 'Humanize Text' to see your results here..."></textarea>
             </div>
         {% endif %}
     </div>
