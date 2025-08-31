@@ -566,6 +566,66 @@ textarea::placeholder {
     opacity: 0.6;
     pointer-events: none;
 }
+/* ============================= */
+/* Full-width overrides (added)  */
+/* ============================= */
+/* Remove global content max-width on this page */
+body .content {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding-left: clamp(0.5rem, 1.2vw, 1.75rem) !important;
+    padding-right: clamp(0.5rem, 1.2vw, 1.75rem) !important;
+}
+
+/* Stretch form container edge-to-edge */
+.form-container {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    grid-template-columns: 1fr 1fr; /* keep two columns on wide screens */
+    gap: clamp(0.75rem, 1vw, 1.25rem) !important;
+}
+
+/* Containers occupy full column width (no internal horizontal margins) */
+.input-section, .output-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: clamp(1rem, 1.4vw, 2rem) !important;
+}
+
+/* Make textareas fluid & taller relative to viewport */
+#inputText, #outputTextArea, .textarea-container textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: clamp(45vh, 50vh, 55vh) !important;
+}
+
+/* Prevent section titles from wrapping to multiple lines */
+.section-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* On very large screens bump font-size slightly so single line still prominent */
+@media (min-width: 1600px) {
+    .section-title { font-size: 1.55rem; }
+}
+
+/* On narrower laptop widths switch to single column for readability */
+@media (max-width: 1250px) {
+    .form-container { grid-template-columns: 1fr !important; }
+    .input-section, .output-section { border-radius: 18px; }
+    #inputText, #outputTextArea { min-height: clamp(40vh, 48vh, 52vh) !important; }
+}
+
+/* Fine-tune very small screens (override earlier mobile rules without duplication) */
+@media (max-width: 640px) {
+    #inputText, #outputTextArea { min-height: 55vh !important; }
+}
     </style>
 {% endblock %}
 
