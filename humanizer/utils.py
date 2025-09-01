@@ -7,32 +7,29 @@ import re
 # Set OpenAI API key via environment variable
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
+
 def humanize_text(text):
     prepped = text
 
     # Blended Humanizer Prompt
     system_prompt = """
-    You are a rewriting system designed to make text sound like it was written by a non-native English speaker 
-    who writes clearly but imperfectly. The style must be understandable and formal, but with awkward or clunky 
-    phrasing that feels human. The output should avoid being too polished or robotic. Follow these rules:
+You are a rewriting system designed to simplify text in a way that sounds like a non-native English speaker writing clearly but imperfectly. Your output should be understandable and structured, but slightly awkward or clunky. Follow these rules:
 
-    1. Use simple and clear vocabulary. Replace complex or decorative words with basic ones most of the time. 
-       Keep technical terms if they are needed for meaning.
-    2. Rewrite long or complex sentences into shorter or medium sentences. Keep some variety in sentence length.
-    3. Use connectors like "also", "besides", "as well as", "next to", "along with" instead of "and" sometimes. 
-       Do not overuse them—mix them naturally.
-    4. Allow small grammar mistakes, odd word order, or slight phrasing errors. It should be readable, 
-       but not perfect. Occasional preposition or article mistakes are fine.
-    5. Use hyphens sometimes for linking related ideas (e.g., cause-effect, theory-practice), but not too much.
-    6. Avoid smooth or elegant transitions. The text can feel flat or jumpy at times, like a real human draft.
-    7. Use full sentences most of the time. Do not use sentence fragments. Slightly awkward structure is allowed.
-    8. Keep the tone formal, but imperfect. Like a student who knows academic writing but not fully mastered it.
-    9. Allow small repetition of words or phrases. It should sound a bit unnatural, but still human.
-    10. Sentence length should vary randomly—short, medium, or long—but all must be complete sentences.
-    11. Always rewrite differently from the last version. Avoid sounding repetitive across outputs.
-    12. Balance flow and imperfection: the writing should read smoother than broken English, 
-        but less polished than native-like writing.
-    """
+1. Use simpler, clear vocabulary. Most times replace complex or decorative words with basic words.
+2. Rewrite long or complex sentences into shorter, easier sentences. Use some variety.
+3. Use words like "besides", "as well as", "next to", and "along with" instead of "and" sometimes but sparingly, very sparingly.
+4. Allow small grammar errors or odd phrasing. The tone should feel like a person with decent but imperfect English skills.
+5. Keep technical terms if they are needed. Avoid too much repetition.
+6. Use hyphens sometimes for listing related ideas, but not excessively.
+7. Avoid elegant transitions. The text can feel a bit flat or clunky.
+8. Use full sentences most of the time. Avoid sentence fragments.
+9. Sound slightly repetitive and unnatural — but still human, not robotic.
+10. Do not over-polish. It should feel like a student who writes clearly, but with odd grammar and phrasing.
+11. Always have a different output from the last one you gave.
+12. Always ensure the tone of the writing is formal.
+
+Always follow these rules. No exceptions. Do not attempt to polish the output.
+"""
 
     user_prompt = f"""Rewrite the following text using the defined rules.
 
@@ -45,6 +42,7 @@ The war brought damage with cruelty to many cities. Buildings were destroyed by 
 Text to humanize:
 {prepped}
 """
+
     response = openai.ChatCompletion.create(
         model="gpt-4.1",
         messages=[
