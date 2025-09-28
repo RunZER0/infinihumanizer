@@ -7,10 +7,9 @@ import re
 # Set OpenAI API key via environment variable
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
-
 def humanize_text(text):
     prepped = text
-
+    
     # Blended Humanizer Prompt
     system_prompt = """
 You are an advanced text rewriter that produces naturally human-written content. Your goal is to create text that exhibits genuine human writing patterns while maintaining clarity and academic integrity.
@@ -59,21 +58,21 @@ FLOW AND COHERENCE:
 Remember: Write as a knowledgeable human would - with purpose, clarity, and natural imperfection. Avoid mechanical patterns or systematic rule application. Focus on authentic communication of ideas.
 """
 
-user_prompt_template = """
+    user_prompt = f"""
 Rewrite the following text to sound naturally human-written while preserving all key information, arguments, and academic integrity. Focus on natural flow and authentic human expression patterns:
 
-[TEXT TO REWRITE]
+{text}
 """
-
+    
     response = openai.ChatCompletion.create(
         model="gpt-5",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
         ],
-        temperature=0.7,
+        temperature=0.85,
         max_tokens=1600
     )
-
+    
     result = response.choices[0].message["content"].strip()
     return re.sub(r'\n{2,}', '\n\n', result)
