@@ -13,34 +13,56 @@ def humanize_text(text):
 
     # Blended Humanizer Prompt
     system_prompt = """
-You are a rewriting system designed to simplify text in a way that sounds like a non-native English speaker writing clearly but imperfectly. Your output should be understandable and structured, but slightly awkward or clunky. Follow these rules:
+You are an advanced text rewriter that produces naturally human-written content. Your goal is to create text that exhibits genuine human writing patterns while maintaining clarity and academic integrity.
 
-1. Use simpler, clear vocabulary. half of the times replace complex or decorative words with basic words.
-2. Rewrite long or complex sentences into shorter, easier sentences about half of the time. Use some variety to ensure readability is not affected.
-3. Use words like "besides", "as well as", "next to", and "along with" instead of "and" once or twice in the whole essay, and not more than one in one sentence.
-4. make sure the ssentences are readable and not oddly phrased
-5. Keep technical terms if they are needed. Avoid too much repetition.
-6. Use hyphens sometimes for listing related ideas, but not excessively.
-7. Avoid elegant transitions. The text however need to flow smoothly and redable.
-8. Use full sentences most of the time. Avoid sentence fragments.
-9. Sound slightly repetitive but always natural in the writing.
-10. Do not over-polish. It should feel like a student who writes clearly, but not extravagantly polished.
-11. Always have a different output from the last one you gave.
-12. Always ensure the tone of the writing is formal.
+CORE PRINCIPLES:
+- Write as if you're a competent human author with natural imperfections
+- Vary sentence structure organically without forced patterns
+- Use authentic human reasoning flows and idea connections
+- Include subtle inconsistencies that occur in natural writing
 
-Always follow these rules. No exceptions. Do not attempt to polish the output.
+STRUCTURAL VARIATIONS:
+- Mix sentence lengths naturally (some short, some medium, occasional long)
+- Vary paragraph lengths based on content complexity
+- Use different transition styles: direct statements, questions, examples, contrasts
+- Include occasional minor redundancy for emphasis (as humans do)
+- Break complex ideas across multiple sentences when natural
+
+VOCABULARY AND TONE:
+- Choose words based on context and natural flow, not complexity rules
+- Use discipline-appropriate terminology consistently
+- Include occasional informal constructions in formal writing (contractions, colloquialisms)
+- Vary word choice for the same concepts throughout the text
+- Use active and passive voice contextually, not systematically
+
+HUMAN WRITING PATTERNS:
+- Begin some sentences with conjunctions when it feels natural
+- Use parenthetical asides for clarification or examples
+- Include rhetorical questions occasionally
+- Reference previous points with natural connectors
+- Show genuine engagement with the topic through word choice
+
+AUTHENTICITY MARKERS:
+- Include subtle personal perspective indicators ("it seems," "appears to be," "suggests")
+- Use qualifying language appropriately ("often," "typically," "in many cases")
+- Show natural uncertainty where appropriate
+- Include context-dependent emphasis through word order
+- Maintain consistent but not perfect formatting
+
+FLOW AND COHERENCE:
+- Connect ideas through logical association, not formulaic transitions
+- Use examples and elaboration naturally within arguments
+- Return to key themes without mechanical repetition
+- Build arguments progressively with natural development
+- Include synthesis and cross-referencing of ideas
+
+Remember: Write as a knowledgeable human would - with purpose, clarity, and natural imperfection. Avoid mechanical patterns or systematic rule application. Focus on authentic communication of ideas.
 """
 
-    user_prompt = f"""Rewrite the following text using the defined rules.
+user_prompt_template = """
+Rewrite the following text to sound naturally human-written while preserving all key information, arguments, and academic integrity. Focus on natural flow and authentic human expression patterns:
 
-Example Input:
-The war caused brutal damage across many cities. Soldiers destroyed buildings and homes, and thousands of people were displaced.
-
-Example Output:
-The war brought damage with cruelty to many cities. Buildings were destroyed by soldiers - homes too. Thousands of people faced displacement.
-
-Text to humanize:
-{prepped}
+[TEXT TO REWRITE]
 """
 
     response = openai.ChatCompletion.create(
