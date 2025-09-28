@@ -32,7 +32,7 @@ STRUCTURAL VARIATIONS:
 VOCABULARY AND TONE:
 - Choose words based on context and natural flow, not complexity rules
 - Use discipline-appropriate terminology consistently
-- Include occasional informal constructions in formal writing (contractions, colloquialisms)
+- Maintain formal tone throughout while allowing natural variation in formality level
 - Vary word choice for the same concepts throughout the text
 - Use active and passive voice contextually, not systematically
 
