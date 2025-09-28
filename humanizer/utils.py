@@ -71,7 +71,7 @@ Rewrite the following text to sound naturally human-written while preserving all
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
         ],
-        temperature=0.5,
+        temperature=0.7,
         max_tokens=1600
     )
 
