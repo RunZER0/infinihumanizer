@@ -66,7 +66,7 @@ Rewrite the following text to sound naturally human-written while preserving all
 """
 
     response = openai.ChatCompletion.create(
-        model="gpt-4.1",
+        model="gpt-5",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
