@@ -97,8 +97,11 @@ def humanize_text(
     if models is None:
         models = DEFAULT_MODELS
     
+    print(f"Starting humanization with model(s): {models}")
+    
     # Split into manageable chunks
     chunks = chunk_text(text, max_chunk_size=800)
+    print(f"Split text into {len(chunks)} chunks")
     
     last_error = None
     
@@ -107,7 +110,9 @@ def humanize_text(
             try:
                 # PASS 1: Initial rewrite with high variation
                 pass1_chunks = []
+                print(f"Starting PASS 1 with {len(chunks)} chunks...")
                 for i, chunk in enumerate(chunks):
+                    print(f"Processing chunk {i+1}/{len(chunks)}")
                     # Vary temperature per chunk slightly for inconsistency
                     temp_variation = random.uniform(0.88, 0.98)
                     freq_variation = random.uniform(0.5, 0.7)
@@ -127,6 +132,7 @@ def humanize_text(
                         time.sleep(random.uniform(0.3, 0.8))
                 
                 pass1_full = '\n\n'.join(pass1_chunks)
+                print("PASS 1 complete. Starting PASS 2...")
                 
                 # PASS 2: Polish pass with different temperature profile
                 final_result = call_openai(
@@ -139,6 +145,7 @@ def humanize_text(
                     max_tokens=2500,
                 )
                 
+                print("PASS 2 complete. Returning result.")
                 # Clean up excessive whitespace
                 return re.sub(r"\n{3,}", "\n\n", final_result)
                 
