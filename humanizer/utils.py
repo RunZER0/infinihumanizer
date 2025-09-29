@@ -53,7 +53,7 @@ The goal isn't to "humanize" artificially - it's to write as a human actually wo
 def humanize_text(
     text: str,
     models: list = None,
-    temperature: float = 0.92,  # Increased for more variation
+    temperature: float = 0.7,  # Increased for more variation
     max_tokens: int = 1600,
     max_retries: int = 3,
     retry_backoff_seconds: float = 2.0,
