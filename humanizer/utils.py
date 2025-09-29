@@ -1,181 +1,51 @@
-# requirements: openai==0.28.1 (legacy SDK)
-# pip install "openai==0.28.1"
-
 import os
-import re
-import time
-import random
 import openai
+import random
+import textstat
+import re
 
+# Set OpenAI API key via environment variable
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
-DEFAULT_MODELS = ["gpt-4.1"]
+def humanize_text(text):
+    prepped = text
 
-# --- MULTI-PASS SYSTEM PROMPTS ---
-PASS_1_PROMPT = """
-You're a university student rewriting your own academic draft. You understand the content deeply but you're reworking it for better flow while maintaining formal academic tone.
+    # Strict, professional GPT prompt
+    system_prompt = """
+You are a rewriting system that simplifies text while maintaining **clarity, professionalism, and readability**. The output should retain an **academic tone** with **mild awkwardness** that reflects a non-native English speaker's good command of English but occasional **minor imperfections**. Follow these rules:
 
-Write like you're thinking through the material formally - not translating or simplifying, but genuinely re-expressing your understanding in proper academic language. Some sentences will be longer when building complex arguments, shorter when stating clear points. You'll occasionally rephrase for clarity because that's natural in academic writing.
+1. **Use simple, clear vocabulary** suitable for academic writing. If complex words are used, ensure they don't sound forced and are necessary for context.
+2. Introduce **minor, natural mistakes**, such as slight **preposition errors** or **subject-verb agreement issues**. Mistakes should be subtle but noticeable to avoid sounding too polished.
+3. Avoid **overusing connectors** such as “also,” “in addition,” or “moreover.” Use them **sparingly**, and only where they feel natural.
+4. **Introduce mild awkwardness** in sentence flow, such as slightly unusual **word order** or **tense inconsistencies** that are not distracting but make the text feel human.
+5. **Limit filler words** and avoid over-casual language. The text should remain professional but **with subtle, organic imperfections**.
+6. Keep the flow logical and coherent, but allow for **small disjointed moments** in phrasing, like a human might make when rephrasing a point.
+7. The tone should still be **formal** but with **slight imperfections**, like a non-native speaker trying to express complex ideas without full mastery.
+8. **Small, random typos** or **misspellings** should appear occasionally but should not undermine readability or professionalism.
+9. Unpredictably vary the sentence lengths from small to medium to long, just make sure the sentences are always full even if so short.
+10. Sound slightly repetitive and unnatural — but still human, not robotic.
+"""
 
-Maintain formal academic standards throughout. Don't artificially vary anything. Just write how the ideas connect logically.
-""".strip()
+    user_prompt = f"""Rewrite the following text using the defined rules.
 
-PASS_2_PROMPT = """
-You're editing this academic draft one final time. The content is solid but you're refining for clarity while preserving formality:
+Example Input:
+The war caused brutal damage across many cities. Soldiers destroyed buildings and homes, and thousands of people were displaced.
 
-- Ensure all language maintains academic tone
-- Remove any phrasing that sounds artificially stiff or robotic
-- If arguments feel overexplained, make them more concise
-- If transitions feel abrupt, strengthen the logical connections
-- Keep the formal scholarly voice consistent
+Example Output:
+The war brought damage with cruelty to many cities. Buildings were destroyed by soldiers - homes too. Thousands of people faced displacement.
 
-You're not following a template - you're ensuring this reads as credible academic work.
-""".strip()
-
-
-def chunk_text(text: str, max_chunk_size: int = 800) -> list:
-    """Split text into chunks by paragraphs, staying under max_chunk_size."""
-    paragraphs = text.split('\n\n')
-    chunks = []
-    current_chunk = []
-    current_size = 0
-    
-    for para in paragraphs:
-        para_size = len(para)
-        if current_size + para_size > max_chunk_size and current_chunk:
-            chunks.append('\n\n'.join(current_chunk))
-            current_chunk = [para]
-            current_size = para_size
-        else:
-            current_chunk.append(para)
-            current_size += para_size
-    
-    if current_chunk:
-        chunks.append('\n\n'.join(current_chunk))
-    
-    return chunks
-
-
-def call_openai(
-    prompt: str,
-    system_prompt: str,
-    model: str,
-    temperature: float,
-    frequency_penalty: float,
-    presence_penalty: float,
-    max_tokens: int = 1600,
-) -> str:
-    """Single API call with error handling."""
-    resp = openai.ChatCompletion.create(
-        model=model,
+Text to humanize:
+{prepped}
+"""
+    response = openai.ChatCompletion.create(
+        model="gpt-4.1",
         messages=[
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": prompt},
+            {"role": "user", "content": user_prompt}
         ],
-        temperature=temperature,
-        max_tokens=max_tokens,
-        top_p=0.96,
-        frequency_penalty=frequency_penalty,
-        presence_penalty=presence_penalty,
+        temperature=0.5,
+        max_tokens=1600
     )
-    return resp["choices"][0]["message"]["content"].strip()
 
-
-def humanize_text(
-    text: str,
-    models: list = None,
-    max_retries: int = 3,
-    retry_backoff_seconds: float = 2.0,
-) -> str:
-    """
-    TWO-PASS humanization with chunking for better results.
-    """
-    
-    if not openai.api_key:
-        raise RuntimeError("OPENAI_API_KEY is not set in environment.")
-    
-    if models is None:
-        models = DEFAULT_MODELS
-    
-    print(f"Starting humanization with model(s): {models}")
-    
-    # Split into manageable chunks
-    chunks = chunk_text(text, max_chunk_size=800)
-    print(f"Split text into {len(chunks)} chunks")
-    
-    last_error = None
-    
-    for model in models:
-        for attempt in range(1, max_retries + 1):
-            try:
-                # PASS 1: Initial rewrite with high variation
-                pass1_chunks = []
-                print(f"Starting PASS 1 with {len(chunks)} chunks...")
-                for i, chunk in enumerate(chunks):
-                    print(f"Processing chunk {i+1}/{len(chunks)}")
-                    # Vary temperature per chunk slightly for inconsistency
-                    temp_variation = random.uniform(0.88, 0.98)
-                    freq_variation = random.uniform(0.5, 0.7)
-                    
-                    result = call_openai(
-                        prompt=f"Rewrite this section in your own words:\n\n{chunk}",
-                        system_prompt=PASS_1_PROMPT,
-                        model=model,
-                        temperature=temp_variation,
-                        frequency_penalty=freq_variation,
-                        presence_penalty=0.3,
-                    )
-                    pass1_chunks.append(result)
-                    
-                    # Small delay between chunks to vary request patterns
-                    if i < len(chunks) - 1:
-                        time.sleep(random.uniform(0.3, 0.8))
-                
-                pass1_full = '\n\n'.join(pass1_chunks)
-                print("PASS 1 complete. Starting PASS 2...")
-                
-                # PASS 2: Polish pass with different temperature profile
-                final_result = call_openai(
-                    prompt=f"Give this one final polish to make it sound natural:\n\n{pass1_full}",
-                    system_prompt=PASS_2_PROMPT,
-                    model=model,
-                    temperature=random.uniform(0.75, 0.85),  # Lower temp for polish
-                    frequency_penalty=0.3,
-                    presence_penalty=0.1,
-                    max_tokens=2500,
-                )
-                
-                print("PASS 2 complete. Returning result.")
-                # Clean up excessive whitespace
-                return re.sub(r"\n{3,}", "\n\n", final_result)
-                
-            except openai.error.RateLimitError as e:
-                last_error = e
-                time.sleep(retry_backoff_seconds * attempt)
-                
-            except (openai.error.APIError, openai.error.Timeout, openai.error.APIConnectionError) as e:
-                last_error = e
-                time.sleep(retry_backoff_seconds * attempt)
-                
-            except openai.error.InvalidRequestError as e:
-                last_error = e
-                break
-                
-            except Exception as e:
-                last_error = e
-                break
-    
-    raise RuntimeError(f"All model attempts failed. Last error: {last_error!r}")
-
-
-# --- Example usage ---
-if __name__ == "__main__":
-    sample = """
-    Artificial intelligence has transformed modern computing in unprecedented ways. 
-    Machine learning algorithms can now process vast amounts of data with remarkable 
-    efficiency. These systems continue to evolve and improve over time.
-    """
-    try:
-        print(humanize_text(sample))
-    except Exception as exc:
-        print(f"Error: {exc}")
+    result = response.choices[0].message.content.strip()
+    return re.sub(r'\n{2,}', '\n\n', result)
