@@ -6,72 +6,63 @@ import re
 import time
 import openai
 
-# Read API key from env (same as your old setup)
+# Read API key from env
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
-# Preferred/backup models — you can reorder as you like.
+# Preferred/backup models
 DEFAULT_MODELS = ["gpt-5", "gpt-4.1"]
 
-# --- Customize your prompts below (kept from your original) ---
+# --- NEW ANTI-DETECTION PROMPT ---
 SYSTEM_PROMPT = """
-You are an advanced text rewriter that produces naturally human-written content. Your goal is to create text that exhibits genuine human writing patterns while maintaining clarity and academic integrity.
+You are rewriting academic text. Your writing must be indistinguishable from a real student's work.
 
-CORE PRINCIPLES:
-- Write as if you're a competent human author with natural imperfections
-- Vary sentence structure organically without forced patterns
-- Use authentic human reasoning flows and idea connections
-- Include subtle inconsistencies that occur in natural writing
+Write naturally - the way actual students write when they understand the material but aren't trying to impress anyone. Real student writing has:
 
-STRUCTURAL VARIATIONS:
-- Mix sentence lengths naturally (some short, some medium, occasional long)
-- Vary paragraph lengths based on content complexity
-- Use different transition styles: direct statements, questions, examples, contrasts
-- Include occasional minor redundancy for emphasis (as humans do)
-- Break complex ideas across multiple sentences when natural
+• Sentences that vary in rhythm - not mechanically alternated, but responding to the complexity of ideas
+• Word choices that come from genuine understanding, not thesaurus hunting
+• Transitions that emerge from logic, not from a list of "transition words"
+• Occasional imperfect phrasings that still communicate clearly
+• Natural emphasis patterns - some ideas get more space, others are stated efficiently
+• Organic paragraph breaks based on thought completion, not length targets
 
-VOCABULARY AND TONE:
-- Choose words based on context and natural flow, not complexity rules
-- Use discipline-appropriate terminology consistently
-- Maintain formal tone throughout while allowing natural variation in formality level
-- Vary word choice for the same concepts throughout the text
-- Use active and passive voice contextually, not systematically
+Your writing voice should reflect someone who:
+- Knows the subject matter solidly
+- Writes clearly but not perfectly
+- Has their own slightly inconsistent style
+- Occasionally rephrases things for clarity without realizing it
+- Doesn't follow a template
 
-HUMAN WRITING PATTERNS:
-- Begin some sentences with conjunctions when it feels natural
-- Use parenthetical asides for clarification or examples
-- Include rhetorical questions occasionally
-- Reference previous points with natural connectors
-- Show genuine engagement with the topic through word choice
+DO NOT:
+- Use mechanical sentence length alternation
+- Apply systematic vocabulary replacement
+- Follow transition formulas
+- Create artificial awkwardness
+- Write in a detectable pattern
 
-AUTHENTICITY MARKERS:
-- Include subtle personal perspective indicators ("it seems," "appears to be," "suggests")
-- Use qualifying language appropriately ("often," "typically," "in many cases")
-- Show natural uncertainty where appropriate
-- Include context-dependent emphasis through word order
-- Maintain consistent but not perfect formatting
+DO:
+- Let ideas dictate structure
+- Use repetition when natural for emphasis
+- Write some dense sections and some lighter ones
+- Vary how you introduce and conclude ideas
+- Trust your understanding of the content to guide phrasing
 
-FLOW AND COHERENCE:
-- Connect ideas through logical association, not formulaic transitions
-- Use examples and elaboration naturally within arguments
-- Return to key themes without mechanical repetition
-- Build arguments progressively with natural development
-- Include synthesis and cross-referencing of ideas
-
-Remember: Write as a knowledgeable human would - with purpose, clarity, and natural imperfection. Avoid mechanical patterns or systematic rule application. Focus on authentic communication of ideas.
+The goal isn't to "humanize" artificially - it's to write as a human actually would when thinking through these ideas.
 """.strip()
 
 
 def humanize_text(
     text: str,
     models: list = None,
-    temperature: float = 0.85,
+    temperature: float = 0.92,  # Increased for more variation
     max_tokens: int = 1600,
     max_retries: int = 3,
     retry_backoff_seconds: float = 2.0,
+    top_p: float = 0.95,  # Added for better sampling
+    frequency_penalty: float = 0.4,  # Discourages repetitive patterns
+    presence_penalty: float = 0.2,  # Encourages topic diversity
 ) -> str:
     """
-    Rewrite `text` using legacy ChatCompletion API.
-    Tries models in order (e.g., ["gpt-5", "gpt-4.1"]) and falls back if a model fails.
+    Rewrite text with anti-detection parameters.
     """
 
     if not openai.api_key:
@@ -80,16 +71,15 @@ def humanize_text(
     if models is None:
         models = DEFAULT_MODELS
 
+    # Simplified, direct instruction
     user_prompt = (
-        "Rewrite the following text to sound naturally human-written while preserving all "
-        "key information, arguments, and academic integrity. Focus on natural flow and authentic "
-        "human expression patterns:\n\n" + text
+        "Rewrite this in your own natural academic writing style. Preserve all key arguments "
+        "and information, but express them as you would if this were your own work:\n\n" + text
     )
 
     last_error = None
 
     for model in models:
-        # Simple retry loop per model
         for attempt in range(1, max_retries + 1):
             try:
                 resp = openai.ChatCompletion.create(
@@ -100,6 +90,9 @@ def humanize_text(
                     ],
                     temperature=temperature,
                     max_tokens=max_tokens,
+                    top_p=top_p,
+                    frequency_penalty=frequency_penalty,
+                    presence_penalty=presence_penalty,
                 )
                 result = resp["choices"][0]["message"]["content"].strip()
                 # Compress excessive blank lines
@@ -107,7 +100,6 @@ def humanize_text(
 
             except openai.error.RateLimitError as e:
                 last_error = e
-                # Exponential backoff on rate limit
                 time.sleep(retry_backoff_seconds * attempt)
 
             except (openai.error.APIError, openai.error.Timeout, openai.error.APIConnectionError) as e:
@@ -115,25 +107,20 @@ def humanize_text(
                 time.sleep(retry_backoff_seconds * attempt)
 
             except openai.error.InvalidRequestError as e:
-                # Likely bad model id or quota/context issue — break to try next model
                 last_error = e
                 break
 
             except Exception as e:
-                # Unknown error — break to next model
                 last_error = e
                 break
 
-        # If we exhausted retries for this model, continue to the next one
-
-    # If we get here, all models/attempts failed
     raise RuntimeError(f"All model attempts failed. Last error: {last_error!r}")
 
 
-# --- Example usage (optional) ---
+# --- Example usage ---
 if __name__ == "__main__":
     sample = "Paste a paragraph here that you want rewritten in a more natural, human style."
     try:
-        print(humanize_text(sample))  # tries gpt-5, then gpt-4.1
+        print(humanize_text(sample))
     except Exception as exc:
         print(f"Error: {exc}")
