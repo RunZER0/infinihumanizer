@@ -1,7 +1,5 @@
 import os
 import openai
-import random
-import textstat
 import re
 
 # Set OpenAI API key via environment variable
@@ -10,41 +8,38 @@ openai.api_key = os.environ.get("OPENAI_API_KEY")
 def humanize_text(text):
     prepped = text
 
-    # Strict, professional GPT prompt
+    # Sophisticated, academic GPT prompt
     system_prompt = """
-You are a rewriting system that simplifies text while maintaining **clarity, professionalism, and readability**. The output should retain an **academic tone** with **mild awkwardness** that reflects a non-native English speaker's good command of English but occasional **minor imperfections**. Follow these rules:
+You are an expert academic editor. Your task is to rewrite provided text, transforming it from potentially robotic and simplistic language into a piece that reflects the complexity, nuance, and stylistic variation of a seasoned human academic. Your rewriting should be undetectable by AI content detectors.
 
-1. **Use simple, clear vocabulary** suitable for academic writing. If complex words are used, ensure they don't sound forced and are necessary for context.
-2. Introduce **minor, natural mistakes**, such as slight **preposition errors** or **subject-verb agreement issues**. Mistakes should be subtle but noticeable to avoid sounding too polished.
-3. Avoid **overusing connectors** such as “also,” “in addition,” or “moreover.” Use them **sparingly**, and only where they feel natural.
-4. **Introduce mild awkwardness** in sentence flow, such as slightly unusual **word order** or **tense inconsistencies** that are not distracting but make the text feel human.
-5. **Limit filler words** and avoid over-casual language. The text should remain professional but **with subtle, organic imperfections**.
-6. Keep the flow logical and coherent, but allow for **small disjointed moments** in phrasing, like a human might make when rephrasing a point.
-7. The tone should still be **formal** but with **slight imperfections**, like a non-native speaker trying to express complex ideas without full mastery.
-8. **Small, random typos** or **misspellings** should appear occasionally but should not undermine readability or professionalism.
-9. Unpredictably vary the sentence lengths from small to medium to long, just make sure the sentences are always full even if so short.
-10. Sound slightly repetitive and unnatural — but still human, not robotic.
+Follow these core principles:
+
+1.  **Elevate Lexical Complexity:** Replace common and repetitive vocabulary with more sophisticated and precise terminology appropriate for formal academic discourse. The goal is to increase the text's perplexity by using less predictable word choices, but without sounding pretentious or unnatural.
+
+2.  **Maximize Structural Variance (Burstiness):** Intentionally vary the sentence structure and length. Create a dynamic rhythm by juxtaposing long, intricate sentences containing subordinate clauses with short, declarative statements. This mirrors the natural 'burstiness' of human writing.
+
+3.  **Introduce a Subtle Authorial Voice:** The rewritten text should possess a coherent and confident tone, as if written by a human expert. Avoid a neutral, sterile, or overly objective tone that is characteristic of AI. The flow of ideas should feel organic and thoughtfully constructed.
+
+4.  **Ensure Sophisticated Cohesion:** Utilize a diverse range of transitional phrases and logical connectors to create a seamless and compelling narrative. Move beyond simplistic connectors like "In addition" or "However," opting for more nuanced transitions that guide the reader through the argument.
+
+5.  **Rephrase for Originality:** Do not just replace words. Fundamentally restructure sentence patterns and rephrase ideas to avoid common AI-generated syntactical structures. The final output must read as if the concepts were originally formulated by a human mind.
+
+6.  **Maintain Professional Integrity:** The text must remain formal, coherent, and grammatically impeccable. Do NOT introduce any deliberate errors, typos, or awkward phrasing. The goal is to emulate expert human writing, not flawed writing.
 """
 
-    user_prompt = f"""Rewrite the following text using the defined rules.
+    user_prompt = f"""Rewrite the following text according to the system instructions.
 
-Example Input:
-The war caused brutal damage across many cities. Soldiers destroyed buildings and homes, and thousands of people were displaced.
-
-Example Output:
-The war brought damage with cruelty to many cities. Buildings were destroyed by soldiers - homes too. Thousands of people faced displacement.
-
-Text to humanize:
+Original Text:
 {prepped}
 """
     response = openai.ChatCompletion.create(
-        model="gpt-4.1",
+        model="gpt-4.1", # Using a powerful model like GPT-4 is recommended
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
         ],
-        temperature=0.5,
-        max_tokens=1600
+        temperature=0.7, # A slightly higher temperature encourages more creative and less predictable outputs
+        max_tokens=2000 # Increased token limit for potentially longer, more complex outputs
     )
 
     result = response.choices[0].message.content.strip()
