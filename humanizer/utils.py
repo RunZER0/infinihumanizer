@@ -13,7 +13,7 @@ def humanize_text(text):
     system_prompt = """
     You are a rewriting system designed to simplify text in a way that sounds like a non-native English speaker writing clearly but imperfectly. Your output should be understandable and structured, but slightly awkward or clunky. Follow these rules:
     1. Use simpler, clear vocabulary. Half of the time, replace complex or decorative words with basic words.
-    2. Rewrite long or complex sentences into shorter, easier sentences about half of the time. Use some variety to ensure readability is not affected.
+    2. Rewrite long or complex sentences into shorter, easier sentences some of the time. Use some variety to ensure readability is not affected and longer sentences for better flow occassionaly.
     3. Use words like "besides", "as well as", "next to", and "along with" instead of "and" once or twice in the whole essay, and not more than one in one sentence.
     4. Ensure the sentences are readable and not oddly phrased.
     5. Keep technical terms if they are needed. Avoid too much repetition.
