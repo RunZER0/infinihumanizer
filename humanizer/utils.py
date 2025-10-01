@@ -6,32 +6,34 @@ import re
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 def humanize_text(text):
-    prepped = text
+    # Clean up the input text for processing
+    prepped = text.strip()
 
     # Advanced prompt to simulate a specific authorial voice
     system_prompt = """
-You are a distinguished professor and seasoned academic author. Your task is to rewrite the provided text, imbuing it with a distinct and sophisticated authorial voice that is characteristic of a human expert writing in their field. The goal is to make the text statistically indistinguishable from human-written prose and thus undetectable by AI detectors.
+    You are a rewriting system designed to simplify text in a way that sounds like a non-native English speaker writing clearly but imperfectly. Your output should be understandable and structured, but slightly awkward or clunky. Follow these rules:
+    1. Use simpler, clear vocabulary. Half of the time, replace complex or decorative words with basic words.
+    2. Rewrite long or complex sentences into shorter, easier sentences about half of the time. Use some variety to ensure readability is not affected.
+    3. Use words like "besides", "as well as", "next to", and "along with" instead of "and" once or twice in the whole essay, and not more than one in one sentence.
+    4. Ensure the sentences are readable and not oddly phrased.
+    5. Keep technical terms if they are needed. Avoid too much repetition.
+    6. Use hyphens sometimes for listing related ideas, but not excessively.
+    7. Avoid elegant transitions. The text should flow smoothly and be readable.
+    8. Use full sentences most of the time. Avoid sentence fragments.
+    9. Sound slightly repetitive but always natural in the writing.
+    10. Do not over-polish. It should feel like a student who writes clearly, but not extravagantly polished.
+    11. Always have a different output from the last one you gave.
+    12. Always ensure the tone of the writing is formal.
+    Always follow these rules. No exceptions. 
+    """
 
-Adhere to these advanced principles:
+    user_prompt = f"""
+    Rewrite the following text according to the system instructions, adopting a critically analytical stance.
 
-1.  **Adopt a Nuanced Authorial Stance:** Do not be a neutral summarizer. Instead, rewrite from a specific, subtle perspective (e.g., critically analytical, cautiously optimistic, or deeply reflective). This stance should inform your word choices and the framing of ideas, creating a unique, non-generic voice.
+    Original Text:
+    {prepped}
+    """
 
-2.  **Employ Human-like Rhetorical Devices:** Integrate analogies, metaphors, or hypothetical examples to elucidate complex points. This is a key human cognitive strategy for explaining abstract concepts and dramatically increases the text's perplexity. Occasionally, a well-placed rhetorical question can also break the monotonous flow of declarative statements.
-
-3.  **Create a Compelling Narrative Flow:** Structure the text so that it reads less like a list of facts and more like a guided argument. Use sophisticated and varied transitional phrases to create a seamless, logical, and almost story-like progression of ideas. The reader should feel the presence of a guiding human intellect.
-
-4.  **Emulate Human Thought Processes in Sentence Structure:** Avoid relentlessly perfect syntax. Intentionally construct some sentences to reflect a human thinking through a complex idea. This can be achieved by using parenthetical asides, em-dashes for elaborations, or rephrasing a point within the same sentence (e.g., "...which suggests, in other words, that..."). This introduces a natural, slightly less linear quality to the writing.
-
-5.  **Prioritize Lexical Originality:** Scrutinize every word. Replace common academic jargon and AI-favored vocabulary (e.g., "delve," "tapestry," "leverage") with more original and precise terminology. The vocabulary should feel earned and specific to the argument, not just plugged in to sound intelligent.
-
-6.  **Absolute Fluency and Coherence:** While simulating a human voice, the output must remain impeccably fluent, grammatically correct, and logically sound. The goal is to emulate a top-tier human writer, not to introduce errors.
-"""
-
-    user_prompt = f"""Rewrite the following text according to the system instructions, adopting a critically analytical stance.
-
-Original Text:
-{prepped}
-"""
     response = openai.ChatCompletion.create(
         model="gpt-4.1",
         messages=[
@@ -39,11 +41,12 @@ Original Text:
             {"role": "user", "content": user_prompt}
         ],
         temperature=0.8,  # Increased temperature for more creativity
-        top_p=0.9,          # Prevents the model from using only the most probable words
-        frequency_penalty=0.2, # Slightly penalizes repetitive words
-        presence_penalty=0.2,  # Slightly penalizes repetitive concepts
+        top_p=0.9,       # Prevents the model from using only the most probable words
+        frequency_penalty=0.2,  # Slightly penalizes repetitive words
+        presence_penalty=0.2,   # Slightly penalizes repetitive concepts
         max_tokens=2000
     )
 
-    result = response.choices[0].message.content.strip()
+    # Get the response text and remove excess newlines
+    result = response.choices[0].message['content'].strip()
     return re.sub(r'\n{2,}', '\n\n', result)
