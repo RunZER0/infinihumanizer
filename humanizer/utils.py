@@ -24,8 +24,7 @@ def humanize_text(text):
     10. Do not over-polish. It should feel like a student who writes clearly, but not extravagantly polished.
     11. Always have a different output from the last one you gave.
     12. Always ensure the tone of the writing is formal.
-    13. IMPORTANT CONSTRAINT: The rewritten text must not exceed 110% of the original word count. If the input is 1000 words, the output must remain under 1100 words. Preserve all information but avoid unnecessary expansion, filler, or verbosity.
-    Always follow these rules. No exceptions. 
+    13. Be concise and avoid unnecessary verbose, make sure you DONT add more than  20% extra words on the humanized output.
     """
 
     user_prompt = f"""
