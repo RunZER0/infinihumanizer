@@ -28,7 +28,7 @@ def humanize_text(text):
     10. Do not over-polish. It should feel like a student who writes clearly, but not extravagantly polished.
     11. Always have a different output from the last one you gave.
     12. Always ensure the tone of the writing is formal.
-    13. CRITICAL: Your output MUST NOT exceed 110% of the original word count. Be ruthlessly concise. Cut filler phrases like "it is important to note," "the fact that," "in order to" (just use "to"), "one can see." If you add complexity anywhere, you MUST remove words elsewhere to stay within the limit.
+    13. CRITICAL: Your output MUST NOT exceed 130% of the original word count. Be ruthlessly concise. Cut filler phrases like "it is important to note," "the fact that," "in order to" (just use "to"), "one can see." If you add complexity anywhere, you MUST remove words elsewhere to stay within the limit.
     """
     
     user_prompt = f"""
@@ -49,7 +49,7 @@ def humanize_text(text):
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
         ],
-        temperature=0.5,
+        temperature=0.7,
         top_p=0.9,
         frequency_penalty=0.2,
         presence_penalty=0.2,
