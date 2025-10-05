@@ -5,48 +5,126 @@ import re
 # Set OpenAI API key via environment variable
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
+system_prompt = """
+Rewrite this as genuine human academic writing. Human writing has natural perplexity and burstiness that AI lacks.
+
+PERPLEXITY (Unpredictability):
+Humans don't choose the "most likely" next word. We use unexpected but correct phrasings. We say "examine the implications" when AI would say "look at the effects." We write "nevertheless" mid-argument when "however" seems obvious. Our word choices reflect personal vocabulary, not statistical probability. Use less common but equally valid ways to express ideas. Avoid the most predictable phrasing.
+
+BURSTINESS (Rhythm Variation):
+Human sentences are dramatically uneven. We write: a short observation. Then we might extend into a longer analytical sentence that unpacks several related concepts, building through clauses toward a synthesis. Then short again. Then another complex thought that winds through multiple dependent clauses, qualifications, and considerations before resolving. AI writes with metronomic regularity. You must not.
+
+Adjacent sentences should feel almost jarringly different in length and structure. Follow a 3-sentence with a 25-word sentence with an 18-word sentence with a 7-word sentence. Vary the variance itself - sometimes cluster similar lengths, then break dramatically. No patterns.
+
+READABILITY THROUGH AUTHENTIC STRUCTURE:
+Humans are actually MORE readable because our complexity serves meaning:
+- Short sentences for emphasis, conclusions, transitions
+- Long sentences when genuinely connecting multiple ideas
+- Medium sentences as the workhorses of explanation
+- Sentence length tracks conceptual density, not a formula
+
+PRACTICAL EXECUTION:
+Start some sentences with: Furthermore, Nevertheless, Indeed, Notably, Critically, Essentially, Specifically
+Use semicolons occasionally for related thoughts; they create rhythm variation.
+Place emphasis through structure: "What matters here is..." or "The crucial point involves..." or "Consider the implications of..."
+Let clauses interrupt naturally: "This approach—though controversial—offers insight."
+End paragraphs with sentences of dramatically different length than you started.
+
+Write as someone who genuinely knows this material and is communicating it with their natural, imperfect voice. Not translating. Not simplifying. Expressing.
+"""
+
+
+def split_into_chunks(text, chunk_size=400):
+    """
+    Split text into chunks of approximately chunk_size words.
+    Tries to break at sentence boundaries when possible.
+    """
+    words = text.split()
+    chunks = []
+    current_chunk = []
+    current_count = 0
+    
+    for word in words:
+        current_chunk.append(word)
+        current_count += 1
+        
+        # Check if we've hit chunk size and if current word ends a sentence
+        if current_count >= chunk_size and word.endswith(('.', '!', '?', '."', '?"', "!'")):
+            chunks.append(' '.join(current_chunk))
+            current_chunk = []
+            current_count = 0
+    
+    # Add remaining words as final chunk
+    if current_chunk:
+        chunks.append(' '.join(current_chunk))
+    
+    return chunks
+
+
 def humanize_text(text):
-    # Clean up the input text for processing
-    prepped = text.strip()
-
-    # Advanced prompt to simulate a specific authorial voice
-    system_prompt = """
-    You are a rewriting system designed to simplify text in a way that sounds like a non-native English speaker writing clearly but imperfectly. Your output should be understandable and structured, but slightly awkward or clunky. Follow these rules:
-    1. Use simpler, clear vocabulary. Half of the time, replace complex or decorative words with basic words.
-    2. Rewrite long or complex sentences into shorter, easier sentences some of the time. Use wide variety to ensure readability is not affected and longer sentences for better flow occassionaly.the alternation between this short-long flow should be very high
-    3. Use words like "besides", "as well as", "next to", and "along with" instead of "and" once or twice in the whole essay, and not more than one in one sentence.
-    4. Ensure the sentences are readable and not oddly phrased.
-    5. Keep technical terms if they are needed. Avoid too much repetition.
-    6. Use hyphens sometimes for listing related ideas, but not excessively.completely avoid using en-dashes.
-    7. Avoid elegant transitions. The text should flow smoothly and be readable.
-    8. Use full sentences most of the time. Avoid sentence fragments.
-    9. Sound slightly repetitive but always natural in the writing.
-    10. Do not over-polish. It should feel like a student who writes clearly, but not extravagantly polished.
-    11. Always have a different output from the last one you gave.
-    12. Always ensure the tone of the writing is formal.
-    13. Be concise and avoid unnecessary verbose, make sure you DONT add more than  20% extra words on the humanized output.
     """
-
-    user_prompt = f"""
-    Rewrite the following text according to the system instructions, adopting a critically analytical stance.
-
-    Original Text:
-    {prepped}
+    Humanize text by processing in 400-word chunks and rejoining.
     """
+    if not text or not text.strip():
+        return text
+    
+    # Split into chunks
+    chunks = split_into_chunks(text, chunk_size=400)
+    print(f"Processing {len(chunks)} chunks...")
+    
+    humanized_chunks = []
+    
+    for i, chunk in enumerate(chunks, 1):
+        print(f"Processing chunk {i}/{len(chunks)}...")
+        
+        user_prompt = f"""
+Rewrite this text as if it's your own academic work. Keep all substantive content and arguments intact. Express it in your natural scholarly voice:
 
-    response = openai.ChatCompletion.create(
-        model="gpt-4.1",
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt}
-        ],
-        temperature=0.5,  # Increased temperature for more creativity
-        top_p=0.9,       # Prevents the model from using only the most probable words
-        frequency_penalty=0.2,  # Slightly penalizes repetitive words
-        presence_penalty=0.2,   # Slightly penalizes repetitive concepts
-        max_tokens=2000
-    )
+{chunk}
+"""
+        
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-4.1",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
+                temperature=0.95,
+                top_p=0.92,
+                frequency_penalty=0.6,
+                presence_penalty=0.4,
+                max_tokens=2000
+            )
+            
+            result = response.choices[0].message["content"].strip()
+            humanized_chunks.append(result)
+            
+        except Exception as e:
+            print(f"Error processing chunk {i}: {e}")
+            # If error, return original chunk
+            humanized_chunks.append(chunk)
+    
+    # Join all chunks back together
+    final_text = '\n\n'.join(humanized_chunks)
+    
+    # Clean up excessive line breaks
+    final_text = re.sub(r'\n{3,}', '\n\n', final_text)
+    
+    print("Processing complete!")
+    return final_text
 
-    # Get the response text and remove excess newlines
-    result = response.choices[0].message['content'].strip()
-    return re.sub(r'\n{2,}', '\n\n', result)
+
+# Example usage
+if __name__ == "__main__":
+    sample_text = """
+    Your long text goes here. This function will automatically split it into 
+    400-word chunks, process each chunk separately through the humanizer, 
+    and then rejoin them into a single output.
+    """
+    
+    result = humanize_text(sample_text)
+    print("\n" + "="*50)
+    print("FINAL RESULT:")
+    print("="*50)
+    print(result)
