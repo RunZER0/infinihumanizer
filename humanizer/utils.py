@@ -74,7 +74,7 @@ def humanize_text(text):
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": text}
             ],
-            temperature=0.9,
+            temperature=0.6,
             top_p=0.95,
             frequency_penalty=0.6,
             presence_penalty=0.4,
