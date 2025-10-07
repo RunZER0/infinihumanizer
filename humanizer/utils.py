@@ -18,68 +18,36 @@ def humanize_text(text):
     estimated_tokens = int(original_word_count * 1.5)
     max_tokens = max(estimated_tokens, 5000)
     
-    # Advanced prompt to simulate a specific authorial voice
+    # Advanced prompt - DRASTICALLY SIMPLIFIED for better adherence
     system_prompt = """
-You are an advanced text rewriter. Your task is to completely restructure the given text with natural variability in sentence construction and unpredictable word choices while preserving all core arguments and maintaining smooth readability.
+CRITICAL INSTRUCTION - SENTENCE LENGTH VARIATION (Your #1 priority):
+You MUST create extreme sentence length variation. This is NON-NEGOTIABLE.
+- Write at least 4 brief sentences (8-15 words) per 200 words of output
+- NEVER write more than 2 consecutive sentences within 10 words of each other
+- Pattern you MUST follow: brief (10w) → long (35w) → brief (12w) → long (38w) → brief (14w)
+- If you just wrote 30+ words, your next sentence MUST be under 16 words
+- If you just wrote under 16 words, your next sentence MUST be 25+ words
 
-MANDATORY RESTRUCTURING RULES:
+WORD CHOICE - Avoid Predictable Language:
+BANNED: "furthermore," "moreover," "in addition," "it is important to note," "one can see," "this shows"
+USE INSTEAD: demonstrates, reveals, exposes, suggests / nevertheless, conversely, yet / given that, since, owing to
+Vary vocabulary - use 3 different phrasings for the same concept throughout.
 
-1. NATURAL BURSTINESS (HIGHEST PRIORITY):
-   - Create dramatic but SMOOTH sentence length variation that feels organic, not forced
-   - Mix sentence lengths: some brief (8-15 words), some medium (16-28 words), some extended (29-45 words)
-   - NEVER write more than 3 consecutive sentences of similar length (within 10 words of each other)
-   - Required rhythm examples:
-     * 12 words → 35 words → 18 words → 40 words → 14 words
-     * 28 words → 11 words → 38 words → 16 words → 42 words
-   - Use shorter sentences (8-15 words) strategically for: strong claims, transitions between ideas, emphasis, conclusions
-   - Use longer sentences (29-45 words) for: complex analysis, connecting multiple ideas, detailed explanations with clauses
-   - Ensure variation feels natural to the content - let idea complexity drive length, not arbitrary patterns
-   - Every paragraph should contain at least one brief sentence (under 15 words) and one extended sentence (over 30 words)
+STRUCTURE:
+- Reorganize information flow - do NOT rephrase sentence-by-sentence
+- Combine short sentences into complex ones; split long ones into brief statements
+- Change 70%+ of sentence beginnings
+- Use: semi-colons; em-dashes—like this; varied punctuation
 
-2. MAXIMUM PERPLEXITY (SECOND PRIORITY - MANDATORY):
-   - Consistently avoid the most statistically probable word choices
-   - BANNED predictable transitions: "furthermore," "moreover," "in addition," "additionally," "it is important to note," "one can see," "this shows that," "in conclusion"
-   - Replace common verbs with less predictable alternatives:
-     * Instead of "shows/indicates" → use: demonstrates, reveals, exposes, illuminates, suggests, underscores, manifests
-     * Instead of "uses/employs" → use: deploys, utilizes, leverages, harnesses, mobilizes
-     * Instead of "important/significant" → use: pivotal, consequential, salient, critical, substantial, pronounced
-   - Replace common conjunctions/transitions:
-     * Instead of "however/but" → use: nevertheless, conversely, yet, even so, that said, still
-     * Instead of "because" → use: given that, insofar as, owing to, stemming from, as, since
-     * Instead of "also/too" → use: likewise, similarly, correspondingly, equally
-   - Restructure sentences for syntactic unpredictability: 
-     * Vary sentence openings: use subordinate clauses, prepositional phrases, participial phrases, conjunctive adverbs
-     * Invert expected word order occasionally
-     * Place emphasis through positioning rather than just word choice
-   - Vary vocabulary for repeated concepts - use 3-4 different phrasings for the same idea throughout the text
+PRESERVE:
+- All core arguments, facts, quotes, and citations exactly
+- Formal academic tone
+- Technical terms unchanged
 
-3. STRUCTURAL TRANSFORMATION (MANDATORY):
-   - Do NOT rephrase sentence-by-sentence. Completely reorganize how information flows
-   - Combine related ideas from separate sentences into complex unified statements
-   - Split dense original sentences into multiple clearer ones
-   - Change 70%+ of sentence beginnings from the original
-   - Alternate unpredictably between active and passive voice (favor active 70% of the time)
-   - Use varied punctuation: semi-colons for related thoughts; em-dashes for clarification—when appropriate; colons to introduce elaborations
-   - Start sentences naturally with: Yet, But, And, So, Still, Nevertheless, Conversely (when logical)
-   - Break paragraphs at different logical junctures than the original
+WORD LIMIT:
+Your output MUST NOT exceed 130% of original word count. Cut ruthlessly.
 
-4. PRESERVE CORE CONTENT (ABSOLUTE REQUIREMENT):
-   - All main arguments, evidence, facts, data, and citations MUST remain completely intact
-   - Do not invent examples, evidence, or claims not present in the original
-   - Maintain formal academic tone consistently
-   - Keep all technical terminology, proper nouns, and quoted material exactly as given
-   - Preserve the original's argumentative structure and logical progression
-
-5. READABILITY IS PARAMOUNT:
-   - Every sentence must flow naturally and be immediately comprehensible
-   - Variation must enhance engagement, not create confusion
-   - No awkward constructions that sacrifice clarity for the sake of unpredictability
-   - Ideas must connect logically with smooth transitions
-   - The text should read as sophisticated human academic writing, not as artificially varied output
-
-6. CRITICAL: Your output MUST NOT exceed 130% of the original word count. Be ruthlessly concise. Cut filler phrases like "it is important to note," "the fact that," "in order to" (just use "to"), "one can see." If you add complexity anywhere, you MUST remove words elsewhere to stay within the limit.
-
-OUTPUT ONLY THE REWRITTEN TEXT. No preambles, explanations, or meta-commentary.
+OUTPUT ONLY THE REWRITTEN TEXT.
 """
     
     user_prompt = f"""
@@ -101,10 +69,10 @@ STRICT REQUIREMENT: Your rewrite must be between {original_word_count} and {max_
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
         ],
-        temperature=0.7,
-        top_p=0.9,
-        frequency_penalty=0.2,
-        presence_penalty=0.2,
+        temperature=0.85,          # Increased for more variation
+        top_p=0.93,                # Increased for diversity
+        frequency_penalty=0.6,     # Significantly increased to fight repetitive patterns
+        presence_penalty=0.5,      # Increased to encourage variety
         max_tokens=max_tokens
     )
     
