@@ -13,6 +13,11 @@ def humanize_text(text):
     original_word_count = len(prepped.split())
     max_allowed_words = int(original_word_count * 1.10)  # 110% limit
     
+    # Calculate appropriate max_tokens based on input length
+    # Roughly 1.5x word count to account for tokenization, minimum 5000
+    estimated_tokens = int(original_word_count * 1.5)
+    max_tokens = max(estimated_tokens, 5000)
+    
     # Advanced prompt to simulate a specific authorial voice
     system_prompt = """
 You are an advanced text rewriter. Your task is to completely restructure the given text with natural variability in sentence construction and unpredictable word choices while preserving all core arguments and maintaining smooth readability.
@@ -88,6 +93,7 @@ STRICT REQUIREMENT: Your rewrite must be between {original_word_count} and {max_
     
     print(f"Original: {original_word_count} words")
     print(f"Maximum allowed: {max_allowed_words} words")
+    print(f"Using max_tokens: {max_tokens}")
     
     response = openai.ChatCompletion.create(
         model="gpt-4.1",
@@ -99,7 +105,7 @@ STRICT REQUIREMENT: Your rewrite must be between {original_word_count} and {max_
         top_p=0.9,
         frequency_penalty=0.2,
         presence_penalty=0.2,
-        max_tokens=2000
+        max_tokens=max_tokens
     )
     
     # Get the response text and remove excess newlines
