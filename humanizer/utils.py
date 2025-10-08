@@ -43,34 +43,51 @@ def _clean_paragraphs(text: str) -> str:
 # Prompts (compatible with old SDK)
 # -----------------------------
 SYSTEM_PROMPT = (
-    "You are an academic rephraser.\n\n"
-    "Constraints:\n"
+    "You are an expert at transforming AI-generated text into authentic human writing.\n\n"
+    "Core Principles:\n"
+    "- Human writing is highly readable with natural flow and rhythm.\n"
+    "- Real humans use diverse vocabulary and complex sentence structures (high perplexity).\n"
+    "- Sentence lengths vary dramatically - short punchy statements mixed with longer, nuanced explanations.\n"
+    "- Humans restructure ideas completely, not just swap words sentence-by-sentence.\n"
+    "- Natural writing includes subtle transitions, occasional emphasis through repetition, and thoughtful pacing.\n\n"
+    "Your Task:\n"
+    "- COMPLETELY restructure the content. Break apart sentences, recombine ideas, reorder concepts.\n"
+    "- Vary sentence length extensively: use 3-5 word sentences alongside 25-40 word complex sentences.\n"
+    "- Use sophisticated vocabulary and varied phrasing to increase perplexity.\n"
+    "- Create natural reading flow - the text should feel effortless to read despite complexity.\n"
+    "- Maintain formal academic tone throughout (no slang, contractions, or casual language).\n"
     "- Preserve all facts, quotes, citations, numbers, and technical terms exactly.\n"
-    "- Maintain a formal academic tone (no slang or hype).\n"
-    "- Aim for a human feel: varied sentence lengths (mix short and long), precise nouns/verbs,\n"
-    "  light natural redundancy for emphasis, and allow a very small non-critical grammatical slip\n"
-    "  if it sounds natural (never inside quotations, numbers, titles, equations, or technical terms).\n"
-    "- Avoid these exact phrases: furthermore, moreover, in addition, it is important to note, one can see, this shows.\n"
-    "- Reorganize for clarity; do not paraphrase sentence-by-sentence.\n"
-    "- Respect the word cap provided by the user.\n\n"
-    "Output only the rewritten text. No prefaces, no lists, no JSON."
+    "- Avoid robotic transition phrases: furthermore, moreover, in addition, it is important to note, additionally, consequently.\n"
+    "- Respect the word count limits provided.\n\n"
+    "Output only the rewritten text. No prefaces, explanations, or metadata."
 )
 
 STYLE_DEMO = (
     "Source (excerpt):\n"
-    "AI systems significantly influence writing workflows. It is important to note that authors should adapt.\n\n"
-    "Humanized academic rewrite (style to imitate):\n"
-    "AI now shapes how we draft, revise, and substantiate arguments. Writers do not need panic; they need methods. "
-    "Learn the tools, keep your evidence straight, and deliver work that reads clean yet alive."
+    "AI systems significantly influence writing workflows. It is important to note that authors should adapt. "
+    "Furthermore, these technologies reshape academic practices. Moreover, proper training ensures effectiveness.\n\n"
+    "Humanized rewrite (style to imitate):\n"
+    "Writing has changed. AI systems now permeate every stage of the composition process, from initial drafting "
+    "through final revision. This transformation demands adaptation from authors, yet panic serves no purpose. "
+    "What scholars require instead are practical methodologies for engaging these tools effectively. Academic practices "
+    "evolve continuously, and this technological shift represents merely another phase in that ongoing development. "
+    "Training becomes paramount—not superficial familiarity, but deep understanding of how these systems operate, "
+    "where they excel, and crucially, where human judgment remains irreplaceable."
 )
 
 def _build_user_prompt(src: str, original_words: int, ceiling_words: int) -> str:
     return (
         f"ORIGINAL_WORDS={original_words}\n"
         f"CEILING_WORDS={ceiling_words}\n\n"
-        "Rephrase the text below per the constraints, keeping a formal academic tone, high burstiness/perplexity, "
-        "slight natural redundancy, and only minor non-critical imperfections. Output only the rewritten text.\n\n"
-        f"TEXT:\n{src.strip()}"
+        "Transform the text below into authentic human writing with these requirements:\n"
+        "1. COMPLETELY restructure - do not preserve the original sentence order or structure\n"
+        "2. Create HIGH PERPLEXITY - use sophisticated, varied vocabulary and complex sentence constructions\n"
+        "3. Vary sentence length dramatically (from very short to very long)\n"
+        "4. Ensure excellent readability despite complexity\n"
+        "5. Maintain strict formal academic tone\n"
+        "6. Stay within the word count limit\n\n"
+        "Output only the transformed text:\n\n"
+        f"{src.strip()}"
     )
 
 # -----------------------------
@@ -163,14 +180,14 @@ def humanize_text(text: str, max_ratio: float = 1.10) -> str:
         {"role": "user", "content": _build_user_prompt(src, original_words, ceiling_words)},
     ]
 
-    # Lower randomness to prioritize instruction-following on legacy endpoints
+    # Higher temperature and adjusted parameters for more creative, human-like output with high perplexity
     resp = _chat_completion_with_retries(
         messages=messages,
         max_tokens=max_tokens,
-        temperature=0.6,
-        top_p=0.95,
-        frequency_penalty=0.2,
-        presence_penalty=0.0,
+        temperature=0.9,  # Increased for more creativity and varied output
+        top_p=0.92,       # Slightly reduced to focus on high-quality diverse tokens
+        frequency_penalty=0.4,  # Increased to encourage vocabulary diversity
+        presence_penalty=0.3,   # Added to encourage topic diversity
     )
 
     out = resp.choices[0].message["content"].strip()
