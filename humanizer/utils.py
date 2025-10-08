@@ -1,94 +1,116 @@
 import os
-import openai
 import re
+import math
+from openai import OpenAI
 
-# Set OpenAI API key via environment variable
-openai.api_key = os.environ.get("OPENAI_API_KEY")
+# Use the new OpenAI client
+client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
-def humanize_text(text):
-    # Clean up the input text for processing
-    prepped = text.strip()
-    
-    # Count words in original
-    original_word_count = len(prepped.split())
-    max_allowed_words = int(original_word_count * 1.10)  # 110% limit
-    
-    # Calculate appropriate max_tokens based on input length
-    # Roughly 1.5x word count to account for tokenization, minimum 5000
-    estimated_tokens = int(original_word_count * 1.5)
-    max_tokens = max(estimated_tokens, 5000)
-    
-    # Advanced prompt - DRASTICALLY SIMPLIFIED for better adherence
-    system_prompt = """
-CRITICAL INSTRUCTION - SENTENCE LENGTH VARIATION (Your #1 priority):
-You MUST create extreme sentence length variation. This is NON-NEGOTIABLE.
-- Write at least 4 brief sentences (8-15 words) per 200 words of output
-- NEVER write more than 2 consecutive sentences within 10 words of each other
-- Pattern you MUST follow: brief (10w) → long (35w) → brief (12w) → long (38w) → brief (14w)
-- If you just wrote 30+ words, your next sentence MUST be under 16 words
-- If you just wrote under 16 words, your next sentence MUST be 25+ words
+# ---------- utilities ----------
+_WORD_RE = re.compile(r"\b\w+\b")
 
-WORD CHOICE - Avoid Predictable Language:
-BANNED: "furthermore," "moreover," "in addition," "it is important to note," "one can see," "this shows"
-USE INSTEAD: demonstrates, reveals, exposes, suggests / nevertheless, conversely, yet / given that, since, owing to
-Vary vocabulary - use 3 different phrasings for the same concept throughout.
+def word_count(text: str) -> int:
+    return len(_WORD_RE.findall(text))
 
-STRUCTURE:
-- Reorganize information flow - do NOT rephrase sentence-by-sentence
-- Combine short sentences into complex ones; split long ones into brief statements
-- Change 70%+ of sentence beginnings
-- Use: semi-colons; em-dashes—like this; varied punctuation
+def trim_to_cap(text: str, cap_words: int) -> str:
+    words = text.split()
+    if len(words) <= cap_words:
+        return text.strip()
+    cut = " ".join(words[:cap_words]).strip()
+    # try to end cleanly at a sentence boundary
+    last_period = cut.rfind(".")
+    if last_period > 0:
+        return cut[:last_period + 1].strip()
+    return cut
 
-PRESERVE:
-- All core arguments, facts, quotes, and citations exactly
-- Formal academic tone
-- Technical terms unchanged
+# ---------- prompts ----------
+SYSTEM_PROMPT = """
+You are an academic rephraser.
 
-WORD LIMIT:
-Your output MUST NOT exceed 130% of original word count. Cut ruthlessly.
+Non-negotiables (in order):
+1) Fidelity: Preserve every claim, quote, citation, number, and technical term. Do not add sources or facts.
+2) Academic tone: Formal, precise, cohesive; no slang or hype.
+3) Human texture:
+   • Burstiness: Mix short and long sentences (target ≥25% ≤12 words; ≥15% ≥28 words).
+   • Perplexity: Prefer specific nouns and concrete verbs; avoid stock transitions.
+   • Slight redundancy: 1–2 gentle reiterations per ~300 words for emphasis.
+   • Minor imperfections: allow ~1 small, non-critical grammatical slip per 200–300 words (never inside quotes, numbers, titles, equations, or technical terms).
+4) Organization: Reorder for clarity; do not paraphrase line-by-line; remove filler and redundancies.
+5) Banned exact phrases: furthermore, moreover, in addition, it is important to note, one can see, this shows.
 
-OUTPUT ONLY THE REWRITTEN TEXT.
-"""
-    
-    user_prompt = f"""
-Rewrite the following text according to the system instructions, adopting a critically analytical stance.
+Respect the word cap the user provides.
+Output only the rewritten text. No prefaces, no lists, no JSON.
+""".strip()
 
-Original Text ({original_word_count} words):
-{prepped}
+# A tiny style anchor to reinforce cadence and confidence without being heavy-handed
+STYLE_DEMO = """
+Source (excerpt):
+AI systems significantly influence writing workflows. It is important to note that authors should adapt.
 
-STRICT REQUIREMENT: Your rewrite must be between {original_word_count} and {max_allowed_words} words. Do not exceed {max_allowed_words} words under any circumstances.
-"""
-    
-    print(f"Original: {original_word_count} words")
-    print(f"Maximum allowed: {max_allowed_words} words")
-    print(f"Using max_tokens: {max_tokens}")
-    
-    response = openai.ChatCompletion.create(
-        model="gpt-4.1",
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt}
-        ],
-        temperature=0.85,          # Increased for more variation
-        top_p=0.93,                # Increased for diversity
-        frequency_penalty=0.6,     # Significantly increased to fight repetitive patterns
-        presence_penalty=0.5,      # Increased to encourage variety
-        max_tokens=max_tokens
+Humanized academic rewrite (style to imitate):
+AI now shapes how we draft, revise, and substantiate arguments. Writers do not need panic; they need methods. Learn the tools, keep your evidence straight, and deliver work that reads clean yet alive.
+""".strip()
+
+def build_user_prompt(src: str, original_words: int, ceiling_words: int) -> str:
+    return (
+        f"ORIGINAL_WORDS={original_words}\n"
+        f"CEILING_WORDS={ceiling_words}\n\n"
+        "Rephrase the text below per the constraints. Preserve meaning, quotes, numbers, and technical terms exactly. "
+        "Maintain formal academic tone, high burstiness/perplexity, slight redundancy, and allow only minor, non-critical imperfections. "
+        "Output only the rewritten text.\n\n"
+        f"TEXT:\n{src.strip()}"
     )
-    
-    # Get the response text and remove excess newlines
-    result = response.choices[0].message['content'].strip()
-    result = re.sub(r'\n{2,}', '\n\n', result)
-    
-    # Count output words and report
-    output_word_count = len(result.split())
-    percentage = (output_word_count / original_word_count) * 100
-    
-    print(f"Output: {output_word_count} words ({percentage:.1f}% of original)")
-    
-    if output_word_count > max_allowed_words:
-        print(f"⚠️  WARNING: Exceeded limit by {output_word_count - max_allowed_words} words!")
-    else:
-        print("✓ Within word count limit")
-    
+
+# ---------- main function ----------
+def humanize_text(text: str, max_ratio: float = 1.10, model: str = "gpt-5") -> str:
+    """
+    Rephrase AI-y text into human-sounding academic prose with high burstiness/perplexity,
+    slight redundancy, and minor non-critical imperfections. Keeps length within [original, 110%].
+    """
+    src = text.strip()
+    if not src:
+        return ""
+
+    original_words = word_count(src)
+    ceiling_words = int(math.floor(original_words * max_ratio))
+
+    # Tight max_tokens based on ceiling words (≈1.3 tokens per word + small buffer)
+    estimated_output_tokens = int(ceiling_words * 1.3) + 64
+    max_tokens = max(256, min(2000, estimated_output_tokens))
+
+    def call_once(ow: int, cw: int) -> str:
+        messages = [
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "assistant", "content": STYLE_DEMO},  # style anchor
+            {"role": "user", "content": build_user_prompt(src, ow, cw)},
+        ]
+        resp = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=0.6,            # variety without chaos
+            top_p=0.95,
+            frequency_penalty=0.2,      # nudges away from repetition
+            presence_penalty=0.0,
+            max_tokens=max_tokens,
+        )
+        out = resp.choices[0].message.content.strip()
+        # clean stray excessive blank lines
+        out = re.sub(r"\n{3,}", "\n\n", out)
+        return out
+
+    # First attempt
+    result = call_once(original_words, ceiling_words)
+    out_wc = word_count(result)
+
+    # One retry if out of bounds (below original or above ceiling)
+    if out_wc < original_words or out_wc > ceiling_words:
+        # Nudge the cap if needed to coax compliance, but never above the real ceiling
+        target_ceiling = ceiling_words if out_wc <= ceiling_words else max(original_words, min(ceiling_words, out_wc - 10))
+        result = call_once(original_words, target_ceiling)
+        out_wc = word_count(result)
+
+    # Final hard guard: trim to cap; if still short, return as-is (do not hallucinate)
+    if out_wc > ceiling_words:
+        result = trim_to_cap(result, ceiling_words)
+
     return result
