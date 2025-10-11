@@ -176,9 +176,9 @@ def _build_user_prompt(src: str, original_words: int, ceiling_words: int, extra_
 # -----------------------------
 def _chat_once(messages, max_tokens: int):
     return openai.ChatCompletion.create(
-        model="gpt-4o",
+        model="gpt-4.1",
         messages=messages,
-        temperature=0.85,
+        temperature=0.6,
         top_p=0.92,
         frequency_penalty=0.3,
         presence_penalty=0.25,
