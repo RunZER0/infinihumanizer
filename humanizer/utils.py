@@ -40,7 +40,7 @@ def humanize_text(text: str):
     3. Use words like "in addition to", "moreover", "next to", and "furthermore" instead of "and" once or twice in the whole essay, and not more than one in one sentence.
     4. Ensure the sentences are readable and not oddly phrased.
     5. Keep technical terms if they are needed. Avoid too much repetition.
-    6. Use hyphens sometimes for listing related ideas, but not excessively.completely avoid using en-dashes.
+    6. Use hyphens sparingly for related ideas; do not use en dashes (–) or em dashes (—) anywhere.
     7. Avoid elegant transitions but The text should flow smoothly and be readable.
     8. Use full sentences most of the time. Avoid sentence fragments.
     9. Sound slightly repetitive but always natural in the writing.
