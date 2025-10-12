@@ -5,9 +5,32 @@ import re
 # Set OpenAI API key via environment variable
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
-def humanize_text(text):
+def _trim_to_word_limit(text: str, max_words: int) -> str:
+    """Trim text to ≤ max_words, preferring to end at a sentence boundary if possible."""
+    words = text.split()
+    if len(words) <= max_words:
+        return text.strip()
+
+    # Hard trim to the word budget first
+    trimmed = " ".join(words[:max_words]).strip()
+
+    # Try to backtrack to the last sentence end within the trimmed text
+    match = re.search(r"(.+?[\.!\?])(?:\s|$)", trimmed[::-1])
+    if match:
+        # match is on the reversed string; convert the slice back
+        end_at = len(trimmed) - match.start()
+        candidate = trimmed[:end_at].strip()
+        if len(candidate.split()) >= max_words * 0.8:  # don't over-trim too much
+            return candidate
+
+    return trimmed
+
+def humanize_text(text: str):
     # Clean up the input text for processing
     prepped = text.strip()
+
+    # Compute a strict 20% word budget
+    max_words = int(len(prepped.split()) * 1.2)
 
     # Advanced prompt to simulate a specific authorial voice
     system_prompt = """
@@ -30,6 +53,8 @@ def humanize_text(text):
     user_prompt = f"""
     paraphrase the following text according to the system instructions, adopting them fully in the whole rewrite.
 
+    HARD LIMIT: Keep the rewritten text ≤ {max_words} words. If you reach the limit, stop. Do not add extra commentary.
+
     Original Text:
     {prepped}
     """
@@ -40,13 +65,18 @@ def humanize_text(text):
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
         ],
-        temperature=0.6,  # Increased temperature for more creativity
-        top_p=0.9,       # Prevents the model from using only the most probable words
-        frequency_penalty=0.2,  # Slightly penalizes repetitive words
-        presence_penalty=0.2,   # Slightly penalizes repetitive concepts
+        temperature=0.6,       # Increased temperature for more creativity
+        top_p=0.9,             # Prevents the model from using only the most probable words
+        frequency_penalty=0.2, # Slightly penalizes repetitive words
+        presence_penalty=0.2,  # Slightly penalizes repetitive concepts
         max_tokens=2000
     )
 
-    # Get the response text and remove excess newlines
-    result = response.choices[0].message['content'].strip()
-    return re.sub(r'\n{2,}', '\n\n', result)
+    # Get the response text and normalize whitespace
+    result = response.choices[0].message["content"].strip()
+    result = re.sub(r"\n{2,}", "\n\n", result)
+
+    # Enforce the ≤ 20% word cap
+    result = _trim_to_word_limit(result, max_words)
+
+    return result
