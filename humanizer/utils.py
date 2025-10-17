@@ -109,24 +109,32 @@ WORD LIMIT: Keep the output ≤ {max_words} words maximum. Do not exceed this li
 Original Text:
 {prepped}"""
 
-    response = client.chat.completions.create(
-        model="gpt-5",  # Using GPT-5
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt}
-        ],
-        temperature=0.6,       # Increased temperature for more creativity
-        top_p=0.9,             # Prevents the model from using only the most probable words
-        frequency_penalty=0.2, # Slightly penalizes repetitive words
-        presence_penalty=0.2,  # Slightly penalizes repetitive concepts
-        max_tokens=max_tokens  # Dynamic token limit based on input size
-    )
+    try:
+        response = client.chat.completions.create(
+            model="gpt-5",  # GPT-5 only
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            temperature=0.6,       # Increased temperature for more creativity
+            top_p=0.9,             # Prevents the model from using only the most probable words
+            frequency_penalty=0.2, # Slightly penalizes repetitive words
+            presence_penalty=0.2,  # Slightly penalizes repetitive concepts
+            max_tokens=max_tokens  # Dynamic token limit based on input size
+        )
 
-    # Get the response text and normalize whitespace
-    result = response.choices[0].message.content.strip()
-    result = re.sub(r"\n{2,}", "\n\n", result)
+        # Get the response text and normalize whitespace
+        result = response.choices[0].message.content.strip()
+        result = re.sub(r"\n{2,}", "\n\n", result)
 
-    # Enforce the ≤ 20% word cap
-    result = _trim_to_word_limit(result, max_words)
+        # Enforce the ≤ 20% word cap
+        result = _trim_to_word_limit(result, max_words)
 
-    return result
+        return result
+    
+    except Exception as e:
+        # Log the error and return a helpful message
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"OpenAI API error: {str(e)}")
+        raise Exception(f"Failed to process text: {str(e)}")

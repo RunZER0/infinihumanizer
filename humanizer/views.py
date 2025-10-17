@@ -34,19 +34,24 @@ def humanizer_view(request):
         input_text = request.POST.get("text", "").strip()
         word_count = len(input_text.split())
 
-        if word_count > word_balance:
+        if not input_text:
+            error = "Please enter some text to humanize."
+        elif word_count > word_balance:
             error = f"You've exceeded your word balance ({word_balance} words left)."
         else:
             try:
                 output_text = humanize_text(input_text)
-                profile.words_used += word_count
-                profile.save()
+                if output_text:
+                    profile.words_used += word_count
+                    profile.save()
+                else:
+                    error = "The humanizer returned an empty result. Please try again."
             except Exception as e:
-                error = f"An error occurred while processing your text. Please try again or use shorter text. Error: {str(e)[:100]}"
+                error = f"Error processing text: {str(e)}"
                 # Log the full error for debugging
                 import logging
                 logger = logging.getLogger(__name__)
-                logger.error(f"Humanizer error for user {user.id}: {str(e)}")
+                logger.error(f"Humanizer error for user {user.id}: {str(e)}", exc_info=True)
 
     return render(request, "humanizer.html", {
         "input_text": input_text,

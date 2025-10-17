@@ -39,7 +39,7 @@ result = response.choices[0].message["content"].strip()
 **After:**
 ```python
 response = client.chat.completions.create(
-    model="gpt-4o",  # Using gpt-4o (change to "gpt-5" when available)
+    model="gpt-5",  # GPT-5 only
     messages=[...],
     ...
 )
@@ -62,14 +62,7 @@ pip install --upgrade openai
 
 ## Model Configuration
 
-The code currently uses `gpt-4o` as the model. When GPT-5 becomes available in your OpenAI account, you can easily switch by changing the model parameter in `humanizer/utils.py`:
-
-```python
-response = client.chat.completions.create(
-    model="gpt-5",  # Change this when GPT-5 is available
-    ...
-)
-```
+The code currently uses `gpt-5` as the model.
 
 ## Key Differences in New SDK
 

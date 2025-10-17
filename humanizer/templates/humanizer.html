@@ -639,6 +639,12 @@ body .content {
     <p>Transform robotic AI text into natural, human-sounding writing with advanced algorithms and intelligent processing.</p>
 </section>
 
+{% if error %}
+<div class="error-message" style="background: rgba(220, 53, 69, 0.15); border: 1px solid #dc3545; border-radius: 10px; padding: 1rem 1.5rem; margin: 2rem auto; max-width: 800px; color: #ff6b6b;">
+    <strong>⚠️ Error:</strong> {{ error }}
+</div>
+{% endif %}
+
 <div class="form-container">
     <div class="input-section">
         <div class="section-header">
