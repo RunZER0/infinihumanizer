@@ -5,7 +5,7 @@ import re
 # Initialize OpenAI client with API key from environment variable and longer timeout
 client = OpenAI(
     api_key=os.environ.get("OPENAI_API_KEY"),
-    timeout=120.0,  # 2 minutes timeout for large texts
+    timeout=90.0,  # Tighter timeout to prevent long-running calls
     max_retries=2
 )
 
@@ -40,7 +40,7 @@ def humanize_text(text: str):
     # Calculate required tokens (words * 1.3 for safety + 20% buffer)
     # This ensures we have enough tokens for the output
     estimated_tokens = int(max_words * 1.5) + 500  # Extra buffer for longer texts
-    max_tokens = max(2000, min(estimated_tokens, 4000))  # Between 2000-4000 tokens
+    max_tokens = max(1800, min(estimated_tokens, 2800))  # Cap output to keep latency reasonable
 
     # Advanced prompt to transform AI text into authentic human writing
     system_prompt = """You are a 'Text Refiner' AI. Your sole purpose is to transform robotic, AI-generated text into prose that reads as if it were written by a thoughtful, articulate, and engaging human. You are not just paraphrasing; you are adopting a specific persona and writing style.
