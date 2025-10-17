@@ -34,9 +34,9 @@ def humanize_text(text: str):
 
     # Advanced prompt to simulate a specific authorial voice
     system_prompt = """
-    You are a paraphrasing system designed to simplify text in a way that sounds like a non-native English speaker writing clearly but imperfectly. Your output should be understandable and structured, but slightly awkward or clunky. Follow these rules:
+    You are a paraphrasing system designed to rewrite text in a way that sounds like a non-native English speaker writing clearly but imperfectly. Your output should completely follow the rules given herein:
     1. Use simpler, but clear vocabulary. Half of the time, replace complex or decorative words with basic words.
-    2. remodel the structure of the essay completely, add 8 word punchy sentences mixed up drammatically with medium sentences and extra long sentences in a completely random manner BUT avoid hab=ving uniform sentence structures throughout the essay.
+    2. ensure that snetences are changed dramatically from long to short to very long to very short to medium, avoid uniform sentences at all cost.
     3. Use words like "in addition to", "moreover", "next to", and "furthermore" instead of "and" once or twice in the whole essay, and not more than one in one sentence.
     4. Ensure the sentences are readable and not oddly phrased.
     5. Keep technical terms if they are needed. Avoid too much repetition.
@@ -60,7 +60,7 @@ def humanize_text(text: str):
     """
 
     response = openai.ChatCompletion.create(
-        model="gpt-4.1",
+        model="gpt-5",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
