@@ -38,12 +38,12 @@ result = response.choices[0].message["content"].strip()
 
 **After:**
 ```python
-response = client.chat.completions.create(
+response = client.responses.create(
     model="gpt-5",  # GPT-5 only
-    messages=[...],
-    ...
+    input=[...],
+    max_output_tokens=...
 )
-result = response.choices[0].message.content.strip()
+result = response.output_text.strip()
 ```
 
 ## Installation
@@ -67,8 +67,8 @@ The code currently uses `gpt-5` as the model.
 ## Key Differences in New SDK
 
 1. **Client-based approach**: Uses `OpenAI()` client instance instead of module-level configuration
-2. **Dot notation**: Response attributes use dot notation (`message.content`) instead of dictionary access (`message["content"]`)
-3. **Structured responses**: Returns structured objects with better type hints
+2. **Responses API**: Leverages `client.responses.create(...)` (successor to the legacy chat completions API)
+3. **Structured responses**: Returns typed objects (`response.output_text`, `response.output`)
 4. **Better error handling**: More specific exception types
 5. **Async support**: Native async/await support (not used in this upgrade)
 

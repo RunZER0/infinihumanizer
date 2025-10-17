@@ -110,9 +110,9 @@ Original Text:
 {prepped}"""
 
     try:
-        response = client.chat.completions.create(
+        response = client.responses.create(
             model="gpt-5",  # GPT-5 only
-            messages=[
+            input=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ],
@@ -120,11 +120,20 @@ Original Text:
             top_p=0.9,             # Prevents the model from using only the most probable words
             frequency_penalty=0.2, # Slightly penalizes repetitive words
             presence_penalty=0.2,  # Slightly penalizes repetitive concepts
-            max_tokens=max_tokens  # Dynamic token limit based on input size
+            max_output_tokens=max_tokens  # Dynamic token limit based on input size
         )
 
-        # Get the response text and normalize whitespace
-        result = response.choices[0].message.content.strip()
+        # Prefer the helper, but fall back to manual reconstruction if needed
+        result = (response.output_text or "").strip()
+
+        if not result and getattr(response, "output", None):
+            chunks = []
+            for item in response.output:
+                for content in getattr(item, "content", []) or []:
+                    if getattr(content, "type", None) == "output_text":
+                        chunks.append(content.text)
+            result = "".join(chunks).strip()
+
         result = re.sub(r"\n{2,}", "\n\n", result)
 
         # Enforce the ≤ 20% word cap
