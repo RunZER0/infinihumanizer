@@ -116,8 +116,6 @@ Original Text:
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ],
-            temperature=0.6,       # Increased temperature for more creativity
-            top_p=0.9,             # Prevents the model from using only the most probable words
             max_output_tokens=max_tokens  # Dynamic token limit based on input size
         )
 
