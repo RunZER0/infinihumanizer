@@ -118,8 +118,6 @@ Original Text:
             ],
             temperature=0.6,       # Increased temperature for more creativity
             top_p=0.9,             # Prevents the model from using only the most probable words
-            frequency_penalty=0.2, # Slightly penalizes repetitive words
-            presence_penalty=0.2,  # Slightly penalizes repetitive concepts
             max_output_tokens=max_tokens  # Dynamic token limit based on input size
         )
 
