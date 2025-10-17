@@ -117,8 +117,15 @@ DATABASES = {
         default=os.getenv(
             "DATABASE_URL",
             "postgresql://postgres.lbgowbtsxonniutjxcmv:6mOO4TupU1bE82pr@aws-1-us-east-2.pooler.supabase.com:5432/postgres"
-        )
+        ),
+        conn_max_age=600,
+        conn_health_checks=True,
     )
+}
+
+# Add SSL settings for Supabase
+DATABASES['default']['OPTIONS'] = {
+    'sslmode': 'require',
 }
 
 # PASSWORD VALIDATORS
