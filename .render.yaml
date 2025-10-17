@@ -6,7 +6,7 @@
     buildCommand: |
       pip install -r requirements.txt
       python manage.py collectstatic --noinput
-    startCommand: gunicorn core.wsgi:application
+    startCommand: gunicorn core.wsgi:application --timeout 180 --workers 2
     envVars:
       - key: DJANGO_SECRET_KEY
         value: from-dashboard

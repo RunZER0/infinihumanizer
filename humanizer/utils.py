@@ -2,8 +2,12 @@ import os
 from openai import OpenAI
 import re
 
-# Initialize OpenAI client with API key from environment variable
-client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+# Initialize OpenAI client with API key from environment variable and longer timeout
+client = OpenAI(
+    api_key=os.environ.get("OPENAI_API_KEY"),
+    timeout=120.0,  # 2 minutes timeout for large texts
+    max_retries=2
+)
 
 def _trim_to_word_limit(text: str, max_words: int) -> str:
     """Trim text to ≤ max_words, preferring to end at a sentence boundary if possible."""
@@ -30,7 +34,13 @@ def humanize_text(text: str):
     prepped = text.strip()
 
     # Compute a strict 20% word budget
-    max_words = int(len(prepped.split()) * 1.2)
+    input_word_count = len(prepped.split())
+    max_words = int(input_word_count * 1.2)
+    
+    # Calculate required tokens (words * 1.3 for safety + 20% buffer)
+    # This ensures we have enough tokens for the output
+    estimated_tokens = int(max_words * 1.5) + 500  # Extra buffer for longer texts
+    max_tokens = max(2000, min(estimated_tokens, 4000))  # Between 2000-4000 tokens
 
     # Advanced prompt to simulate a specific authorial voice
     system_prompt = """
@@ -69,7 +79,7 @@ def humanize_text(text: str):
         top_p=0.9,             # Prevents the model from using only the most probable words
         frequency_penalty=0.2, # Slightly penalizes repetitive words
         presence_penalty=0.2,  # Slightly penalizes repetitive concepts
-        max_tokens=2000
+        max_tokens=max_tokens  # Dynamic token limit based on input size
     )
 
     # Get the response text and normalize whitespace
