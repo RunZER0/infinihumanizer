@@ -1,9 +1,9 @@
 import os
-import openai
+from openai import OpenAI
 import re
 
-# Set OpenAI API key via environment variable
-openai.api_key = os.environ.get("OPENAI_API_KEY")
+# Initialize OpenAI client with API key from environment variable
+client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 def _trim_to_word_limit(text: str, max_words: int) -> str:
     """Trim text to ≤ max_words, preferring to end at a sentence boundary if possible."""
@@ -59,8 +59,8 @@ def humanize_text(text: str):
     {prepped}
     """
 
-    response = openai.ChatCompletion.create(
-        model="gpt-5",
+    response = client.chat.completions.create(
+        model="gpt-4o",  # Using gpt-4o as the latest available model (gpt-5 when available)
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
@@ -73,7 +73,7 @@ def humanize_text(text: str):
     )
 
     # Get the response text and normalize whitespace
-    result = response.choices[0].message["content"].strip()
+    result = response.choices[0].message.content.strip()
     result = re.sub(r"\n{2,}", "\n\n", result)
 
     # Enforce the ≤ 20% word cap
