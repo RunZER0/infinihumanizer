@@ -82,18 +82,41 @@ def humanize_text(text: str):
             max_output_tokens=max_tokens  # Dynamic token limit based on input size
         )
 
+        # Debug: Log the raw response structure
+        import logging
+        logger = logging.getLogger(__name__)
+        
+        # Try to serialize the response for debugging
+        try:
+            if hasattr(response, 'model_dump'):
+                response_dict = response.model_dump()
+            elif hasattr(response, 'to_dict'):
+                response_dict = response.to_dict()
+            else:
+                response_dict = str(response)
+            logger.error(f"FULL RESPONSE DUMP: {response_dict}")
+        except Exception as debug_err:
+            logger.error(f"Could not dump response: {debug_err}")
+        
+        logger.error(f"Response attributes: {dir(response)}")
+        logger.error(f"output_text attr: {getattr(response, 'output_text', 'NOT_FOUND')}")
+        logger.error(f"output attr: {getattr(response, 'output', 'NOT_FOUND')}")
+
         # Prefer the helper, but fall back to manual reconstruction if needed
         result = (getattr(response, "output_text", "") or "").strip()
 
         if not result:
             output = getattr(response, "output", None)
             if output:
+                logger.error(f"Output type: {type(output)}, Output value: {output}")
                 chunks = []
                 for item in output:
+                    logger.error(f"Item type: {type(item)}, Item value: {item}")
                     content_list = getattr(item, "content", None)
                     if content_list is None and isinstance(item, dict):
                         content_list = item.get("content")
 
+                    logger.error(f"Content list: {content_list}")
                     for content in content_list or []:
                         content_type = getattr(content, "type", None)
                         text = getattr(content, "text", None)
@@ -102,12 +125,15 @@ def humanize_text(text: str):
                             content_type = content.get("type", content_type)
                             text = content.get("text", text)
 
+                        logger.error(f"Content type: {content_type}, Text: {text}")
                         if content_type in {"output_text", "text"} and text:
                             chunks.append(text)
 
                 result = "".join(chunks).strip()
+                logger.error(f"Final result after chunks: '{result}'")
 
         if not result:
+            logger.error("RAISING EXCEPTION: OpenAI returned an empty response.")
             raise Exception("OpenAI returned an empty response.")
 
         result = re.sub(r"\n{2,}", "\n\n", result)
