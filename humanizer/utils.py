@@ -1,9 +1,13 @@
 import os
-import openai
 import re
+from openai import OpenAI
 
-# Set OpenAI API key via environment variable
-openai.api_key = os.environ.get("OPENAI_API_KEY")
+# Initialize OpenAI client with API key from environment variable
+client = OpenAI(
+    api_key=os.environ.get("OPENAI_API_KEY"),
+    timeout=90.0,
+    max_retries=2
+)
 
 def humanize_text(text):
     # Clean up the input text for processing
@@ -34,19 +38,26 @@ def humanize_text(text):
     {prepped}
     """
 
-    response = openai.ChatCompletion.create(
-        model="gpt-4.1",
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt}
-        ],
-        temperature=0.5,  # Increased temperature for more creativity
-        top_p=0.9,       # Prevents the model from using only the most probable words
-        frequency_penalty=0.2,  # Slightly penalizes repetitive words
-        presence_penalty=0.2,   # Slightly penalizes repetitive concepts
-        max_tokens=2000
-    )
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            temperature=0.5,
+            top_p=0.9,
+            frequency_penalty=0.2,
+            presence_penalty=0.2,
+            max_tokens=2000
+        )
 
-    # Get the response text and remove excess newlines
-    result = response.choices[0].message['content'].strip()
-    return re.sub(r'\n{2,}', '\n\n', result)
+        # Get the response text and remove excess newlines
+        result = response.choices[0].message.content.strip()
+        return re.sub(r'\n{2,}', '\n\n', result)
+    
+    except Exception as e:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"OpenAI API error: {str(e)}")
+        raise Exception(f"Failed to process text: {str(e)}")
