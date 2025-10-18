@@ -16,7 +16,7 @@ class HumanizerTests(TestCase):
         self.assertEqual(result, "Rewritten text here.")
 
     @patch("humanizer.utils.client.chat.completions.create")
-    def test_uses_gpt_4o_model(self, mock_create):
+    def test_uses_gpt_4_1_model(self, mock_create):
         mock_response = MagicMock()
         mock_response.choices = [MagicMock()]
         mock_response.choices[0].message.content = "Output"
@@ -25,4 +25,4 @@ class HumanizerTests(TestCase):
         humanize_text("Test input")
 
         _, kwargs = mock_create.call_args
-        self.assertEqual(kwargs["model"], "gpt-4o")
+        self.assertEqual(kwargs["model"], "gpt-4.1")
