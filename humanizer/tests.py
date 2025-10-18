@@ -40,3 +40,27 @@ class HumanizerPromptTests(TestCase):
         _, kwargs = mock_client.responses.create.call_args
         self.assertLessEqual(kwargs["max_output_tokens"], 2800)
         self.assertGreaterEqual(kwargs["max_output_tokens"], 1800)
+
+    @patch("humanizer.utils.client")
+    def test_extracts_text_from_dict_output(self, mock_client):
+        mock_response = MagicMock()
+        mock_response.output_text = ""
+        mock_response.output = [
+            {"content": [{"type": "text", "text": "Simpler wording"}]}
+        ]
+        mock_client.responses.create.return_value = mock_response
+
+        result = humanize_text("Sample input text")
+        self.assertEqual(result, "Simpler wording")
+
+    @patch("humanizer.utils.client")
+    def test_raises_when_openai_returns_empty(self, mock_client):
+        mock_response = MagicMock()
+        mock_response.output_text = ""
+        mock_response.output = [
+            {"content": [{"type": "text", "text": ""}]}
+        ]
+        mock_client.responses.create.return_value = mock_response
+
+        with self.assertRaises(Exception):
+            humanize_text("Short input")

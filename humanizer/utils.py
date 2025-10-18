@@ -83,15 +83,32 @@ def humanize_text(text: str):
         )
 
         # Prefer the helper, but fall back to manual reconstruction if needed
-        result = (response.output_text or "").strip()
+        result = (getattr(response, "output_text", "") or "").strip()
 
-        if not result and getattr(response, "output", None):
-            chunks = []
-            for item in response.output:
-                for content in getattr(item, "content", []) or []:
-                    if getattr(content, "type", None) == "output_text":
-                        chunks.append(content.text)
-            result = "".join(chunks).strip()
+        if not result:
+            output = getattr(response, "output", None)
+            if output:
+                chunks = []
+                for item in output:
+                    content_list = getattr(item, "content", None)
+                    if content_list is None and isinstance(item, dict):
+                        content_list = item.get("content")
+
+                    for content in content_list or []:
+                        content_type = getattr(content, "type", None)
+                        text = getattr(content, "text", None)
+
+                        if isinstance(content, dict):
+                            content_type = content.get("type", content_type)
+                            text = content.get("text", text)
+
+                        if content_type in {"output_text", "text"} and text:
+                            chunks.append(text)
+
+                result = "".join(chunks).strip()
+
+        if not result:
+            raise Exception("OpenAI returned an empty response.")
 
         result = re.sub(r"\n{2,}", "\n\n", result)
 
