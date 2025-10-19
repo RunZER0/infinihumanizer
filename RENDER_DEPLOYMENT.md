@@ -39,18 +39,13 @@ git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
 git push -u origin main
 ```
 
-### 2. Create PostgreSQL Database on Render
+### 2. Database Setup (Supabase - Already Configured!)
 
-1. Go to [Render Dashboard](https://dashboard.render.com/)
-2. Click **"New +"** → **"PostgreSQL"**
-3. Configure:
-   - **Name:** `infinihumanizer-db`
-   - **Database:** `infinihumanizer`
-   - **User:** (auto-generated)
-   - **Region:** Choose closest to your users
-   - **Plan:** Free tier is fine for testing
-4. Click **"Create Database"**
-5. **Save the Internal Database URL** - you'll need this for your web service
+✅ **You're already using Supabase!** Your database URL is configured in Render environment variables.
+
+**No additional database setup needed** - Supabase is already providing your PostgreSQL database.
+
+Your `DATABASE_URL` environment variable in Render should point to your Supabase instance.
 
 ### 3. Create Web Service on Render
 
