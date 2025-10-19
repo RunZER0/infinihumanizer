@@ -871,3 +871,32 @@ textarea::placeholder {
     max-width: 700px;
     margin: 0 auto var(--spacing-lg);
 }
+
+/* ==========================================
+     MOBILE STACKING FOR HUMANIZER TEXTAREAS
+     ========================================== */
+@media (max-width: 600px) {
+    .split-container {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: var(--spacing-md) !important;
+        padding: 0 var(--spacing-xs) !important;
+    }
+    .input-container,
+    .output-container {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
+    .input-container textarea,
+    .output-container textarea {
+        min-height: 120px !important;
+        font-size: 1rem !important;
+    }
+    .container-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.5rem !important;
+    }
+}
