@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout - InfiniHumanizer</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-left">
+            <div class="auth-branding">
+                <h1 class="gradient-text">InfiniHumanizer</h1>
+                <p style="font-size: 1.3rem; color: var(--luminous-blue); margin-bottom: 1.5rem;">
+                    See You Soon!
+                </p>
+                <p>
+                    Thank you for using InfiniHumanizer. Your session has been safely terminated.
+                </p>
+            </div>
+        </div>
+
+        <div class="auth-right">
+            <div class="auth-form-container">
+                <div class="auth-form-header">
+                    <h2>Sign Out</h2>
+                    <p>Are you sure you want to logout?</p>
+                </div>
+
+                <div class="form-container">
+                    <form method="post" action="{% url 'account_logout' %}">
+                        {% csrf_token %}
+                        
+                        <button type="submit" class="btn-danger" style="width: 100%; margin-bottom: 1rem;">
+                            🚪 Yes, Sign Me Out
+                        </button>
+                    </form>
+
+                    <a href="{% url 'humanizer' %}" class="btn-secondary" style="display: block; text-align: center;">
+                        ← Back to Humanizer
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

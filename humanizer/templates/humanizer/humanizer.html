@@ -1,0 +1,1665 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Humanizer - InfiniHumanizer{% endblock %}
+
+{% csrf_token %}
+
+{% block extra_head %}
+<!-- jsPDF Library for PDF Generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<style>
+    /* Reset base.html styles */
+    body {
+        background: #0D0D0D !important;
+        margin: 0;
+        padding: 0;
+        font-family: 'Aptos', 'Segoe UI', sans-serif;
+    }
+    
+    main {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    /* Hide base navigation */
+    nav {
+        display: none !important;
+    }
+    
+    /* Modern Top Ribbon */
+    .top-ribbon {
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(26, 26, 26, 0.95));
+        border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        backdrop-filter: blur(10px);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+    
+    .ribbon-left {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+    
+    .sidebar-toggle {
+        background: transparent;
+        border: none;
+        color: #00D4FF;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        transform: rotate(0deg);
+    }
+    
+    .sidebar-toggle:hover {
+        background: rgba(0, 212, 255, 0.1);
+    }
+    
+    .sidebar-toggle.collapsed {
+        transform: rotate(180deg);
+    }
+    
+    .app-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #00D4FF;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .ribbon-right {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+    
+    .user-info {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.95rem;
+    }
+    
+    .user-info strong {
+        color: #00D4FF;
+    }
+    
+    /* Main Layout */
+    .humanizer-layout {
+        display: flex;
+        height: calc(100vh - 80px);
+        overflow: hidden;
+    }
+    
+    /* Collapsible Left Sidebar */
+    .sidebar {
+        width: 280px;
+        background: rgba(0, 0, 0, 0.6);
+        border-right: 1px solid rgba(0, 212, 255, 0.2);
+        padding: 1.5rem;
+        overflow-y: auto;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateX(0);
+    }
+    
+    /* Custom scrollbar for sidebar - blending cyberpunk style */
+    .sidebar::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .sidebar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    
+    .sidebar::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, 
+            rgba(0, 212, 255, 0.1), 
+            rgba(0, 212, 255, 0.3), 
+            rgba(0, 212, 255, 0.1));
+        border-radius: 3px;
+        transition: background 0.3s ease;
+    }
+    
+    .sidebar::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, 
+            rgba(0, 212, 255, 0.3), 
+            rgba(0, 212, 255, 0.5), 
+            rgba(0, 212, 255, 0.3));
+    }
+    
+    /* Firefox scrollbar */
+    .sidebar {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(0, 212, 255, 0.2) transparent;
+    }
+    
+    .sidebar.collapsed {
+        width: 0;
+        padding: 0;
+        transform: translateX(-100%);
+        border-right: none;
+    }
+    
+    .sidebar-content {
+        opacity: 1;
+        transition: opacity 0.3s ease;
+    }
+    
+    .sidebar.collapsed .sidebar-content {
+        opacity: 0;
+    }
+    
+    .sidebar-section {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+    }
+    
+    .sidebar-section:last-child {
+        border-bottom: none;
+    }
+    
+    .sidebar-title {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.5);
+        letter-spacing: 1px;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    
+    /* Navigation Links */
+    .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.875rem 1rem;
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+    
+    .nav-link:hover {
+        background: rgba(0, 212, 255, 0.1);
+        color: #00D4FF;
+        transform: translateX(4px);
+    }
+    
+    .nav-link.logout {
+        color: rgba(255, 59, 48, 0.8);
+    }
+    
+    .nav-link.logout:hover {
+        background: rgba(255, 59, 48, 0.1);
+        color: #FF3B30;
+    }
+    
+    /* Model Cards - Sleek Minimal */
+    .model-card {
+        background: rgba(26, 26, 26, 0.3);
+        border: 1px solid rgba(0, 212, 255, 0.1);
+        border-radius: 10px;
+        padding: 0.875rem 1rem;
+        margin-bottom: 0.625rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    
+    .model-card:hover {
+        background: rgba(0, 212, 255, 0.05);
+        border-color: rgba(0, 212, 255, 0.25);
+    }
+    
+    .model-card.selected {
+        background: rgba(0, 212, 255, 0.08);
+        border-color: #00D4FF;
+    }
+    
+    .model-card input[type="radio"] {
+        display: none;
+    }
+    
+    .model-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .model-left {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .model-icon {
+        font-size: 1.3rem;
+        filter: grayscale(0.4) brightness(0.75) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+        transition: all 0.3s ease;
+        opacity: 0.85;
+    }
+    
+    .model-card:hover .model-icon {
+        filter: grayscale(0.2) brightness(0.9) drop-shadow(0 0 10px rgba(0, 212, 255, 0.3));
+        opacity: 1;
+        transform: scale(1.08);
+    }
+    
+    .model-card.selected .model-icon {
+        filter: grayscale(0) brightness(1) drop-shadow(0 0 12px rgba(0, 212, 255, 0.5));
+        opacity: 1;
+    }
+    
+    .model-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #FFF;
+    }
+    
+    .model-badge {
+        background: rgba(0, 212, 255, 0.15);
+        color: #00D4FF;
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 0.2rem 0.6rem;
+        border-radius: 8px;
+        text-transform: uppercase;
+    }
+    
+    .model-description {
+        margin-top: 0.6rem;
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.6);
+        line-height: 1.4;
+    }
+    
+    /* Nuclear Card Styling */
+    .nuclear-card {
+        border: 1px solid rgba(255, 69, 0, 0.3);
+    }
+    
+    .nuclear-card:hover {
+        background: rgba(255, 69, 0, 0.08);
+        border-color: rgba(255, 69, 0, 0.5);
+    }
+    
+    .nuclear-card.selected {
+        background: rgba(255, 69, 0, 0.12);
+        border-color: #FF4500;
+        box-shadow: 0 0 20px rgba(255, 69, 0, 0.3);
+    }
+    
+    .nuclear-badge {
+        background: rgba(255, 69, 0, 0.2);
+        color: #FF4500;
+        animation: nuclear-pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes nuclear-pulse {
+        0%, 100% {
+            opacity: 1;
+            text-shadow: 0 0 5px rgba(255, 69, 0, 0.5);
+        }
+        50% {
+            opacity: 0.7;
+            text-shadow: 0 0 10px rgba(255, 69, 0, 0.8);
+        }
+    }
+    
+    /* Main Content Area */
+    .content-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    
+    /* Work Window */
+    .work-window {
+        flex: 1;
+        padding: 2rem;
+        overflow-y: auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        align-items: start;
+        max-height: calc(100vh - 80px);
+    }
+    
+    .error-alert {
+        grid-column: 1 / -1;
+    }
+    
+    .input-container, .output-container {
+        background: rgba(0, 0, 0, 0.4);
+        border: 2px solid rgba(0, 212, 255, 0.3);
+        border-radius: 16px;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 180px);
+        max-height: calc(100vh - 180px);
+    }
+    
+    .container-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.75rem;
+        padding: 0 0.25rem;
+    }
+    
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .container-label {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #00D4FF;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    /* Word Counter in Header */
+    .word-counter {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.5);
+        padding: 0.3rem 0.7rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 6px;
+    }
+    
+    .word-count {
+        color: #00D4FF;
+        font-weight: 600;
+    }
+    
+    .text-box {
+        flex: 1;
+        background: rgba(13, 13, 13, 0.9);
+        border: 1px solid rgba(0, 212, 255, 0.15);
+        border-radius: 12px;
+        padding: 1.5rem;
+        color: #FFFFFF;
+        font-size: 1rem;
+        line-height: 1.8;
+        font-family: 'Aptos', 'Segoe UI', sans-serif;
+        resize: none;
+        transition: all 0.3s ease;
+    }
+    
+    .text-box:focus {
+        outline: none;
+        border-color: #00D4FF;
+        background: rgba(13, 13, 13, 1);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+    }
+    
+    .text-box::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .action-bar {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 0.75rem;
+        padding: 0 0.25rem;
+    }
+    
+    .btn {
+        padding: 0.5rem 1.2rem;
+        border-radius: 6px;
+        border: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        justify-content: center;
+        line-height: 1;
+        height: 2.5rem;
+        max-height: 2.5rem;
+        width: 100%;
+    }
+    
+    /* Loading Dots Animation */
+    .loading-dots {
+        display: inline-flex;
+        gap: 0.4rem;
+    }
+    
+    .loading-dots span {
+        width: 8px;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        animation: wave 1.2s ease-in-out infinite;
+    }
+    
+    .loading-dots span:nth-child(1) {
+        animation-delay: 0s;
+    }
+    
+    .loading-dots span:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+    
+    .loading-dots span:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+    
+    @keyframes wave {
+        0%, 60%, 100% {
+            transform: translateY(0);
+            opacity: 0.5;
+        }
+        30% {
+            transform: translateY(-10px);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #00D4FF, #0099FF);
+        color: #0D0D0D;
+        flex: 1;
+    }
+    
+    .btn-primary:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 30px rgba(0, 212, 255, 0.4);
+    }
+    
+    .btn-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+    
+    /* Loading state - removed spinner circle to avoid overcrowding the dots */
+    .btn-primary.loading {
+        position: relative;
+    }
+    
+    .btn-secondary {
+        background: rgba(0, 212, 255, 0.15);
+        color: #00D4FF;
+        border: 1px solid #00D4FF;
+    }
+    
+    .btn-secondary:hover {
+        background: rgba(0, 212, 255, 0.25);
+        transform: translateY(-2px);
+    }
+    
+    /* Release Notes Section */
+    .release-notes {
+        background: rgba(0, 0, 0, 0.5);
+        border-top: 1px solid rgba(0, 212, 255, 0.2);
+        padding: 2rem;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    .notes-header {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #00D4FF;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .note-item {
+        background: rgba(26, 26, 26, 0.4);
+        border-left: 2px solid rgba(0, 212, 255, 0.3);
+        border-radius: 8px;
+        padding: 0.875rem 1rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .note-version {
+        color: #00D4FF;
+        font-weight: 700;
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .note-text {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+    
+    /* Error Message */
+    .error-alert {
+        background: rgba(255, 59, 48, 0.1);
+        border: 1px solid rgba(255, 59, 48, 0.4);
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        color: #FF3B30;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    /* Processing Overlay */
+    .processing-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.95);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+    
+    .processing-spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid rgba(0, 212, 255, 0.2);
+        border-top-color: #00D4FF;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    .processing-text {
+        color: #00D4FF;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-top: 1.5rem;
+    }
+    
+    /* Toast Notifications - Modern Grey-Black (Compact) */
+    .toast {
+        position: fixed;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        background: linear-gradient(135deg, rgba(26, 26, 26, 0.98), rgba(18, 18, 18, 0.98));
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: 8px;
+        padding: 0.6rem 1rem;
+        color: #FFF;
+        font-size: 0.85rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+        z-index: 10000;
+        animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s;
+        pointer-events: none;
+        backdrop-filter: blur(10px);
+        max-width: 300px;
+    }
+    
+    @keyframes slideIn {
+        from {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes fadeOut {
+        to {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+    }
+    
+    .toast-icon {
+        font-size: 1.1rem;
+    }
+    
+    .toast-success {
+        border-color: rgba(0, 255, 136, 0.7);
+    }
+    
+    .toast-error {
+        border-color: rgba(255, 59, 48, 0.7);
+    }
+    
+    /* Scroll Animations */
+    .scroll-fade-in {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    
+    .scroll-fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .parallax-slow {
+        transition: transform 0.3s ease-out;
+    }
+    
+    /* Copy Button in Header */
+    .copy-btn, .pdf-btn {
+        background: rgba(0, 212, 255, 0.1);
+        border: 1px solid rgba(0, 212, 255, 0.3);
+        color: #00D4FF;
+        padding: 0.4rem 0.8rem;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    
+    .copy-btn:hover, .pdf-btn:hover {
+        background: rgba(0, 212, 255, 0.2);
+        transform: translateY(-1px);
+    }
+    
+    .copy-btn.copied {
+        background: rgba(0, 255, 136, 0.15);
+        border-color: rgba(0, 255, 136, 0.4);
+        color: #00FF88;
+    }
+    
+    /* Circular Readability Indicators in Header */
+    .readability-circles {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+    
+    .circle-stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    
+    .circle-progress {
+        position: relative;
+        width: 28px;
+        height: 28px;
+    }
+    
+    .circle-progress svg {
+        transform: rotate(-90deg);
+    }
+    
+    .circle-bg {
+        fill: none;
+        stroke: rgba(0, 212, 255, 0.15);
+        stroke-width: 2.5;
+    }
+    
+    .circle-fill {
+        fill: none;
+        stroke: #00D4FF;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        transition: stroke-dashoffset 0.6s ease;
+    }
+    
+    .circle-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 0.6rem;
+        font-weight: 700;
+        color: #00D4FF;
+        white-space: nowrap;
+    }
+    
+    .circle-label {
+        font-size: 0.65rem;
+        color: rgba(255, 255, 255, 0.5);
+        font-weight: 500;
+    }
+</style>
+
+<!-- Modern Top Ribbon -->
+<div class="top-ribbon">
+    <div class="ribbon-left">
+        <button class="sidebar-toggle collapsed" id="sidebarToggle" onclick="toggleSidebar()">☰</button>
+        <div class="app-title">
+            <span>🤖</span>
+            <span>InfiniAI Humanizer</span>
+        </div>
+    </div>
+    <div class="ribbon-right">
+        <div class="user-info">
+            <strong>{{ user.username }}</strong>
+        </div>
+    </div>
+</div>
+
+<!-- Main Layout -->
+<div class="humanizer-layout">
+    <!-- Collapsible Left Sidebar -->
+    <div class="sidebar collapsed" id="sidebar">
+        <div class="sidebar-content">
+        <!-- Navigation Section -->
+        <div class="sidebar-section">
+            <div class="sidebar-title">Navigation</div>
+            <a href="{% url 'pricing' %}" class="nav-link">
+                <span>💎</span>
+                <span>Pricing</span>
+            </a>
+            <a href="{% url 'settings' %}" class="nav-link">
+                <span>⚙️</span>
+                <span>Settings</span>
+            </a>
+            <a href="{% url 'about' %}" class="nav-link">
+                <span>ℹ️</span>
+                <span>About</span>
+            </a>
+            <a href="{% url 'contact' %}" class="nav-link">
+                <span>📧</span>
+                <span>Contact</span>
+            </a>
+            <a href="{% url 'account_logout' %}" class="nav-link logout">
+                <span>🚪</span>
+                <span>Logout</span>
+            </a>
+        </div>
+        
+        <!-- Model Selection Section -->
+        <div class="sidebar-section">
+            <div class="sidebar-title">Select AI Model</div>
+            
+            <label class="model-card" data-engine="deepseek">
+                <input type="radio" name="engine" value="deepseek">
+                <div class="model-header">
+                    <div class="model-left">
+                        <span class="model-icon">🔥</span>
+                        <span class="model-name">Loly</span>
+                    </div>
+                    <div class="model-badge">Beat Detectors</div>
+                </div>
+                <div class="model-description">Optimized to bypass AI detection systems</div>
+            </label>
+            
+            <label class="model-card selected" data-engine="claude">
+                <input type="radio" name="engine" value="claude" checked>
+                <div class="model-header">
+                    <div class="model-left">
+                        <span class="model-icon">⭕</span>
+                        <span class="model-name">OXO</span>
+                    </div>
+                    <div class="model-badge">Balanced</div>
+                </div>
+                <div class="model-description">Perfect balance of quality and authenticity</div>
+            </label>
+            
+            <label class="model-card" data-engine="openai">
+                <input type="radio" name="engine" value="openai">
+                <div class="model-header">
+                    <div class="model-left">
+                        <span class="model-icon">⚡</span>
+                        <span class="model-name">Smurk</span>
+                    </div>
+                    <div class="model-badge">Best Quality</div>
+                </div>
+                <div class="model-description">Highest quality output with natural errors</div>
+            </label>
+        </div>
+        </div>
+    </div>
+
+    <!-- Work Area -->
+    <div class="content-area">
+        <div class="work-window">
+            <!-- Input Container -->
+            <div class="input-container">
+                <div class="container-header">
+                    <div class="header-left">
+                        <div class="container-label">
+                            <span>📝</span>
+                            <span>Input Text</span>
+                        </div>
+                        <div class="word-counter">
+                            <span>Words:</span>
+                            <span class="word-count" id="inputWordCount">0</span>
+                        </div>
+                    </div>
+                </div>
+                <textarea 
+                    id="inputText" 
+                    class="text-box" 
+                    placeholder="Paste your text here to humanize it..."
+                ></textarea>
+                <button id="humanizeBtn" class="btn btn-primary">
+                    <span id="btnText">🤖 Humanize Text</span>
+                </button>
+            </div>
+
+            <!-- Output Container -->
+            <div class="output-container">
+                <div class="container-header">
+                    <div class="header-left">
+                        <div class="container-label">
+                            <span>✨</span>
+                            <span>Humanized Output</span>
+                        </div>
+                        <div class="word-counter">
+                            <span>Words:</span>
+                            <span class="word-count" id="outputWordCount">0</span>
+                        </div>
+                    </div>
+                    <div class="header-right">
+                        <!-- Stats Indicators -->
+                        <div class="circle-stat" style="margin-right: 1rem;">
+                            <div class="circle-progress">
+                                <svg width="32" height="32">
+                                    <circle class="circle-bg" cx="16" cy="16" r="14"></circle>
+                                    <circle class="circle-fill" id="humanCircle" cx="16" cy="16" r="14" 
+                                            stroke-dasharray="87.96" stroke-dashoffset="87.96"></circle>
+                                </svg>
+                                <span class="circle-text" id="humanScore" style="font-size: 0.7rem;">0%</span>
+                            </div>
+                            <span class="circle-label" style="font-size: 0.75rem;">Human</span>
+                        </div>
+                        <div class="circle-stat" style="margin-right: 1rem;">
+                            <div class="circle-progress">
+                                <svg width="32" height="32">
+                                    <circle class="circle-bg" cx="16" cy="16" r="14"></circle>
+                                    <circle class="circle-fill" id="readCircle" cx="16" cy="16" r="14" 
+                                            stroke-dasharray="87.96" stroke-dashoffset="87.96"></circle>
+                                </svg>
+                                <span class="circle-text" id="readScore" style="font-size: 0.7rem;">0%</span>
+                            </div>
+                            <span class="circle-label" style="font-size: 0.75rem;">Readable</span>
+                        </div>
+                        <button id="copyBtn" class="copy-btn" title="Copy to clipboard">
+                            📋 Copy
+                        </button>
+                        <button id="pdfBtn" class="pdf-btn" title="Download as PDF">
+                            📄 PDF
+                        </button>
+                    </div>
+                </div>
+                <textarea 
+                    id="outputText" 
+                    class="text-box" 
+                    placeholder="Humanized text will appear here..."
+                    readonly
+                ></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Glitching Version Badge - Reduced Height -->
+<div style="text-align: center; padding: 2rem 2rem 1.5rem; background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(13, 13, 20, 0.5) 100%);">
+    <div class="glitch-version" style="font-size: 2rem; font-weight: 900; color: #00D4FF; position: relative; display: inline-block; letter-spacing: 0.15rem;">
+        <span style="position: relative; z-index: 1;">NEURAL-X v3.0</span>
+    </div>
+    <p style="color: rgba(255, 255, 255, 0.5); margin-top: 0.5rem; font-size: 0.95rem;">Advanced AI Humanization Platform</p>
+</div>
+
+<!-- Smooth Separator -->
+<div style="height: 1px; background: linear-gradient(to right, transparent, rgba(0, 212, 255, 0.2), transparent); margin: 0;"></div>
+
+<!-- Services Section - Seamless Flow -->
+<section style="padding: 0; max-width: 100%; margin: 0;">
+    
+    <!-- Plagiarism Checker Section - FIRST -->
+    <div class="scroll-fade-in" style="padding: 5rem 2rem; background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(13, 13, 20, 0.6) 100%); position: relative;">
+        <div class="parallax-slow" style="position: absolute; top: 15%; right: 8%; width: 250px; height: 250px; background: url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=500') center/cover; opacity: 0.05; border-radius: 50%; filter: blur(4px);"></div>
+        
+        <div style="max-width: 900px; margin: 0 auto; text-align: center; position: relative; z-index: 1;">
+            <h2 style="color: #00D4FF; font-size: 2.8rem; margin-bottom: 1.5rem; font-weight: 800; text-shadow: 0 0 30px rgba(0, 212, 255, 0.5);">
+                📝 Plagiarism Checker
+            </h2>
+            <div style="width: 120px; height: 3px; background: linear-gradient(90deg, transparent, #00D4FF, transparent); margin: 0 auto 2rem;"></div>
+            
+            <p style="color: rgba(255, 255, 255, 0.9); line-height: 2; font-size: 1.2rem; margin-bottom: 2rem;">
+                Need to verify your content's originality? Our plagiarism detection service ensures your work is unique and properly cited.
+            </p>
+            <div style="padding: 1.5rem; margin: 0 auto; max-width: 500px;">
+                <p style="color: rgba(255, 255, 255, 0.8); font-size: 1rem; margin-bottom: 1rem;">
+                    <strong style="color: #00D4FF; font-size: 1.1rem;">Contact us for plagiarism checking:</strong>
+                </p>
+                <a href="mailto:valdaceai@gmail.com" style="color: rgba(255, 255, 255, 0.9); text-decoration: none; font-weight: 700; font-size: 1.3rem; display: inline-flex; align-items: center; gap: 0.8rem; transition: all 0.3s ease; padding: 0.8rem 1.5rem; background: linear-gradient(135deg, rgba(40, 40, 40, 0.9), rgba(26, 26, 26, 0.9)); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);">
+                    <span style="font-size: 1.8rem;">📧</span>
+                    <span>valdaceai@gmail.com</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subtle Divider -->
+    <div style="height: 80px; background: linear-gradient(180deg, rgba(13, 13, 20, 0.6) 0%, rgba(0, 0, 0, 0.9) 100%);"></div>
+
+    <!-- Legal AI Tech Section - SECOND -->
+    <div class="scroll-fade-in" style="padding: 5rem 2rem; background: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, rgba(13, 13, 20, 0.8) 50%, rgba(0, 0, 0, 0.95) 100%), url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200') center/cover; background-attachment: fixed; position: relative; min-height: 500px;">
+        <div class="parallax-slow" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at center, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.95));"></div>
+        <div style="max-width: 900px; margin: 0 auto; text-align: center; position: relative; z-index: 1;">
+            <div style="display: inline-block; background: linear-gradient(45deg, #FFB800, #FFA500); color: #000; padding: 0.7rem 2rem; border-radius: 30px; font-weight: 900; font-size: 1.1rem; margin-bottom: 2rem; box-shadow: 0 0 40px rgba(255, 184, 0, 0.6); animation: pulse 2s infinite;">
+                ⚡ COMING SOON
+            </div>
+            <h2 style="color: #FFB800; font-size: 3rem; margin-bottom: 1.5rem; font-weight: 900; text-shadow: 0 0 35px rgba(255, 184, 0, 0.5);">
+                ⚖️ Legal AI Technology
+            </h2>
+            <p style="color: rgba(255, 255, 255, 0.9); line-height: 2; font-size: 1.2rem; margin-bottom: 3rem;">
+                Revolutionary AI-powered legal document analysis and generation. Transform complex legal work with intelligent automation that understands context, precedent, and compliance.
+            </p>
+            <div style="display: grid; gap: 1.2rem; max-width: 650px; margin: 0 auto;">
+                <div style="padding: 1.2rem 1.8rem; text-align: left;">
+                    <strong style="color: #FFB800; font-size: 1.1rem; display: block; margin-bottom: 0.5rem;">✓ Contract Analysis & Review</strong>
+                    <p style="color: rgba(255, 255, 255, 0.7); font-size: 1rem; line-height: 1.6;">Automated contract review with risk assessment</p>
+                </div>
+                <div style="padding: 1.2rem 1.8rem; text-align: left;">
+                    <strong style="color: #FFB800; font-size: 1.1rem; display: block; margin-bottom: 0.5rem;">✓ Legal Document Generation</strong>
+                    <p style="color: rgba(255, 255, 255, 0.7); font-size: 1rem; line-height: 1.6;">AI-powered drafting of legal documents and briefs</p>
+                </div>
+                <div style="padding: 1.2rem 1.8rem; text-align: left;">
+                    <strong style="color: #FFB800; font-size: 1.1rem; display: block; margin-bottom: 0.5rem;">✓ Case Law Research Assistant</strong>
+                    <p style="color: rgba(255, 255, 255, 0.7); font-size: 1rem; line-height: 1.6;">Intelligent case law search with precedent analysis</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subtle Divider -->
+    <div style="height: 80px; background: linear-gradient(180deg, rgba(0, 0, 0, 0.95) 0%, rgba(13, 13, 20, 0.7) 100%);"></div>
+
+    <!-- Contact Us Section - THIRD -->
+    <div class="scroll-fade-in" style="padding: 5rem 2rem; background: linear-gradient(180deg, rgba(13, 13, 20, 0.7) 0%, rgba(0, 0, 0, 0.85) 100%);">
+        <div style="max-width: 900px; margin: 0 auto; text-align: center;">
+            <h2 style="color: #00D4FF; font-size: 2.8rem; margin-bottom: 1.5rem; font-weight: 800; text-shadow: 0 0 30px rgba(0, 212, 255, 0.5);">
+                📧 Contact Us
+            </h2>
+            <div style="width: 120px; height: 3px; background: linear-gradient(90deg, transparent, #00D4FF, transparent); margin: 0 auto 2.5rem;"></div>
+            
+            <p style="color: rgba(255, 255, 255, 0.85); font-size: 1.15rem; line-height: 1.9; margin-bottom: 2.5rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+                Have questions, feedback, or need assistance? We're here to help! Reach out to us for any inquiries about our services, technical support, or partnership opportunities.
+            </p>
+            
+            <a href="mailto:valdaceai@gmail.com" style="display: inline-flex; align-items: center; gap: 1rem; background: linear-gradient(135deg, rgba(45, 45, 45, 0.95), rgba(30, 30, 30, 0.95)); color: #FFF; text-decoration: none; padding: 1.2rem 2.5rem; border-radius: 12px; font-weight: 800; font-size: 1.2rem; transition: all 0.3s ease; box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5); margin-bottom: 3rem; border: 2px solid rgba(255, 255, 255, 0.15);">
+                <span style="font-size: 1.8rem;">📧</span>
+                <span>valdaceai@gmail.com</span>
+            </a>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; max-width: 600px; margin: 0 auto; padding-top: 2rem; border-top: 1px solid rgba(0, 212, 255, 0.15);">
+                <div>
+                    <div style="color: #00D4FF; font-weight: 700; margin-bottom: 0.6rem; font-size: 1.05rem;">⏱️ Response Time</div>
+                    <div style="color: rgba(255, 255, 255, 0.75); font-size: 1rem;">Within 24 hours</div>
+                </div>
+                <div>
+                    <div style="color: #00D4FF; font-weight: 700; margin-bottom: 0.6rem; font-size: 1.05rem;">📅 Support</div>
+                    <div style="color: rgba(255, 255, 255, 0.75); font-size: 1rem;">7 Days a Week</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subtle Divider -->
+    <div style="height: 80px; background: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(13, 13, 20, 0.6) 100%);"></div>
+
+    <!-- About InfiniHumanizer Section - LAST -->
+    <div class="scroll-fade-in" style="padding: 5rem 2rem; background: linear-gradient(180deg, rgba(13, 13, 20, 0.6) 0%, rgba(0, 0, 0, 0.95) 100%); position: relative;">
+        <div class="parallax-slow" style="position: absolute; top: 10%; left: 8%; width: 280px; height: 280px; background: url('https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600') center/cover; opacity: 0.06; border-radius: 50%; filter: blur(3px);"></div>
+        
+        <div style="max-width: 1000px; margin: 0 auto; text-align: center; position: relative; z-index: 1;">
+            <h2 style="color: #00D4FF; font-size: 2.8rem; margin-bottom: 1.5rem; font-weight: 800; text-shadow: 0 0 30px rgba(0, 212, 255, 0.5);">
+                ℹ️ About InfiniHumanizer
+            </h2>
+            <div style="width: 120px; height: 3px; background: linear-gradient(90deg, transparent, #00D4FF, transparent); margin: 0 auto 2.5rem;"></div>
+            
+            <p style="color: rgba(255, 255, 255, 0.9); line-height: 2; font-size: 1.2rem; margin-bottom: 1.8rem;">
+                InfiniAI Humanizer uses cutting-edge AI technology to transform robotic text into natural, authentic human writing.
+            </p>
+            <p style="color: rgba(255, 255, 255, 0.75); line-height: 1.9; font-size: 1.1rem; max-width: 800px; margin: 0 auto;">
+                We combine multiple AI engines (DeepSeek, Claude, OpenAI) with sophisticated humanization algorithms to deliver the most authentic results possible. Our platform ensures your content bypasses AI detection while maintaining quality and readability.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Scroll to Top Button -->
+<button id="scrollTopBtn" style="position: fixed; bottom: 2rem; right: 2rem; width: 50px; height: 50px; background: linear-gradient(45deg, #00D4FF, #00BFFF); border: none; border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 20px rgba(0, 212, 255, 0.6); transition: all 0.3s ease; z-index: 1000;">
+    <span style="transform: rotate(-90deg); display: inline-block;">➜</span>
+</button>
+
+<style>
+/* Glitch Animation */
+.glitch-version {
+    animation: glitch 3s infinite;
+}
+
+@keyframes glitch {
+    0%, 90%, 100% {
+        transform: translate(0);
+        text-shadow: 
+            2px 2px 0 rgba(255, 0, 255, 0.7),
+            -2px -2px 0 rgba(0, 255, 255, 0.7);
+    }
+    92% {
+        transform: translate(-2px, 2px);
+        text-shadow: 
+            4px 0 0 rgba(255, 0, 255, 0.7),
+            -4px 0 0 rgba(0, 255, 255, 0.7);
+    }
+    94% {
+        transform: translate(2px, -2px);
+        text-shadow: 
+            -4px 0 0 rgba(255, 0, 255, 0.7),
+            4px 0 0 rgba(0, 255, 255, 0.7);
+    }
+    96% {
+        transform: translate(-2px, -2px);
+        text-shadow: 
+            2px 4px 0 rgba(255, 0, 255, 0.7),
+            -2px -4px 0 rgba(0, 255, 255, 0.7);
+    }
+}
+
+/* Horizontal Glitch Spikes */
+.glitch-version::before,
+.glitch-version::after {
+    content: 'VERSION 4.5';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.glitch-version::before {
+    animation: glitch-spike 2.5s infinite;
+    color: rgba(255, 0, 255, 0.8);
+    z-index: -1;
+}
+
+.glitch-version::after {
+    animation: glitch-spike 2.5s infinite reverse;
+    color: rgba(0, 255, 255, 0.8);
+    z-index: -2;
+}
+
+@keyframes glitch-spike {
+    0%, 95%, 100% {
+        clip-path: inset(0 0 0 0);
+        transform: translate(0);
+    }
+    96% {
+        clip-path: inset(20% 0 40% 0);
+        transform: translate(-10px, 0);
+    }
+    97% {
+        clip-path: inset(60% 0 20% 0);
+        transform: translate(10px, 0);
+    }
+    98% {
+        clip-path: inset(40% 0 30% 0);
+        transform: translate(-8px, 0);
+    }
+}
+
+/* Scroll Top Button Hover */
+#scrollTopBtn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 30px rgba(0, 212, 255, 0.8);
+}
+
+/* Section Hover Effects */
+a[href^="mailto"]:hover {
+    transform: translateX(5px);
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
+}
+</style>
+
+<script>
+// Get CSRF token from cookie
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+const csrftoken = getCookie('csrftoken');
+
+// Toast notification function
+function showToast(message, type = 'success') {
+    // Remove any existing toasts
+    const existingToasts = document.querySelectorAll('.toast');
+    existingToasts.forEach(toast => toast.remove());
+    
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+        z-index: 10000;
+        min-width: 200px;
+        max-width: 280px;
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.8rem;
+        animation: slideIn 0.3s ease;
+    `;
+    
+    // Icon based on type
+    const icon = type === 'success' ? '✓' : type === 'error' ? '⚠' : 'ℹ';
+    
+    toast.innerHTML = `
+        <span style="font-size: 0.9rem; flex-shrink: 0;">${icon}</span>
+        <span style="flex: 1; color: rgba(255, 255, 255, 0.95); font-size: 0.8rem;">${message}</span>
+    `;
+    
+    // Add to page
+    document.body.appendChild(toast);
+    
+    // Auto-remove after 3 seconds
+    setTimeout(() => {
+        toast.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// Word count function
+function updateWordCount(textareaId, counterId) {
+    const text = document.getElementById(textareaId).value.trim();
+    const wordCount = text ? text.split(/\s+/).length : 0;
+    document.getElementById(counterId).textContent = wordCount;
+    return wordCount;
+}
+
+// Update input word count on input
+document.getElementById('inputText').addEventListener('input', function() {
+    updateWordCount('inputText', 'inputWordCount');
+});
+
+// Sidebar toggle
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.getElementById('sidebarToggle');
+    sidebar.classList.toggle('collapsed');
+    toggle.classList.toggle('collapsed');
+}
+
+// Model selection
+document.querySelectorAll('.model-card').forEach(card => {
+    card.addEventListener('click', function() {
+        document.querySelectorAll('.model-card').forEach(c => c.classList.remove('selected'));
+        this.classList.add('selected');
+        this.querySelector('input[type="radio"]').checked = true;
+    });
+});
+
+// Humanize button
+document.getElementById('humanizeBtn').addEventListener('click', async function() {
+    const inputText = document.getElementById('inputText').value.trim();
+    const selectedEngine = document.querySelector('input[name="engine"]:checked').value;
+    
+    if (!inputText) {
+        showToast('Please enter some text to humanize', 'error');
+        return;
+    }
+    
+    const btn = this;
+    const btnText = document.getElementById('btnText');
+    const outputTextarea = document.getElementById('outputText');
+    
+    // Disable button and show loading dots
+    btn.disabled = true;
+    btn.classList.add('loading');
+    btnText.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+    outputTextarea.value = 'Processing your text...';
+    
+    try {
+        const response = await fetch('/humanizer/humanize/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrftoken
+            },
+            body: `text=${encodeURIComponent(inputText)}&engine=${encodeURIComponent(selectedEngine)}`
+        });
+        
+        if (!response.ok) {
+            const data = await response.json().catch(() => ({ error: `Server error: ${response.status}` }));
+            throw new Error(data.error || `HTTP ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        outputTextarea.value = data.output_text || '';
+        updateWordCount('outputText', 'outputWordCount');
+        
+        // Update stats if available
+        if (data.human_score !== undefined && data.read_score !== undefined) {
+            updateCircleStat('humanCircle', 'humanScore', data.human_score);
+            updateCircleStat('readCircle', 'readScore', data.read_score);
+        }
+        
+    } catch (error) {
+        console.error('Humanization error:', error);
+        const errorMsg = error.message || 'Connection failed';
+        outputTextarea.value = `Error: ${errorMsg}`;
+        showToast(errorMsg, 'error');
+    } finally {
+        // Re-enable button
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        btnText.innerHTML = '🤖 Humanize Text';
+    }
+});
+
+// Update circle stat
+function updateCircleStat(circleId, textId, percentage) {
+    const circle = document.getElementById(circleId);
+    const text = document.getElementById(textId);
+    const circumference = 87.96; // 2 * PI * 14
+    const offset = circumference - (percentage / 100) * circumference;
+    
+    circle.style.strokeDashoffset = offset;
+    text.textContent = `${Math.round(percentage)}%`;
+}
+
+// Copy button
+document.getElementById('copyBtn').addEventListener('click', async function() {
+        const outputText = document.getElementById('outputText').value;
+        if (!outputText) {
+            showToast('Nothing to copy', 'error');
+            return;
+        }    try {
+        await navigator.clipboard.writeText(outputText);
+        this.textContent = '✅ Copied!';
+        this.classList.add('copied');
+        setTimeout(() => {
+            this.textContent = '📋 Copy';
+            this.classList.remove('copied');
+        }, 2000);
+    } catch (error) {
+        showToast('Failed to copy to clipboard', 'error');
+    }
+});
+
+// PDF button
+document.getElementById('pdfBtn').addEventListener('click', function() {
+    try {
+        const outputText = document.getElementById('outputText').value;
+        if (!outputText) {
+            showToast('Nothing to export', 'error');
+            return;
+        }
+        
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Get selected engine - use only brand names
+        const selectedEngine = document.querySelector('input[name="engine"]:checked');
+        const engineName = selectedEngine ? selectedEngine.value : 'Unknown';
+        const engineLabels = {
+            'deepseek': 'Loly',
+            'claude': 'OXO',
+            'openai': 'Smurk'
+        };
+        const engineDisplayName = engineLabels[engineName] || engineName;
+        
+        // Generate 6-character alphanumeric ID
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let docId = '';
+        for (let i = 0; i < 6; i++) {
+            docId += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        const fullDocId = `${engineDisplayName.toUpperCase()}-${docId}`;
+        
+        // Get current date
+        const now = new Date();
+        const formattedDate = now.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        // Page setup
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const margins = { top: 60, bottom: 35, left: 20, right: 20 };
+        const maxLineWidth = pageWidth - margins.left - margins.right;
+        const lineHeight = 6;
+        
+        // Brand header with Neural-X v3.0 (on first page only)
+        doc.setFontSize(20);
+        doc.setFont(undefined, 'bold');
+        doc.setTextColor(0, 212, 255); // Cyan color
+        doc.text('Neural-X v3.0', margins.left, 20);
+        
+        // Model, date, and doc ID info
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        doc.setTextColor(100, 100, 100);
+        doc.text(`Model: ${engineDisplayName} | Doc ID: ${fullDocId}`, margins.left, 30);
+        doc.text(`Generated: ${formattedDate}`, margins.left, 36);
+        
+        // Divider line
+        doc.setDrawColor(0, 212, 255);
+        doc.setLineWidth(0.5);
+        doc.line(margins.left, 40, pageWidth - margins.right, 40);
+        
+        // Content title
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.setTextColor(0, 0, 0);
+        doc.text('Humanized Content', margins.left, 50);
+        
+        // Main content with proper pagination
+        doc.setFontSize(11);
+        doc.setFont(undefined, 'normal');
+        doc.setTextColor(0, 0, 0);
+        
+        // Split text into lines that fit the page width
+        const lines = doc.splitTextToSize(outputText, maxLineWidth);
+        
+        let cursorY = margins.top;
+        let currentPage = 1;
+        
+        lines.forEach((line, index) => {
+            // Check if we need a new page (leaving room for footer)
+            if (cursorY + lineHeight > pageHeight - margins.bottom) {
+                doc.addPage();
+                currentPage++;
+                cursorY = 25; // Top margin for continuation pages
+            }
+            
+            // Add the line
+            doc.text(line, margins.left, cursorY);
+            cursorY += lineHeight;
+        });
+        
+        // Add footer with doc ID to all pages
+        const pageCount = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            doc.setFontSize(8);
+            doc.setTextColor(150, 150, 150);
+            
+            // Footer with doc ID
+            const footerLeft = `Doc ID: ${fullDocId}`;
+            const footerCenter = `InfiniHumanizer - Neural-X v3.0`;
+            const footerRight = `Page ${i} of ${pageCount}`;
+            
+            doc.text(footerLeft, margins.left, pageHeight - 10);
+            doc.text(footerCenter, pageWidth / 2, pageHeight - 10, { align: 'center' });
+            doc.text(footerRight, pageWidth - margins.right, pageHeight - 10, { align: 'right' });
+        }
+        
+        // Save with model name and doc ID
+        const timestamp = now.toISOString().split('T')[0];
+        doc.save(`${fullDocId}-${timestamp}.pdf`);
+        showToast(`PDF downloaded: ${fullDocId}`, 'success');
+    } catch (error) {
+        console.error('PDF generation error:', error);
+        showToast('Failed to generate PDF', 'error');
+    }
+});
+
+// Scroll to Top Button Functionality
+const scrollTopBtn = document.getElementById('scrollTopBtn');
+
+// Show/hide button based on scroll position
+window.addEventListener('scroll', function() {
+    if (window.pageYOffset > 300) {
+        scrollTopBtn.style.display = 'flex';
+    } else {
+        scrollTopBtn.style.display = 'none';
+    }
+    
+    // Parallax effect for background elements
+    const scrollY = window.pageYOffset;
+    document.querySelectorAll('.parallax-slow').forEach(el => {
+        el.style.transform = `translateY(${scrollY * 0.15}px)`;
+    });
+});
+
+// Intersection Observer for scroll fade-in animations
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const scrollObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, observerOptions);
+
+// Apply fade-in animation to sections
+document.querySelectorAll('.scroll-fade-in').forEach(el => {
+    scrollObserver.observe(el);
+});
+
+// Smooth scroll to top when clicked
+scrollTopBtn.addEventListener('click', function() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+</script>
+
+<!-- Features & Testimonials - Seamless Design -->
+<section style="padding: 3rem 2rem 4rem; background: linear-gradient(180deg, rgba(13, 13, 20, 0.5) 0%, rgba(0, 0, 0, 0.7) 100%); max-width: 100%; margin: 0;">
+    
+    <!-- Features Section -->
+    <div style="max-width: 1200px; margin: 0 auto 4rem;">
+        <div style="text-align: center; margin-bottom: 3rem;">
+            <div style="display: inline-block; color: rgba(0, 212, 255, 0.8); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.1rem; margin-bottom: 0.5rem;">
+                POWERFUL FEATURES
+            </div>
+            <h2 style="color: #00D4FF; font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);">
+                Why Choose InfiniHumanizer
+            </h2>
+            <div style="width: 80px; height: 2px; background: linear-gradient(90deg, transparent, #00D4FF, transparent); margin: 1rem auto;"></div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2.5rem;">
+            <div style="padding: 0 1rem; text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 1rem; filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.3));">✍️</div>
+                <h3 style="color: #00D4FF; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.8rem;">Natural Cadence</h3>
+                <p style="color: rgba(255, 255, 255, 0.7); line-height: 1.8; font-size: 0.95rem;">Your words flow like a real student — no rigid AI rhythm. Advanced algorithms ensure natural pacing and rhythm in every sentence.</p>
+            </div>
+            <div style="padding: 0 1rem; text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 1rem; filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.3));">🔁</div>
+                <h3 style="color: #00D4FF; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.8rem;">Structured Variance</h3>
+                <p style="color: rgba(255, 255, 255, 0.7); line-height: 1.8; font-size: 0.95rem;">Paragraphs are well balanced for human clarity. Intelligent variation in sentence length and structure keeps readers engaged.</p>
+            </div>
+            <div style="padding: 0 1rem; text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 1rem; filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.3));">📚</div>
+                <h3 style="color: #00D4FF; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.8rem;">Academic Realism</h3>
+                <p style="color: rgba(255, 255, 255, 0.7); line-height: 1.8; font-size: 0.95rem;">The tone mimics thoughtful effort, not perfect computation. Maintains academic integrity while sounding authentically human.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Smooth Separator -->
+    <div style="max-width: 600px; margin: 3rem auto; height: 1px; background: linear-gradient(to right, transparent, rgba(0, 212, 255, 0.15), transparent);"></div>
+
+    <!-- Testimonials Section -->
+    <div style="max-width: 1000px; margin: 0 auto;">
+        <div style="text-align: center; margin-bottom: 2.5rem;">
+            <div style="display: inline-block; color: rgba(0, 212, 255, 0.8); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.1rem; margin-bottom: 0.5rem;">
+                USER FEEDBACK
+            </div>
+            <h2 style="color: #00D4FF; font-size: 2rem; font-weight: 800; text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);">
+                What Our Users Say
+            </h2>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2.5rem; padding: 0 1rem;">
+            <div style="text-align: center; padding: 1.5rem 0;">
+                <div style="color: rgba(0, 212, 255, 0.4); font-size: 3rem; line-height: 1; margin-bottom: 0.5rem;">"</div>
+                <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.8; font-size: 1rem; font-style: italic; margin-bottom: 1.2rem;">
+                    This actually sounds like I wrote it after a long study night. The naturalness is incredible!
+                </p>
+                <div style="color: #00D4FF; font-weight: 700; font-size: 0.95rem;">— Joseph</div>
+            </div>
+            <div style="text-align: center; padding: 1.5rem 0;">
+                <div style="color: rgba(0, 212, 255, 0.4); font-size: 3rem; line-height: 1; margin-bottom: 0.5rem;">"</div>
+                <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.8; font-size: 1rem; font-style: italic; margin-bottom: 1.2rem;">
+                    Passed the AI check with flying colors. And my professor said it felt authentic and well-written.
+                </p>
+                <div style="color: #00D4FF; font-weight: 700; font-size: 0.95rem;">— Kate</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Smooth Separator -->
+    <div style="max-width: 600px; margin: 4rem auto 3rem; height: 1px; background: linear-gradient(to right, transparent, rgba(0, 212, 255, 0.15), transparent);"></div>
+
+    <!-- Changelog Section - Seamless -->
+    <div style="max-width: 900px; margin: 0 auto; padding: 0 1rem;">
+        <div style="text-align: center; margin-bottom: 2.5rem;">
+            <div style="display: inline-block; color: rgba(0, 212, 255, 0.8); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.1rem; margin-bottom: 0.5rem;">
+                LATEST UPDATES
+            </div>
+            <h2 style="color: #00D4FF; font-size: 2rem; font-weight: 800; text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);">
+                📋 Changelog
+            </h2>
+        </div>
+        
+        <div style="max-width: 750px; margin: 0 auto;">
+            <!-- Version 4.5 -->
+            <div style="margin-bottom: 2.5rem; padding-left: 2rem; border-left: 2px solid rgba(0, 212, 255, 0.4); position: relative;">
+                <div style="position: absolute; left: -5px; top: 0; width: 8px; height: 8px; background: #00D4FF; border-radius: 50%; box-shadow: 0 0 10px rgba(0, 212, 255, 0.6);"></div>
+                <div style="color: #00D4FF; font-weight: 700; margin-bottom: 0.8rem; font-size: 1.05rem;">
+                    ✨ Version 4.5 - Advanced Model Integration
+                </div>
+                <ul style="color: rgba(255, 255, 255, 0.75); line-height: 1.9; list-style: none; padding-left: 0; font-size: 0.95rem;">
+                    <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
+                        <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.6);">•</span>
+                        Added Claude (OXO) - Balanced humanization model
+                    </li>
+                    <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
+                        <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.6);">•</span>
+                        Enhanced DeepSeek (Loly) for detector evasion
+                    </li>
+                    <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
+                        <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.6);">•</span>
+                        Upgraded OpenAI (Smurk) with authentic patterns
+                    </li>
+                    <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
+                        <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.6);">•</span>
+                        Implemented verbosity & natural error injection
+                    </li>
+                    <li style="padding-left: 1.2rem; position: relative;">
+                        <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.6);">•</span>
+                        Dynamic temperature for variation
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Version 4.0 -->
+            <div style="padding-left: 2rem; border-left: 2px solid rgba(0, 212, 255, 0.2); position: relative;">
+                <div style="position: absolute; left: -5px; top: 0; width: 8px; height: 8px; background: rgba(0, 212, 255, 0.5); border-radius: 50%;"></div>
+                <div style="color: rgba(0, 212, 255, 0.8); font-weight: 700; margin-bottom: 0.8rem; font-size: 1.05rem;">
+                    🔧 Version 4.0 - Core Improvements
+                </div>
+                <ul style="color: rgba(255, 255, 255, 0.65); line-height: 1.9; list-style: none; padding-left: 0; font-size: 0.95rem;">
+                    <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
+                        <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.4);">•</span>
+                        Sentence reorganization algorithms
+                    </li>
+                    <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
+                        <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.4);">•</span>
+                        High perplexity vocabulary integration
+                    </li>
+                    <li style="padding-left: 1.2rem; position: relative;">
+                        <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.4);">•</span>
+                        Improved readability scores
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Smooth Separator -->
+<div style="height: 1px; background: linear-gradient(to right, transparent, rgba(0, 212, 255, 0.15), transparent); margin: 0;"></div>
+
+{% endblock %}
+

@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification - InfiniHumanizer</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-left">
+            <div class="auth-branding">
+                <h1 class="gradient-text">InfiniHumanizer</h1>
+                <p class="tagline" style="font-size: 1.3rem; color: var(--luminous-blue); margin-bottom: 1.5rem;">
+                    📧 Verify Your Email
+                </p>
+                <p>
+                    We've sent a verification link to your email address. 
+                    Please check your inbox and click the link to activate your account.
+                </p>
+            </div>
+        </div>
+
+        <div class="auth-right">
+            <div class="auth-form-container">
+                <div class="auth-form-header">
+                    <h2>Check Your Email</h2>
+                    <p>We've sent you a verification link</p>
+                </div>
+
+                <div class="form-container" style="text-align: center;">
+                    <div style="font-size: 4rem; margin: 2rem 0;">📬</div>
+                    
+                    <p style="color: var(--text-gray); margin-bottom: 1.5rem; line-height: 1.6;">
+                        We've sent a verification email to <br>
+                        <strong style="color: var(--luminous-blue);">{{ user.email }}</strong>
+                    </p>
+                    
+                    <p style="color: var(--text-gray); margin-bottom: 2rem; font-size: 0.95rem;">
+                        Click the link in the email to verify your account and start using InfiniHumanizer.
+                    </p>
+
+                    <div style="padding: 1.5rem; background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: var(--radius-md); margin-bottom: 2rem;">
+                        <p style="color: var(--text-gray); font-size: 0.9rem; margin-bottom: 0.5rem;">
+                            💡 <strong style="color: var(--luminous-blue);">Tip:</strong> Check your spam folder if you don't see the email
+                        </p>
+                    </div>
+
+                    <a href="{% url 'account_login' %}" class="btn-primary" style="display: inline-block;">
+                        🔐 Go to Login
+                    </a>
+
+                    <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(0, 212, 255, 0.1);">
+                        <p style="color: var(--text-gray); margin-bottom: 1rem; font-size: 0.9rem;">
+                            Didn't receive the email?
+                        </p>
+                        <button class="btn-secondary" onclick="resendEmail()">
+                            📧 Resend Verification Email
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function resendEmail() {
+            // Add your resend logic here
+            alert('Verification email has been resent!');
+        }
+    </script>
+</body>
+</html>

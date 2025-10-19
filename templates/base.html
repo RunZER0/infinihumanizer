@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}InfiniHumanizer - AI to Human Text Transformation{% endblock %}</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon-16x16.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'android-chrome-192x192.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}">
+    <link rel="manifest" href="{% static 'site.webmanifest' %}">
+    
+    <!-- Meta Tags -->
+    <meta name="description" content="Transform AI-generated text into natural, human-sounding content with InfiniHumanizer.">
+    <meta name="keywords" content="AI humanizer, text transformation, AI to human, content humanization">
+    
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Messages -->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Navigation -->
+    {% if user.is_authenticated %}
+    <nav>
+        <div class="nav-container">
+            <a href="{% url 'humanizer' %}" class="logo">InfiniHumanizer</a>
+            <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="{% url 'humanizer' %}" {% if request.path == '/humanizer/' %}class="active"{% endif %}>🤖 Humanizer</a></li>
+                <li><a href="{% url 'pricing' %}" {% if request.path == '/pricing/' %}class="active"{% endif %}>💎 Pricing</a></li>
+                <li><a href="{% url 'about' %}" {% if request.path == '/about/' %}class="active"{% endif %}>ℹ️ About</a></li>
+                <li><a href="{% url 'contact' %}" {% if request.path == '/contact/' %}class="active"{% endif %}>📧 Contact</a></li>
+                <li><a href="{% url 'settings' %}" {% if request.path == '/settings/' %}class="active"{% endif %}>⚙️ Settings</a></li>
+                <li><a href="{% url 'account_logout' %}">🚪 Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer style="text-align: center; padding: 2rem; color: var(--text-gray); border-top: 1px solid rgba(0, 212, 255, 0.1); margin-top: 4rem;">
+        <p>&copy; 2025 InfiniHumanizer. All rights reserved.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Powered by AI • Made with 💙</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Hamburger menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.getElementById('hamburger');
+            const navMenu = document.getElementById('navMenu');
+            
+            if (hamburger && navMenu) {
+                hamburger.addEventListener('click', function() {
+                    hamburger.classList.toggle('active');
+                    navMenu.classList.toggle('active');
+                });
+                
+                // Close menu when clicking a link
+                const navLinks = navMenu.querySelectorAll('a');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        hamburger.classList.remove('active');
+                        navMenu.classList.remove('active');
+                    });
+                });
+            }
+            
+            // Auto-hide messages after 5 seconds
+            const messages = document.querySelectorAll('.message');
+            messages.forEach(function(message) {
+                setTimeout(function() {
+                    message.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(function() {
+                        message.remove();
+                    }, 300);
+                }, 5000);
+            });
+        });
+
+        // Add slideOut animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideOut {
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+    
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

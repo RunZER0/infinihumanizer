@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Payment - {{ plan }} Plan{% endblock %}
+
+{% block content %}
+<div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; background: linear-gradient(135deg, #0D0D14 0%, #1a1a2e 100%);">
+    <div style="max-width: 500px; width: 100%; background: rgba(26, 26, 26, 0.95); border-radius: 20px; padding: 3rem; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); border: 1px solid rgba(0, 212, 255, 0.2);">
+        
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">💳</div>
+            <h1 style="color: #00D4FF; font-size: 2rem; margin-bottom: 0.5rem; font-weight: 800;">Complete Payment</h1>
+            <p style="color: rgba(255, 255, 255, 0.7); font-size: 1rem;">{{ plan }} Plan</p>
+        </div>
+
+        <!-- Plan Details -->
+        <div style="background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: rgba(255, 255, 255, 0.8); font-size: 1rem;">Plan:</span>
+                <span style="color: #00D4FF; font-weight: 700; font-size: 1.1rem;">{{ plan }}</span>
+            </div>
+            <div style="height: 1px; background: rgba(0, 212, 255, 0.2); margin: 1rem 0;"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: rgba(255, 255, 255, 0.8); font-size: 1rem;">Amount:</span>
+                <span style="color: #00FF88; font-weight: 800; font-size: 1.5rem;">KES {{ amount }}</span>
+            </div>
+        </div>
+
+        <!-- Payment Form -->
+        <form id="paymentForm" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="amount" value="{{ amount }}">
+            <input type="hidden" name="plan" value="{{ plan }}">
+            
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; color: rgba(255, 255, 255, 0.9); margin-bottom: 0.5rem; font-weight: 600;">Email Address</label>
+                <input 
+                    type="email" 
+                    name="email" 
+                    value="{{ user_email }}"
+                    required
+                    style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: #FFF; font-size: 1rem; transition: all 0.3s ease;"
+                    placeholder="your.email@example.com"
+                    onfocus="this.style.borderColor='rgba(0, 212, 255, 0.5)'; this.style.background='rgba(255, 255, 255, 0.08)';"
+                    onblur="this.style.borderColor='rgba(255, 255, 255, 0.2)'; this.style.background='rgba(255, 255, 255, 0.05)';"
+                >
+            </div>
+
+            <button 
+                type="submit"
+                id="payButton"
+                style="width: 100%; padding: 1.2rem; background: linear-gradient(135deg, #00D4FF, #0099FF); color: #0D0D0D; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);"
+                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 30px rgba(0, 212, 255, 0.5)';"
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(0, 212, 255, 0.3)';"
+            >
+                <span id="buttonText">🔒 Proceed to Payment</span>
+            </button>
+        </form>
+
+        <!-- Back Link -->
+        <div style="text-align: center; margin-top: 1.5rem;">
+            <a href="{% url 'pricing' %}" style="color: rgba(0, 212, 255, 0.8); text-decoration: none; font-size: 0.95rem; transition: color 0.3s ease;"
+               onmouseover="this.style.color='#00D4FF';"
+               onmouseout="this.style.color='rgba(0, 212, 255, 0.8)';">
+                ← Back to Pricing
+            </a>
+        </div>
+
+        <!-- Secure Badge -->
+        <div style="text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+            <p style="color: rgba(255, 255, 255, 0.5); font-size: 0.85rem; margin: 0;">
+                🔐 Secure payment powered by Paystack
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('paymentForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const button = document.getElementById('payButton');
+    const buttonText = document.getElementById('buttonText');
+    const originalText = buttonText.innerHTML;
+    
+    // Show loading
+    button.disabled = true;
+    buttonText.innerHTML = '⏳ Processing...';
+    button.style.opacity = '0.7';
+    
+    try {
+        const formData = new FormData(this);
+        const response = await fetch('{% url "start-payment" %}', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.status && data.data && data.data.authorization_url) {
+            // Redirect to Paystack
+            window.location.href = data.data.authorization_url;
+        } else {
+            alert('Payment initialization failed. Please try again.');
+            button.disabled = false;
+            buttonText.innerHTML = originalText;
+            button.style.opacity = '1';
+        }
+    } catch (error) {
+        alert('An error occurred. Please try again.');
+        button.disabled = false;
+        buttonText.innerHTML = originalText;
+        button.style.opacity = '1';
+    }
+});
+</script>
+{% endblock %}

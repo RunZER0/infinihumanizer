@@ -1,0 +1,51 @@
+﻿# Python
+*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Django
+db.sqlite3
+db.sqlite3-journal
+*.log
+*.pot
+.env
+.env.local
+media/
+# Exclude collected static files (will be regenerated on server)
+# but KEEP source static files in static/ directory
+/staticfiles/
+staticfiles/*
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# NLTK data (will be downloaded during build)
+nltk_data/
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Build files
+build/
+dist/
+*.egg-info/

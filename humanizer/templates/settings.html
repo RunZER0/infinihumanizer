@@ -1,0 +1,401 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - InfiniHumanizer{% endblock %}
+
+{% block content %}
+
+<style>
+/* Settings Page Redesign - No Cards, Horizontal Layout */
+.settings-container {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #0D0D14 0%, #1a1a2e 50%, #0D0D14 100%);
+    padding: 3rem 2rem;
+}
+
+.settings-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    position: relative;
+}
+
+.settings-header h1 {
+    font-size: 3rem;
+    background: linear-gradient(135deg, #00D4FF, #00FF88);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 40px rgba(0, 212, 255, 0.3);
+}
+
+.settings-header p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.1rem;
+}
+
+/* Horizontal Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto 3rem;
+}
+
+.stat-item {
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.6), rgba(13, 13, 20, 0.4));
+    padding: 1.5rem;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 212, 255, 0.15);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-item:hover {
+    transform: translateY(-5px);
+    border-color: rgba(0, 212, 255, 0.4);
+    box-shadow: 0 10px 40px rgba(0, 212, 255, 0.2);
+}
+
+.stat-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #00D4FF, transparent);
+}
+
+.stat-label {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    color: #FFF;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.stat-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+/* Word Balance Progress */
+.word-progress {
+    margin-top: 0.8rem;
+}
+
+.progress-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00D4FF, #00FF88);
+    border-radius: 10px;
+    transition: width 0.6s ease;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+/* Horizontal Action Panels */
+.action-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto 3rem;
+}
+
+@media (max-width: 768px) {
+    .action-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.action-panel {
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.8), rgba(13, 13, 20, 0.6));
+    padding: 2rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.action-panel:hover {
+    border-color: rgba(0, 212, 255, 0.3);
+}
+
+.panel-title {
+    font-size: 1.5rem;
+    color: #00D4FF;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.panel-description {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+/* Modern Buttons */
+.action-btn {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-primary-modern {
+    background: linear-gradient(135deg, #00D4FF, #0099FF);
+    color: #0D0D0D;
+    box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
+}
+
+.btn-primary-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 30px rgba(0, 212, 255, 0.5);
+}
+
+.btn-secondary-modern {
+    background: rgba(255, 255, 255, 0.05);
+    color: #FFF;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-secondary-modern:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(0, 212, 255, 0.5);
+}
+
+.btn-danger-modern {
+    background: linear-gradient(135deg, rgba(255, 59, 48, 0.2), rgba(255, 59, 48, 0.1));
+    color: #FF3B30;
+    border: 1px solid rgba(255, 59, 48, 0.4);
+}
+
+.btn-danger-modern:hover {
+    background: linear-gradient(135deg, rgba(255, 59, 48, 0.3), rgba(255, 59, 48, 0.2));
+    border-color: rgba(255, 59, 48, 0.6);
+}
+
+/* AI Model Selector */
+.model-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.model-option {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.model-option:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(0, 212, 255, 0.3);
+}
+
+.model-option.selected {
+    background: rgba(0, 212, 255, 0.1);
+    border-color: #00D4FF;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+}
+
+.model-name {
+    font-weight: 700;
+    color: #FFF;
+    margin-bottom: 0.3rem;
+}
+
+.model-desc {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Danger Zone */
+.danger-zone {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, rgba(255, 59, 48, 0.05), rgba(255, 59, 48, 0.02));
+    padding: 2rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 59, 48, 0.2);
+}
+
+.separator {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+    margin: 3rem 0;
+}
+</style>
+
+<div class="settings-container">
+    <!-- Header -->
+    <div class="settings-header">
+        <h1>⚙️ Settings</h1>
+        <p>Manage your account, preferences, and security</p>
+    </div>
+
+    <!-- Stats Grid (Horizontal) -->
+    <div class="stats-grid">
+        <div class="stat-item">
+            <span class="stat-icon">📧</span>
+            <div class="stat-label">Email</div>
+            <div class="stat-value" style="font-size: 1rem;">{{ user.email }}</div>
+        </div>
+
+        <div class="stat-item">
+            <span class="stat-icon">👤</span>
+            <div class="stat-label">Account Type</div>
+            <div class="stat-value" style="color: #00FF88;">{{ user.profile.account_type|default:"FREE" }}</div>
+        </div>
+
+        <div class="stat-item">
+            <span class="stat-icon">📊</span>
+            <div class="stat-label">Words Balance</div>
+            <div class="stat-value">{{ user.profile.words_used|default:"0" }} / {{ user.profile.word_quota|default:"100000" }}</div>
+            <div class="word-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {% widthratio user.profile.words_used user.profile.word_quota 100 %}%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-item">
+            <span class="stat-icon">📅</span>
+            <div class="stat-label">Member Since</div>
+            <div class="stat-value">{{ user.date_joined|date:"M Y" }}</div>
+        </div>
+    </div>
+
+    <div class="separator"></div>
+
+    <!-- Action Panels (Horizontal) -->
+    <div class="action-grid">
+        <!-- AI Model Preferences -->
+        <div class="action-panel">
+            <div class="panel-title">
+                <span>🤖</span> AI Model Preferences
+            </div>
+            <div class="panel-description">
+                Choose your default AI engine for humanization
+            </div>
+            
+            <form method="post" id="preferencesForm">
+                {% csrf_token %}
+                
+                <div class="model-selector">
+                    <div class="model-option selected" data-engine="claude">
+                        <div class="model-name">OXO</div>
+                        <div class="model-desc">Balanced</div>
+                    </div>
+                    <div class="model-option" data-engine="openai">
+                        <div class="model-name">Smurk</div>
+                        <div class="model-desc">Pro</div>
+                    </div>
+                    <div class="model-option" data-engine="deepseek">
+                        <div class="model-name">Loly</div>
+                        <div class="model-desc">Fast</div>
+                    </div>
+                </div>
+                
+                <input type="hidden" name="engine" id="selectedEngine" value="claude">
+                
+                <button type="submit" class="action-btn btn-primary-modern">
+                    💾 Save Preferences
+                </button>
+            </form>
+        </div>
+
+        <!-- Security Panel -->
+        <div class="action-panel">
+            <div class="panel-title">
+                <span>🔒</span> Security
+            </div>
+            <div class="panel-description">
+                Keep your account secure with a strong password
+            </div>
+            
+            <a href="{% url 'account_change_password' %}" class="action-btn btn-secondary-modern" style="text-decoration: none;">
+                � Change Password
+            </a>
+        </div>
+    </div>
+
+    <div class="separator"></div>
+
+    <!-- Danger Zone -->
+    <div class="danger-zone">
+        <div class="panel-title" style="color: #FF3B30;">
+            <span>⚠️</span> Danger Zone
+        </div>
+        <div class="panel-description">
+            Once you delete your account, there is no going back. All your data, word balance, and preferences will be permanently erased.
+        </div>
+        
+        <button class="action-btn btn-danger-modern" onclick="confirmDelete()" style="max-width: 300px;">
+            🗑️ Delete Account Permanently
+        </button>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Model selector interaction
+document.querySelectorAll('.model-option').forEach(option => {
+    option.addEventListener('click', function() {
+        // Remove selected from all
+        document.querySelectorAll('.model-option').forEach(opt => opt.classList.remove('selected'));
+        
+        // Add selected to this one
+        this.classList.add('selected');
+        
+        // Update hidden input
+        const engine = this.dataset.engine;
+        document.getElementById('selectedEngine').value = engine;
+    });
+});
+
+// Delete account confirmation
+function confirmDelete() {
+    if (confirm('⚠️ Are you absolutely sure you want to delete your account?\n\nThis action CANNOT be undone!')) {
+        if (confirm('🚨 FINAL WARNING: All your data will be permanently erased.\n\nDelete account permanently?')) {
+            // Redirect to account deletion endpoint
+            window.location.href = '/accounts/delete/';
+        }
+    }
+}
+</script>
+{% endblock %}

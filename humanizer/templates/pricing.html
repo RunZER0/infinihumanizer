@@ -1,0 +1,386 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Pricing - InfiniHumanizer{% endblock %}
+
+{% block content %}
+
+<style>
+/* Pricing Page Redesign - Modern, No Cards */
+.pricing-container {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #0D0D14 0%, #1a1a2e 50%, #0D0D14 100%);
+    padding: 4rem 2rem;
+}
+
+.pricing-header {
+    text-align: center;
+    margin-bottom: 5rem;
+}
+
+.pricing-header h1 {
+    font-size: 3.5rem;
+    background: linear-gradient(135deg, #00D4FF, #00FF88);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+.pricing-header p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.3rem;
+    font-weight: 300;
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 20px rgba(0, 212, 255, 0.3); }
+    to { text-shadow: 0 0 40px rgba(0, 212, 255, 0.6); }
+}
+
+/* Horizontal Plans Grid */
+.plans-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto 4rem;
+}
+
+@media (max-width: 1024px) {
+    .plans-grid { grid-template-columns: 1fr; }
+}
+
+/* Individual Plan Styling */
+.plan {
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.8), rgba(13, 13, 20, 0.6));
+    padding: 3rem 2.5rem;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.plan::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #00D4FF, transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.plan:hover {
+    transform: translateY(-10px);
+    border-color: rgba(0, 212, 255, 0.4);
+    box-shadow: 0 20px 60px rgba(0, 212, 255, 0.3);
+}
+
+.plan:hover::before {
+    opacity: 1;
+}
+
+/* Featured Plan (Pro) */
+.plan.featured {
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(0, 255, 136, 0.05));
+    border: 2px solid rgba(0, 212, 255, 0.4);
+    box-shadow: 0 10px 40px rgba(0, 212, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.plan.featured::before {
+    opacity: 1;
+    height: 5px;
+}
+
+.plan.featured .badge {
+    position: absolute;
+    top: -15px;
+    right: 20px;
+    background: linear-gradient(135deg, #00D4FF, #00FF88);
+    color: #0D0D0D;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-weight: 800;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+}
+
+/* Plan Header */
+.plan-name {
+    font-size: 1.8rem;
+    color: #00D4FF;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.plan-price {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    margin-bottom: 0.5rem;
+}
+
+.currency {
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 600;
+}
+
+.amount {
+    font-size: 4rem;
+    color: #FFF;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.plan-words {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Features List */
+.features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2.5rem 0;
+}
+
+.features-list li {
+    padding: 0.8rem 0;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+.features-list li:hover {
+    color: #00D4FF;
+    transform: translateX(5px);
+}
+
+.feature-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+/* Select Button */
+.select-button {
+    width: 100%;
+    padding: 1.2rem;
+    border: none;
+    border-radius: 16px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+}
+
+.select-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.select-button:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.select-button span {
+    position: relative;
+    z-index: 1;
+}
+
+/* Button Variants */
+.btn-standard {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    color: #FFF;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-standard:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+    border-color: rgba(0, 212, 255, 0.5);
+    box-shadow: 0 8px 30px rgba(0, 212, 255, 0.3);
+}
+
+.btn-pro {
+    background: linear-gradient(135deg, #00D4FF, #0099FF);
+    color: #0D0D0D;
+    border: none;
+    box-shadow: 0 8px 30px rgba(0, 212, 255, 0.4);
+}
+
+.btn-pro:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0, 212, 255, 0.6);
+}
+
+.btn-enterprise {
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 212, 255, 0.2));
+    color: #00FF88;
+    border: 2px solid rgba(0, 255, 136, 0.4);
+}
+
+.btn-enterprise:hover {
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.3), rgba(0, 212, 255, 0.3));
+    border-color: rgba(0, 255, 136, 0.6);
+    box-shadow: 0 8px 30px rgba(0, 255, 136, 0.3);
+}
+
+/* Info Banner */
+.info-banner {
+    max-width: 900px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(0, 255, 136, 0.05));
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 20px;
+    padding: 2rem 3rem;
+    text-align: center;
+}
+
+.info-title {
+    color: #00D4FF;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.info-text {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+</style>
+
+<div class="pricing-container">
+    <!-- Header -->
+    <div class="pricing-header">
+        <h1>💎 Choose Your Plan</h1>
+        <p>Flexible word-based pricing for every kind of writer</p>
+    </div>
+
+    <!-- Plans Grid -->
+    <div class="plans-grid">
+        
+        <!-- Standard Plan -->
+        <div class="plan">
+            <div class="plan-name">Standard</div>
+            <div class="plan-price">
+                <span class="currency">KSh</span>
+                <span class="amount">1500</span>
+            </div>
+            <div class="plan-words">100,000 words</div>
+            
+            <ul class="features-list">
+                <li><span class="feature-icon">✨</span> Unlimited rehumanizations</li>
+                <li><span class="feature-icon">🤖</span> GPT-4 refinement engine</li>
+                <li><span class="feature-icon">📊</span> Word usage tracking</li>
+                <li><span class="feature-icon">📋</span> Copy + download tools</li>
+            </ul>
+            
+            <button class="select-button btn-standard select-btn" data-plan="Standard" data-amount="1500">
+                <span>Select Standard</span>
+            </button>
+        </div>
+
+        <!-- Pro Plan (Featured) -->
+        <div class="plan featured">
+            <div class="badge">⭐ BEST VALUE</div>
+            <div class="plan-name">Pro</div>
+            <div class="plan-price">
+                <span class="currency">KSh</span>
+                <span class="amount">3200</span>
+            </div>
+            <div class="plan-words">250,000 words</div>
+            
+            <ul class="features-list">
+                <li><span class="feature-icon">✨</span> Everything in Standard</li>
+                <li><span class="feature-icon">🎯</span> Enhanced human tone detection</li>
+                <li><span class="feature-icon">⚡</span> Batch processing for larger chunks</li>
+                <li><span class="feature-icon">💬</span> Priority email support</li>
+            </ul>
+            
+            <button class="select-button btn-pro select-btn" data-plan="Pro" data-amount="3200">
+                <span>Select Pro</span>
+            </button>
+        </div>
+
+        <!-- Enterprise Plan -->
+        <div class="plan">
+            <div class="plan-name">Enterprise</div>
+            <div class="plan-price">
+                <span class="currency">KSh</span>
+                <span class="amount">6400</span>
+            </div>
+            <div class="plan-words">600,000 words</div>
+            
+            <ul class="features-list">
+                <li><span class="feature-icon">✨</span> Everything in Pro</li>
+                <li><span class="feature-icon">👥</span> Team access (invite support)</li>
+                <li><span class="feature-icon">📦</span> Bulk document handling <span style="color: rgba(255, 255, 255, 0.4); font-size: 0.8rem;">(coming soon)</span></li>
+                <li><span class="feature-icon">🚀</span> Early access to new features</li>
+            </ul>
+            
+            <button class="select-button btn-enterprise select-btn" data-plan="Enterprise" data-amount="6400">
+                <span>Select Enterprise</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Info Banner -->
+    <div class="info-banner">
+        <div class="info-title">
+            <span>💡</span> Payment Information
+        </div>
+        <div class="info-text">
+            All prices are shown in Kenyan Shillings (KES). Payments are processed securely through Paystack with bank-level encryption.
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.querySelectorAll('.select-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const plan = this.dataset.plan;
+        const amount = this.dataset.amount;
+        
+        // Redirect to payment endpoint
+        window.location.href = `/humanizer/start-payment/?plan=${plan}&amount=${amount}`;
+    });
+});
+</script>
+{% endblock %}

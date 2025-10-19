@@ -1,0 +1,156 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - InfiniHumanizer</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+</head>
+<body>
+    <!-- Messages -->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="auth-wrapper">
+        <!-- Left Side - Branding -->
+        <div class="auth-left">
+            <div class="auth-branding">
+                <h1 class="gradient-text">InfiniHumanizer</h1>
+                <p class="tagline" style="font-size: 1.3rem; color: var(--luminous-blue); margin-bottom: 1.5rem;">
+                    Start Your Journey
+                </p>
+                <p>
+                    Join thousands of users who trust InfiniHumanizer to transform their AI-generated 
+                    content into natural, human-sounding text.
+                </p>
+                
+                <div class="auth-features">
+                    <div class="auth-feature">
+                        <div class="auth-feature-icon">🎁</div>
+                        <div style="color: var(--luminous-blue); font-weight: 600;">Free Trial</div>
+                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">1000 words to start</p>
+                    </div>
+                    <div class="auth-feature">
+                        <div class="auth-feature-icon">⚡</div>
+                        <div style="color: var(--luminous-blue); font-weight: 600;">Instant Access</div>
+                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">No credit card needed</p>
+                    </div>
+                    <div class="auth-feature">
+                        <div class="auth-feature-icon">🌟</div>
+                        <div style="color: var(--luminous-blue); font-weight: 600;">Premium Quality</div>
+                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">GPT-4 & Gemini powered</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Signup Form -->
+        <div class="auth-right">
+            <div class="auth-form-container">
+                <div class="auth-form-header">
+                    <h2>Create Account</h2>
+                    <p>Get started with InfiniHumanizer today</p>
+                </div>
+
+                <div class="form-container">
+                    <form method="post" action="{% url 'account_signup' %}">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="id_email">Email Address</label>
+                            <input 
+                                type="email" 
+                                name="email" 
+                                id="id_email" 
+                                placeholder="Enter your email"
+                                required
+                                autocomplete="email"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_password1">Password</label>
+                            <input 
+                                type="password" 
+                                name="password1" 
+                                id="id_password1" 
+                                placeholder="Create a strong password"
+                                required
+                                autocomplete="new-password"
+                            >
+                            <small style="color: var(--text-gray); display: block; margin-top: 0.5rem;">
+                                Must be at least 8 characters
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_password2">Confirm Password</label>
+                            <input 
+                                type="password" 
+                                name="password2" 
+                                id="id_password2" 
+                                placeholder="Re-enter your password"
+                                required
+                                autocomplete="new-password"
+                            >
+                        </div>
+
+                        <div class="form-group" style="display: flex; align-items: start; gap: 0.5rem;">
+                            <input type="checkbox" name="terms" id="id_terms" required style="width: auto; margin-top: 0.3rem;">
+                            <label for="id_terms" style="margin: 0; cursor: pointer; font-size: 0.9rem;">
+                                I agree to the Terms of Service and Privacy Policy
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;">
+                            ✨ Create Account
+                        </button>
+                    </form>
+
+                    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(0, 212, 255, 0.1); text-align: center;">
+                        <p style="color: var(--text-gray); margin-bottom: 1rem;">Already have an account?</p>
+                        <a href="{% url 'account_login' %}" class="btn-secondary" style="display: inline-block;">
+                            🔐 Sign In
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-hide messages
+        document.addEventListener('DOMContentLoaded', function() {
+            const messages = document.querySelectorAll('.message');
+            messages.forEach(function(message) {
+                setTimeout(function() {
+                    message.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(function() {
+                        message.remove();
+                    }, 300);
+                }, 5000);
+            });
+        });
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideOut {
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1139 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - InfiniHumanizer</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Aptos', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0D0D0D;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Matrix Binary Code Background */
+        .binary-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.25;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .binary-column {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: 700;
+            color: #00FF41;
+            opacity: 0.5;
+            text-shadow: 0 0 15px #00FF41, 0 0 30px rgba(0, 255, 65, 0.9), 0 0 40px rgba(0, 255, 65, 0.6);
+            white-space: pre;
+            line-height: 1.5;
+            animation: matrixFall linear infinite;
+            will-change: transform;
+            pointer-events: none;
+        }
+
+        @keyframes matrixFall {
+            0% {
+                transform: translateY(-100%);
+            }
+            100% {
+                transform: translateY(calc(100vh + 100%));
+            }
+        }
+        
+        /* Horizontal scanline glitch effect */
+        @keyframes horizontalGlitch {
+            0%, 94%, 100% {
+                transform: translate(0, 0);
+            }
+            95% {
+                transform: translate(-3px, 0) skew(2deg);
+            }
+            96% {
+                transform: translate(4px, 0) skew(-2deg);
+            }
+            97% {
+                transform: translate(-2px, 0);
+            }
+        }
+        
+        @keyframes glitchBlur {
+            0%, 94%, 100% {
+                filter: blur(0px);
+            }
+            95% {
+                filter: blur(1px);
+            }
+            96% {
+                filter: blur(1.5px);
+            }
+            97% {
+                filter: blur(0.5px);
+            }
+        }
+        
+        .glitch-container {
+            animation: horizontalGlitch 5s ease-in-out infinite, glitchBlur 5s ease-in-out infinite;
+        }
+        
+        /* Scanline overlay effect */
+        .glitch-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 212, 255, 0.03) 0px,
+                transparent 1px,
+                transparent 2px,
+                rgba(0, 212, 255, 0.03) 3px
+            );
+            pointer-events: none;
+            z-index: 100;
+            animation: scanlineMove 8s linear infinite;
+        }
+        
+        @keyframes scanlineMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(10px); }
+        }
+
+        /* Animated Gradient Background */
+        .gradient-bg {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #0D0D0D, #1A1A1A, #0D0D0D, #1F1F1F);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            z-index: 0;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: float 20s infinite ease-in-out;
+            z-index: 1;
+        }
+
+        .orb1 {
+            width: 400px;
+            height: 400px;
+            background: #00D4FF;
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .orb2 {
+            width: 300px;
+            height: 300px;
+            background: #0099FF;
+            bottom: -50px;
+            right: -50px;
+            animation-delay: 5s;
+        }
+
+        .orb3 {
+            width: 250px;
+            height: 250px;
+            background: #00D4FF;
+            top: 50%;
+            left: 50%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(100px, -100px) scale(1.1); }
+            66% { transform: translate(-100px, 100px) scale(0.9); }
+        }
+
+        /* Main Layout */
+        .page-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 100vw;
+            height: 100vh;
+            padding: 2rem 3rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr 520px;
+            grid-template-rows: auto 1fr;
+            gap: 1.5rem 2.5rem;
+            align-items: start;
+            box-sizing: border-box;
+        }
+        
+        /* Custom scrollbar for left and center columns - Auto-hiding */
+        .marketing-left,
+        .testimonials-center {
+            scrollbar-width: thin;
+            scrollbar-color: transparent transparent;
+            transition: scrollbar-color 0.3s ease;
+        }
+        
+        .marketing-left:hover,
+        .testimonials-center:hover {
+            scrollbar-color: #00D4FF rgba(0, 0, 0, 0.3);
+        }
+        
+        .marketing-left::-webkit-scrollbar,
+        .testimonials-center::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .marketing-left::-webkit-scrollbar-track,
+        .testimonials-center::-webkit-scrollbar-track {
+            background: transparent;
+            border-radius: 3px;
+        }
+        
+        .marketing-left::-webkit-scrollbar-thumb,
+        .testimonials-center::-webkit-scrollbar-thumb {
+            background: transparent;
+            border-radius: 3px;
+            transition: background 0.3s ease;
+        }
+        
+        .marketing-left:hover::-webkit-scrollbar-track,
+        .testimonials-center:hover::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .marketing-left:hover::-webkit-scrollbar-thumb,
+        .testimonials-center:hover::-webkit-scrollbar-thumb {
+            background: #00D4FF;
+        }
+        
+        .marketing-left::-webkit-scrollbar-thumb:hover,
+        .testimonials-center::-webkit-scrollbar-thumb:hover {
+            background: #00B8E6;
+        }
+
+        /* Brand Header - Spans 2 Columns */
+        .brand-header {
+            grid-column: 1 / 3;
+            grid-row: 1;
+        }
+
+        .brand-heading {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00D4FF, #0099FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-block;
+            margin-right: 1rem;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 153, 255, 0.2));
+            border: 1px solid rgba(0, 212, 255, 0.4);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #00D4FF;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
+            vertical-align: middle;
+        }
+
+        .brand-extension {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-style: italic;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
+        }
+
+        /* Marketing Bullet Points - Left */
+        .marketing-left {
+            grid-column: 1;
+            grid-row: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 10px;
+        }
+
+        .bullet-point {
+            opacity: 0;
+            animation: floatIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            background: rgba(0, 0, 0, 0.6);
+            border-left: 3px solid #00D4FF;
+            padding: 1.25rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .bullet-point:nth-child(1) { animation-delay: 0.3s; }
+        .bullet-point:nth-child(2) { animation-delay: 0.5s; }
+        .bullet-point:nth-child(3) { animation-delay: 0.7s; }
+
+        @keyframes floatIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .bullet-point:hover {
+            background: rgba(0, 0, 0, 0.8);
+            transform: translateX(10px);
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2);
+        }
+
+        .bullet-icon {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.6));
+        }
+
+        .bullet-title {
+            color: #00D4FF;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+            letter-spacing: 0.5px;
+        }
+
+        .bullet-desc {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* Testimonials - Center */
+        .testimonials-center {
+            grid-column: 2;
+            grid-row: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 10px;
+        }
+
+        .testimonial {
+            opacity: 0;
+            animation: floatIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .testimonial:nth-child(1) { animation-delay: 0.4s; }
+        .testimonial:nth-child(2) { animation-delay: 0.6s; }
+        .testimonial:nth-child(3) { animation-delay: 0.8s; }
+
+        .testimonial::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            font-size: 3rem;
+            color: rgba(0, 212, 255, 0.2);
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+
+        .testimonial:hover {
+            background: rgba(0, 0, 0, 0.8);
+            border-color: rgba(0, 212, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2);
+        }
+
+        .testimonial-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin-bottom: 0.875rem;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+        }
+
+        .author-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00D4FF, #0099FF);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #0A0A0A;
+            font-size: 0.8rem;
+        }
+
+        .author-info {
+            flex: 1;
+        }
+
+        .author-name {
+            color: #FFFFFF;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .author-role {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.75rem;
+        }
+
+        .testimonial-stars {
+            color: #FFD700;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        /* Glass Container - Right Side */
+        .login-wrapper {
+            grid-column: 3;
+            grid-row: 1 / 3;
+            position: relative;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            max-height: calc(100vh - 4rem);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .glass-card {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            padding: 1.75rem 3rem;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                0 0 100px rgba(0, 212, 255, 0.1);
+            position: relative;
+            overflow: visible;
+            width: 100%;
+        }
+
+        /* Header */
+        .logo {
+            text-align: center;
+            margin-bottom: 1.25rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00D4FF, #0099FF, #00D4FF);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientText 3s ease infinite;
+            letter-spacing: -1px;
+            display: inline-block;
+        }
+
+        @keyframes gradientText {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .logo-tagline {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.7rem;
+            margin-top: 0.25rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .welcome-text {
+            text-align: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .welcome-text h2 {
+            color: #FFFFFF;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .welcome-text p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 0.875rem;
+            font-size: 0.85rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            color: #FFFFFF;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            position: relative;
+        }
+
+        .form-input:focus {
+            outline: none;
+            background: rgba(0, 0, 0, 0.7);
+            border-color: #00D4FF;
+            box-shadow: 
+                0 0 0 4px rgba(0, 212, 255, 0.1),
+                0 4px 20px rgba(0, 212, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .form-label {
+            position: absolute;
+            top: -8px;
+            left: 12px;
+            background: linear-gradient(135deg, #00D4FF, #0099FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+            font-size: 0.75rem;
+            padding: 0 0.4rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0.875rem 0;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .remember-me:hover {
+            color: #00D4FF;
+        }
+
+        .remember-me input {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: #00D4FF;
+        }
+
+        .forgot-link {
+            color: #00D4FF;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .forgot-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #00D4FF;
+            transition: width 0.3s ease;
+        }
+
+        .forgot-link:hover::after {
+            width: 100%;
+        }
+
+        /* Button */
+        .btn-signin {
+            width: 100%;
+            padding: 0.875rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #0A0A0A;
+            background: linear-gradient(135deg, #00D4FF, #0099FF);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-signin::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-signin:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-signin:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 212, 255, 0.5);
+        }
+
+        .btn-signin:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-signin span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.25rem 0 0.875rem 0;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(0, 212, 255, 0.3), transparent);
+        }
+
+        .divider span {
+            padding: 0 1.25rem;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+        }
+
+        /* Signup Section */
+        .signup-section {
+            text-align: center;
+        }
+
+        .signup-text {
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 0.625rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-signup {
+            display: inline-block;
+            padding: 0.625rem 1.75rem;
+            color: #00D4FF;
+            background: transparent;
+            border: 2px solid #00D4FF;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            font-size: 0.8rem;
+        }
+
+        .btn-signup::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 212, 255, 0.1);
+            transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-signup:hover::before {
+            left: 0;
+        }
+
+        .btn-signup:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
+            border-color: #00D4FF;
+        }
+
+        .btn-signup span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Features Icons */
+        .features {
+            display: none; /* Hidden to save space */
+        }
+
+        /* Messages */
+        .messages {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            max-width: 400px;
+        }
+
+        .message {
+            padding: 1.25rem;
+            background: rgba(0, 212, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid #00D4FF;
+            border-left: 4px solid #00D4FF;
+            border-radius: 12px;
+            color: #FFFFFF;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .message.error {
+            background: rgba(255, 51, 102, 0.15);
+            border-color: #FF3366;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .page-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+                max-width: 440px;
+                margin: 0 auto;
+            }
+
+            .brand-header {
+                grid-column: 1;
+            }
+
+            .marketing-left,
+            .testimonials-center {
+                display: none;
+            }
+
+            .login-wrapper {
+                grid-column: 1;
+                grid-row: 2;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-container {
+                padding: 1.5rem;
+            }
+
+            .glass-card {
+                padding: 1.5rem 1.25rem;
+            }
+
+            .logo-text {
+                font-size: 1.3rem;
+            }
+
+            .welcome-text h2 {
+                font-size: 1.15rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Matrix Binary Code Background -->
+    <div class="binary-background" id="binaryBg"></div>
+
+    <!-- Animated Background -->
+    <div class="gradient-bg"></div>
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Main Page Container -->
+    <div class="page-container glitch-container">
+        <!-- Brand Header - Spans Left and Center Columns -->
+        <div class="brand-header">
+            <h1 class="brand-heading">InfiniAI Humanizer</h1>
+            <span class="version-badge">Neural-X v3.0</span>
+            <p class="brand-extension">Transform AI text into naturally human content</p>
+        </div>
+
+        <!-- Left: Marketing Bullet Points -->
+        <div class="marketing-left marketing-section">
+            <div class="bullet-point">
+                <div class="bullet-icon">⚡</div>
+                <div class="bullet-title">Lightning Fast</div>
+                <div class="bullet-desc">Transform thousands of words in seconds with our dual-engine system</div>
+            </div>
+            <div class="bullet-point">
+                <div class="bullet-icon">🔒</div>
+                <div class="bullet-title">100% Private</div>
+                <div class="bullet-desc">Your content stays secure. We never store or share your text</div>
+            </div>
+            <div class="bullet-point">
+                <div class="bullet-icon">💎</div>
+                <div class="bullet-title">Premium Quality</div>
+                <div class="bullet-desc">Dual AI engines ensure perfect grammar, tone, and authenticity</div>
+            </div>
+            <div class="bullet-point">
+                <div class="bullet-icon">🎯</div>
+                <div class="bullet-title">Undetectable Results</div>
+                <div class="bullet-desc">Bypass all major AI detectors with our advanced humanization technology</div>
+            </div>
+            <div class="bullet-point">
+                <div class="bullet-icon">🌐</div>
+                <div class="bullet-title">Multi-Language Support</div>
+                <div class="bullet-desc">Works seamlessly with content in over 50 different languages</div>
+            </div>
+            <div class="bullet-point">
+                <div class="bullet-icon">📊</div>
+                <div class="bullet-title">Real-Time Processing</div>
+                <div class="bullet-desc">Watch your text transform instantly with live preview and editing</div>
+            </div>
+            <div class="bullet-point">
+                <div class="bullet-icon">🎓</div>
+                <div class="bullet-title">Academic Excellence</div>
+                <div class="bullet-desc">Maintain scholarly tone while ensuring natural, human-like writing</div>
+            </div>
+            <div class="bullet-point">
+                <div class="bullet-icon">💡</div>
+                <div class="bullet-title">Smart Context Awareness</div>
+                <div class="bullet-desc">Preserves meaning and context while improving readability</div>
+            </div>
+        </div>
+
+        <!-- Center: Testimonials -->
+        <div class="testimonials-center testimonial-section">
+            <div class="testimonial">
+                <p class="testimonial-text">"This humanizer is absolutely perfect! It never misses. My essays pass every AI detector now."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">SM</div>
+                    <div class="author-info">
+                        <div class="author-name">Sarah Martinez</div>
+                        <div class="author-role">Graduate Student</div>
+                    </div>
+                    <div class="testimonial-stars">★★★★★</div>
+                </div>
+            </div>
+            <div class="testimonial">
+                <p class="testimonial-text">"I love this humanizer! Been using it for months and it's never failed me. Best tool for academic writing."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">JC</div>
+                    <div class="author-info">
+                        <div class="author-name">James Chen</div>
+                        <div class="author-role">MBA Student</div>
+                    </div>
+                    <div class="testimonial-stars">★★★★★</div>
+                </div>
+            </div>
+            <div class="testimonial">
+                <p class="testimonial-text">"Game changer! The quality is unmatched. Makes my content sound genuinely human and natural."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">EA</div>
+                    <div class="author-info">
+                        <div class="author-name">Emily Anderson</div>
+                        <div class="author-role">PhD Candidate</div>
+                    </div>
+                    <div class="testimonial-stars">★★★★★</div>
+                </div>
+            </div>
+            <div class="testimonial">
+                <p class="testimonial-text">"Saved my semester! Every paper I submitted was accepted without any AI detection issues. Highly recommended!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">MJ</div>
+                    <div class="author-info">
+                        <div class="author-name">Michael Johnson</div>
+                        <div class="author-role">Engineering Major</div>
+                    </div>
+                    <div class="testimonial-stars">★★★★★</div>
+                </div>
+            </div>
+            <div class="testimonial">
+                <p class="testimonial-text">"The dual-engine system is brilliant! My research papers maintain academic integrity while sounding natural."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">LW</div>
+                    <div class="author-info">
+                        <div class="author-name">Lisa Wang</div>
+                        <div class="author-role">Medical Student</div>
+                    </div>
+                    <div class="testimonial-stars">★★★★★</div>
+                </div>
+            </div>
+            <div class="testimonial">
+                <p class="testimonial-text">"Fast, reliable, and effective. This tool has become essential for my workflow. Worth every penny!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">DK</div>
+                    <div class="author-info">
+                        <div class="author-name">David Kim</div>
+                        <div class="author-role">Law Student</div>
+                    </div>
+                    <div class="testimonial-stars">★★★★★</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Login Form -->
+        <div class="login-wrapper">
+            <div class="glass-card">
+                <!-- Logo & Branding -->
+                <div class="logo">
+                    <div class="logo-text">InfiniHumanizer</div>
+                    <div class="logo-tagline">AI to Human Text</div>
+                </div>
+
+                <!-- Welcome Message -->
+                <div class="welcome-text">
+                    <h2>Welcome Back</h2>
+                    <p>Sign in to continue</p>
+                </div>
+
+                <!-- Login Form -->
+                <form method="post" action="{% url 'account_login' %}">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="id_login">Email</label>
+                        <input 
+                            type="text" 
+                            name="login" 
+                            id="id_login"
+                            class="form-input" 
+                            placeholder="your.email@example.com"
+                            required
+                            autofocus
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="id_password">Password</label>
+                        <input 
+                            type="password" 
+                            name="password" 
+                            id="id_password"
+                            class="form-input" 
+                            placeholder="••••••••"
+                            required
+                        >
+                    </div>
+
+                    <div class="remember-forgot">
+                        <label class="remember-me">
+                            <input type="checkbox" name="remember" id="id_remember">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="{% url 'account_reset_password' %}" class="forgot-link">
+                            Forgot Password?
+                        </a>
+                    </div>
+
+                    <button type="submit" class="btn-signin">
+                        <span>Sign In</span>
+                    </button>
+                </form>
+
+                <!-- Divider -->
+                <div class="divider">
+                    <span>New Here?</span>
+                </div>
+
+                <!-- Signup Section -->
+                <div class="signup-section">
+                    <p class="signup-text">Join thousands transforming AI text</p>
+                    <a href="{% url 'account_signup' %}" class="btn-signup">
+                        <span>Create Free Account</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Generate Matrix-style binary code background
+        function createBinaryRain() {
+            const container = document.getElementById('binaryBg');
+            const columns = Math.floor(window.innerWidth / 35); // More columns
+            
+            for (let i = 0; i < columns; i++) {
+                const column = document.createElement('div');
+                column.className = 'binary-column';
+                
+                // Generate random binary string with line breaks
+                let binaryText = '';
+                const length = Math.floor(Math.random() * 40) + 30;
+                for (let j = 0; j < length; j++) {
+                    binaryText += Math.random() > 0.5 ? '1' : '0';
+                    if ((j + 1) % 8 === 0) {
+                        binaryText += '\n'; // New line every 8 digits
+                    } else if ((j + 1) % 4 === 0) {
+                        binaryText += ' '; // Space every 4 digits
+                    }
+                }
+                
+                column.textContent = binaryText;
+                column.style.left = `${(i * 35) + Math.random() * 15}px`;
+                column.style.animationDuration = `${Math.random() * 6 + 8}s`;
+                // NO DELAY - Start immediately at different vertical positions
+                column.style.animationDelay = '0s';
+                // Spread columns throughout the screen height so they appear immediately
+                const startPosition = Math.random() * 100; // 0% to 100% of screen
+                column.style.top = `${startPosition}%`;
+                // Transform to continue animation from current position
+                column.style.transform = `translateY(-${startPosition}%)`;
+                
+                container.appendChild(column);
+            }
+            
+            // Debug
+            console.log(`Created ${columns} binary rain columns`);
+        }
+
+        // Auto-hide messages with smooth animation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create binary background immediately
+            createBinaryRain();
+            
+            // Debug: Log to console
+            console.log('Binary rain started immediately');
+            
+            const messages = document.querySelectorAll('.message');
+            messages.forEach(function(message) {
+                setTimeout(function() {
+                    message.style.transition = 'all 0.5s ease';
+                    message.style.opacity = '0';
+                    message.style.transform = 'translateX(100%)';
+                    setTimeout(function() {
+                        message.remove();
+                    }, 500);
+                }, 5000);
+            });
+        });
+
+        // Add subtle mouse parallax effect to orbs
+        document.addEventListener('mousemove', function(e) {
+            const orbs = document.querySelectorAll('.orb');
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            orbs.forEach((orb, index) => {
+                const speed = (index + 1) * 20;
+                const x = (mouseX - 0.5) * speed;
+                const y = (mouseY - 0.5) * speed;
+                orb.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+    </script>
+</body>
+</html>

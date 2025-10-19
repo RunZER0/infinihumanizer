@@ -1,0 +1,327 @@
+{% extends "base.html" %}
+
+{% block title %}About - InfiniHumanizer{% endblock %}
+
+{% block content %}
+
+<style>
+/* About Page Redesign - Modern, Flowing, No Cards */
+.about-container {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #0D0D14 0%, #1a1a2e 30%, #0D0D14 70%, #1a1a2e 100%);
+    padding: 4rem 2rem;
+}
+
+/* Hero Section */
+.about-hero {
+    text-align: center;
+    margin-bottom: 6rem;
+    position: relative;
+}
+
+.about-hero h1 {
+    font-size: 4rem;
+    background: linear-gradient(135deg, #00D4FF 0%, #00FF88 50%, #00D4FF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 900;
+    margin-bottom: 1.5rem;
+    animation: gradientShift 3s ease infinite;
+    background-size: 200% 200%;
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.about-hero p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.4rem;
+    font-weight: 300;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* Section Styling */
+.about-section {
+    max-width: 1200px;
+    margin: 0 auto 5rem;
+    padding: 4rem 3rem;
+    background: rgba(20, 20, 25, 0.6);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: border-color 0.3s ease;
+}
+
+.about-section:hover {
+    border-color: rgba(0, 212, 255, 0.3);
+}
+
+.section-title {
+    font-size: 2.5rem;
+    color: #00D4FF;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.section-title-icon {
+    font-size: 2.5rem;
+}
+
+.section-content {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.15rem;
+    line-height: 1.9;
+}
+
+/* Process Steps */
+.process-steps {
+    display: grid;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.process-step {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    padding: 1.5rem;
+    background: rgba(0, 212, 255, 0.03);
+    border-radius: 16px;
+    border-left: 4px solid #00D4FF;
+    transition: all 0.3s ease;
+}
+
+.process-step:hover {
+    background: rgba(0, 212, 255, 0.08);
+    transform: translateX(10px);
+}
+
+.step-number {
+    font-size: 2rem;
+    color: #00D4FF;
+    font-weight: 900;
+    min-width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 212, 255, 0.1);
+    border-radius: 50%;
+}
+
+.step-content h4 {
+    color: #00FF88;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.step-content p {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+}
+
+/* Features Grid */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.5rem;
+    margin-top: 3rem;
+}
+
+.feature-card {
+    text-align: center;
+    padding: 2.5rem 2rem;
+    background: rgba(20, 20, 25, 0.5);
+    border-radius: 16px;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(0, 212, 255, 0.4);
+}
+
+.feature-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    display: block;
+}
+
+.feature-title {
+    color: #00D4FF;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.feature-description {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.7;
+}
+
+/* Version Badge */
+.version-badge {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem;
+    background: rgba(20, 20, 25, 0.6);
+    border: 2px solid rgba(0, 212, 255, 0.3);
+    border-radius: 20px;
+    text-align: center;
+}
+
+.version-title {
+    font-size: 2rem;
+    color: #00D4FF;
+    font-weight: 800;
+    margin-bottom: 2rem;
+}
+
+.version-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+}
+
+.version-item {
+    padding: 1.5rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+}
+
+.version-label {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+.version-value {
+    color: #00FF88;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+/* Separator */
+.section-separator {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.3), transparent);
+    margin: 5rem 0;
+}
+</style>
+
+<div class="about-container">
+    <!-- Hero -->
+    <div class="about-hero">
+        <h1>About InfiniHumanizer</h1>
+        <p>Transforming AI-generated content into authentic human writing</p>
+    </div>
+
+    <!-- Mission Section -->
+    <div class="about-section">
+        <h2 class="section-title">
+            <span class="section-title-icon">🎯</span>
+            Our Mission
+        </h2>
+        <div class="section-content">
+            <p>InfiniHumanizer bridges the gap between artificial intelligence and human expression. While AI tools generate content quickly, they often lack the natural flow, personality, and authenticity of human writing.</p>
+            <p style="margin-top: 1.5rem;">Our advanced humanization system transforms AI-generated text into content that feels genuinely human-written, maintaining context, intent, and natural language patterns while ensuring your content bypasses detection and preserves meaning.</p>
+        </div>
+    </div>
+
+    <!-- How It Works Section -->
+    <div class="about-section">
+        <h2 class="section-title">
+            <span class="section-title-icon">⚙️</span>
+            How It Works
+        </h2>
+        <div class="section-content">
+            <p>Our advanced humanization engine uses a sophisticated multi-step process to ensure natural, authentic output:</p>
+        </div>
+        <div class="process-steps">
+            <div class="process-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>Intelligent Text Chunking</h4>
+                    <p>Automatically splits your content into optimal-sized segments for processing, preserving context and meaning across boundaries.</p>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>Dynamic Temperature Control</h4>
+                    <p>Adjusts creativity levels dynamically to produce natural variation without losing coherence or factual accuracy.</p>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h4>Advanced Review System</h4>
+                    <p>Multiple quality checks ensure output authenticity, natural flow, and proper context preservation throughout the humanization process.</p>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h4>Seamless Rejoining</h4>
+                    <p>Intelligently merges chunks back together, removing redundancies and ensuring smooth transitions between segments.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Features Section -->
+    <div class="about-section">
+        <h2 class="section-title">
+            <span class="section-title-icon">✨</span>
+            Key Features
+        </h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <span class="feature-icon">✍️</span>
+                <h3 class="feature-title">Natural Cadence</h3>
+                <p class="feature-description">Text flows naturally with human-like rhythm, avoiding rigid AI patterns and robotic sentence structures.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🔁</span>
+                <h3 class="feature-title">Structured Variance</h3>
+                <p class="feature-description">Balanced paragraphs with intelligent variation in length, tone, and complexity for authentic human writing.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">📚</span>
+                <h3 class="feature-title">Academic Integrity</h3>
+                <p class="feature-description">Maintains authenticity and bypasses AI detection while preserving the original meaning and message.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Version Badge -->
+    <div class="version-badge">
+        <h2 class="version-title">Neural-X v3.0</h2>
+        <div class="version-info">
+            <div class="version-item">
+                <div class="version-label">Current Version</div>
+                <div class="version-value">Neural-X v3.0</div>
+            </div>
+            <div class="version-item">
+                <div class="version-label">Last Updated</div>
+                <div class="version-value">October 2025</div>
+            </div>
+            <div class="version-item">
+                <div class="version-label">Status</div>
+                <div class="version-value">Production Ready</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
