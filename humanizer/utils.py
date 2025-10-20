@@ -70,10 +70,17 @@ def humanize_text_with_engine(text: str, engine: str) -> str:
 
 
 def humanize_with_chunking(text: str, engine: str) -> str:
-    # Humanize large text using chunking and rejoining. No preprocessing or final review.
-            chunk_input = chunk.text
-        
-        # Humanize the chunk with chunk_index for temperature variation
+    # Chunking only, no pre-processing or final review
+    chunker = TextChunker(
+        min_chunk_size=CHUNK_MIN_SIZE,
+        max_chunk_size=CHUNK_MAX_SIZE,
+        overlap_sentences=2
+    )
+    rejoiner = TextRejoiner()
+    chunks = chunker.chunk_text(text)
+    processed_chunks = []
+    for chunk in chunks:
+        chunk_input = f"{chunk.overlap_start}\n\n{chunk.text}" if chunk.has_overlap_start else chunk.text
         try:
             if engine == "deepseek":
                 processed_text = humanize_with_deepseek(chunk_input, chunk.index)
@@ -83,10 +90,8 @@ def humanize_with_chunking(text: str, engine: str) -> str:
                 processed_text = humanize_with_openai(chunk_input, chunk.index)
             else:
                 raise ValueError(f"Unknown engine: {engine}")
-            
             print(f"  ✅ Chunk {chunk.index + 1} processed ({len(processed_text)} chars)")
             processed_chunks.append((chunk, processed_text))
-            
         except Exception as e:
             print(f"  ⚠️ Chunk {chunk.index + 1} failed, retrying: {e}")
             # Retry once on failure
@@ -99,65 +104,17 @@ def humanize_with_chunking(text: str, engine: str) -> str:
                     processed_text = humanize_with_openai(chunk_input, chunk.index)
                 else:
                     raise ValueError(f"Unknown engine: {engine}")
-                
                 print(f"  ✅ Chunk {chunk.index + 1} retry successful")
                 processed_chunks.append((chunk, processed_text))
             except Exception as retry_error:
                 print(f"  ❌ Chunk {chunk.index + 1} failed permanently: {retry_error}")
                 raise RuntimeError(f"Failed to process chunk {chunk.index}: {retry_error}")
-    
     # Rejoin chunks
     print(f"🔗 Rejoining {len(processed_chunks)} chunks...")
     rejoined_text = rejoiner.rejoin_chunks(processed_chunks)
     print(f"✅ Chunks rejoined - Text: {len(rejoined_text)} chars")
-    
-    # FINAL REVIEW PASS - Use alternative engine to fix redundancies only
-    alternative_engine = "openai" if engine == "gemini" else "gemini"
-    print(f"\n🔍 FINAL REVIEW PASS - Using {alternative_engine.upper()} to fix redundancies...")
-    print(f"   ⚠️ Review mode: ONLY fixing chunk boundaries and removing redundancies")
-    print(f"   ⚠️ NOT rewriting content - surgical edits only")
-    
-    try:
-        if alternative_engine == "gemini":
-            gemini_engine = GeminiEngine()
-            final_text = gemini_engine.final_review(rejoined_text, chunk_count)
-        else:  # openai
-            openai_engine = OpenAIEngine()
-            final_text = openai_engine.final_review(rejoined_text, chunk_count)
-        
-        print(f"✅ Final review complete - Text: {len(final_text)} chars")
-        
-    except Exception as e:
-        print(f"⚠️ Final review failed: {e}")
-        print(f"   Returning rejoined text without review")
-        final_text = rejoined_text
-    
-    print(f"✅ CHUNKING COMPLETE - Final text: {len(final_text)} chars\n")
-    
-                # Chunking only, no pre-processing or final review
-                chunker = TextChunker(
-                    min_chunk_size=CHUNK_MIN_SIZE,
-                    max_chunk_size=CHUNK_MAX_SIZE,
-                    overlap_sentences=2
-                )
-                rejoiner = TextRejoiner()
-                chunks = chunker.chunk_text(text)
-                processed_chunks = []
-                for chunk in chunks:
-                    chunk_input = f"{chunk.overlap_start}\n\n{chunk.text}" if chunk.has_overlap_start else chunk.text
-                    if engine == "deepseek":
-                        processed_text = humanize_with_deepseek(chunk_input, chunk.index)
-                    elif engine == "claude":
-                        processed_text = humanize_with_claude(chunk_input, chunk.index)
-                    elif engine == "openai":
-                        processed_text = humanize_with_openai(chunk_input, chunk.index)
-                    else:
-                        raise ValueError(f"Unknown engine: {engine}")
-                    processed_chunks.append((chunk, processed_text))
-                rejoined_text = rejoiner.rejoin_chunks(processed_chunks)
-
-
-                return rejoined_text
+    print(f"✅ CHUNKING COMPLETE - Final text: {len(rejoined_text)} chars\n")
+    return rejoined_text
 
 
 
