@@ -1,3 +1,11 @@
+def humanize_with_claude(text: str, chunk_index: int = 0) -> str:
+    """Humanize text using Claude engine."""
+    return humanize_text_claude([text])[0]
+
+def humanize_with_openai(text: str, chunk_index: int = 0) -> str:
+    """Humanize text using OpenAI engine."""
+    engine = OpenAIEngine()
+    return engine.humanize(text, chunk_index)
 """
 Text Humanization Utilities
 Main interface for humanizing text using LLM engines.
@@ -10,11 +18,11 @@ from .llm_engines.claude_engine import humanize_text_claude
 from .chunking import TextChunker, TextRejoiner
 
 
-# Chunking configuration
-CHUNKING_ENABLED = os.environ.get("ENABLE_CHUNKING", "True").lower() == "true"
-CHUNK_MIN_SIZE = int(os.environ.get("CHUNK_MIN_SIZE", "200"))
-CHUNK_MAX_SIZE = int(os.environ.get("CHUNK_MAX_SIZE", "400"))
-CHUNKING_THRESHOLD = int(os.environ.get("CHUNKING_THRESHOLD", "500"))  # Words before chunking kicks in
+# Chunking configuration (fixed 500 words per chunk, always enabled)
+CHUNKING_ENABLED = True
+CHUNK_MIN_SIZE = 500
+CHUNK_MAX_SIZE = 500
+CHUNKING_THRESHOLD = 500  # Always chunk at 500 words
 
 
 def humanize_text(text: str, engine: str | None = None) -> str:
@@ -57,73 +65,12 @@ def humanize_text_with_engine(text: str, engine: str) -> str:
     """
     engine = engine.lower()
     
-    # Count words to determine if chunking is needed
-    word_count = len(text.split())
-    
-    print(f"\n📊 TEXT ANALYSIS:")
-    print(f"   Word count: {word_count}")
-    print(f"   Chunking enabled: {CHUNKING_ENABLED}")
-    print(f"   Chunking threshold: {CHUNKING_THRESHOLD}")
-    print(f"   Will use chunking: {CHUNKING_ENABLED and word_count >= CHUNKING_THRESHOLD}")
-    
-    # If text is small or chunking is disabled, process directly
-    if not CHUNKING_ENABLED or word_count < CHUNKING_THRESHOLD:
-        print(f"   → Using direct processing (no chunking)")
-        if engine == "openai":
-            return humanize_with_openai(text)
-        elif engine == "deepseek":
-            return humanize_with_deepseek(text)
-        elif engine == "claude":
-            return humanize_with_claude(text)
-        else:
-            raise ValueError(f"Unknown engine: {engine}. Use 'deepseek', 'claude', or 'openai'")
-    
-    # Use chunking for large texts
-    print(f"   → Using chunking pipeline")
+    # Always use chunking, no preprocessing/analysis
     return humanize_with_chunking(text, engine)
 
 
 def humanize_with_chunking(text: str, engine: str) -> str:
-    """
-    Humanize large text using intelligent chunking and rejoining.
-    Optimized: 600-900 word chunks (2-3 chunks per 1500-2000 word essay).
-    After rejoining, passes through ALTERNATIVE engine for final review.
-    
-    Args:
-        text: The large text to humanize
-        engine: Engine to use ('deepseek', 'claude', or 'openai')
-        
-    Returns:
-        Seamlessly rejoined and reviewed humanized text
-        
-    Raises:
-        RuntimeError: If chunking or processing fails
-    """
-    print(f"\n🔄 CHUNKING STARTED - Text length: {len(text)} chars, Engine: {engine}")
-    print(f"   Using large chunks: {CHUNK_MIN_SIZE}-{CHUNK_MAX_SIZE} words per chunk (minimizes fragmentation)")
-    
-    # Initialize chunker and rejoiner with optimized settings
-    chunker = TextChunker(
-        min_chunk_size=CHUNK_MIN_SIZE,  # 500 words
-        max_chunk_size=CHUNK_MAX_SIZE,   # 600 words
-        overlap_sentences=2  # Keep 1-2 sentence overlap for continuity
-    )
-    rejoiner = TextRejoiner()
-    
-    # Split text into chunks
-    chunks = chunker.chunk_text(text)
-    chunk_count = len(chunks)
-    print(f"✂️ Split into {chunk_count} chunks")
-    
-    # Process each chunk with dynamic temperature
-    processed_chunks = []
-    for chunk in chunks:
-        print(f"  📝 Processing chunk {chunk.index + 1}/{chunk_count}")
-        
-        # Combine overlap with main text for context
-        if chunk.has_overlap_start:
-            chunk_input = f"{chunk.overlap_start}\n\n{chunk.text}"
-        else:
+    # Humanize large text using chunking and rejoining. No preprocessing or final review.
             chunk_input = chunk.text
         
         # Humanize the chunk with chunk_index for temperature variation
@@ -187,78 +134,34 @@ def humanize_with_chunking(text: str, engine: str) -> str:
     
     print(f"✅ CHUNKING COMPLETE - Final text: {len(final_text)} chars\n")
     
-    return final_text
+                # Chunking only, no pre-processing or final review
+                chunker = TextChunker(
+                    min_chunk_size=CHUNK_MIN_SIZE,
+                    max_chunk_size=CHUNK_MAX_SIZE,
+                    overlap_sentences=2
+                )
+                rejoiner = TextRejoiner()
+                chunks = chunker.chunk_text(text)
+                processed_chunks = []
+                for chunk in chunks:
+                    chunk_input = f"{chunk.overlap_start}\n\n{chunk.text}" if chunk.has_overlap_start else chunk.text
+                    if engine == "deepseek":
+                        processed_text = humanize_with_deepseek(chunk_input, chunk.index)
+                    elif engine == "claude":
+                        processed_text = humanize_with_claude(chunk_input, chunk.index)
+                    elif engine == "openai":
+                        processed_text = humanize_with_openai(chunk_input, chunk.index)
+                    else:
+                        raise ValueError(f"Unknown engine: {engine}")
+                    processed_chunks.append((chunk, processed_text))
+                rejoined_text = rejoiner.rejoin_chunks(processed_chunks)
 
 
-def humanize_with_gemini(text: str, chunk_index: int = 0) -> str:
-    """
-    Humanize text using Google Gemini (OXO) with dynamic temperature.
-    
-    Args:
-        text: The text to humanize
-        chunk_index: Index of chunk for temperature variation
-        
-    Returns:
-        Humanized text from Gemini
-        
-    Raises:
-        RuntimeError: If GEMINI_API_KEY is not set or API fails
-    """
-    engine = GeminiEngine()
-    return engine.humanize(text, chunk_index)
+                return rejoined_text
 
 
-def humanize_with_openai(text: str, chunk_index: int = 0) -> str:
-    """
-    Humanize text using OpenAI (smurk) with dynamic temperature.
-    
-    Args:
-        text: The text to humanize
-        chunk_index: Index of chunk for temperature variation
-        
-    Returns:
-        Humanized text from OpenAI
-        
-    Raises:
-        RuntimeError: If OPENAI_API_KEY is not set or API fails
-    """
-    engine = OpenAIEngine()
-    return engine.humanize(text, chunk_index)
-
-
-def humanize_with_claude(text: str, chunk_index: int = 0) -> str:
-    """
-    Humanize text using Claude (OXO) with dynamic temperature.
-    
-    Args:
-        text: The text to humanize
-        chunk_index: Index of chunk for temperature variation
-        
-    Returns:
-        Humanized text from Claude
-        
-    Raises:
-        RuntimeError: If ANTHROPIC_API_KEY is not set or API fails
-    """
-    # Use the Claude engine's humanize function
-    chunks = [text]
-    result = humanize_text_claude(chunks)
-    return result[0] if result else text
 
 
 def humanize_with_deepseek(text: str, chunk_index: int = 0) -> str:
-    """
-    Humanize text using DeepSeek (Loly) with dynamic temperature.
-    
-    Args:
-        text: The text to humanize
-        chunk_index: Index of chunk for temperature variation
-        
-    Returns:
-        Humanized text from DeepSeek
-        
-    Raises:
-        RuntimeError: If DEEPSEEK_API_KEY is not set or API fails
-    """
     engine = DeepSeekEngine()
     return engine.humanize(text, chunk_index)
