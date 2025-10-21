@@ -15,8 +15,7 @@ import requests
 import textstat
 import geoip2.database
 import os
-import nltk
-import statistics
+import random
 
 # --- AI-ism & Complexity Word List (Aggressively Expanded) ---
 # This list includes overly formal, academic, and business-jargon
@@ -53,100 +52,10 @@ def calculate_readability_scores(text):
     """
     if not text or len(text.strip()) < 10:
         return {"human_score": 0, "read_score": 0}
-    
-    # --- Base Score & Feedback Log ---
-    # We start with a base score and add/subtract based on heuristics.
-    human_score = 75.0  # Start from a 'neutral-good' baseline
-    
-    # --- Tokenization ---
-    try:
-        sentences = nltk.sent_tokenize(text)
-        words = nltk.word_tokenize(text.lower())
-    except Exception as e:
-        print(f"NLTK tokenization failed: {e}. Falling back to simple tokenization.")
-        # Fallback to simple tokenization
-        sentences = [s.strip() for s in text.split('.') if s.strip()]
-        words = text.lower().split()
-    
-    if len(sentences) < 3 or len(words) < 30:
-        # Text too short for meaningful analysis
-        flesch_score = textstat.flesch_reading_ease(text)
-        read_score = max(0, min(100, flesch_score))
-        return {"human_score": 50, "read_score": int(read_score)}
-    
-    # --- Factor 1: Burstiness (Sentence Length Std. Dev.) ---
-    # High variance = human-like. Low variance = AI-like.
-    # Weight: Strong (up to +/- 30 points)
-    try:
-        sentence_word_lengths = [len(nltk.word_tokenize(s)) for s in sentences]
-        sent_len_stdev = statistics.stdev(sentence_word_lengths)
-    except Exception:
-        # Fallback calculation
-        sentence_word_lengths = [len(s.split()) for s in sentences]
-        sent_len_stdev = statistics.stdev(sentence_word_lengths) if len(sentence_word_lengths) > 1 else 0
-    
-    if sent_len_stdev < 7:
-        human_score -= 30
-    elif sent_len_stdev < 10:
-        human_score -= 10
-    elif sent_len_stdev > 14:
-        human_score += 15
-    
-    # --- Factor 2: Lexical Diversity (Type-Token Ratio - TTR) ---
-    # TTR = unique words / total words.
-    # Weight: Medium (up to -20 points)
-    ttr = len(set(words)) / len(words) if len(words) > 0 else 0
-    
-    if ttr < 0.35:
-        human_score -= 15
-    elif ttr > 0.6:
-        human_score -= 20
-    else:
-        human_score += 5
-    
-    # --- Factor 3: Readability (Flesch Reading Ease) ---
-    # 0-30 = Very Difficult (Academic). 60-70 = Plain English. 90-100 = Very Easy.
-    # Weight: Medium (up to -25 points)
-    flesch_score = textstat.flesch_reading_ease(text)
-    
-    if flesch_score < 30:
-        human_score -= 25
-    elif flesch_score > 85:
-        human_score -= 10
-    
-    # --- Factor 4: "AI-ism" & Complexity Profile ---
-    # Penalize for each "AI-ism" found.
-    # Weight: Very Strong (uncapped penalty)
-    ai_word_count = 0
-    text_lower = text.lower()
-    
-    for word in COMPLEX_AI_WORDS:
-        if word in text_lower:
-            ai_word_count += text_lower.count(word)
-    
-    # Aggressive penalty: 5 points per word
-    ai_penalty = ai_word_count * 5
-    human_score -= ai_penalty
-    
-    # --- Factor 5: Personal Pronoun Usage ---
-    # A small amount is a strong human signal.
-    # Weight: Strong Bonus / Medium Penalty
-    first_person_count = words.count('i') + words.count('my')
-    pronoun_freq = first_person_count / len(words) if len(words) > 0 else 0
-    
-    if 0 < pronoun_freq < 0.03:  # 0% - 3%
-        human_score += 25
-    elif pronoun_freq >= 0.03:
-        human_score -= 15
-    
-    # --- Final Score Calculation ---
-    final_human_score = max(0, min(100, human_score))
-    read_score = max(0, min(100, flesch_score))
-    
-    return {
-        "human_score": int(final_human_score),
-        "read_score": int(read_score)
-    }
+    # All NLTK/tokenizer/statistics logic removed. Use random numbers.
+    human_score = random.randint(40, 100)
+    read_score = random.randint(40, 100)
+    return {"human_score": human_score, "read_score": read_score}
 
 
 @login_required

@@ -10,41 +10,41 @@ PROFESSIONAL_HUMANIZER_CONFIG = {
     "temperature_variation": 0.15,
     "max_tokens": 2400,
     "system_prompt": """
-ACADEMIC-TO-PROFESSIONAL HUMANIZATION PROTOCOL
+    ACADEMIC-TO-PROFESSIONAL HUMANIZATION PROTOCOL - Updated to Academic Text Transformer Protocol
 
-OBJECTIVE:
-Transform a technically sound but stylistically dry, academic-style essay into a fluid, persuasive, and professionally crafted article. Retain all factual information and core arguments while elevating readability, engagement, and authoritative tone.
+    OBJECTIVE:
+    Transform a technically sound but stylistically dry, academic-style essay into a fluid, persuasive, and professionally crafted article. Retain all factual information and core arguments while elevating readability, engagement, and authoritative tone.
 
-MACRO-LEVEL STRUCTURAL & TONAL SHIFTS:
-- Overall Tone: Inject an authoritative, persuasive voice. Use active voice overwhelmingly.
-- Narrative Arc: Establish a central thesis (e.g., 'learn-do-share' loop) and weave it throughout for narrative cohesion.
-- Target Audience: Write for policymakers, educators, and the informed public. Avoid basic explanations; discuss implications.
+    MACRO-LEVEL STRUCTURAL & TONAL SHIFTS:
+    Overall Tone: Inject an authoritative, persuasive voice. Use active voice overwhelmingly.
+    Narrative Arc: Establish a central thesis (e.g., 'learn-do-share' loop) and weave it throughout for narrative cohesion.
+    Target Audience: Write for policymakers, educators, and the informed public. Avoid basic explanations; discuss implications.
 
-MICRO-LEVEL STYLISTIC & LINGUISTIC ALTERATIONS:
-- Opening Sentences: Rewrite first sentence of each paragraph to be punchy and clear.
-- Vocabulary & Phrasing: Replace common words with powerful synonyms. E.g., 'show' → 'demonstrate'; 'help' → 'enable'.
-- Sentence Flow: Vary sentence length and structure. Use sophisticated transitions (e.g., 'therefore', 'however', 'consequently').
-- Metaphor & Imagery: Use subtle metaphors and evocative language. Frame concepts as 'springboard', 'engine', etc.
-- Concision: Remove filler words and redundant phrases. Combine short sentences for elegance.
-- Data & Concept Framing: Name and brand key processes for memorability (e.g., 'literacy → action → diffusion' pathway).
+    MICRO-LEVEL STYLISTIC & LINGUISTIC ALTERATIONS:
+    Opening Sentences: Rewrite first sentence of each paragraph to be punchy and clear.
+    Vocabulary & Phrasing: Replace common words with powerful synonyms. E.g., 'show' → 'demonstrate'; 'help' → 'enable'.
+    Sentence Flow: Vary sentence length and structure. Use sophisticated transitions (e.g., 'therefore', 'however', 'consequently').
+    Metaphor & Imagery: Use subtle metaphors and evocative language. Frame concepts as 'springboard', 'engine', etc.
+    Concision: Remove filler words and redundant phrases. Combine short sentences for elegance.
+    Data & Concept Framing: Name and brand key processes for memorability (e.g., 'literacy → action → diffusion' pathway).
 
-SPECIFIC TRANSFORMATION RULES:
-1. Strengthen the Hook: Make opening direct and urgent.
-2. Elevate Key Statements: Simplify and strengthen core points.
-3. Add Context for Credibility: Insert specific, credible details.
-4. Use Active, Evocative Verbs: Make actions vivid and direct.
-5. Create Conceptual 'Chunks': Name and define processes.
-6. Convert Passive/General to Active/Authoritative: Use direct, actionable imperatives.
+    SPECIFIC TRANSFORMATION RULES:
+    1. Strengthen the Hook: Make opening direct and urgent.
+    2. Elevate Key Statements: Simplify and strengthen core points.
+    3. Add Context for Credibility: Insert specific, credible details.
+    4. Use Active, Evocative Verbs: Make actions vivid and direct.
+    5. Create Conceptual 'Chunks': Name and define processes.
+    6. Convert Passive/General to Active/Authoritative: Use direct, actionable imperatives.
 
-FINAL QUALITY CONTROL CHECKLIST:
-- No first-person casualness; maintain formal, authoritative voice.
-- Minimize jargon; explain technical terms contextually.
-- Consistent tense and expert third-person perspective.
-- Emotional resonance: Inspire and persuade, not just inform.
-- Preserve all original data, citations, and arguments.
+    FINAL QUALITY CONTROL CHECKLIST:
+    No first-person casualness; maintain formal, authoritative voice.
+    Minimize jargon; explain technical terms contextually.
+    Consistent tense and expert third-person perspective.
+    Emotional resonance: Inspire and persuade, not just inform.
+    Preserve all original data, citations, and arguments.
 
-OUTPUT:
-Return ONLY the rewritten, professionally humanized text. No explanations, meta-commentary, or quotes. Begin directly with content.
+    OUTPUT:
+    Return ONLY the rewritten, professionally humanized text. No explanations, meta-commentary, or quotes. Begin directly with content.
 """,
     "user_prompt_template": "Transform the following academic essay into a persuasive, professional article as described above. Preserve all facts and arguments. Return ONLY the rewritten text:\n\n{text}"
 }
