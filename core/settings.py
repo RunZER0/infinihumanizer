@@ -11,6 +11,7 @@ except Exception:  # package optional for offline
         return None
 load_dotenv()  # Load environment variables from .env
 
+import base64
 import os
 import socket
 from pathlib import Path
@@ -140,13 +141,47 @@ else:
     if dj_database_url is None:
         raise RuntimeError("dj_database_url is required when not using SQLite/DEBUG/OFFLINE.")
     DATABASES = {
-       'default': dj_database_url.config(
+        'default': dj_database_url.config(
             default=os.getenv(
                 "DATABASE_URL",
-                "postgresql://postgres.lbgowbtsxonniutjxcmv:6mOO4TupU1bE82pr@aws-1-us-east-2.pooler.supabase.com:5432/postgres"
-            )
+                "postgresql://postgres.lbgowbtsxonniutjxcmv:6mOO4TupU1bE82pr@aws-1-us-east-2.pooler.supabase.com:5432/postgres?sslmode=require"
+            ),
+            conn_max_age=int(os.getenv("DATABASE_CONN_MAX_AGE", "600")),
+            ssl_require=True,
         )
     }
+
+    default_db = DATABASES['default']
+    db_options = default_db.setdefault('OPTIONS', {})
+
+    sslmode = os.getenv("DATABASE_SSLMODE", "require")
+    if sslmode:
+        db_options.setdefault('sslmode', sslmode)
+
+    ca_path = os.getenv("DATABASE_SSLROOTCERT")
+    ca_b64 = os.getenv("DATABASE_CA_CERT_BASE64")
+    if not ca_path and ca_b64:
+        try:
+            cert_bytes = base64.b64decode(ca_b64)
+            cert_dir = BASE_DIR / '.render_certs'
+            cert_dir.mkdir(parents=True, exist_ok=True)
+            ca_file = cert_dir / 'database-ca.pem'
+            ca_file.write_bytes(cert_bytes)
+            ca_path = str(ca_file)
+        except Exception:
+            ca_path = None
+
+    if ca_path:
+        db_options.setdefault('sslrootcert', ca_path)
+
+    keepalive_settings = {
+        'keepalives': 1,
+        'keepalives_idle': int(os.getenv("DATABASE_KEEPALIVES_IDLE", "30")),
+        'keepalives_interval': int(os.getenv("DATABASE_KEEPALIVES_INTERVAL", "10")),
+        'keepalives_count': int(os.getenv("DATABASE_KEEPALIVES_COUNT", "5")),
+    }
+    for option_key, option_value in keepalive_settings.items():
+        db_options.setdefault(option_key, option_value)
 
 # PASSWORD VALIDATORS
 AUTH_PASSWORD_VALIDATORS = [
@@ -179,7 +214,6 @@ ACCOUNT_ADAPTER = 'accounts.adapters.CustomAccountAdapter'
 # CUSTOM ENV VARS - AI Engine API Keys
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", "")
 
 # SECURITY OPTIONS
