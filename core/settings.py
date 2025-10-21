@@ -140,11 +140,13 @@ else:
     if dj_database_url is None:
         raise RuntimeError("dj_database_url is required when not using SQLite/DEBUG/OFFLINE.")
     DATABASES = {
-       'default': dj_database_url.config(
+        'default': dj_database_url.config(
             default=os.getenv(
                 "DATABASE_URL",
-                "postgresql://postgres.lbgowbtsxonniutjxcmv:6mOO4TupU1bE82pr@aws-1-us-east-2.pooler.supabase.com:5432/postgres"
-            )
+                "postgresql://postgres.lbgowbtsxonniutjxcmv:6mOO4TupU1bE82pr@aws-1-us-east-2.pooler.supabase.com:5432/postgres?sslmode=require"
+            ),
+            conn_max_age=600,
+            ssl_require=True,
         )
     }
 
@@ -179,7 +181,6 @@ ACCOUNT_ADAPTER = 'accounts.adapters.CustomAccountAdapter'
 # CUSTOM ENV VARS - AI Engine API Keys
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", "")
 
 # SECURITY OPTIONS

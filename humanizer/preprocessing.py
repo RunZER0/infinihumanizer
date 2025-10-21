@@ -414,7 +414,7 @@ class TextPreprocessor:
         instructions = {
             'chatgpt': self._chatgpt_instructions(ai_patterns),
             'deepseek': self._deepseek_instructions(ai_patterns),
-            'gemini': self._gemini_instructions(ai_patterns)
+            'claude': self._claude_instructions(ai_patterns)
         }
         return instructions
     
@@ -435,11 +435,14 @@ class TextPreprocessor:
         instructions = "Introduce natural human writing patterns including slight imperfections. "
         instructions += "Focus on making it sound authentically human rather than perfectly optimized. "
         return instructions
-    
-    def _gemini_instructions(self, ai_patterns: Dict) -> str:
-        """Gemini-specific instructions"""
-        instructions = "Humanize the text while preserving all factual accuracy. "
-        instructions += "Add natural variation in sentence flow and structure. "
+
+    def _claude_instructions(self, ai_patterns: Dict) -> str:
+        """Claude-specific instructions"""
+        instructions = "Preserve nuance and intent while loosening overly formal phrasing. "
+        overused = ai_patterns.get('transition_overuse', {}).get('overused_transitions')
+        if overused:
+            instructions += "Use more grounded connectors instead of repetitive transitions. "
+        instructions += "Keep the tone conversational-professional with slight personal voice. "
         return instructions
     
     def _assess_risks(self, text: str, domain: str, preservation: Dict) -> Dict:
