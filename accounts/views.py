@@ -1,35 +1,42 @@
-from django.shortcuts import render, redirect
+import logging
+
+from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-from django.contrib import messages
+from django.shortcuts import redirect, render
+from django.urls import reverse
 
-from .forms import SignUpForm
-from humanizer.utils import humanize_text_with_engine
-
-from allauth.account.views import LoginView
 from allauth.account.models import EmailAddress
 from allauth.account.utils import send_email_confirmation
-from django.urls import reverse
+from allauth.account.views import LoginView
+
+from .forms import SignUpForm
+from .models import Profile
+from humanizer.utils import humanize_text_with_engine
+
+
+logger = logging.getLogger(__name__)
 
 
 class VerifiedEmailLoginView(LoginView):
     def form_valid(self, form):
         from django.conf import settings
-        
+
         # ✅ Debug output to confirm this custom view is active
         print("✅ USING CUSTOM VerifiedEmailLoginView")
-        
+
+        user = form.user_cache
+
         # In OFFLINE_MODE or DEBUG, skip email verification entirely
         if getattr(settings, 'OFFLINE_MODE', False) or getattr(settings, 'DEBUG', False):
             print("   ⚡ Offline/Debug mode - Skipping email verification")
+            self._ensure_profile(user)
             # Just proceed with normal login
             return super().form_valid(form)
-        
+
         # In production, enforce verification
-        user = form.user_cache
         verified = EmailAddress.objects.filter(user=user, verified=True).exists()
-        
+
         if not verified:
             self.request.session['resend_email'] = user.email
             messages.error(
@@ -41,7 +48,13 @@ class VerifiedEmailLoginView(LoginView):
             context = self.get_context_data(form=form)
             return render(self.request, self.template_name, context)
 
+        self._ensure_profile(user)
         return super().form_valid(form)
+
+    def _ensure_profile(self, user):
+        profile, created = Profile.objects.get_or_create(user=user)
+        if created:
+            logger.info("Created profile for user %s during login", user.pk)
 
 
 def signup_view(request):
@@ -58,22 +71,45 @@ def signup_view(request):
 
 @login_required
 def humanizer_view(request):
+    profile, _ = Profile.objects.get_or_create(user=request.user)
+
+    try:
+        word_quota = int(getattr(profile, "word_quota", 0) or 0)
+        words_used = int(getattr(profile, "words_used", 0) or 0)
+    except Exception as exc:  # pragma: no cover - defensive fallback
+        logger.exception("Failed to normalize profile word data: %s", exc)
+        word_quota = 0
+        words_used = 0
+
+    word_balance = max(0, word_quota - words_used)
     input_text = ''
     output_text = ''
     word_count = 0
-    word_balance = 10000
-    selected_engine = (request.POST.get('engine') or 'gemini').lower()
+    selected_engine = (request.POST.get('engine') or 'claude').lower()
 
     if request.method == "POST":
-        try:
-            input_text = request.POST.get("text", "")
-            word_count = len(input_text.split())
-            word_balance = max(0, 10000 - word_count)
-            if selected_engine not in ("gemini", "openai"):
-                return HttpResponse("<pre>Invalid engine selection.</pre>", status=400)
-            output_text = humanize_text_with_engine(input_text, selected_engine)
-        except Exception as e:
-            return HttpResponse(f"<pre>POST ERROR: {e}</pre>", status=500)
+        input_text = request.POST.get("text", "").strip()
+        word_count = len(input_text.split())
+
+        if selected_engine not in ("claude", "openai", "deepseek"):
+            messages.error(request, "Invalid engine selection.")
+        elif not input_text:
+            messages.error(request, "Please provide text to humanize.")
+        elif word_count > word_balance:
+            messages.error(
+                request,
+                f"You've exceeded your word balance ({word_balance} words left)."
+            )
+        else:
+            try:
+                output_text = humanize_text_with_engine(input_text, selected_engine)
+            except Exception as exc:  # pragma: no cover - defensive logging
+                logger.exception("Humanizer request failed: %s", exc)
+                messages.error(
+                    request,
+                    "We couldn't humanize your text right now. "
+                    "Please check your API keys and try again.",
+                )
 
     context = {
         "input_text": input_text,
