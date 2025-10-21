@@ -64,11 +64,14 @@ def humanizer_view(request):
     storage = messages.get_messages(request)
     list(storage)
 
-    input_text = ""
-    output_text = ""
-    word_count = 0
-    error = ""
-    word_balance = None
+    import logging
+    import traceback
+
+        input_text = ""
+        output_text = ""
+        word_count = 0
+        error = ""
+        word_balance = None
 
     user = request.user
     try:
@@ -76,6 +79,16 @@ def humanizer_view(request):
     except Profile.DoesNotExist:
         return HttpResponse("<pre>Profile does not exist for this user.</pre>", status=500)
 
+        try:
+            word_balance = profile.word_quota - profile.words_used
+
+            # Just render the page for GET requests
+            return render(request, "humanizer/humanizer.html", {
+                "word_balance": word_balance,
+            })
+        except Exception as e:
+            logging.error(f"Exception in humanizer view: {e}\n{traceback.format_exc()}")
+            return HttpResponse("Internal Server Error: See server logs for details.", status=500)
     word_balance = profile.word_quota - profile.words_used
 
     # Just render the page for GET requests

@@ -276,8 +276,10 @@ def get_engine_config(engine_name: str) -> dict:
         return CLAUDE_CONFIG
     elif engine_name in ("openai", "gpt", "chatgpt"):
         return OPENAI_CONFIG
+    elif engine_name in ("professional", "pro-humanizer", "gpt-4-pro-humanizer"):
+        return PROFESSIONAL_HUMANIZER_CONFIG
     else:
-        raise ValueError(f"Unknown engine: {engine_name}. Valid options: 'deepseek', 'claude', 'openai'")
+        raise ValueError(f"Unknown engine: {engine_name}. Valid options: 'deepseek', 'claude', 'openai', 'professional'")
 
 
 def calculate_temperature(base_temp: float, variation: float, chunk_index: int) -> float:
@@ -301,10 +303,7 @@ def list_available_engines():
     print("AVAILABLE HUMANIZATION ENGINES")
     print("=" * 80)
     
-    engines = [DEEPSEEK_CONFIG, CLAUDE_CONFIG, OPENAI_CONFIG]
-    
-    engines = [DEEPSEEK_CONFIG, OPENAI_CONFIG]
-    
+    engines = [DEEPSEEK_CONFIG, CLAUDE_CONFIG, OPENAI_CONFIG, PROFESSIONAL_HUMANIZER_CONFIG]
     for config in engines:
         print(f"\n{config['name']}")
         print(f"  Model: {config['model']}")
