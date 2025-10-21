@@ -1,21 +1,25 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_http_methods
-from django.conf import settings
-from allauth.account.models import EmailAddress
-from django.contrib import messages
+import logging
+import random
+from typing import Dict, Tuple
 
-from accounts.models import Profile
-from .utils import humanize_text, humanize_text_with_engine
-from .preprocessing import TextPreprocessor
-from .validation import HumanizationValidator
 import requests
 import textstat
-import geoip2.database
-import os
-import random
+from allauth.account.models import EmailAddress
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect, render
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+
+from accounts.models import Profile
+from .preprocessing import TextPreprocessor
+from .utils import humanize_text_with_engine
+from .validation import HumanizationValidator
+
+
+logger = logging.getLogger(__name__)
 
 # --- AI-ism & Complexity Word List (Aggressively Expanded) ---
 # This list includes overly formal, academic, and business-jargon
@@ -58,152 +62,161 @@ def calculate_readability_scores(text):
     return {"human_score": human_score, "read_score": read_score}
 
 
+def _load_profile_state(user) -> Tuple[Profile, Dict[str, int]]:
+    profile, created = Profile.objects.get_or_create(user=user)
+    if created:
+        logger.info("Created missing profile for user %s", user.pk)
+
+    try:
+        word_quota = int(getattr(profile, "word_quota", 0) or 0)
+        words_used = int(getattr(profile, "words_used", 0) or 0)
+    except Exception as exc:  # pragma: no cover - defensive fallback
+        logger.exception("Failed to normalize profile numbers for user %s: %s", user.pk, exc)
+        word_quota = 0
+        words_used = 0
+
+    word_quota = max(0, word_quota)
+    words_used = max(0, words_used)
+    word_balance = max(0, word_quota - words_used)
+
+    return profile, {
+        "word_quota": word_quota,
+        "words_used": words_used,
+        "word_balance": word_balance,
+    }
+
+
 @login_required
 def humanizer_view(request):
     # 💡 Clear any leftover messages (like "Successfully signed in as...")
     storage = messages.get_messages(request)
     list(storage)
 
-    import logging
-    import traceback
-
-        input_text = ""
-        output_text = ""
-        word_count = 0
-        error = ""
-        word_balance = None
-
     user = request.user
-    try:
-        profile = user.profile
-    except Profile.DoesNotExist:
-        return HttpResponse("<pre>Profile does not exist for this user.</pre>", status=500)
 
-        try:
-            word_balance = profile.word_quota - profile.words_used
+    profile, state = _load_profile_state(user)
+    if state["word_balance"] == 0 and state["word_quota"]:
+        messages.warning(
+            request,
+            "You've used your available words. Upgrade your plan to unlock more humanizations."
+        )
 
-            # Just render the page for GET requests
-            return render(request, "humanizer/humanizer.html", {
-                "word_balance": word_balance,
-            })
-        except Exception as e:
-            logging.error(f"Exception in humanizer view: {e}\n{traceback.format_exc()}")
-            return HttpResponse("Internal Server Error: See server logs for details.", status=500)
-    word_balance = profile.word_quota - profile.words_used
-
-    # Just render the page for GET requests
-    return render(request, "humanizer/humanizer.html", {
-        "word_balance": word_balance,
-    })
+    return render(
+        request,
+        "humanizer/humanizer.html",
+        {
+            "word_balance": state["word_balance"],
+        },
+    )
 
 
 @login_required
 @require_http_methods(["POST"])
 def humanize_ajax(request):
     """AJAX endpoint for humanization with preprocessing and validation"""
-    try:
-        profile = request.user.profile
-    except Profile.DoesNotExist:
-        return JsonResponse({"error": "Profile does not exist"}, status=500)
+    profile, state = _load_profile_state(request.user)
 
-    word_balance = profile.word_quota - profile.words_used
-    
     input_text = request.POST.get("text", "").strip()
     selected_engine = (request.POST.get("engine") or "claude").lower()  # Default to Claude (OXO)
     word_count = len(input_text.split())
-    
-    print(f"\n{'='*60}")
-    print(f"🚀 AJAX HUMANIZATION REQUEST")
-    print(f"   Engine: {selected_engine}")
-    print(f"   Word count: {word_count}")
-    print(f"   Word balance: {word_balance}")
-    print(f"{'='*60}")
 
-    if word_count > word_balance:
-        error = f"You've exceeded your word balance ({word_balance} words left)."
-        print(f"❌ Word limit exceeded!")
-        return JsonResponse({"error": error}, status=400)
-    
-    # Valid engines: DeepSeek (Loly), Claude (OXO), OpenAI (Smurk)
+    logger.info(
+        "Humanization request received",
+        extra={
+            "user_id": request.user.pk,
+            "engine": selected_engine,
+            "word_count": word_count,
+            "word_balance": state["word_balance"],
+        },
+    )
+
+    if not input_text:
+        return JsonResponse({"error": "Please provide text to humanize."}, status=400)
+
     if selected_engine not in ("deepseek", "claude", "openai"):
-        return JsonResponse({"error": "Invalid engine selection"}, status=400)
-    
+        return JsonResponse({"error": "Invalid engine selection."}, status=400)
+
+    if not profile.is_paid and word_count > state["word_balance"]:
+        error = f"You've exceeded your word balance ({state['word_balance']} words left)."
+        logger.info("Humanization rejected for user %s: %s", request.user.pk, error)
+        return JsonResponse({"error": error}, status=400)
+
+    # =============================================================================
+    # 3-STAGE PIPELINE - ALWAYS ACTIVE, CANNOT BE BYPASSED
+    # =============================================================================
+    preprocessor = TextPreprocessor()
     try:
-        # =============================================================================
-        # 3-STAGE PIPELINE - ALWAYS ACTIVE, CANNOT BE BYPASSED
-        # =============================================================================
-        
-        # STAGE 1: PREPROCESSING - Analyze text before humanization (MANDATORY)
-        print(f"🔍 Stage 1: PREPROCESSING & ANALYSIS (MANDATORY)...")
-        preprocessor = TextPreprocessor()
+        logger.info("Stage 1: preprocessing text for user %s", request.user.pk)
         analysis = preprocessor.preprocess_text(input_text)
-        
-        print(f"   ✅ Analysis complete:")
-        print(f"      - AI patterns detected: {len(analysis['ai_patterns'])} categories")
-        print(f"      - Elements to preserve: {sum(len(v) for v in analysis['preservation_map'].values())}")
-        print(f"      - Safe variation zones: {len(analysis['safe_variation_zones'])}")
-        
-        # STAGE 2: HUMANIZATION - Process with selected engine (MANDATORY)
-        print(f"⏳ Stage 2: HUMANIZATION with {selected_engine.upper()} (MANDATORY)...")
+    except Exception as exc:  # pragma: no cover - defensive fallback
+        logger.exception("Preprocessing failed for user %s", request.user.pk)
+        return JsonResponse(
+            {"error": "We couldn't analyse your text right now. Please try again."},
+            status=422,
+        )
+
+    try:
+        logger.info("Stage 2: humanizing text with %s for user %s", selected_engine, request.user.pk)
         output_text = humanize_text_with_engine(input_text, selected_engine)
-        print(f"   ✅ Humanization complete! Output length: {len(output_text)} chars")
-        
-        # STAGE 3: VALIDATION - Quality control and fixing (MANDATORY)
-        print(f"🔬 Stage 3: QUALITY VALIDATION & AUTO-FIX (MANDATORY)...")
-        validator = HumanizationValidator()
+    except Exception as exc:  # pragma: no cover - defensive fallback
+        logger.exception("Engine failure for user %s using %s", request.user.pk, selected_engine)
+        return JsonResponse(
+            {"error": "The selected engine is unavailable right now. Please try again later."},
+            status=503,
+        )
+
+    validator = HumanizationValidator()
+    try:
+        logger.info("Stage 3: validating output for user %s", request.user.pk)
         validation_report = validator.validate_humanization(
             original=input_text,
             humanized=output_text,
             preservation_map=analysis['preservation_map']
         )
-        
-        print(f"   ✅ Validation complete:")
-        print(f"      - Overall score: {validation_report['overall_score']}/100")
-        print(f"      - Passed: {validation_report['passed_validation']}")
-        print(f"      - Issues detected: {len(validation_report['detected_issues'])}")
-        print(f"      - AI Detection Risk: {validation_report['risk_assessment']['risk_level']}")
-        
-        # Use the validated/fixed text (ALWAYS VALIDATED)
-        final_text = validation_report['final_text']
-        
-        # =============================================================================
-        # END OF 3-STAGE PIPELINE
-        # =============================================================================
-        
-        # Calculate readability scores for the output
-        scores = calculate_readability_scores(final_text)
-        print(f"📊 Final Scores - Human: {scores['human_score']}%, Read: {scores['read_score']}%")
-        
-        # Update word usage
-        profile.words_used += word_count
-        profile.save()
-        
-        new_balance = profile.word_quota - profile.words_used
-        
-        print(f"✅ HUMANIZATION COMPLETE - ALL 3 STAGES EXECUTED")
-        print(f"{'='*60}\n")
-        
-        return JsonResponse({
-            "success": True,
-            "output_text": final_text,
-            "word_balance": new_balance,
-            "words_used": word_count,
-            "human_score": scores["human_score"],
-            "read_score": scores["read_score"],
-            "validation": {
-                "score": validation_report['overall_score'],
-                "passed": validation_report['passed_validation'],
-                "risk_level": validation_report['risk_assessment']['risk_level'],
-                "issues_count": len(validation_report['detected_issues'])
-            }
-        })
-        
-    except Exception as e:
-        error = f"Humanization error: {str(e)}"
-        print(f"❌ ERROR in humanize_ajax: {e}")
-        import traceback
-        traceback.print_exc()
-        return JsonResponse({"error": error}, status=500)
+    except Exception as exc:  # pragma: no cover - defensive fallback
+        logger.exception("Validation failed for user %s", request.user.pk)
+        return JsonResponse(
+            {"error": "We hit an issue validating the output. Please try again."},
+            status=503,
+        )
+
+    final_text = validation_report['final_text']
+
+    # =============================================================================
+    # END OF 3-STAGE PIPELINE
+    # =============================================================================
+
+    scores = calculate_readability_scores(final_text)
+
+    profile.words_used = state["words_used"] + word_count
+    profile.save(update_fields=["words_used"])
+
+    new_balance = max(0, state["word_quota"] - profile.words_used)
+
+    logger.info(
+        "Humanization complete for user %s",
+        extra={
+            "engine": selected_engine,
+            "word_count": word_count,
+            "new_balance": new_balance,
+            "scores": scores,
+        },
+    )
+
+    return JsonResponse({
+        "success": True,
+        "output_text": final_text,
+        "word_balance": new_balance,
+        "words_used": word_count,
+        "human_score": scores["human_score"],
+        "read_score": scores["read_score"],
+        "validation": {
+            "score": validation_report['overall_score'],
+            "passed": validation_report['passed_validation'],
+            "risk_level": validation_report['risk_assessment']['risk_level'],
+            "issues_count": len(validation_report['detected_issues'])
+        }
+    })
 
 
 def get_client_ip(request):
@@ -291,17 +304,16 @@ def contact_view(request):
 
 @login_required
 def settings_view(request):
-    try:
-        profile = request.user.profile
-        percent_used = int((profile.words_used / profile.word_quota) * 100) if profile.word_quota else 0
+    profile, state = _load_profile_state(request.user)
 
-        return render(request, "settings.html", {
-            "profile": profile,
-            "percent_used": percent_used,
-        })
+    percent_used = 0
+    if state["word_quota"]:
+        percent_used = int((state["words_used"] / state["word_quota"]) * 100)
 
-    except Exception as e:
-        return HttpResponse(f"<pre>SETTINGS VIEW ERROR:\n{e}</pre>", status=500)
+    return render(request, "settings.html", {
+        "profile": profile,
+        "percent_used": percent_used,
+    })
 
 
 PLAN_WORD_QUOTAS = {

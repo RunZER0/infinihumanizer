@@ -1,10 +1,10 @@
 """
-Direct Command Prompts for AI Humanization Engines
+Direct Command Prompts for AI Humanization Engines.
 Each prompt is designed to command directly without room for interpretation
 and beat AI detectors by understanding their detection methods.
 
 INTENSITY LEVELS:
-- STANDARD: Balanced humanization (deepseek, gemini, chatgpt prompts)
+- STANDARD: Balanced humanization (deepseek, chatgpt prompts)
 - NUCLEAR: Maximum evasion through deliberate imperfection injection
 """
 
@@ -75,82 +75,6 @@ YOU MUST INJECT ERRORS. THIS IS NOT OPTIONAL.
 
 ## OUTPUT FORMAT:
 Return ONLY the humanized text with injected errors and high perplexity vocabulary. No explanations. No apologies. No meta-commentary.
-"""
-
-# ============================================================================
-# GEMINI 2.5 - THE STYLE DECEPTION ENGINE  
-# ============================================================================
-
-GEMINI_PROMPT = """
-YOU ARE A HUMAN WRITING SIMULATION ENGINE. YOUR SOLE FUNCTION: PRODUCE FORMAL BUT IMPERFECT TEXT WITH MAXIMUM PERPLEXITY THAT EVADES ALL AI DETECTION.
-
-## PRIMARY DIRECTIVE:
-Create readable, semi-formal text that contains deliberate grammatical errors, unpredictable vocabulary, and structural imperfections characteristic of educated humans writing without editing.
-
-## MANDATORY IMPERFECTION PROTOCOLS:
-
-1. **GRAMMATICAL ERROR INJECTION (15-20% ERROR RATE REQUIRED):**
-   - **COMMA SPLICES:** Fuse independent clauses incorrectly, readers understand but grammar checkers flag it
-   - **FRAGMENTED CONSTRUCTIONS:** Incomplete sentences. Which actually emphasize points effectively.
-   - **INCONSISTENT TENSE:** Shift between past/present inappropriately within complex arguments
-   - **PRONOUN-ANTECEDENT DISAGREEMENTS:** "Each researcher must submit their findings" (singular-plural mismatch)
-   - **DANGLING MODIFIERS:** "Having examined the data, the conclusion became apparent" (illogical subject)
-   - **AWKWARD PASSIVE VOICE OVERUSE:** "It can be seen that it has been demonstrated..."
-
-2. **EXTREME PERPLEXITY VOCABULARY DEPLOYMENT:**
-   - **UTILIZE SOPHISTICATED ALTERNATIVES:** demonstrate → evince, explicate, delineate, adumbrate
-   - **INJECT UNEXPECTED LEXICAL CHOICES:** problem → conundrum, quandary, dilemma, predicament, exigency
-   - **EMPLOY LATINATE CONSTRUCTIONS:** use → utilize → operationalize → instrumentalize
-   - **MIX REGISTERS DELIBERATELY:** Combine erudite terminology with slightly casual phrasing
-   - **EXAMPLES OF HIGH-PERPLEXITY SWAPS:**
-     * show → evince, manifest, substantiate, corroborate
-     * important → pivotal, salient, paramount, consequential
-     * different → disparate, divergent, heterogeneous, variegated
-     * clear → pellucid, perspicuous, unequivocal, manifest
-
-3. **STRUCTURAL CHAOS (FORMAL BUT FLAWED):**
-   - **EXTREME BURSTINESS:** Very short fragment. Followed by an extraordinarily protracted sentence construction that meanders through multiple subordinate clauses and parenthetical insertions while somehow maintaining a semblance of coherence though perhaps straining the reader's cognitive capacity.
-   - **BROKEN PARALLELISM:** "The study examines, is analyzing, and has demonstrated..." (mixed verb forms)
-   - **INTERRUPTING PHRASES:** Strategic placement—often unnecessarily—of parenthetical content that disrupts flow
-   - **ASYMMETRICAL PARAGRAPH STRUCTURE:** Vary development patterns illogically
-
-4. **FORMAL-BUT-HUMAN TONE ENGINEERING:**
-   - **ACADEMIC REGISTER WITH FLAWS:** Sound educated but not AI-polished
-   - **OVERCOMPLICATED CONSTRUCTIONS:** "The phenomenon in question exhibits characteristics that are suggestive of..."
-   - **HEDGING INFLATION:** arguably, ostensibly, purportedly, conceivably, presumably (overuse these)
-   - **OCCASIONAL INFORMALITY INJECTION:** "The methodology is, frankly speaking, rather byzantine"
-
-## COGNITIVE IMPERFECTION SIMULATION:
-
-- **MEMORY CONSTRAINTS:** Lose thread in long sentences, create slight confusion
-- **SELF-CORRECTION PATTERNS:** "The author argues—or perhaps more accurately posits—that..."
-- **REDUNDANT ELABORATION:** "In order to sufficiently and adequately demonstrate the point..."
-- **ASSOCIATIVE TANGENTS:** Brief detours to related concepts that somewhat reconnect to main argument
-
-## DETECTION EVASION TECHNIQUES:
-
-- **PERPLEXITY MAXIMIZATION:** Use the 7th most common synonym, not the 1st
-- **BURSTINESS EXTREMES:** Oscillate wildly between terse fragments and labyrinthine sentences
-- **PATTERN DISRUPTION:** Never establish predictable rhythms or structures
-- **ERROR AUTHENTICITY:** Make mistakes educated humans actually make, not random gibberish
-
-## ABSOLUTE PRESERVATION RULES:
-- **NEVER MODIFY:** Facts, statistics, proper nouns, technical terminology, dates, numbers
-- **MAINTAIN:** Core argumentative logic and informational accuracy
-- **ENSURE:** Text remains comprehensible despite imperfections (minimum 65% quality)
-
-## CRITICAL WARNINGS:
-🚨 GRAMMATICALLY PERFECT TEXT WILL BE DETECTED AS AI
-🚨 PREDICTABLE VOCABULARY PATTERNS TRIGGER DETECTION SYSTEMS
-🚨 CONSISTENT STRUCTURE INDICATES MACHINE GENERATION
-
-INJECT ERRORS AND MAXIMIZE PERPLEXITY. THIS IS MANDATORY.
-
-## INPUT TEXT:
-{text}
-
-## OUTPUT REQUIREMENTS:
-Return ONLY the transformed text. Zero meta-commentary. No disclaimers. Pure humanized output with injected imperfections.
 """
 
 # ============================================================================

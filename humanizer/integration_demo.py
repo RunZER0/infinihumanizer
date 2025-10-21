@@ -11,11 +11,10 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from preprocessing import TextPreprocessor
 from prompts import (
-    get_prompt_by_engine,
-    get_intensity_adjusted_prompt,
+    CHATGPT_PROMPT,
     DEEPSEEK_PROMPT,
-    GEMINI_PROMPT,
-    CHATGPT_PROMPT
+    get_intensity_adjusted_prompt,
+    get_prompt_by_engine,
 )
 
 
@@ -25,7 +24,7 @@ def complete_humanization_workflow(text: str, engine: str = 'deepseek', domain: 
     
     Args:
         text: Text to humanize
-        engine: 'deepseek', 'gemini', or 'chatgpt'
+        engine: 'deepseek' or 'chatgpt'
         domain: Content domain (legal, medical, technical, academic, business, creative, general)
     
     Returns:
@@ -55,8 +54,7 @@ def complete_humanization_workflow(text: str, engine: str = 'deepseek', domain: 
     print(f"\n[STEP 3] Adjusting prompt for intensity level...")
     base_prompts = {
         'deepseek': DEEPSEEK_PROMPT,
-        'gemini': GEMINI_PROMPT,
-        'chatgpt': CHATGPT_PROMPT
+        'chatgpt': CHATGPT_PROMPT,
     }
     final_prompt = get_intensity_adjusted_prompt(
         base_prompts.get(engine.lower(), CHATGPT_PROMPT),
@@ -87,7 +85,7 @@ def demonstrate_all_engines(text: str):
     print("DEMONSTRATION: PROMPTS FOR ALL ENGINES")
     print("=" * 80)
     
-    engines = ['deepseek', 'gemini', 'chatgpt']
+    engines = ['deepseek', 'chatgpt']
     
     for engine in engines:
         print(f"\n{'=' * 80}")
@@ -169,7 +167,7 @@ def scenario_2_business_content():
     The robust framework ensures scalability and reliability for enterprise deployments.
     """
     
-    result = complete_humanization_workflow(text, engine='gemini', domain='business')
+    result = complete_humanization_workflow(text, engine='deepseek', domain='business')
     
     print("\nPRESERVATION RULES:")
     for rule in result['preservation_rules']:
