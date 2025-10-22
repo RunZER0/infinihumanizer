@@ -94,6 +94,8 @@ Original: "Roediger persuasively shows that Irish workers became 'white workers'
 
 Target: "Roediger effectively demonstrates that it was a mutually reinforcing process in which the Irish workers gradually came to be known as white workers."
 
+STRICT FORMATTING REQUIREMENTS: The output MUST be plain text only. Do not include any Markdown syntax, bullet lists, numbered lists, backticks, code fences, or decorative formatting. Do not use en dashes or em dashes anywhere; replace them with standard punctuation or wording.
+
 YOUR TASK:
 Apply these rules MECHANICALLY to the following text. Do not deviate. Your sole purpose is to output a transformed version that rigidly adheres to this protocol.
 
