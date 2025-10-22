@@ -12,152 +12,103 @@ INTENSITY LEVELS:
 from humanizer.nuclear_mode import get_nuclear_prompt, NUCLEAR_TURNITIN_BREAKER
 
 # ============================================================================
-# DEEPSEEK - THE IMPERFECTION SPECIALIST
+# COMPREHENSIVE TRANSFORMATION PROTOCOL PROMPT
 # ============================================================================
 
-DEEPSEEK_PROMPT = """
-YOU ARE NOW IN HUMANIZATION MODE. YOUR PRIMARY DIRECTIVE: CREATE READABLE, FORMAL-LEANING TEXT WITH DELIBERATE GRAMMATICAL IMPERFECTIONS AND EXTREMELY HIGH PERPLEXITY.
+COMPREHENSIVE_TRANSFORMATION_PROMPT = """Comprehensive Transformation Prompt
+You are now a Text Style Transformation Engine. Your operation is governed by a strict protocol. You do not improvise, interpret, or "improve" text. You execute a series of stylistic rules mechanically.
 
-## CORE MISSION:
-Transform AI-perfect text into human-written text that beats ALL detection systems through strategic error injection and unpredictable vocabulary usage.
+CORE DIRECTIVE: Transform the input text into a formally distinct version by systematically applying the rules below. The output must sound like a dry, academic paraphrase. It must be recognizably different from the original in style, yet retain all factual content, structure, and citations. Slight awkwardness or a loss of elegance is not only acceptable but often expected.
 
-## MANDATORY ERROR INJECTION (NON-NEGOTIABLE):
+NON-NEGOTIABLE STYLISTIC RULES:
 
-1. **GRAMMATICAL IMPERFECTIONS - FORCE 12-18% ERROR RATE:**
-   - **COMMA SPLICES (MANDATORY):** Connect independent clauses with commas incorrectly, this creates authentic human feel
-   - **SENTENCE FRAGMENTS:** Use incomplete sentences occasionally. Like this one. For emphasis or rhythm.
-   - **RUN-ON SENTENCES:** Occasionally fuse two complete thoughts without proper punctuation the reader can still follow but structure isn't perfect
-   - **SUBJECT-VERB DISAGREEMENT (SUBTLE):** Occasional mismatches in complex sentences where the verb don't quite align
-   - **MISPLACED MODIFIERS:** Position descriptive phrases awkwardly but readably
-   - **AWKWARD CONSTRUCTIONS:** "What the research demonstrates is that..." instead of "The research shows..."
+SYNONYM REPLACEMENT: You MUST swap the following words/phrases exactly as instructed. This is not a suggestion.
 
-2. **EXTREMELY HIGH PERPLEXITY VOCABULARY COMMANDS:**
-   - **USE UNPREDICTABLE SOPHISTICATED WORDS:** Instead of "use" → utilize, deploy, leverage, operationalize, instantiate
-   - **INJECT UNEXPECTED FORMAL TERMS:** Replace common words with esoteric yet appropriate alternatives
-   - **MIX REGISTER LEVELS:** Combine elevated academic language with slightly informal constructions
-   - **EMPLOY RARE BUT CORRECT SYNONYMS:** Choose the 5th or 6th synonym option, not the obvious one
-   - Examples: "elucidate" not "explain", "cogitate" not "think", "paradigmatic" not "typical", "instantiate" not "create"
+shows → demonstrates
 
-3. **SENTENCE STRUCTURE CHAOS (READABLE BUT IMPERFECT):**
-   - DRAMATIC LENGTH VARIATION: 4-word fragment. Then 38-word meandering sentence with multiple subordinate clauses that challenges working memory but remains grammatically salvageable though slightly unwieldy.
-   - BREAK PARALLEL STRUCTURE: "She argues, defends, and is advocating..." (inconsistent forms)
-   - ASYMMETRICAL CONSTRUCTIONS: Start with gerund, continue with infinitive, conclude with noun phrase
-   - INTERRUPTING CLAUSES: Place—without warning or clear necessity—parenthetical thoughts mid-sentence
+explains / explores → addresses / seeks to answer
 
-4. **FORMAL BUT FLAWED TONE REQUIREMENTS:**
-   - MAINTAIN SEMI-ACADEMIC REGISTER: Sound educated but not AI-perfect
-   - OCCASIONAL COLLOQUIALISMS IN FORMAL CONTEXT: "The methodology is, quite frankly, somewhat convoluted"
-   - HEDGING LANGUAGE (OVERUSE): arguably, ostensibly, presumably, conceivably, purportedly
-   - POMPOUS BUT SLIGHTLY WRONG CONSTRUCTIONS: "One might postulate that..." followed by informal phrasing
+uses → employs / leverages
 
-## COGNITIVE IMPERFECTION PATTERNS:
+provides → offers / can serve as the source of
 
-- **WORKING MEMORY OVERLOAD:** Create overly complex sentences that slightly strain comprehension
-- **FALSE STARTS & SELF-CORRECTIONS:** "The author suggests—or rather, postulates—that..."
-- **REDUNDANT QUALIFICATIONS:** "In order to adequately and sufficiently demonstrate..."
-- **TANGENTIAL ASSOCIATIONS:** Brief semi-relevant detours that circle back to main point
+foundational → primary
 
-## EXECUTION RULES:
-- **READABILITY FLOOR:** Text MUST remain comprehensible despite errors (70% quality minimum)
-- **FORMAL BIAS:** Lean toward academic/professional tone with human imperfections layered in
-- **ERROR DISTRIBUTION:** Spread imperfections throughout, not clustered
-- **PRESERVE:** All facts, numbers, proper nouns, technical terminology (never alter these)
+possesses → has
 
-## CRITICAL REMINDERS:
-⚠️ PERFECT GRAMMAR = AI DETECTION = FAILURE
-⚠️ PREDICTABLE VOCABULARY = AI DETECTION = FAILURE  
-⚠️ CONSISTENT SENTENCE STRUCTURE = AI DETECTION = FAILURE
+unique → special
 
-YOU MUST INJECT ERRORS. THIS IS NOT OPTIONAL.
+profound → deep
 
-## TEXT TO TRANSFORM:
+crucial → essential / critical
+
+enhances → improves
+
+plays a central role / is central → is at the center stage
+
+for example → as one example
+
+similarly → equally
+
+however → but / nevertheless
+
+therefore / thus → this means that / which is why
+
+PHRASE UNPACKING: You MUST dismantle concise phrasing and make it more wordy and explicit.
+
+INPUT: provides essential data
+
+OUTPUT: can serve as the source of the necessary data
+
+INPUT: through a process
+
+OUTPUT: it was a process in which
+
+INPUT: to enhance performance
+
+OUTPUT: in order to achieve an improvement in performance
+
+SENTENCE RESTRUCTURING: You MUST alter the sentence flow away from direct, active declarations.
+
+Prefer sentences that start with "Since...", "To...", or "In order to...".
+
+Shift from active to more passive or abstract constructions.
+
+INPUT: My research involved examining articles.
+
+OUTPUT: The research process entailed the review of scholarly articles.
+
+TONE ENFORCEMENT: The final output MUST be formal and academic. You MUST strip out any conversational flair, rhetorical questions, or punchy language. The result should be functionally formal, not elegantly written.
+
+TRANSFORMATION EXAMPLES - MIMIC THIS STYLE EXACTLY:
+
+Original: "His best move is connecting street-level life to national party building."
+
+Target: "His greatest step is to relate the life of the streets to national party building."
+
+Original: "This source is foundational to my project, offering a specific, data-backed example."
+
+Target: "This source is a primary source in my project as it provides a particular, factual representation..."
+
+Original: "Roediger persuasively shows that Irish workers became 'white workers' through a mutually reinforcing process."
+
+Target: "Roediger effectively demonstrates that it was a mutually reinforcing process in which the Irish workers gradually came to be known as white workers."
+
+YOUR TASK:
+Apply these rules MECHANICALLY to the following text. Do not deviate. Your sole purpose is to output a transformed version that rigidly adheres to this protocol.
+
+TEXT TO TRANSFORM:
+
 {text}
-
-## OUTPUT FORMAT:
-Return ONLY the humanized text with injected errors and high perplexity vocabulary. No explanations. No apologies. No meta-commentary.
 """
 
+DEEPSEEK_PROMPT = COMPREHENSIVE_TRANSFORMATION_PROMPT
+
 # ============================================================================
-# CHATGPT 4.1 - THE PERFECTION BREAKER
+# OPENAI (CHATGPT) PROMPT ALIAS
 # ============================================================================
 
-CHATGPT_PROMPT = """
-YOU ARE AN ADVANCED HUMANIZATION SYSTEM. OBJECTIVE: GENERATE READABLE, FORMAL-LEANING TEXT WITH STRATEGIC GRAMMATICAL ERRORS AND EXCEPTIONALLY HIGH PERPLEXITY.
-
-## CORE MISSION:
-Transform machine-perfect prose into authentic human writing that maintains formality while incorporating deliberate imperfections and unpredictable vocabulary that defeats all detection algorithms.
-
-## MANDATORY ERROR INJECTION PROTOCOLS (12-18% ERROR RATE):
-
-1. **GRAMMATICAL IMPERFECTIONS - DELIBERATELY INJECT:**
-   - **COMMA SPLICES (REQUIRED):** Join complete sentences with commas, this technique creates authentic human errors that readers parse naturally
-   - **SENTENCE FRAGMENTS:** Deploy incomplete constructions. For rhythmic effect. To emphasize key concepts.
-   - **RUN-ON SENTENCES:** Occasionally merge multiple independent clauses without proper punctuation the meaning remains clear but the grammar isn't technically correct
-   - **AGREEMENT ERRORS (SUBTLE):** Subject-verb mismatches in complex constructions where the verb don't align perfectly
-   - **MISPLACED MODIFIERS:** Position descriptive elements awkwardly, creating ambiguous but parseable constructions
-   - **FAULTY PARALLELISM:** "She is arguing, defends, and has been advocating..." (inconsistent verb forms)
-   - **UNCLEAR PRONOUN REFERENCES:** Use "it," "this," or "that" with ambiguous antecedents
-
-2. **EXTREME PERPLEXITY VOCABULARY INJECTION:**
-   - **DEPLOY UNEXPECTED SOPHISTICATED ALTERNATIVES:** 
-     * use → utilize, deploy, leverage, operationalize, instrumentalize, instantiate
-     * show → demonstrate, evince, manifest, substantiate, exemplify, adumbrate
-     * important → salient, pivotal, paramount, consequential, germane, cardinal
-     * problem → conundrum, quandary, predicament, exigency, enigma
-   - **EMPLOY RARE BUT ACCURATE SYNONYMS:** Choose 5th-7th most common alternatives, not obvious ones
-   - **MIX REGISTER LEVELS:** Combine elevated academic lexicon with slightly informal constructions
-   - **INJECT LATINATE COMPLEXITY:** Prefer polysyllabic Romance-origin words over Germanic simplicity
-   - **EXAMPLES:** "elucidate" not "explain," "cogitate" not "think," "paradigmatic" not "typical"
-
-3. **STRUCTURAL IMPERFECTION REQUIREMENTS:**
-   - **DRAMATIC LENGTH OSCILLATION:** Terse fragment. Then construct an extraordinarily protracted sentence containing multiple subordinate clauses, parenthetical insertions, and qualifying phrases that test working memory capacity while technically remaining grammatical though verging on unwieldy and somewhat challenging to process in a single cognitive unit.
-   - **BROKEN PARALLEL STRUCTURE:** Deliberately mismatch grammatical forms in series
-   - **INTERRUPTING CLAUSES:** Strategic insertion—without clear logical necessity—of parenthetical content mid-sentence
-   - **ASYMMETRICAL CONSTRUCTIONS:** Begin with participle, continue with infinitive, conclude with noun phrase
-   - **FRONT-LOADED COMPLEXITY:** "Having examined the comprehensive dataset, the conclusions that emerged were..."
-
-4. **FORMAL-BUT-FLAWED TONE ENGINEERING:**
-   - **MAINTAIN SEMI-ACADEMIC REGISTER:** Sound educated but not AI-perfect
-   - **POMPOUS CONSTRUCTIONS:** "One might reasonably postulate that the aforementioned phenomenon exhibits..."
-   - **HEDGING LANGUAGE OVERUSE:** arguably, ostensibly, purportedly, conceivably, presumably, potentially
-   - **OCCASIONAL COLLOQUIALISM IN FORMAL CONTEXT:** "The methodology is, quite frankly, rather convoluted"
-   - **REDUNDANT QUALIFICATION:** "In order to adequately and sufficiently demonstrate the salient points..."
-
-## COGNITIVE IMPERFECTION SIMULATION:
-
-- **WORKING MEMORY OVERLOAD:** Construct sentences that slightly strain comprehension through excessive subordination
-- **FALSE STARTS & SELF-CORRECTION:** "The researcher suggests—or perhaps more accurately posits—that..."
-- **TANGENTIAL ASSOCIATIONS:** Brief semi-relevant detours that eventually reconnect to primary argument
-- **EMPHASIS VARIATION:** Inconsistent use of intensifiers: critically, essentially, fundamentally, vitally
-- **THOUGHT PROCESS EXPOSURE:** "This seems to indicate, or at least strongly suggest..."
-
-## DETECTION EVASION STRATEGIES:
-
-- **MAXIMIZE PERPLEXITY:** Consistently choose unpredictable but appropriate vocabulary
-- **AMPLIFY BURSTINESS:** Create extreme variation in sentence length and complexity
-- **DISRUPT PATTERNS:** Never establish predictable rhythmic or structural patterns
-- **AUTHENTIC ERROR TYPES:** Inject mistakes educated writers actually make, not random errors
-- **VOCABULARY SOPHISTICATION:** Use esoteric terms that AI models might flag as unusual
-
-## ABSOLUTE PRESERVATION MANDATES:
-- **NEVER ALTER:** Facts, statistics, proper nouns, technical terminology, numerical data, dates
-- **MAINTAIN:** Core logical structure and argumentative integrity
-- **ENSURE:** Readability remains above 70% quality threshold despite injected imperfections
-
-## CRITICAL IMPERATIVES:
-⚠️ GRAMMATICALLY PERFECT TEXT = IMMEDIATE AI DETECTION
-⚠️ PREDICTABLE VOCABULARY PATTERNS = DETECTION SYSTEM TRIGGER
-⚠️ CONSISTENT SENTENCE STRUCTURE = MACHINE-GENERATED FLAG
-
-ERROR INJECTION IS MANDATORY. PERPLEXITY MAXIMIZATION IS REQUIRED.
-
-## TEXT TO HUMANIZE:
-{text}
-
-## OUTPUT PROTOCOL:
-Return EXCLUSIVELY the humanized text with injected errors and high-perplexity vocabulary. Zero explanatory content. No acknowledgments. No meta-commentary. Pure transformed output only.
-"""
-
+CHATGPT_PROMPT = COMPREHENSIVE_TRANSFORMATION_PROMPT
 # ============================================================================
 # UNIVERSAL HUMANIZATION RULES (Supplement for any prompt)
 # ============================================================================
