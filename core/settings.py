@@ -129,8 +129,10 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 # DATABASE
 # Use lightweight SQLite when in DEBUG or OFFLINE mode for local/offline testing,
-# otherwise fall back to DATABASE_URL (PostgreSQL in production).
-if DEBUG or OFFLINE_MODE or not os.getenv("DATABASE_URL"):
+# otherwise rely on DATABASE_URL (PostgreSQL in production).
+database_url = os.getenv("DATABASE_URL")
+
+if DEBUG or OFFLINE_MODE or not database_url:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -142,10 +144,7 @@ else:
         raise RuntimeError("dj_database_url is required when not using SQLite/DEBUG/OFFLINE.")
     DATABASES = {
         'default': dj_database_url.config(
-            default=os.getenv(
-                "DATABASE_URL",
-                "postgresql://postgres.lbgowbtsxonniutjxcmv:6mOO4TupU1bE82pr@aws-1-us-east-2.pooler.supabase.com:5432/postgres?sslmode=require"
-            ),
+            default=database_url,
             conn_max_age=int(os.getenv("DATABASE_CONN_MAX_AGE", "600")),
             ssl_require=True,
         )

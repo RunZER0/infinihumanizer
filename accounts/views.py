@@ -3,6 +3,7 @@ import logging
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.db import DatabaseError
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
@@ -22,16 +23,13 @@ class VerifiedEmailLoginView(LoginView):
     def form_valid(self, form):
         from django.conf import settings
 
-        # ✅ Debug output to confirm this custom view is active
-        print("✅ USING CUSTOM VerifiedEmailLoginView")
-
         user = form.user_cache
 
         # In OFFLINE_MODE or DEBUG, skip email verification entirely
         if getattr(settings, 'OFFLINE_MODE', False) or getattr(settings, 'DEBUG', False):
-            print("   ⚡ Offline/Debug mode - Skipping email verification")
-            self._ensure_profile(user)
-            # Just proceed with normal login
+            if not self._ensure_profile(user):
+                context = self.get_context_data(form=form)
+                return render(self.request, self.template_name, context)
             return super().form_valid(form)
 
         # In production, enforce verification
@@ -48,13 +46,25 @@ class VerifiedEmailLoginView(LoginView):
             context = self.get_context_data(form=form)
             return render(self.request, self.template_name, context)
 
-        self._ensure_profile(user)
+        if not self._ensure_profile(user):
+            context = self.get_context_data(form=form)
+            return render(self.request, self.template_name, context)
         return super().form_valid(form)
 
     def _ensure_profile(self, user):
-        profile, created = Profile.objects.get_or_create(user=user)
+        try:
+            profile, created = Profile.objects.get_or_create(user=user)
+        except DatabaseError as exc:
+            logger.exception("Unable to load or create profile for user %s: %s", user.pk, exc)
+            messages.error(
+                self.request,
+                "We couldn't connect to the database to load your account. Please try again in a moment.",
+            )
+            return False
+
         if created:
             logger.info("Created profile for user %s during login", user.pk)
+        return True
 
 
 def signup_view(request):
@@ -71,7 +81,22 @@ def signup_view(request):
 
 @login_required
 def humanizer_view(request):
-    profile, _ = Profile.objects.get_or_create(user=request.user)
+    try:
+        profile, _ = Profile.objects.get_or_create(user=request.user)
+    except DatabaseError as exc:
+        logger.exception("Unable to load profile for user %s: %s", request.user.pk, exc)
+        messages.error(
+            request,
+            "We couldn't connect to the database to load your profile. Please try again shortly.",
+        )
+        context = {
+            "input_text": '',
+            "output_text": '',
+            "word_count": 0,
+            "word_balance": 0,
+            "selected_engine": (request.POST.get('engine') or 'claude').lower(),
+        }
+        return render(request, "humanizer/humanizer.html", context)
 
     try:
         word_quota = int(getattr(profile, "word_quota", 0) or 0)
