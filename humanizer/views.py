@@ -14,7 +14,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from accounts.models import Profile
-from .preprocessing import TextPreprocessor
 from .utils import humanize_text_with_engine
 from .validation import HumanizationValidator
 
@@ -113,7 +112,7 @@ def humanizer_view(request):
 @login_required
 @require_http_methods(["POST"])
 def humanize_ajax(request):
-    """AJAX endpoint for humanization with preprocessing and validation"""
+    """AJAX endpoint for humanization with validation"""
     profile, state = _load_profile_state(request.user)
 
     input_text = request.POST.get("text", "").strip()
@@ -142,21 +141,10 @@ def humanize_ajax(request):
         return JsonResponse({"error": error}, status=400)
 
     # =============================================================================
-    # 3-STAGE PIPELINE - ALWAYS ACTIVE, CANNOT BE BYPASSED
+    # HUMANIZATION PIPELINE - VALIDATION STILL ENFORCED
     # =============================================================================
-    preprocessor = TextPreprocessor()
     try:
-        logger.info("Stage 1: preprocessing text for user %s", request.user.pk)
-        analysis = preprocessor.preprocess_text(input_text)
-    except Exception as exc:  # pragma: no cover - defensive fallback
-        logger.exception("Preprocessing failed for user %s", request.user.pk)
-        return JsonResponse(
-            {"error": "We couldn't analyse your text right now. Please try again."},
-            status=422,
-        )
-
-    try:
-        logger.info("Stage 2: humanizing text with %s for user %s", selected_engine, request.user.pk)
+        logger.info("Stage 1: humanizing text with %s for user %s", selected_engine, request.user.pk)
         output_text = humanize_text_with_engine(input_text, selected_engine)
     except Exception as exc:  # pragma: no cover - defensive fallback
         logger.exception("Engine failure for user %s using %s", request.user.pk, selected_engine)
@@ -166,12 +154,13 @@ def humanize_ajax(request):
         )
 
     validator = HumanizationValidator()
+    preservation_map: Dict[str, object] = {}
     try:
-        logger.info("Stage 3: validating output for user %s", request.user.pk)
+        logger.info("Stage 2: validating output for user %s", request.user.pk)
         validation_report = validator.validate_humanization(
             original=input_text,
             humanized=output_text,
-            preservation_map=analysis['preservation_map']
+            preservation_map=preservation_map
         )
     except Exception as exc:  # pragma: no cover - defensive fallback
         logger.exception("Validation failed for user %s", request.user.pk)

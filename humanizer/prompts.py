@@ -149,67 +149,30 @@ UNIVERSAL_HUMANIZATION_RULES = """
 """
 
 # ============================================================================
-# ENHANCED PROMPTS WITH PREPROCESSING INTEGRATION
+# ENGINE PROMPT HELPERS
 # ============================================================================
 
-def build_enhanced_prompt(base_prompt: str, text: str, preprocessing_analysis: dict = None) -> str:
+def build_enhanced_prompt(base_prompt: str, text: str) -> str:
     """
-    Build enhanced prompt with preprocessing analysis integration
-    
+    Build the final prompt for a given engine without preprocessing context.
+
     Args:
         base_prompt: Base prompt template (DEEPSEEK_PROMPT, CLAUDE_PROMPT, or CHATGPT_PROMPT)
         text: Text to humanize
-        preprocessing_analysis: Optional analysis from TextPreprocessor
-    
+
     Returns:
-        Enhanced prompt with preservation rules and targeted instructions
+        Enhanced prompt string ready for the engine request
     """
-    prompt = base_prompt.format(text=text)
-    
-    if preprocessing_analysis:
-        # Add preservation rules from preprocessing
-        preservation_map = preprocessing_analysis.get('preservation_map', {})
-        guidelines = preprocessing_analysis.get('humanization_guidelines', {})
-        
-        preservation_section = "\n## ADDITIONAL PRESERVATION RULES FROM ANALYSIS:\n"
-        
-        if preservation_map.get('technical_terms'):
-            terms = ', '.join(list(preservation_map['technical_terms'])[:10])
-            preservation_section += f"- PRESERVE THESE TECHNICAL TERMS: {terms}\n"
-        
-        if preservation_map.get('proper_nouns'):
-            nouns = ', '.join(list(preservation_map['proper_nouns'])[:10])
-            preservation_section += f"- NEVER CHANGE THESE PROPER NOUNS: {nouns}\n"
-        
-        if preservation_map.get('numbers_dates'):
-            nums = ', '.join(preservation_map['numbers_dates'][:5])
-            preservation_section += f"- MAINTAIN THESE EXACT VALUES: {nums}\n"
-        
-        # Add targeted recommendations
-        if guidelines.get('variation_recommendations'):
-            preservation_section += "\n## PRIORITY HUMANIZATION TARGETS:\n"
-            for rec in guidelines['variation_recommendations'][:5]:
-                preservation_section += f"- {rec.upper()}\n"
-        
-        # Insert before the text to transform
-        prompt = prompt.replace("## TEXT TO TRANSFORM:", 
-                              preservation_section + "\n## TEXT TO TRANSFORM:")
-        prompt = prompt.replace("## INPUT TEXT:", 
-                              preservation_section + "\n## INPUT TEXT:")
-        prompt = prompt.replace("## TEXT TO HUMANIZE:", 
-                              preservation_section + "\n## TEXT TO HUMANIZE:")
-    
-    return prompt
+    return base_prompt.format(text=text)
 
 
-def get_prompt_by_engine(engine_name: str, text: str, preprocessing_analysis: dict = None) -> str:
+def get_prompt_by_engine(engine_name: str, text: str) -> str:
     """
     Get the appropriate prompt for a specific engine
     
     Args:
         engine_name: 'deepseek', 'chatgpt'/'openai', or 'nuclear' (⚛️ MAXIMUM EVASION)
         text: Text to humanize
-        preprocessing_analysis: Optional analysis from TextPreprocessor
     
     Returns:
         Formatted prompt ready for the engine
@@ -228,7 +191,7 @@ def get_prompt_by_engine(engine_name: str, text: str, preprocessing_analysis: di
     if engine_name.lower() == 'nuclear':
         return base_prompt.format(text=text)
     
-    return build_enhanced_prompt(base_prompt, text, preprocessing_analysis)
+    return build_enhanced_prompt(base_prompt, text)
 
 
 def get_intensity_adjusted_prompt(base_prompt: str, text: str, intensity: float) -> str:

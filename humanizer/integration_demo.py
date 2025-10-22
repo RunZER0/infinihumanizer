@@ -9,7 +9,6 @@ from pathlib import Path
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 
-from preprocessing import TextPreprocessor
 from prompts import (
     CHATGPT_PROMPT,
     DEEPSEEK_PROMPT,
@@ -20,7 +19,7 @@ from prompts import (
 
 def complete_humanization_workflow(text: str, engine: str = 'deepseek', domain: str = 'general'):
     """
-    Complete humanization workflow with preprocessing and prompt generation
+    Complete humanization workflow with prompt generation only
     
     Args:
         text: Text to humanize
@@ -28,30 +27,22 @@ def complete_humanization_workflow(text: str, engine: str = 'deepseek', domain: 
         domain: Content domain (legal, medical, technical, academic, business, creative, general)
     
     Returns:
-        dict: Complete analysis and ready-to-use prompt
+        dict: Prompt configuration details
     """
     print("=" * 80)
     print("COMPLETE HUMANIZATION WORKFLOW")
     print("=" * 80)
-    
-    # STEP 1: Preprocessing Analysis
-    print("\n[STEP 1] Running preprocessing analysis...")
-    preprocessor = TextPreprocessor()
-    analysis = preprocessor.preprocess_text(text, domain)
-    
-    # Show analysis summary
-    print(preprocessor.generate_summary_report(analysis))
-    
-    # STEP 2: Generate Enhanced Prompt
-    print("\n[STEP 2] Generating enhanced prompt...")
-    prompt = get_prompt_by_engine(engine, text, analysis)
-    
-    # STEP 3: Get Intensity Recommendation
-    intensity = analysis['humanization_guidelines']['intensity_settings']['overall_intensity']
+
+    # STEP 1: Generate Prompt
+    print("\n[STEP 1] Generating engine prompt...")
+    prompt = get_prompt_by_engine(engine, text)
+
+    # STEP 2: Determine default intensity
+    intensity = 0.5
     print(f"\nRecommended intensity: {intensity:.2f}")
-    
-    # STEP 4: Adjust for intensity
-    print(f"\n[STEP 3] Adjusting prompt for intensity level...")
+
+    # STEP 3: Adjust for intensity
+    print(f"\n[STEP 2] Adjusting prompt for intensity level...")
     base_prompts = {
         'deepseek': DEEPSEEK_PROMPT,
         'chatgpt': CHATGPT_PROMPT,
@@ -67,13 +58,13 @@ def complete_humanization_workflow(text: str, engine: str = 'deepseek', domain: 
     print("=" * 80)
     
     return {
-        'analysis': analysis,
+        'analysis': None,
         'prompt': final_prompt,
         'intensity': intensity,
         'engine': engine,
         'domain': domain,
-        'preservation_rules': analysis['humanization_guidelines']['preservation_rules'],
-        'recommendations': analysis['humanization_guidelines']['variation_recommendations']
+        'preservation_rules': [],
+        'recommendations': [],
     }
 
 

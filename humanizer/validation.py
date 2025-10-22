@@ -26,11 +26,18 @@ class HumanizationValidator:
             'ai_detection_risk': {'max_probability': 0.3}  # 30% max AI probability
         }
     
-    def validate_humanization(self, original: str, humanized: str, preservation_map: Dict) -> Dict:
+    def validate_humanization(
+        self,
+        original: str,
+        humanized: str,
+        preservation_map: Dict | None,
+    ) -> Dict:
         """
         Comprehensive validation of humanized text
         Returns: Validation report with pass/fail and fixes needed
         """
+        preservation_map = preservation_map or {}
+
         validation_report = {
             'overall_score': 0,
             'passed_validation': False,
