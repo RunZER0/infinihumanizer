@@ -102,7 +102,9 @@ TEXT TO TRANSFORM:
 {text}
 """
 
+# Shared prompt bindings for all supported engines
 DEEPSEEK_PROMPT = COMPREHENSIVE_TRANSFORMATION_PROMPT
+CLAUDE_PROMPT = COMPREHENSIVE_TRANSFORMATION_PROMPT
 
 # ============================================================================
 # OPENAI (CHATGPT) PROMPT ALIAS
