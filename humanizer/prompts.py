@@ -157,7 +157,7 @@ def build_enhanced_prompt(base_prompt: str, text: str, preprocessing_analysis: d
     Build enhanced prompt with preprocessing analysis integration
     
     Args:
-        base_prompt: Base prompt template (DEEPSEEK_PROMPT, GEMINI_PROMPT, or CHATGPT_PROMPT)
+        base_prompt: Base prompt template (DEEPSEEK_PROMPT, CLAUDE_PROMPT, or CHATGPT_PROMPT)
         text: Text to humanize
         preprocessing_analysis: Optional analysis from TextPreprocessor
     
