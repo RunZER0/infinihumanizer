@@ -145,7 +145,7 @@ else:
             default=os.getenv(
                 "DATABASE_URL",
                 # Use transaction pooler (port 6543) for better IPv4 compatibility and stability
-                "postgresql://postgres.lbgowbtsxonniutjxcmv:6mOO4TupU1bE82pr@aws-1-us-east-2.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true"
+                "postgresql://postgres.lbgowbtsxonniutjxcmv:6mOO4TupU1bE82pr@aws-1-us-east-2.pooler.supabase.com:6543/postgres?sslmode=require"
             ),
             conn_max_age=int(os.getenv("DATABASE_CONN_MAX_AGE", "0")),  # Disable connection pooling with pgbouncer
             ssl_require=True,
