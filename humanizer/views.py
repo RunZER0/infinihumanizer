@@ -114,7 +114,14 @@ def humanizer_view(request):
 @require_http_methods(["POST"])
 def humanize_ajax(request):
     """AJAX endpoint for humanization with preprocessing and validation"""
-    profile, state = _load_profile_state(request.user)
+    try:
+        profile, state = _load_profile_state(request.user)
+    except Exception as exc:
+        logger.exception("Failed to load profile for user %s", request.user.pk)
+        return JsonResponse(
+            {"error": "Unable to load your profile. Please refresh and try again."},
+            status=500
+        )
 
     input_text = request.POST.get("text", "").strip()
     selected_engine = (request.POST.get("engine") or "claude").lower()  # Default to Claude (OXO)
@@ -129,94 +136,144 @@ def humanize_ajax(request):
             "word_balance": state["word_balance"],
         },
     )
-
-    if not input_text:
-        return JsonResponse({"error": "Please provide text to humanize."}, status=400)
-
-    if selected_engine not in ("deepseek", "claude", "openai"):
-        return JsonResponse({"error": "Invalid engine selection."}, status=400)
-
-    if not profile.is_paid and word_count > state["word_balance"]:
-        error = f"You've exceeded your word balance ({state['word_balance']} words left)."
-        logger.info("Humanization rejected for user %s: %s", request.user.pk, error)
-        return JsonResponse({"error": error}, status=400)
-
-    # =============================================================================
-    # 3-STAGE PIPELINE - ALWAYS ACTIVE, CANNOT BE BYPASSED
-    # =============================================================================
-    preprocessor = TextPreprocessor()
+    
+    # Master try-catch to prevent ANY uncaught 500 errors
     try:
-        logger.info("Stage 1: preprocessing text for user %s", request.user.pk)
-        analysis = preprocessor.preprocess_text(input_text)
-    except Exception as exc:  # pragma: no cover - defensive fallback
-        logger.exception("Preprocessing failed for user %s", request.user.pk)
-        return JsonResponse(
-            {"error": "We couldn't analyse your text right now. Please try again."},
-            status=422,
+        if not input_text:
+            return JsonResponse({"error": "Please provide text to humanize."}, status=400)
+
+        if selected_engine not in ("deepseek", "claude", "openai"):
+            return JsonResponse({"error": "Invalid engine selection."}, status=400)
+
+        if not profile.is_paid and word_count > state["word_balance"]:
+            error = f"You've exceeded your word balance ({state['word_balance']} words left)."
+            logger.info("Humanization rejected for user %s: %s", request.user.pk, error)
+            return JsonResponse({"error": error}, status=400)
+
+        # =============================================================================
+        # 3-STAGE PIPELINE - ALWAYS ACTIVE, CANNOT BE BYPASSED
+        # =============================================================================
+        preprocessor = TextPreprocessor()
+        try:
+            logger.info("Stage 1: preprocessing text for user %s", request.user.pk)
+            analysis = preprocessor.preprocess_text(input_text)
+        except Exception as exc:  # pragma: no cover - defensive fallback
+            logger.exception("Preprocessing failed for user %s", request.user.pk)
+            return JsonResponse(
+                {"error": "We couldn't analyse your text right now. Please try again."},
+                status=422,
+            )
+
+        try:
+            logger.info("Stage 2: humanizing text with %s for user %s", selected_engine, request.user.pk)
+            output_text = humanize_text_with_engine(input_text, selected_engine)
+            
+            # If output is empty or too short, something went wrong
+            if not output_text or len(output_text.strip()) < 10:
+                raise ValueError("Engine returned empty or invalid output")
+                
+        except Exception as exc:  # pragma: no cover - defensive fallback
+            logger.exception("Engine failure for user %s using %s", request.user.pk, selected_engine)
+            
+            # Try fallback to Claude if not already using it
+            if selected_engine != "claude":
+                try:
+                    logger.info("Attempting fallback to Claude for user %s", request.user.pk)
+                    output_text = humanize_text_with_engine(input_text, "claude")
+                    if not output_text or len(output_text.strip()) < 10:
+                        raise ValueError("Fallback engine also failed")
+                except Exception as fallback_exc:
+                    logger.exception("Fallback also failed for user %s", request.user.pk)
+                    return JsonResponse(
+                        {"error": "All humanization engines are temporarily unavailable. Please try again in a moment."},
+                        status=503,
+                    )
+            else:
+                return JsonResponse(
+                    {"error": "The selected engine is unavailable right now. Please try again later."},
+                    status=503,
+                )
+
+        validator = HumanizationValidator()
+        try:
+            logger.info("Stage 3: validating output for user %s", request.user.pk)
+            validation_report = validator.validate_humanization(
+                original=input_text,
+                humanized=output_text,
+                preservation_map=analysis['preservation_map']
+            )
+        except Exception as exc:  # pragma: no cover - defensive fallback
+            logger.exception("Validation failed for user %s", request.user.pk)
+            return JsonResponse(
+                {"error": "We hit an issue validating the output. Please try again."},
+                status=503,
+            )
+
+        final_text = validation_report['final_text']
+
+        # =============================================================================
+        # STAGE 4: POST-PROCESSING - Add Natural Imperfections
+        # =============================================================================
+        try:
+            from humanizer.post_processing import add_natural_imperfections
+            logger.info("Stage 4: Adding natural imperfections for user %s", request.user.pk)
+            
+            # Apply medium intensity post-processing by default
+            final_text, pp_stats = add_natural_imperfections(final_text, intensity="medium")
+            logger.info("Post-processing complete: %s", pp_stats)
+        except Exception as exc:
+            # If post-processing fails, continue with unprocessed text
+            logger.warning("Post-processing failed for user %s, using unprocessed output: %s", 
+                          request.user.pk, exc)
+
+        # =============================================================================
+        # END OF PIPELINE
+        # =============================================================================
+
+        scores = calculate_readability_scores(final_text)
+
+        # Update word usage with retry logic for DB issues
+        try:
+            profile.words_used = state["words_used"] + word_count
+            profile.save(update_fields=["words_used"])
+            new_balance = max(0, state["word_quota"] - profile.words_used)
+        except Exception as db_exc:
+            logger.exception("Failed to update word usage for user %s", request.user.pk)
+            # Still return success but log the issue
+            new_balance = max(0, state["word_balance"] - word_count)
+
+        logger.info(
+            "Humanization complete for user %s",
+            extra={
+                "engine": selected_engine,
+                "word_count": word_count,
+                "new_balance": new_balance,
+                "scores": scores,
+            },
         )
 
-    try:
-        logger.info("Stage 2: humanizing text with %s for user %s", selected_engine, request.user.pk)
-        output_text = humanize_text_with_engine(input_text, selected_engine)
-    except Exception as exc:  # pragma: no cover - defensive fallback
-        logger.exception("Engine failure for user %s using %s", request.user.pk, selected_engine)
-        return JsonResponse(
-            {"error": "The selected engine is unavailable right now. Please try again later."},
-            status=503,
-        )
-
-    validator = HumanizationValidator()
-    try:
-        logger.info("Stage 3: validating output for user %s", request.user.pk)
-        validation_report = validator.validate_humanization(
-            original=input_text,
-            humanized=output_text,
-            preservation_map=analysis['preservation_map']
-        )
-    except Exception as exc:  # pragma: no cover - defensive fallback
-        logger.exception("Validation failed for user %s", request.user.pk)
-        return JsonResponse(
-            {"error": "We hit an issue validating the output. Please try again."},
-            status=503,
-        )
-
-    final_text = validation_report['final_text']
-
-    # =============================================================================
-    # END OF 3-STAGE PIPELINE
-    # =============================================================================
-
-    scores = calculate_readability_scores(final_text)
-
-    profile.words_used = state["words_used"] + word_count
-    profile.save(update_fields=["words_used"])
-
-    new_balance = max(0, state["word_quota"] - profile.words_used)
-
-    logger.info(
-        "Humanization complete for user %s",
-        extra={
-            "engine": selected_engine,
-            "word_count": word_count,
-            "new_balance": new_balance,
-            "scores": scores,
-        },
-    )
-
-    return JsonResponse({
-        "success": True,
-        "output_text": final_text,
-        "word_balance": new_balance,
-        "words_used": word_count,
-        "human_score": scores["human_score"],
-        "read_score": scores["read_score"],
-        "validation": {
-            "score": validation_report['overall_score'],
-            "passed": validation_report['passed_validation'],
-            "risk_level": validation_report['risk_assessment']['risk_level'],
-            "issues_count": len(validation_report['detected_issues'])
-        }
-    })
+        return JsonResponse({
+            "success": True,
+            "output_text": final_text,
+            "word_balance": new_balance,
+            "words_used": word_count,
+            "human_score": scores["human_score"],
+            "read_score": scores["read_score"],
+            "validation": {
+                "score": validation_report['overall_score'],
+                "passed": validation_report['passed_validation'],
+                "risk_level": validation_report['risk_assessment']['risk_level'],
+                "issues_count": len(validation_report['detected_issues'])
+            }
+        })
+    
+    except Exception as unexpected_error:
+        # Master catch-all for ANY unexpected errors
+        logger.exception("Unexpected error in humanize_ajax for user %s", request.user.pk)
+        return JsonResponse({
+            "error": "An unexpected error occurred. Our team has been notified. Please try again.",
+            "details": str(unexpected_error) if logger.level == 10 else None  # Only in DEBUG
+        }, status=500)
 
 
 def get_client_ip(request):
