@@ -12,8 +12,7 @@ python -c "import nltk; nltk.download('punkt', quiet=True); nltk.download('punkt
 # Collect static files
 python manage.py collectstatic --no-input
 
-# Wait for database to be available (with retry logic for SSL issues)
-python manage.py wait_for_db
+# Make start script executable
+chmod +x start.sh
 
-# Run database migrations
-python manage.py migrate
+echo "✅ Build complete! Database connection and migrations will run in start.sh"
