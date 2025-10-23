@@ -144,9 +144,10 @@ else:
         'default': dj_database_url.config(
             default=os.getenv(
                 "DATABASE_URL",
-                "postgresql://postgres.lbgowbtsxonniutjxcmv:6mOO4TupU1bE82pr@aws-1-us-east-2.pooler.supabase.com:5432/postgres?sslmode=require"
+                # Use transaction pooler (port 6543) for better IPv4 compatibility and stability
+                "postgresql://postgres.lbgowbtsxonniutjxcmv:6mOO4TupU1bE82pr@aws-1-us-east-2.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true"
             ),
-            conn_max_age=int(os.getenv("DATABASE_CONN_MAX_AGE", "600")),
+            conn_max_age=int(os.getenv("DATABASE_CONN_MAX_AGE", "0")),  # Disable connection pooling with pgbouncer
             ssl_require=True,
         )
     }
