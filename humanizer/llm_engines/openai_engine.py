@@ -19,8 +19,8 @@ class OpenAIEngine:
         
         self.client = OpenAI(
             api_key=api_key,
-            timeout=90.0,
-            max_retries=2
+            timeout=25.0,  # Reduced from 90s to fail before worker timeout
+            max_retries=1   # Reduced from 2 to fail faster
         )
         
         # Load configuration from engine_config.py

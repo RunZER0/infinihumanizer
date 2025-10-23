@@ -27,8 +27,11 @@ def humanize_text_claude(text_chunks: List[str]) -> List[str]:
     # Get engine configuration
     config = get_engine_config("claude")
     
-    # Initialize Anthropic client
-    client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+    # Initialize Anthropic client with timeout
+    client = anthropic.Anthropic(
+        api_key=ANTHROPIC_API_KEY,
+        timeout=25.0  # Fail before worker timeout
+    )
     
     humanized_chunks = []
     
