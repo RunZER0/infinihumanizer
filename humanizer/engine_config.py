@@ -127,7 +127,7 @@ Apply these rules MECHANICALLY. Do not deviate. Your sole purpose is to output a
 
 CLAUDE_CONFIG = {
     "name": "Claude (Academic Stealth)",
-    "model": "claude-3-sonnet-20240229",
+    "model": "claude-3-5-sonnet-20241022",
     "description": "Applies deterministic style-shifting for formal, distinct academic output",
     
     "base_temperature": 0.7,

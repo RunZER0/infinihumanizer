@@ -61,7 +61,7 @@ def humanize_text_claude(text_chunks: List[str]) -> List[str]:
             
         except Exception as e:
             print(f"Error humanizing chunk {i+1} with Claude: {str(e)}")
-            humanized_chunks.append(chunk)  # Fallback to original
+            raise RuntimeError(f"Claude API failed: {str(e)}") from e
     
     return humanized_chunks
 

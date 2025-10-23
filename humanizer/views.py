@@ -14,9 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from accounts.models import Profile
-from .preprocessing import TextPreprocessor
 from .utils import humanize_text_with_engine
-from .validation import HumanizationValidator
 
 
 logger = logging.getLogger(__name__)
@@ -151,21 +149,11 @@ def humanize_ajax(request):
             return JsonResponse({"error": error}, status=400)
 
         # =============================================================================
-        # 3-STAGE PIPELINE - ALWAYS ACTIVE, CANNOT BE BYPASSED
+        # SIMPLIFIED PIPELINE - Direct LLM Call Only (No Preprocessing/Chunking)
         # =============================================================================
-        preprocessor = TextPreprocessor()
-        try:
-            logger.info("Stage 1: preprocessing text for user %s", request.user.pk)
-            analysis = preprocessor.preprocess_text(input_text)
-        except Exception as exc:  # pragma: no cover - defensive fallback
-            logger.exception("Preprocessing failed for user %s", request.user.pk)
-            return JsonResponse(
-                {"error": "We couldn't analyse your text right now. Please try again."},
-                status=422,
-            )
 
         try:
-            logger.info("Stage 2: humanizing text with %s for user %s", selected_engine, request.user.pk)
+            logger.info("Humanizing text with %s for user %s", selected_engine, request.user.pk)
             output_text = humanize_text_with_engine(input_text, selected_engine)
             
             # If output is empty or too short, something went wrong
@@ -194,29 +182,15 @@ def humanize_ajax(request):
                     status=503,
                 )
 
-        validator = HumanizationValidator()
-        try:
-            logger.info("Stage 3: validating output for user %s", request.user.pk)
-            validation_report = validator.validate_humanization(
-                original=input_text,
-                humanized=output_text,
-                preservation_map=analysis['preservation_map']
-            )
-        except Exception as exc:  # pragma: no cover - defensive fallback
-            logger.exception("Validation failed for user %s", request.user.pk)
-            return JsonResponse(
-                {"error": "We hit an issue validating the output. Please try again."},
-                status=503,
-            )
-
-        final_text = validation_report['final_text']
+        # Use the LLM output directly - no validation stage
+        final_text = output_text
 
         # =============================================================================
-        # STAGE 4: POST-PROCESSING - Add Natural Imperfections
+        # OPTIONAL: POST-PROCESSING - Add Natural Imperfections
         # =============================================================================
         try:
             from humanizer.post_processing import add_natural_imperfections
-            logger.info("Stage 4: Adding natural imperfections for user %s", request.user.pk)
+            logger.info("Adding natural imperfections for user %s", request.user.pk)
             
             # Apply medium intensity post-processing by default
             final_text, pp_stats = add_natural_imperfections(final_text, intensity="medium")
@@ -259,12 +233,6 @@ def humanize_ajax(request):
             "words_used": word_count,
             "human_score": scores["human_score"],
             "read_score": scores["read_score"],
-            "validation": {
-                "score": validation_report['overall_score'],
-                "passed": validation_report['passed_validation'],
-                "risk_level": validation_report['risk_assessment']['risk_level'],
-                "issues_count": len(validation_report['detected_issues'])
-            }
         })
     
     except Exception as unexpected_error:
