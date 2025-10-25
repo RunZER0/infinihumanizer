@@ -4,7 +4,7 @@ Configuration is managed in engine_config.py for easy editing.
 """
 
 import os
-from openai import OpenAI
+from openai import OpenAI, APITimeoutError
 from ..engine_config import get_engine_config, calculate_temperature
 
 
@@ -17,10 +17,13 @@ class OpenAIEngine:
         if not api_key:
             raise RuntimeError("OPENAI_API_KEY environment variable is not set")
         
+        # Use 25s timeout to fail fast before Gunicorn worker timeout
+        # This prevents worker crashes on large inputs and ensures consistent
+        # timeout behavior across all engines (Claude, OpenAI, DeepSeek)
         self.client = OpenAI(
             api_key=api_key,
-            timeout=25.0,  # Reduced from 90s to fail before worker timeout
-            max_retries=1   # Reduced from 2 to fail faster
+            timeout=25.0,
+            max_retries=1
         )
         
         # Load configuration from engine_config.py
@@ -67,8 +70,12 @@ class OpenAIEngine:
             
             return response.choices[0].message.content.strip()
             
+        except APITimeoutError as e:
+            # Specific handling for OpenAI timeout errors
+            raise RuntimeError(f"OpenAI API timeout after 25 seconds. The request took too long - try reducing input size or try again later.") from e
         except Exception as e:
-            raise RuntimeError(f"OpenAI API error: {str(e)}")
+            # Handle other errors
+            raise RuntimeError(f"OpenAI API error: {str(e)}") from e
     
     def final_review(self, text: str, chunk_count: int) -> str:
         """
