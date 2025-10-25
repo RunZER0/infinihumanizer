@@ -231,8 +231,10 @@ def test_engine_large_input_handling(engine_name: str, test_func: Callable[[str]
         
         # If it's a timeout error, that's acceptable - we're testing that it fails gracefully
         # Check for timeout indicators: "timeout", "timed out", or specific timeout durations
-        timeout_indicators = ["timeout", "timed out", "25 second", "APITimeout"]
-        is_timeout = any(indicator in error_msg for indicator in timeout_indicators)
+        # Use case-insensitive matching for robustness
+        error_msg_lower = error_msg.lower()
+        timeout_indicators = ["timeout", "timed out", "25 second", "apitimeout"]
+        is_timeout = any(indicator in error_msg_lower for indicator in timeout_indicators)
         
         if is_timeout:
             print(f"✅ ACCEPTABLE: Engine timed out gracefully (as expected for very large input)")
