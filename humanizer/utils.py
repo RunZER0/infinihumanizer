@@ -30,14 +30,16 @@ def clean_llm_output(text: str) -> str:
         cleaned = re.sub(pattern, '', cleaned, flags=re.IGNORECASE | re.MULTILINE)
     
     # Remove trailing metadata sections that appear after double newline
-    # Only remove if followed by these specific keywords at the start of a new paragraph
-    metadata_keywords = ['Note:', 'Please note:', 'I hope this helps', 'Let me know', 
-                        'Feel free', 'If you need', 'Important:']
+    # Construct single alternation pattern for efficiency
+    metadata_keywords = [
+        'Note:', 'Please note:', 'I hope this helps', 'Let me know',
+        'Feel free', 'If you need', 'Important:'
+    ]
     
-    for keyword in metadata_keywords:
-        # Remove from double newline + keyword to end of text
-        pattern = r'\n\n' + re.escape(keyword) + r'.*$'
-        cleaned = re.sub(pattern, '', cleaned, flags=re.IGNORECASE | re.DOTALL)
+    # Build alternation pattern: (keyword1|keyword2|...)
+    escaped_keywords = [re.escape(kw) for kw in metadata_keywords]
+    metadata_pattern = r'\n\n(' + '|'.join(escaped_keywords) + r').*$'
+    cleaned = re.sub(metadata_pattern, '', cleaned, flags=re.IGNORECASE | re.DOTALL)
     
     return cleaned.strip()
 
