@@ -168,6 +168,27 @@ def humanize_ajax(request):
             # If output is empty or too short, something went wrong
             if not output_text or len(output_text.strip()) < 10:
                 raise ValueError("Engine returned empty or invalid output")
+        
+        except ValueError as val_exc:
+            # Handle input length validation errors specifically
+            error_msg = str(val_exc)
+            if "Text too long" in error_msg:
+                logger.warning("Text too long for user %s: %s", request.user.pk, error_msg)
+                return JsonResponse(
+                    {"error": error_msg},
+                    status=413  # 413 Payload Too Large
+                )
+            elif "Engine returned empty" in error_msg:
+                # Empty output from engine
+                logger.error("Engine returned empty output for user %s using %s", request.user.pk, selected_engine)
+                return JsonResponse(
+                    {"error": "The selected engine failed to process your text. Please try again."},
+                    status=503,
+                )
+            else:
+                # Other ValueError
+                logger.error("Validation error for user %s: %s", request.user.pk, error_msg)
+                return JsonResponse({"error": error_msg}, status=400)
                 
         except Exception as exc:  # pragma: no cover - defensive fallback
             error_msg = str(exc)
