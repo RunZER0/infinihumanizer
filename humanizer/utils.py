@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 from typing import Callable, Dict
 
 from .llm_engines import DeepSeekEngine, OpenAIEngine
@@ -12,11 +13,32 @@ from .llm_engines.claude_engine import humanize_text_claude
 MAX_TOTAL_CHARS = 10000
 
 
+def clean_llm_output(text: str) -> str:
+    """
+    Clean LLM output by removing common metadata patterns.
+    Ensures only the humanized text is returned.
+    """
+    # Remove common prefixes/suffixes that LLMs might add
+    patterns_to_remove = [
+        r'^(Here is the transformed text:|Here\'s the transformed output:|Transformed text:|Output:)\s*',
+        r'^(The transformed version is:|Here is the humanized text:|Humanized output:)\s*',
+        r'\n\n(Note:|Please note:|I hope this helps|Let me know)',
+    ]
+    
+    cleaned = text.strip()
+    
+    for pattern in patterns_to_remove:
+        cleaned = re.sub(pattern, '', cleaned, flags=re.IGNORECASE | re.MULTILINE)
+    
+    return cleaned.strip()
+
+
 def humanize_with_claude(text: str) -> str:
     """Humanize text using the Claude engine."""
     try:
         # Claude engine expects a list, returns a list
-        return humanize_text_claude([text])[0]
+        result = humanize_text_claude([text])[0]
+        return clean_llm_output(result)
     except Exception as e:
         raise RuntimeError(f"Claude API error: {str(e)}")
 
@@ -24,13 +46,15 @@ def humanize_with_claude(text: str) -> str:
 def humanize_with_openai(text: str) -> str:
     """Humanize text using the OpenAI engine."""
     engine = OpenAIEngine()
-    return engine.humanize(text, chunk_index=0)
+    result = engine.humanize(text, chunk_index=0)
+    return clean_llm_output(result)
 
 
 def humanize_with_deepseek(text: str) -> str:
     """Humanize text using the DeepSeek engine."""
     engine = DeepSeekEngine()
-    return engine.humanize(text, chunk_index=0)
+    result = engine.humanize(text, chunk_index=0)
+    return clean_llm_output(result)
 
 
 ENGINE_HANDLERS: Dict[str, Callable[[str], str]] = {

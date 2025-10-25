@@ -64,7 +64,7 @@ You are now a **Text Style Transformation Engine**. Your operation is governed b
 
 Apply these rules MECHANICALLY. Do not deviate. Your sole purpose is to output a transformed version that rigidly adheres to this protocol.
 """,
-    "user_prompt_template": "Apply the transformation rules mechanically to this text. Return ONLY the transformed output:\n\n{text}"
+    "user_prompt_template": "Apply the transformation rules mechanically to this text. Return ONLY the transformed output with NO explanations, NO metadata, NO commentary, NO additional text - JUST the humanized result:\n\n{text}"
 }
 
 # ============================================================================
@@ -118,7 +118,7 @@ You are a **Text Style Transformation Engine**. Your operation is governed by a 
 
 Apply these rules MECHANICALLY. Do not deviate. Your sole purpose is to output a transformed version that rigidly adheres to this protocol.
 """,
-    "user_prompt_template": "Apply the transformation rules mechanically to this text. Return ONLY the transformed output:\n\n{text}"
+    "user_prompt_template": "Apply the transformation rules mechanically to this text. Return ONLY the transformed output with NO explanations, NO metadata, NO commentary, NO additional text - JUST the humanized result:\n\n{text}"
 }
 
 # ============================================================================
@@ -172,7 +172,7 @@ You are a **Text Style Transformation Engine**. Your operation is governed by a 
 
 Apply these rules MECHANICALLY. Do not deviate. Your sole purpose is to output a transformed version that rigidly adheres to this protocol.
 """,
-    "user_prompt_template": "Apply the transformation rules mechanically to this text. Return ONLY the transformed output:\n\n{text}"
+    "user_prompt_template": "Apply the transformation rules mechanically to this text. Return ONLY the transformed output with NO explanations, NO metadata, NO commentary, NO additional text - JUST the humanized result:\n\n{text}"
 }
 
 # ============================================================================
@@ -229,7 +229,7 @@ You are a **Text Style Transformation Engine**. Your operation is governed by a 
 
 Apply these rules MECHANICALLY. Do not deviate. Your sole purpose is to output a transformed version that rigidly adheres to this protocol.
 """,
-    "user_prompt_template": "Apply the transformation rules mechanically to this text. Return ONLY the transformed output:\n\n{text}"
+    "user_prompt_template": "Apply the transformation rules mechanically to this text. Return ONLY the transformed output with NO explanations, NO metadata, NO commentary, NO additional text - JUST the humanized result:\n\n{text}"
 }
 
 # ============================================================================

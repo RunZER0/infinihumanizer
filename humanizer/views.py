@@ -124,6 +124,9 @@ def humanize_ajax(request):
     input_text = request.POST.get("text", "").strip()
     selected_engine = (request.POST.get("engine") or "claude").lower()  # Default to Claude (OXO)
     word_count = len(input_text.split())
+    
+    # Maximum word limit to prevent timeouts (roughly 8000 characters)
+    MAX_WORD_COUNT = 2000
 
     logger.info(
         "Humanization request received",
@@ -142,6 +145,12 @@ def humanize_ajax(request):
 
         if selected_engine not in ("deepseek", "claude", "openai"):
             return JsonResponse({"error": "Invalid engine selection."}, status=400)
+        
+        # Check if input is too large to prevent timeouts
+        if word_count > MAX_WORD_COUNT:
+            return JsonResponse({
+                "error": f"Text is too long ({word_count} words). Maximum allowed: {MAX_WORD_COUNT} words. Please reduce the text size."
+            }, status=400)
 
         if not profile.is_paid and word_count > state["word_balance"]:
             error = f"You've exceeded your word balance ({state['word_balance']} words left)."
@@ -161,7 +170,15 @@ def humanize_ajax(request):
                 raise ValueError("Engine returned empty or invalid output")
                 
         except Exception as exc:  # pragma: no cover - defensive fallback
+            error_msg = str(exc)
             logger.exception("Engine failure for user %s using %s", request.user.pk, selected_engine)
+            
+            # Check for timeout errors - provide helpful message
+            if "timeout" in error_msg.lower():
+                return JsonResponse(
+                    {"error": "The processing took too long. Please try with shorter text (under 1500 words) or try again later."},
+                    status=503,
+                )
             
             # Try fallback to Claude if not already using it
             if selected_engine != "claude":
@@ -172,6 +189,14 @@ def humanize_ajax(request):
                         raise ValueError("Fallback engine also failed")
                 except Exception as fallback_exc:
                     logger.exception("Fallback also failed for user %s", request.user.pk)
+                    
+                    # Check for timeout in fallback as well
+                    if "timeout" in str(fallback_exc).lower():
+                        return JsonResponse(
+                            {"error": "The processing took too long. Please try with shorter text (under 1500 words) or try again later."},
+                            status=503,
+                        )
+                    
                     return JsonResponse(
                         {"error": "All humanization engines are temporarily unavailable. Please try again in a moment."},
                         status=503,

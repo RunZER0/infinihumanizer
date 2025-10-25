@@ -29,12 +29,12 @@ def humanize_text_claude(text_chunks: List[str]) -> List[str]:
     config = get_engine_config("claude")
     
     # Initialize Anthropic client with timeout
-    # Use 25s timeout to fail fast before Gunicorn worker timeout
-    # This prevents worker crashes on large inputs and ensures consistent
-    # timeout behavior across all engines (Claude, OpenAI, DeepSeek)
+    # Use 120s timeout to handle large inputs without worker crashes
+    # This provides enough time for processing while still failing before
+    # the Gunicorn worker timeout (180s)
     client = anthropic.Anthropic(
         api_key=ANTHROPIC_API_KEY,
-        timeout=25.0
+        timeout=120.0
     )
     
     humanized_chunks = []
@@ -68,7 +68,7 @@ def humanize_text_claude(text_chunks: List[str]) -> List[str]:
             
         except APITimeoutError as e:
             # Specific handling for Anthropic timeout errors
-            raise RuntimeError(f"Claude API timeout after 25 seconds on chunk {i+1}. The request took too long - try reducing input size or try again later.") from e
+            raise RuntimeError(f"Claude API timeout after 120 seconds on chunk {i+1}. The request took too long - try reducing input size or try again later.") from e
         except Exception as e:
             # Handle other errors
             error_msg = str(e)
