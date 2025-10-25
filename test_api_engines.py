@@ -128,9 +128,9 @@ def test_engine_large_input_handling(engine_name: str, test_func: Callable[[str]
             f"Skipping {engine_name} large input test: missing API key(s) {', '.join(env_keys)}"
         )
     
-    # Create a large academic text input (~3000 words / ~20,000 characters)
+    # Create a large academic text input targeting exactly 20,000 characters
     # This simulates the "Academic Stealth Humanization" scenario with a large essay
-    large_academic_text = """
+    base_text = """
     The Industrial Revolution represents a fundamental transformation in human history that began in Britain 
     during the late eighteenth century and subsequently spread across Europe and North America. This period 
     witnessed profound changes in manufacturing processes, economic structures, and social organization that 
@@ -200,7 +200,13 @@ def test_engine_large_input_handling(engine_name: str, test_func: Callable[[str]
     from Africa were all integrated into global supply chains that sustained industrial production. This 
     process created economic dependencies and power imbalances that would have lasting consequences for 
     international relations and development patterns.
-    """ * 3  # Repeat to make it approximately 3000 words
+    """
+    
+    # Calculate precise repetition factor to reach target size
+    target_size = 20000
+    base_size = len(base_text)
+    repetitions = (target_size // base_size) + 1
+    large_academic_text = (base_text * repetitions)[:target_size]
     
     print(f"\n{'=' * 80}")
     print(f"TESTING {engine_name.upper()} ENGINE WITH LARGE INPUT")
@@ -224,7 +230,11 @@ def test_engine_large_input_handling(engine_name: str, test_func: Callable[[str]
         error_msg = str(e)
         
         # If it's a timeout error, that's acceptable - we're testing that it fails gracefully
-        if "timeout" in error_msg.lower() or "25 second" in error_msg.lower():
+        # Check for timeout indicators: "timeout", "timed out", or specific timeout durations
+        timeout_indicators = ["timeout", "timed out", "25 second", "APITimeout"]
+        is_timeout = any(indicator in error_msg for indicator in timeout_indicators)
+        
+        if is_timeout:
             print(f"✅ ACCEPTABLE: Engine timed out gracefully (as expected for very large input)")
             print(f"   Error: {error_msg}")
             # This is not a failure - it's the expected behavior for inputs that are too large

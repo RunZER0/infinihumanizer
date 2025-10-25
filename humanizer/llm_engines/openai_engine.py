@@ -4,7 +4,7 @@ Configuration is managed in engine_config.py for easy editing.
 """
 
 import os
-from openai import OpenAI
+from openai import OpenAI, APITimeoutError
 from ..engine_config import get_engine_config, calculate_temperature
 
 
@@ -70,12 +70,12 @@ class OpenAIEngine:
             
             return response.choices[0].message.content.strip()
             
+        except APITimeoutError as e:
+            # Specific handling for OpenAI timeout errors
+            raise RuntimeError(f"OpenAI API timeout after 25 seconds. The request took too long - try reducing input size or try again later.") from e
         except Exception as e:
-            # Provide informative error message for timeout and other failures
-            error_msg = str(e)
-            if "timeout" in error_msg.lower() or "timed out" in error_msg.lower():
-                raise RuntimeError(f"OpenAI API timeout after 25 seconds. The request took too long - try reducing input size or try again later.") from e
-            raise RuntimeError(f"OpenAI API error: {error_msg}") from e
+            # Handle other errors
+            raise RuntimeError(f"OpenAI API error: {str(e)}") from e
     
     def final_review(self, text: str, chunk_count: int) -> str:
         """

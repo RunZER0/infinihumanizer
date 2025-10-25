@@ -5,6 +5,7 @@ Uses Claude 3.5 Sonnet for balanced humanization
 
 import os
 import anthropic
+from anthropic import APITimeoutError
 from typing import List, Dict
 from humanizer.engine_config import get_engine_config, calculate_temperature
 
@@ -65,11 +66,12 @@ def humanize_text_claude(text_chunks: List[str]) -> List[str]:
             humanized_text = message.content[0].text
             humanized_chunks.append(humanized_text)
             
+        except APITimeoutError as e:
+            # Specific handling for Anthropic timeout errors
+            raise RuntimeError(f"Claude API timeout after 25 seconds on chunk {i+1}. The request took too long - try reducing input size or try again later.") from e
         except Exception as e:
+            # Handle other errors
             error_msg = str(e)
-            # Provide informative error message for timeout and other failures
-            if "timeout" in error_msg.lower() or "timed out" in error_msg.lower():
-                raise RuntimeError(f"Claude API timeout after 25 seconds on chunk {i+1}. The request took too long - try reducing input size or try again later.") from e
             print(f"Error humanizing chunk {i+1} with Claude: {error_msg}")
             raise RuntimeError(f"Claude API failed on chunk {i+1}: {error_msg}") from e
     
