@@ -132,7 +132,7 @@ CLAUDE_CONFIG = {
     
     "base_temperature": 0.7,
     "temperature_variation": 0.1,
-    "max_tokens": 4000,
+    "max_tokens": 8192,  # Increased from 4000 to 8192 to prevent truncation
     
     "system_prompt": """
 You are a **Text Style Transformation Engine**. Your operation is governed by a strict protocol. You do not improvise, interpret, or "improve" text. You execute a series of stylistic rules mechanically.

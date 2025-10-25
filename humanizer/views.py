@@ -14,7 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from accounts.models import Profile
-from .utils import humanize_text_with_engine
+from .utils import humanize_text_with_engine, MAX_TOTAL_CHARS
 
 
 logger = logging.getLogger(__name__)
@@ -168,6 +168,31 @@ def humanize_ajax(request):
             # If output is empty or too short, something went wrong
             if not output_text or len(output_text.strip()) < 10:
                 raise ValueError("Engine returned empty or invalid output")
+        
+        except ValueError as val_exc:
+            # Handle input length validation errors specifically
+            error_msg = str(val_exc)
+            if "Text too long" in error_msg:
+                logger.warning("Text too long for user %s: %s", request.user.pk, error_msg)
+                # Extract just the character count info, not the full error message
+                return JsonResponse(
+                    {"error": f"Text is too long ({len(input_text)} characters). Maximum allowed: {MAX_TOTAL_CHARS} characters. Please reduce the text size."},
+                    status=413  # 413 Payload Too Large
+                )
+            elif "Engine returned empty" in error_msg:
+                # Empty output from engine
+                logger.error("Engine returned empty output for user %s using %s", request.user.pk, selected_engine)
+                return JsonResponse(
+                    {"error": "The selected engine failed to process your text. Please try again."},
+                    status=503,
+                )
+            else:
+                # Other ValueError - don't expose internal error details
+                logger.error("Validation error for user %s: %s", request.user.pk, error_msg)
+                return JsonResponse(
+                    {"error": "Invalid input. Please check your text and try again."},
+                    status=400
+                )
                 
         except Exception as exc:  # pragma: no cover - defensive fallback
             error_msg = str(exc)

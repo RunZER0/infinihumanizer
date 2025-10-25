@@ -4,10 +4,15 @@ Uses Claude 3.5 Sonnet for balanced humanization
 """
 
 import os
+import logging
 import anthropic
 from anthropic import APITimeoutError
 from typing import List, Dict
 from humanizer.engine_config import get_engine_config, calculate_temperature
+
+
+# Setup logger
+logger = logging.getLogger(__name__)
 
 
 # API Configuration - Read from environment
@@ -64,6 +69,13 @@ def humanize_text_claude(text_chunks: List[str]) -> List[str]:
             
             # Extract humanized text
             humanized_text = message.content[0].text
+            
+            # Check if output was truncated due to max_tokens limit
+            if message.stop_reason == "max_tokens":
+                logger.warning(f"Claude output truncated on chunk {i+1} due to max_tokens limit")
+                # Append warning to the user-facing output
+                humanized_text += "\n\n[Warning: Output may be incomplete due to length limits]"
+            
             humanized_chunks.append(humanized_text)
             
         except APITimeoutError as e:

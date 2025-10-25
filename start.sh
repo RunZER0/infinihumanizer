@@ -13,7 +13,7 @@ echo "🚀 Starting Gunicorn server..."
 exec gunicorn core.wsgi:application \
     --bind 0.0.0.0:${PORT:-10000} \
     --workers ${GUNICORN_WORKERS:-2} \
-    --timeout ${GUNICORN_TIMEOUT:-180} \
+    --timeout ${GUNICORN_TIMEOUT:-300} \
     --log-level ${GUNICORN_LOG_LEVEL:-info} \
     --access-logfile - \
     --error-logfile -

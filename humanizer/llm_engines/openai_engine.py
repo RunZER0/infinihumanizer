@@ -31,7 +31,7 @@ class OpenAIEngine:
     
     def humanize(self, text: str, chunk_index: int = 0) -> str:
         """
-        Humanize text using OpenAI with dynamic temperature.
+        Humanize text using OpenAI with dynamic temperature and streaming.
         
         Args:
             text: The text to humanize
@@ -52,7 +52,8 @@ class OpenAIEngine:
         user_prompt = self.config["user_prompt_template"].format(text=text)
         
         try:
-            response = self.client.chat.completions.create(
+            # Use streaming to avoid ReadTimeoutError on large responses
+            stream = self.client.chat.completions.create(
                 model=self.config["model"],
                 messages=[
                     {"role": "system", "content": system_prompt},
@@ -62,13 +63,20 @@ class OpenAIEngine:
                 top_p=self.config.get("top_p", 0.9),
                 frequency_penalty=self.config.get("frequency_penalty", 0.2),
                 presence_penalty=self.config.get("presence_penalty", 0.2),
-                max_tokens=self.config["max_tokens"]
+                max_tokens=self.config["max_tokens"],
+                stream=True
             )
             
-            if not response.choices or not response.choices[0].message.content:
+            # Collect content from stream chunks
+            humanized_text = ""
+            for chunk in stream:
+                if chunk.choices and chunk.choices[0].delta.content:
+                    humanized_text += chunk.choices[0].delta.content
+            
+            if not humanized_text:
                 raise RuntimeError("OpenAI returned empty response")
             
-            return response.choices[0].message.content.strip()
+            return humanized_text.strip()
             
         except APITimeoutError as e:
             # Specific handling for OpenAI timeout errors
@@ -105,7 +113,8 @@ Text to review:
 Return the text with only necessary fixes applied:"""
 
         try:
-            response = self.client.chat.completions.create(
+            # Use streaming for final review as well to prevent timeouts
+            stream = self.client.chat.completions.create(
                 model=self.config["model"],
                 messages=[
                     {"role": "system", "content": "You are a careful text editor who makes only necessary, minimal edits."},
@@ -113,13 +122,20 @@ Return the text with only necessary fixes applied:"""
                 ],
                 temperature=0.3,  # Lower temperature for consistency
                 top_p=0.8,
-                max_tokens=self.config["max_tokens"]
+                max_tokens=self.config["max_tokens"],
+                stream=True
             )
             
-            if not response.choices or not response.choices[0].message.content:
+            # Collect content from stream chunks
+            reviewed_text = ""
+            for chunk in stream:
+                if chunk.choices and chunk.choices[0].delta.content:
+                    reviewed_text += chunk.choices[0].delta.content
+            
+            if not reviewed_text:
                 return text  # Return original if review fails
             
-            return response.choices[0].message.content.strip()
+            return reviewed_text.strip()
             
         except Exception as e:
             print(f"Warning: OpenAI final review failed: {e}")
