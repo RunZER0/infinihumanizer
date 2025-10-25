@@ -46,7 +46,7 @@ This document summarizes the fixes implemented to stabilize LLM engines (OpenAI,
 - Transparent feedback when truncation still occurs
 - Better visibility into API behavior for debugging
 
-### 3. DeepSeek Functional Deficiency 📝 DOCUMENTED
+### 3. DeepSeek Transformation Functionality 📝 DOCUMENTED
 **Problem**: DeepSeek fails to correctly apply "Academic Stealth" transformation even for small inputs, often returning text identical to input.
 
 **Status**: Documented as a known issue requiring further investigation with API access. Possible causes:
