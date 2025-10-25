@@ -18,21 +18,26 @@ def clean_llm_output(text: str) -> str:
     Clean LLM output by removing common metadata patterns.
     Ensures only the humanized text is returned.
     """
-    # Remove common prefixes/suffixes that LLMs might add
-    patterns_to_remove = [
+    cleaned = text.strip()
+    
+    # Remove common prefixes that LLMs might add
+    prefix_patterns = [
         r'^(Here is the transformed text:|Here\'s the transformed output:|Transformed text:|Output:)\s*',
         r'^(The transformed version is:|Here is the humanized text:|Humanized output:)\s*',
     ]
     
-    cleaned = text.strip()
-    
-    # Remove prefix patterns
-    for pattern in patterns_to_remove:
+    for pattern in prefix_patterns:
         cleaned = re.sub(pattern, '', cleaned, flags=re.IGNORECASE | re.MULTILINE)
     
-    # Remove trailing metadata (Note:, Let me know, etc.) - everything after double newline
-    # that starts with common metadata keywords
-    cleaned = re.sub(r'\n\n(Note:|Please note:|I hope this helps|Let me know).*$', '', cleaned, flags=re.IGNORECASE | re.DOTALL)
+    # Remove trailing metadata sections that appear after double newline
+    # Only remove if followed by these specific keywords at the start of a new paragraph
+    metadata_keywords = ['Note:', 'Please note:', 'I hope this helps', 'Let me know', 
+                        'Feel free', 'If you need', 'Important:']
+    
+    for keyword in metadata_keywords:
+        # Remove from double newline + keyword to end of text
+        pattern = r'\n\n' + re.escape(keyword) + r'.*$'
+        cleaned = re.sub(pattern, '', cleaned, flags=re.IGNORECASE | re.DOTALL)
     
     return cleaned.strip()
 
