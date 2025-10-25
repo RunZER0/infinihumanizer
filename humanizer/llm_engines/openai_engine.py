@@ -17,10 +17,13 @@ class OpenAIEngine:
         if not api_key:
             raise RuntimeError("OPENAI_API_KEY environment variable is not set")
         
+        # Use 25s timeout to fail fast before Gunicorn worker timeout
+        # This prevents worker crashes on large inputs and ensures consistent
+        # timeout behavior across all engines (Claude, OpenAI, DeepSeek)
         self.client = OpenAI(
             api_key=api_key,
-            timeout=25.0,  # Reduced from 90s to fail before worker timeout
-            max_retries=1   # Reduced from 2 to fail faster
+            timeout=25.0,
+            max_retries=1
         )
         
         # Load configuration from engine_config.py
@@ -68,7 +71,11 @@ class OpenAIEngine:
             return response.choices[0].message.content.strip()
             
         except Exception as e:
-            raise RuntimeError(f"OpenAI API error: {str(e)}")
+            # Provide informative error message for timeout and other failures
+            error_msg = str(e)
+            if "timeout" in error_msg.lower() or "timed out" in error_msg.lower():
+                raise RuntimeError(f"OpenAI API timeout after 25 seconds. The request took too long - try reducing input size or try again later.") from e
+            raise RuntimeError(f"OpenAI API error: {error_msg}") from e
     
     def final_review(self, text: str, chunk_count: int) -> str:
         """

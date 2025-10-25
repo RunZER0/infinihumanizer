@@ -60,9 +60,10 @@ class DeepSeekEngine:
         }
         
         try:
-            # Use 90s timeout - Gunicorn is configured for 120s in start.sh
-            # This gives DeepSeek time to respond while staying under worker timeout
-            response = requests.post(self.api_url, json=payload, headers=headers, timeout=90)
+            # Use 25s timeout to fail fast before Gunicorn worker timeout
+            # This prevents worker crashes on large inputs and ensures consistent
+            # timeout behavior across all engines (Claude, OpenAI, DeepSeek)
+            response = requests.post(self.api_url, json=payload, headers=headers, timeout=25)
             response.raise_for_status()
             
             result = response.json()
@@ -71,7 +72,7 @@ class DeepSeekEngine:
             return humanized
             
         except requests.exceptions.Timeout as e:
-            raise RuntimeError(f"DeepSeek API timeout after 90s - network or API is too slow") from e
+            raise RuntimeError(f"DeepSeek API timeout after 25 seconds. The request took too long - try reducing input size or try again later.") from e
         except requests.exceptions.RequestException as e:
             raise RuntimeError(f"DeepSeek API error: {str(e)}") from e
         except (KeyError, IndexError) as e:
