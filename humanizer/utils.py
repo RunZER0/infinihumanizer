@@ -22,13 +22,17 @@ def clean_llm_output(text: str) -> str:
     patterns_to_remove = [
         r'^(Here is the transformed text:|Here\'s the transformed output:|Transformed text:|Output:)\s*',
         r'^(The transformed version is:|Here is the humanized text:|Humanized output:)\s*',
-        r'\n\n(Note:|Please note:|I hope this helps|Let me know)',
     ]
     
     cleaned = text.strip()
     
+    # Remove prefix patterns
     for pattern in patterns_to_remove:
         cleaned = re.sub(pattern, '', cleaned, flags=re.IGNORECASE | re.MULTILINE)
+    
+    # Remove trailing metadata (Note:, Let me know, etc.) - everything after double newline
+    # that starts with common metadata keywords
+    cleaned = re.sub(r'\n\n(Note:|Please note:|I hope this helps|Let me know).*$', '', cleaned, flags=re.IGNORECASE | re.DOTALL)
     
     return cleaned.strip()
 
