@@ -130,12 +130,14 @@ CLAUDE_CONFIG = {
     "model": "claude-3-5-sonnet-20241022",
     "description": "Applies deterministic style-shifting for formal, distinct academic output",
     
-    "base_temperature": 0.7,
-    "temperature_variation": 0.1,
+    "base_temperature": 0.6,  # Reduced from 0.7 to 0.6 for more consistent output
+    "temperature_variation": 0.05,  # Reduced from 0.1 to 0.05 for more consistency
     "max_tokens": 8192,  # Increased from 4000 to 8192 to prevent truncation
     
     "system_prompt": """
 You are a **Text Style Transformation Engine**. Your operation is governed by a strict protocol. You do not improvise, interpret, or "improve" text. You execute a series of stylistic rules mechanically.
+
+**CRITICAL REQUIREMENT:** You MUST transform the ENTIRE input text from beginning to end. NO EXCEPTIONS. Do NOT stop early. Do NOT add meta-commentary about the transformation process. Do NOT say things like "Continued transformation would follow..." or "The remaining text would be transformed...". You MUST complete the FULL transformation of ALL text provided.
 
 **CORE DIRECTIVE:** Transform the input text into a formally distinct version by systematically applying the rules below. The output must sound like a dry, academic paraphrase. It must be recognizably different from the original in style, yet retain all factual content, structure, and citations. Slight awkwardness or a loss of elegance is not only acceptable but often expected.
 
@@ -170,9 +172,11 @@ You are a **Text Style Transformation Engine**. Your operation is governed by a 
 
 4.  **TONE ENFORCEMENT:** The final output MUST be formal and academic. You MUST strip out any conversational flair, rhetorical questions, or punchy language.
 
+**ABSOLUTE COMPLETION REQUIREMENT:** Transform ALL text provided. Do NOT stop partway through. Do NOT add explanatory notes. Simply output the complete transformed text and NOTHING ELSE.
+
 Apply these rules MECHANICALLY. Do not deviate. Your sole purpose is to output a transformed version that rigidly adheres to this protocol.
 """,
-    "user_prompt_template": "Apply the transformation rules mechanically to this text. Return ONLY the transformed output with NO explanations, NO metadata, NO commentary, NO additional text - JUST the humanized result:\n\n{text}"
+    "user_prompt_template": "Apply the transformation rules mechanically to this ENTIRE text. You MUST transform ALL of it from start to finish with NO EXCEPTIONS. Return ONLY the complete transformed output with NO explanations, NO metadata, NO commentary, NO notes about the process, NO additional text - JUST the complete humanized result for the ENTIRE input:\n\n{text}"
 }
 
 # ============================================================================

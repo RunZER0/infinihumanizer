@@ -73,8 +73,25 @@ def humanize_text_claude(text_chunks: List[str]) -> List[str]:
             # Check if output was truncated due to max_tokens limit
             if message.stop_reason == "max_tokens":
                 logger.warning(f"Claude output truncated on chunk {i+1} due to max_tokens limit")
-                # Append warning to the user-facing output
-                humanized_text += "\n\n[Warning: Output may be incomplete due to length limits]"
+                # Log this but don't add a warning to output - the cleaning will handle it
+            
+            # Check for meta-commentary patterns indicating incomplete transformation
+            # These patterns suggest Claude stopped early rather than completing the work
+            meta_commentary_indicators = [
+                "continued transformation would follow",
+                "remaining text would be transformed",
+                "rest of the text would be transformed",
+                "transformation would continue",
+                "following the same pattern",
+                "and so on for the remaining",
+            ]
+            
+            lower_text = humanized_text.lower()
+            has_meta_commentary = any(indicator in lower_text for indicator in meta_commentary_indicators)
+            
+            if has_meta_commentary:
+                logger.warning(f"Claude chunk {i+1} contains meta-commentary - incomplete transformation detected")
+                # The clean_llm_output function in utils.py will remove these patterns
             
             humanized_chunks.append(humanized_text)
             
