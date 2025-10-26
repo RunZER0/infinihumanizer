@@ -8,7 +8,17 @@ python manage.py runserver 127.0.0.1:8000
 ```
 
 ## 🔐 Login Credentials
-- **Admin**: `admin@example.com` / `admin1234`
+
+### Create/Reset Admin Credentials
+If you need admin access or forgot your password, run:
+```bash
+python manage.py create_new_superuser
+```
+This creates a new admin with secure auto-generated credentials.
+
+See [SUPERUSER_RECOVERY.md](SUPERUSER_RECOVERY.md) for details.
+
+### Development Accounts (if not changed)
 - **Tester**: `tester@example.com` / `test1234`
 
 ## 🎯 Engines

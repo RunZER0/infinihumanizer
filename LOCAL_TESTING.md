@@ -3,7 +3,11 @@
 This project supports an OFFLINE_MODE for local testing without external APIs.
 
 1) Server login
-- Superuser: admin / admin1234
+- To create/reset admin credentials, run:
+  ```bash
+  python manage.py create_new_superuser
+  ```
+  See [SUPERUSER_RECOVERY.md](SUPERUSER_RECOVERY.md) for details.
 - Tester: tester / test1234
 
 2) Offline mode (default)
