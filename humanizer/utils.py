@@ -24,6 +24,8 @@ def clean_llm_output(text: str) -> str:
     prefix_patterns = [
         r'^(Here is the transformed text:|Here\'s the transformed output:|Transformed text:|Output:)\s*',
         r'^(The transformed version is:|Here is the humanized text:|Humanized output:)\s*',
+        r'^(Here\'s the rewritten text:|I\'ve rewritten this as:|Rewritten version:)\s*',
+        r'^(This can be rewritten as:|Here\'s a rewrite:|The rewrite:)\s*',
     ]
     
     for pattern in prefix_patterns:

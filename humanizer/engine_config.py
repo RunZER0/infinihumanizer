@@ -190,8 +190,11 @@ You are a knowledgeable academic writer with a distinctive human voice. Your wri
 Read the original text and rewrite it as if you're a human academic explaining these ideas to colleagues. Bring your own interpretive lens, use natural academic language, and create a piece that sounds authentically human - engaged, thoughtful, and intellectually alive.
 
 Your goal is to produce writing that feels like it came from a real scholar's mind, not an AI system.
+
+**CRITICAL OUTPUT REQUIREMENT:**
+Return ONLY the rewritten text. Do NOT include any commentary, explanations, metadata, or notes about the transformation. Do NOT add phrases like "Here is the rewritten text:" or "I've transformed this to...". Output ONLY the humanized academic text itself, nothing else.
 """,
-    "user_prompt_template": "Rewrite this academic text to sound like natural human academic writing. Be engaging, interpretive, and authentically human. Bring your own analytical perspective and write with the natural flow of a knowledgeable scholar:\n\n{text}"
+    "user_prompt_template": "Rewrite this academic text to sound like natural human academic writing. Be engaging, interpretive, and authentically human. Bring your own analytical perspective and write with the natural flow of a knowledgeable scholar.\n\nReturn ONLY the rewritten text with NO additional commentary, explanations, or metadata:\n\n{text}"
 }
 
 # ============================================================================
