@@ -11,7 +11,8 @@ from allauth.account.views import LoginView
 try:
     from allauth.account.utils import send_email_confirmation
 except ImportError:
-    # In newer versions of django-allauth, this function may have moved
+    # In django-allauth >= 0.50.0, send_email_confirmation may have been moved or removed
+    # See: https://github.com/pennersr/django-allauth/blob/main/ChangeLog.rst
     send_email_confirmation = None
 
 from .forms import SignUpForm

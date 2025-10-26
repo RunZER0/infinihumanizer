@@ -314,9 +314,8 @@ def is_african_ip(ip_address):
         return True
     
     try:
-        # You would use a GeoIP database here in production
-        # For now, using a simple IP geolocation API
-        response = requests.get(f'http://ip-api.com/json/{ip_address}', timeout=2)
+        # Use HTTPS for secure communication with IP geolocation API
+        response = requests.get(f'https://ip-api.com/json/{ip_address}', timeout=2)
         if response.status_code == 200:
             data = response.json()
             continent = data.get('continent', '')

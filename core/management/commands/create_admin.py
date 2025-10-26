@@ -42,6 +42,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS('---'))
         self.stdout.write(self.style.SUCCESS(f'Username: {username}'))
         self.stdout.write(self.style.SUCCESS(f'Email: {email}'))
-        self.stdout.write(self.style.SUCCESS(f'Password: {password}'))
+        self.stdout.write(self.style.WARNING(f'Password: {password}'))
         self.stdout.write(self.style.SUCCESS('---'))
+        self.stdout.write(self.style.WARNING('⚠️  SECURITY: Clear your console history after viewing the password'))
         self.stdout.write(self.style.SUCCESS('You can now login to /admin/ with these credentials'))
