@@ -62,3 +62,25 @@ class SignupViewTests(TestCase):
         # Second user should exist with username 'testuser1'
         user = User.objects.get(email='testuser@different.com')
         self.assertEqual(user.username, 'testuser1')
+    
+    def test_signup_with_duplicate_email(self):
+        """Test that duplicate email is rejected"""
+        # Create first user
+        User.objects.create_user(username='existing', email='test@example.com', password='pass123')
+        
+        # Try to create another user with the same email
+        signup_data = {
+            'email': 'test@example.com',
+            'password1': 'TestPass123!',
+            'password2': 'TestPass123!',
+        }
+        
+        response = self.client.post(self.signup_url, signup_data)
+        
+        # Should not redirect (form invalid)
+        self.assertEqual(response.status_code, 200)
+        
+        # Should show error message
+        form = response.context['form']
+        self.assertTrue(form.errors)
+        self.assertIn('email', form.errors)
