@@ -67,11 +67,19 @@ def signup_view(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
+            
+            # Create profile for new user
+            Profile.objects.get_or_create(user=user)
+            
+            # Log the user in with backend specified
+            from django.contrib.auth import get_backends
+            backend = get_backends()[0]
+            login(request, user, backend=f'{backend.__module__}.{backend.__class__.__name__}')
+            
             return redirect("humanizer")  # Redirect to the humanizer view
     else:
         form = SignUpForm()
-    return render(request, "registration/signup.html", {"form": form})
+    return render(request, "account/signup.html", {"form": form})
 
 
 @login_required
