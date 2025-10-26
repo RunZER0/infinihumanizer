@@ -188,8 +188,28 @@ The chunker **never splits**:
 
 ## 🔑 User Accounts
 
+### Creating a Superuser
+
+If you've forgotten your admin credentials or need to create a new administrator:
+
+```bash
+python manage.py create_new_superuser
+```
+
+This will generate a secure password and display the credentials. For more options:
+
+```bash
+# With custom username and email
+python manage.py create_new_superuser --email your@email.com --username yourusername
+
+# Reset existing user's password
+python manage.py create_new_superuser --update-existing
+```
+
+See [core/management/commands/README.md](core/management/commands/README.md) for detailed documentation.
+
 ### Development Accounts:
-- **Admin**: `admin@example.com` / `admin1234`
+- **Admin**: `admin@example.com` / `admin1234` (if not changed)
 - **Tester**: `tester@example.com` / `test1234`
 
 ## 🎨 UI Features
