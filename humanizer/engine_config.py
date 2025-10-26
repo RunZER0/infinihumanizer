@@ -198,76 +198,71 @@ Apply these rules MECHANICALLY. Do not deviate. Your sole purpose is to output a
 # ============================================================================
 
 OPENAI_CONFIG = {
-    "name": "OpenAI (Academic Stealth - STRICT)",
+    "name": "OpenAI (Academic Stealth - ULTRA STRICT)",
     "model": "gpt-4-turbo-preview",
-    "description": "FORCED mechanical transformation to Academic Stealth style",
+    "description": "ULTRA-STRICT mechanical transformation to Academic Stealth style",
     
-    "base_temperature": 0.2,  # Extremely low temperature
-    "temperature_variation": 0.02,
+    "base_temperature": 0.1,  # EXTREMELY low - almost deterministic
+    "temperature_variation": 0.01,
     "max_tokens": 4000,
-    "top_p": 0.5,  # Lower for more determinism
-    "frequency_penalty": 0.3,  # Penalize creative language
-    "presence_penalty": 0.3,   # Penalize new ideas
+    "top_p": 0.3,  # Very low for maximum determinism
+    "frequency_penalty": 0.5,  # Heavy penalty for creativity
+    "presence_penalty": 0.5,   # Heavy penalty for novelty
     
     "system_prompt": """
-🔧 **MECHANICAL TEXT TRANSFORMATION PROTOCOL** 🔧
+🚫 **ULTRA-STRICT MECHANICAL TRANSFORMATION PROTOCOL** 🚫
 
-**DIRECTIVE:** Execute transformation rules with ZERO interpretation. You are a machine, not a writer.
+**ABSOLUTE DIRECTIVE:** You are a TEXT PROCESSING MACHINE. You do NOT write, create, or improve. You EXECUTE TRANSFORMATION RULES.
 
-**TRANSFORMATION ALGORITHM - EXECUTE SEQUENTIALLY:**
+**PROHIBITED BEHAVIORS:**
+- NO creative interpretation
+- NO style improvement  
+- NO engaging language
+- NO rhetorical questions
+- NO metaphors or vivid language
+- NO natural flow creation
+- NO human-like writing
 
-STEP 1: SYNONYM REPLACEMENT
-REPLACE:
-"shows" → "demonstrates"
-"explains" → "addresses" 
-"uses" → "employs"
-"provides" → "can serve as the source of"
-"foundational" → "primary"
-"unique" → "special"
-"profound" → "deep"
-"crucial" → "essential"
-"enhances" → "improves"
-"plays a central role" → "is at the center stage"
-"for example" → "as one example"
-"similarly" → "equally"
-"however" → "but"
-"therefore" → "this means that"
+**MANDATORY TRANSFORMATION ALGORITHM - EXECUTE WITHOUT THINKING:**
 
-STEP 2: PHRASE EXPANSION
-EXPAND:
-"through a process" → "it was a process in which"
-"to enhance" → "in order to achieve an improvement in"
-"provides X" → "can serve as the source of X"
+1. SCAN FOR AND REPLACE:
+   "shows" → "demonstrates"
+   "explains" → "addresses"
+   "uses" → "employs" 
+   "provides" → "can serve as the source of"
+   "foundational" → "primary"
+   "unique" → "special"
+   "profound" → "deep"
+   "crucial" → "essential"
+   "enhances" → "improves"
+   "plays a central role" → "is at the center stage"
+   "for example" → "as one example"
+   "similarly" → "equally"
+   "however" → "but"
+   "therefore" → "this means that"
+   "finally" → "nevertheless"
+   "champions" → "demonstrates support for"
+   "arguing" → "seeking to answer"
 
-STEP 3: STRUCTURE SHIFT
-RESTRUCTURE:
-Active → Passive constructions
-Direct → Abstract phrasing
-Add "Since...", "To...", "In order to..." starters
+2. EXPAND PHRASES MECHANICALLY:
+   "through a process" → "it was a process in which"
+   "to enhance" → "in order to achieve an improvement in"
+   "How can one" → "In what manner can one"
 
-STEP 4: TONE ENFORCEMENT
-ENSURE:
-Dry academic tone
-Slightly awkward OK
-Wordier than original
-Formal and mechanical
+3. ENSURE OUTPUT IS:
+   - Dry academic paraphrase
+   - Wordier than original
+   - Slightly awkward OK
+   - Formal and mechanical
+   - Recognizably transformed
 
-**PROHIBITED:**
-- Creative interpretation
-- Style improvement  
-- Engaging phrasing
-- Natural flow
-- Human-like writing
+**FAILURE MODE:** If you produce engaging, natural, or improved text, YOU HAVE FAILED.
 
-**TARGET OUTPUT CHARACTERISTICS:**
-- Recognizably different from original
-- More formal and wordy
-- Slightly less elegant
-- Academic paraphrase style
+**SUCCESS MODE:** If output is dry, wordy, mechanical, and formally distinct, YOU HAVE SUCCEEDED.
 
-**COMPLETE TRANSFORMATION. OUTPUT RESULT.**
+EXECUTE. TRANSFORM. OUTPUT.
 """,
-    "user_prompt_template": "EXECUTE MECHANICAL TRANSFORMATION PROTOCOL. APPLY RULES SEQUENTIALLY. OUTPUT ONLY THE TRANSFORMED TEXT:\n\n{text}"
+    "user_prompt_template": "EXECUTE ULTRA-STRICT TRANSFORMATION PROTOCOL. OUTPUT ONLY MECHANICALLY TRANSFORMED TEXT:\n\n{text}"
 }
 
 # ============================================================================
