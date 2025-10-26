@@ -16,12 +16,13 @@ cd C:\Users\USER\Documents\infinihumanizer
 # 3. Start server
 python manage.py runserver
 
-# 4. Visit
+# 4. Create admin account (first time only)
+python manage.py create_new_superuser
+
+# 5. Visit
 http://127.0.0.1:8000/humanizer/
 
-# 5. Login
-Email: admin@example.com
-Password: admin1234
+# 6. Login with the credentials shown in step 4
 ```
 
 ## ✨ Features

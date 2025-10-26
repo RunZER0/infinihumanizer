@@ -8,7 +8,7 @@
 │         Intelligent Text Humanization Platform              │
 │                                                              │
 │  🌐 http://127.0.0.1:8000/humanizer/                        │
-│  🔐 admin@example.com / admin1234                           │
+│  🔐 Create admin: python manage.py create_new_superuser    │
 │  🎯 OXO (Gemini) | smurk (OpenAI)                           │
 └──────────────────────────────────────────────────────────────┘
 ```
@@ -394,7 +394,7 @@ Post-Processing:
 
 ### For Testing:
 1. Visit http://127.0.0.1:8000/humanizer/
-2. Login: `admin@example.com` / `admin1234`
+2. Create admin credentials: `python manage.py create_new_superuser`
 3. Test small text (< 500 words) - should NOT chunk
 4. Test large text (> 500 words) - SHOULD chunk
 5. Verify output quality, no duplicates
