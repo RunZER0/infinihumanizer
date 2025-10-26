@@ -314,9 +314,8 @@ def is_african_ip(ip_address):
         return True
     
     try:
-        # You would use a GeoIP database here in production
-        # For now, using a simple IP geolocation API
-        response = requests.get(f'http://ip-api.com/json/{ip_address}', timeout=2)
+        # Use HTTPS for secure communication with IP geolocation API
+        response = requests.get(f'https://ip-api.com/json/{ip_address}', timeout=2)
         if response.status_code == 200:
             data = response.json()
             continent = data.get('continent', '')
@@ -392,15 +391,25 @@ def settings_view(request):
 
 
 PLAN_WORD_QUOTAS = {
+    # USD amounts
     30: 100_000,
     75: 250_000,
     150: 600_000,
+    # KES amounts (for backward compatibility and Kenyan users)
+    1500: 100_000,
+    3200: 250_000,
+    6400: 600_000,
 }
 
 PLAN_TIERS = {
+    # USD amounts
     30: 'STANDARD',
     75: 'PRO',
-    150: 'ENTERPRISE'
+    150: 'ENTERPRISE',
+    # KES amounts
+    1500: 'STANDARD',
+    3200: 'PRO',
+    6400: 'ENTERPRISE',
 }
 
 
@@ -410,18 +419,32 @@ def start_payment(request):
         # Show payment form
         plan = request.GET.get('plan', 'Standard')
         amount = request.GET.get('amount', '1500')
+        currency = request.GET.get('currency', 'KES')
+        
+        # Set currency symbol based on currency
+        currency_symbol = 'KSh' if currency == 'KES' else '$'
+        
         return render(request, 'payment.html', {
             'plan': plan,
             'amount': amount,
+            'currency': currency,
+            'currency_symbol': currency_symbol,
             'user_email': request.user.email if request.user.is_authenticated else ''
         })
     
     if request.method == 'POST':
         email = request.POST.get('email')
-        usd_amount = int(request.POST.get('amount'))
-        currency = request.POST.get('currency', 'USD')
+        amount = int(request.POST.get('amount'))
+        currency = request.POST.get('currency', 'KES')
 
-        kes_amount = usd_amount * 135 * 100
+        # Convert to KES for Paystack (which only accepts KES)
+        # Paystack expects amount in kobo (smallest unit), so multiply by 100
+        if currency == 'USD':
+            # Convert USD to KES (1 USD = 135 KES approximately)
+            kes_amount = amount * 135 * 100  # Convert to kobo
+        else:
+            # Already in KES, just convert to kobo
+            kes_amount = amount * 100
 
         # Offline mode: return a mocked init response
         if getattr(settings, 'OFFLINE_MODE', False):
@@ -429,7 +452,7 @@ def start_payment(request):
                 'status': True,
                 'message': 'Authorization URL created',
                 'data': {
-                    'authorization_url': f"http://localhost:8000/humanizer/verify-payment/?reference=OFFLINE_REF&amount={usd_amount}",
+                    'authorization_url': f"http://localhost:8000/humanizer/verify-payment/?reference=OFFLINE_REF&amount={amount}&currency={currency}",
                     'access_code': 'OFFLINE_ACCESS',
                     'reference': 'OFFLINE_REF'
                 },
@@ -440,7 +463,7 @@ def start_payment(request):
             "email": email,
             "amount": int(kes_amount),
             "currency": "KES",
-            "callback_url": f"http://localhost:8000/humanizer/verify-payment/?amount={usd_amount}"
+            "callback_url": f"http://localhost:8000/humanizer/verify-payment/?amount={amount}&currency={currency}"
         }
 
         headers = {
@@ -460,6 +483,7 @@ def start_payment(request):
 def verify_payment(request):
     reference = request.GET.get('reference')
     amount = int(request.GET.get('amount', 0))
+    currency = request.GET.get('currency', 'KES')
 
     # Offline mode: assume success and apply plan
     if getattr(settings, 'OFFLINE_MODE', False):

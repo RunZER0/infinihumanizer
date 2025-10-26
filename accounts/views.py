@@ -7,8 +7,13 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 
 from allauth.account.models import EmailAddress
-from allauth.account.utils import send_email_confirmation
 from allauth.account.views import LoginView
+try:
+    from allauth.account.utils import send_email_confirmation
+except ImportError:
+    # In django-allauth >= 0.50.0, send_email_confirmation may have been moved or removed
+    # See: https://github.com/pennersr/django-allauth/blob/main/ChangeLog.rst
+    send_email_confirmation = None
 
 from .forms import SignUpForm
 from .models import Profile
@@ -131,8 +136,11 @@ def resend_verification(request):
     if email:
         email_address = EmailAddress.objects.filter(email=email).first()
         if email_address and not email_address.verified:
-            send_email_confirmation(request, email_address.user, email=email)
-            messages.success(request, "✅ A new verification email has been sent.")
+            if send_email_confirmation:
+                send_email_confirmation(request, email_address.user, email=email)
+                messages.success(request, "✅ A new verification email has been sent.")
+            else:
+                messages.warning(request, "⚠️ Email verification is not available.")
         else:
             messages.warning(request, "⚠️ This email is already verified or doesn't exist.")
         request.session.pop('resend_email', None)  # Clean up

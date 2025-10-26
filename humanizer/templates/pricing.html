@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load humanize %}
 
 {% block title %}Pricing - InfiniHumanizer{% endblock %}
 
@@ -297,10 +298,10 @@
         <div class="plan">
             <div class="plan-name">Standard</div>
             <div class="plan-price">
-                <span class="currency">KSh</span>
-                <span class="amount">1500</span>
+                <span class="currency">{{ pricing.currency_symbol }}</span>
+                <span class="amount">{{ pricing.standard.price }}</span>
             </div>
-            <div class="plan-words">100,000 words</div>
+            <div class="plan-words">{{ pricing.standard.words|floatformat:0|intcomma }} words</div>
             
             <ul class="features-list">
                 <li><span class="feature-icon">✨</span> Unlimited rehumanizations</li>
@@ -309,7 +310,7 @@
                 <li><span class="feature-icon">📋</span> Copy + download tools</li>
             </ul>
             
-            <button class="select-button btn-standard select-btn" data-plan="Standard" data-amount="1500">
+            <button class="select-button btn-standard select-btn" data-plan="Standard" data-amount="{{ pricing.standard.price }}" data-currency="{{ pricing.currency }}">
                 <span>Select Standard</span>
             </button>
         </div>
@@ -319,10 +320,10 @@
             <div class="badge">⭐ BEST VALUE</div>
             <div class="plan-name">Pro</div>
             <div class="plan-price">
-                <span class="currency">KSh</span>
-                <span class="amount">3200</span>
+                <span class="currency">{{ pricing.currency_symbol }}</span>
+                <span class="amount">{{ pricing.pro.price }}</span>
             </div>
-            <div class="plan-words">250,000 words</div>
+            <div class="plan-words">{{ pricing.pro.words|floatformat:0|intcomma }} words</div>
             
             <ul class="features-list">
                 <li><span class="feature-icon">✨</span> Everything in Standard</li>
@@ -331,7 +332,7 @@
                 <li><span class="feature-icon">💬</span> Priority email support</li>
             </ul>
             
-            <button class="select-button btn-pro select-btn" data-plan="Pro" data-amount="3200">
+            <button class="select-button btn-pro select-btn" data-plan="Pro" data-amount="{{ pricing.pro.price }}" data-currency="{{ pricing.currency }}">
                 <span>Select Pro</span>
             </button>
         </div>
@@ -340,10 +341,10 @@
         <div class="plan">
             <div class="plan-name">Enterprise</div>
             <div class="plan-price">
-                <span class="currency">KSh</span>
-                <span class="amount">6400</span>
+                <span class="currency">{{ pricing.currency_symbol }}</span>
+                <span class="amount">{{ pricing.enterprise.price }}</span>
             </div>
-            <div class="plan-words">600,000 words</div>
+            <div class="plan-words">{{ pricing.enterprise.words|floatformat:0|intcomma }} words</div>
             
             <ul class="features-list">
                 <li><span class="feature-icon">✨</span> Everything in Pro</li>
@@ -352,7 +353,7 @@
                 <li><span class="feature-icon">🚀</span> Early access to new features</li>
             </ul>
             
-            <button class="select-button btn-enterprise select-btn" data-plan="Enterprise" data-amount="6400">
+            <button class="select-button btn-enterprise select-btn" data-plan="Enterprise" data-amount="{{ pricing.enterprise.price }}" data-currency="{{ pricing.currency }}">
                 <span>Select Enterprise</span>
             </button>
         </div>
@@ -364,7 +365,11 @@
             <span>💡</span> Payment Information
         </div>
         <div class="info-text">
+            {% if pricing.currency == 'KES' %}
             All prices are shown in Kenyan Shillings (KES). Payments are processed securely through Paystack with bank-level encryption.
+            {% else %}
+            All prices are shown in US Dollars (USD). Payments are processed securely through Paystack with bank-level encryption.
+            {% endif %}
         </div>
     </div>
 </div>
@@ -377,9 +382,10 @@ document.querySelectorAll('.select-btn').forEach(btn => {
     btn.addEventListener('click', function() {
         const plan = this.dataset.plan;
         const amount = this.dataset.amount;
+        const currency = this.dataset.currency;
         
         // Redirect to payment endpoint
-        window.location.href = `/humanizer/start-payment/?plan=${plan}&amount=${amount}`;
+        window.location.href = `/humanizer/start-payment/?plan=${plan}&amount=${amount}&currency=${currency}`;
     });
 });
 </script>
