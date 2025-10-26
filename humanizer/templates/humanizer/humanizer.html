@@ -905,7 +905,7 @@
                     <div class="header-left">
                         <div class="container-label">
                             <span>📝</span>
-                            <span>Input Text</span>
+                            <span>Input Text (Max 500 words)</span>
                         </div>
                         <div class="word-counter">
                             <span>Words:</span>
@@ -919,7 +919,7 @@
                 <textarea 
                     id="inputText" 
                     class="text-box" 
-                    placeholder="Paste your text here to humanize it..."
+                    placeholder="Paste your input text here (max 500 words). Output can be any length."
                 ></textarea>
                 <button id="humanizeBtn" class="btn btn-primary">
                     <span id="btnText">🤖 Humanize Text</span>
@@ -932,7 +932,7 @@
                     <div class="header-left">
                         <div class="container-label">
                             <span>✨</span>
-                            <span>Humanized Output</span>
+                            <span>Humanized Output (No limit)</span>
                         </div>
                         <div class="word-counter">
                             <span>Words:</span>
@@ -1266,6 +1266,7 @@ function showToast(message, type = 'success') {
 }
 
 // Word count function
+// Maximum INPUT word limit (output has no limit)
 const MAX_WORD_LIMIT = 500;
 let typingTimeout = null;
 let hasShownToast = false;
@@ -1302,7 +1303,7 @@ function updateWordCount(textareaId, counterId) {
     
     counterElement.textContent = wordCount;
     
-    // Check if over limit
+    // Check if INPUT is over limit (output has no word limit)
     if (wordCount > MAX_WORD_LIMIT) {
         // Add over-limit styling
         counterElement.classList.add('over-limit');
@@ -1330,7 +1331,7 @@ function updateWordCount(textareaId, counterId) {
         
         // Show toast notification (only once per session of being over limit)
         if (!hasShownToast) {
-            showToast('Maximum 500 words allowed. Please reduce your text.', 'error');
+            showToast('Maximum 500 words allowed for INPUT. Please reduce your input text. (Output can be any length)', 'error');
             hasShownToast = true;
         }
     } else {
@@ -1386,9 +1387,10 @@ document.getElementById('humanizeBtn').addEventListener('click', async function(
     }
     
     // Check word count limit - use consistent word counting logic
+    // NOTE: This 500-word limit applies ONLY to input, not output
     const wordCount = countWords(inputText);
     if (wordCount > MAX_WORD_LIMIT) {
-        showToast(`Text exceeds ${MAX_WORD_LIMIT} word limit. Please reduce your text.`, 'error');
+        showToast(`Input text exceeds ${MAX_WORD_LIMIT} word limit. Please reduce your input text. (Output can be any length)`, 'error');
         return;
     }
     
