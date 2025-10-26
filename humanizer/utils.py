@@ -41,6 +41,27 @@ def clean_llm_output(text: str) -> str:
     metadata_pattern = r'\n\n(' + '|'.join(escaped_keywords) + r').*$'
     cleaned = re.sub(metadata_pattern, '', cleaned, flags=re.IGNORECASE | re.DOTALL)
     
+    # Remove meta-commentary patterns that indicate incomplete transformation
+    # These are patterns where the LLM stops early and adds commentary
+    meta_commentary_patterns = [
+        r'\[Continued transformation would follow.*?\]',
+        r'\[The remaining text would be transformed.*?\]',
+        r'\[Rest of the text would be transformed.*?\]',
+        r'\[The transformation would continue.*?\]',
+        r'\[Following the same pattern.*?\]',
+        r'\[And so on.*?\]',
+        r'\[etc\.\]',
+        r'\.\.\.[^.]*?would follow.*?$',
+        r'\.\.\.[^.]*?same.*?rules.*?$',
+        r'\.\.\.[^.]*?pattern.*?continues.*?$',
+    ]
+    
+    for pattern in meta_commentary_patterns:
+        cleaned = re.sub(pattern, '', cleaned, flags=re.IGNORECASE | re.DOTALL)
+    
+    # Remove trailing ellipsis followed by explanatory text
+    cleaned = re.sub(r'\.\.\.\s*\(.*?\)$', '', cleaned, flags=re.DOTALL)
+    
     return cleaned.strip()
 
 
