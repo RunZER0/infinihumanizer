@@ -71,6 +71,27 @@ class TestClaudeMetaCommentaryRemoval(unittest.TestCase):
         text = "Beginning section [Rest of the text would be transformed identically]"
         cleaned = clean_llm_output(text)
         self.assertNotIn("[Rest of", cleaned)
+    
+    def test_rewritten_prefix_pattern(self):
+        """Test removal of 'Here's the rewritten text:' prefix"""
+        text = "Here's the rewritten text:\n\nThis is the actual content."
+        cleaned = clean_llm_output(text)
+        self.assertNotIn("Here's the rewritten", cleaned)
+        self.assertEqual(cleaned, "This is the actual content.")
+    
+    def test_ive_rewritten_prefix_pattern(self):
+        """Test removal of 'I've rewritten this as:' prefix"""
+        text = "I've rewritten this as:\n\nThis demonstrates the approach."
+        cleaned = clean_llm_output(text)
+        self.assertNotIn("I've rewritten", cleaned)
+        self.assertEqual(cleaned, "This demonstrates the approach.")
+    
+    def test_rewritten_version_prefix(self):
+        """Test removal of 'Rewritten version:' prefix"""
+        text = "Rewritten version: The methodology employs systematic analysis."
+        cleaned = clean_llm_output(text)
+        self.assertNotIn("Rewritten version", cleaned)
+        self.assertIn("The methodology employs", cleaned)
 
 
 class TestClaudeConfiguration(unittest.TestCase):
@@ -128,6 +149,21 @@ class TestClaudeConfiguration(unittest.TestCase):
         self.assertIn("analytical perspective", template)
         self.assertIn("natural flow", template)
         self.assertIn("knowledgeable scholar", template)
+    
+    def test_system_prompt_prohibits_commentary(self):
+        """Test that system prompt explicitly prohibits commentary and metadata"""
+        config = get_engine_config("claude")
+        prompt = config["system_prompt"]
+        self.assertIn("CRITICAL OUTPUT REQUIREMENT", prompt)
+        self.assertIn("Return ONLY the rewritten text", prompt)
+        self.assertIn("Do NOT include any commentary", prompt)
+    
+    def test_user_prompt_emphasizes_no_commentary(self):
+        """Test that user prompt emphasizes outputting only the text"""
+        config = get_engine_config("claude")
+        template = config["user_prompt_template"]
+        self.assertIn("Return ONLY the rewritten text", template)
+        self.assertIn("NO additional commentary", template)
 
 
 class TestCleaningEdgeCases(unittest.TestCase):
