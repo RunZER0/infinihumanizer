@@ -119,11 +119,35 @@ If you want to use a custom domain:
    - Start Gunicorn server
 3. Monitor the logs for any errors
 
-### 7. Verify Deployment
+### 7. Create Admin/Superuser Account
+
+After successful deployment, you'll need an admin account to manage the application.
+
+**Option A: Using Render Shell (Recommended)**
+1. Go to your Render dashboard
+2. Select your web service
+3. Click **"Shell"** in the left sidebar
+4. Run the command:
+   ```bash
+   python manage.py create_new_superuser
+   ```
+5. **Save the displayed credentials immediately** - they won't be shown again!
+
+**Option B: Custom credentials during deployment**
+```bash
+python manage.py create_new_superuser --email admin@yourdomain.com --username adminuser
+```
+
+**Important:** The password is auto-generated and secure. Make sure to save it in a password manager.
+
+See [SUPERUSER_RECOVERY.md](SUPERUSER_RECOVERY.md) for detailed instructions.
+
+### 8. Verify Deployment
 
 Once deployed, test these endpoints:
 - `https://your-app.onrender.com/` - Homepage
-- `https://your-app.onrender.com/accounts/login/` - Login page
+- `https://your-app.onrender.com/accounts/login/` - Login page (use superuser credentials)
+- `https://your-app.onrender.com/admin/` - Django admin panel
 - `https://your-app.onrender.com/humanizer/` - Humanizer interface
 
 ## 🔧 Troubleshooting
