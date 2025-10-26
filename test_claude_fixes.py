@@ -81,17 +81,17 @@ class TestClaudeConfiguration(unittest.TestCase):
         config = get_engine_config("claude")
         self.assertEqual(config["model"], "claude-3-5-sonnet-20241022")
     
-    def test_temperature_reduced(self):
-        """Test that temperature is reduced for consistency"""
+    def test_temperature_increased(self):
+        """Test that temperature is increased for creative variation"""
         config = get_engine_config("claude")
-        self.assertEqual(config["base_temperature"], 0.6)
-        self.assertLess(config["base_temperature"], 0.7)
+        self.assertEqual(config["base_temperature"], 0.8)
+        self.assertGreater(config["base_temperature"], 0.7)
     
-    def test_temperature_variation_reduced(self):
-        """Test that temperature variation is reduced"""
+    def test_temperature_variation_increased(self):
+        """Test that temperature variation is increased for creative variation"""
         config = get_engine_config("claude")
-        self.assertEqual(config["temperature_variation"], 0.05)
-        self.assertLess(config["temperature_variation"], 0.1)
+        self.assertEqual(config["temperature_variation"], 0.15)
+        self.assertGreater(config["temperature_variation"], 0.1)
     
     def test_max_tokens_sufficient(self):
         """Test that max_tokens is set high enough for long texts"""
@@ -99,36 +99,35 @@ class TestClaudeConfiguration(unittest.TestCase):
         self.assertEqual(config["max_tokens"], 8192)
         self.assertGreaterEqual(config["max_tokens"], 8000)
     
-    def test_system_prompt_has_critical_requirement(self):
-        """Test that system prompt includes CRITICAL REQUIREMENT directive"""
+    def test_system_prompt_has_critical_directive(self):
+        """Test that system prompt includes CRITICAL directive"""
         config = get_engine_config("claude")
-        self.assertIn("CRITICAL REQUIREMENT", config["system_prompt"])
-        self.assertIn("ENTIRE input text", config["system_prompt"])
+        self.assertIn("CRITICAL", config["system_prompt"])
+        self.assertIn("HUMAN ACADEMIC", config["system_prompt"])
     
-    def test_system_prompt_forbids_meta_commentary(self):
-        """Test that system prompt explicitly forbids meta-commentary"""
+    def test_system_prompt_promotes_human_writing(self):
+        """Test that system prompt promotes human academic writing"""
         config = get_engine_config("claude")
         prompt = config["system_prompt"]
-        self.assertIn("NO EXCEPTIONS", prompt)
-        self.assertIn("Do NOT stop early", prompt)
-        self.assertIn("Do NOT add meta-commentary", prompt)
+        self.assertIn("NATURAL ENGAGEMENT", prompt)
+        self.assertIn("INTERPRETIVE DEPTH", prompt)
+        self.assertIn("AUTHENTIC ACADEMIC VOICE", prompt)
     
-    def test_user_prompt_emphasizes_completion(self):
-        """Test that user prompt emphasizes complete transformation"""
+    def test_user_prompt_emphasizes_natural_writing(self):
+        """Test that user prompt emphasizes natural human writing"""
         config = get_engine_config("claude")
         template = config["user_prompt_template"]
-        self.assertIn("ENTIRE", template)
-        self.assertIn("ALL of it", template)
-        self.assertIn("NO EXCEPTIONS", template)
+        self.assertIn("natural human academic writing", template)
+        self.assertIn("engaging, interpretive", template)
+        self.assertIn("authentically human", template)
     
-    def test_user_prompt_forbids_notes(self):
-        """Test that user prompt forbids explanatory notes"""
+    def test_user_prompt_encourages_perspective(self):
+        """Test that user prompt encourages analytical perspective"""
         config = get_engine_config("claude")
         template = config["user_prompt_template"]
-        self.assertIn("NO explanations", template)
-        self.assertIn("NO metadata", template)
-        self.assertIn("NO commentary", template)
-        self.assertIn("NO notes", template)
+        self.assertIn("analytical perspective", template)
+        self.assertIn("natural flow", template)
+        self.assertIn("knowledgeable scholar", template)
 
 
 class TestCleaningEdgeCases(unittest.TestCase):
@@ -174,12 +173,12 @@ class TestPromptConsistency(unittest.TestCase):
             self.assertIn("user_prompt_template", config)
             self.assertTrue(len(config["system_prompt"]) > 100)
     
-    def test_claude_has_strictest_prompts(self):
-        """Test that Claude has the strictest completion requirements"""
+    def test_claude_has_human_writing_focus(self):
+        """Test that Claude has focus on natural human academic writing"""
         claude_config = get_engine_config("claude")
-        # Claude should have stronger completion directives
-        self.assertIn("CRITICAL REQUIREMENT", claude_config["system_prompt"])
-        self.assertIn("ENTIRE", claude_config["user_prompt_template"])
+        # Claude should emphasize human-like writing
+        self.assertIn("CRITICAL", claude_config["system_prompt"])
+        self.assertIn("natural", claude_config["user_prompt_template"])
 
 
 def run_tests():
