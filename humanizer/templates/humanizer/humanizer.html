@@ -1270,6 +1270,11 @@ const MAX_WORD_LIMIT = 500;
 let typingTimeout = null;
 let hasShownToast = false;
 
+function countWords(text) {
+    const trimmed = text.trim();
+    return trimmed ? trimmed.split(/\s+/).length : 0;
+}
+
 function typeWarningMessage(element, message, speed = 30) {
     element.textContent = '';
     element.classList.add('visible');
@@ -1287,8 +1292,8 @@ function typeWarningMessage(element, message, speed = 30) {
 }
 
 function updateWordCount(textareaId, counterId) {
-    const text = document.getElementById(textareaId).value.trim();
-    const wordCount = text ? text.split(/\s+/).length : 0;
+    const text = document.getElementById(textareaId).value;
+    const wordCount = countWords(text);
     const counterElement = document.getElementById(counterId);
     const inputTextarea = document.getElementById('inputText');
     const inputContainer = document.querySelector('.input-container');
@@ -1381,7 +1386,7 @@ document.getElementById('humanizeBtn').addEventListener('click', async function(
     }
     
     // Check word count limit - use consistent word counting logic
-    const wordCount = inputText ? inputText.split(/\s+/).length : 0;
+    const wordCount = countWords(inputText);
     if (wordCount > MAX_WORD_LIMIT) {
         showToast(`Text exceeds ${MAX_WORD_LIMIT} word limit. Please reduce your text.`, 'error');
         return;
