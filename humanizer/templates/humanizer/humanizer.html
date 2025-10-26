@@ -1268,6 +1268,7 @@ function showToast(message, type = 'success') {
 // Word count function
 const MAX_WORD_LIMIT = 500;
 let typingTimeout = null;
+let hasShownToast = false;
 
 function typeWarningMessage(element, message, speed = 30) {
     element.textContent = '';
@@ -1311,22 +1312,21 @@ function updateWordCount(textareaId, counterId) {
             clearTimeout(typingTimeout);
         }
         
-        // Show warning message with typing effect (only once per change)
+        const excessWords = wordCount - MAX_WORD_LIMIT;
+        const warningMessage = `⚠️ ${excessWords} word${excessWords > 1 ? 's' : ''} over limit!`;
+        
+        // Show warning message with typing effect (only on first appearance)
         if (!warningElement.classList.contains('visible')) {
-            const excessWords = wordCount - MAX_WORD_LIMIT;
-            typeWarningMessage(
-                warningElement, 
-                `⚠️ ${excessWords} word${excessWords > 1 ? 's' : ''} over limit!`
-            );
+            typeWarningMessage(warningElement, warningMessage);
         } else {
             // Update the count without re-typing
-            const excessWords = wordCount - MAX_WORD_LIMIT;
-            warningElement.textContent = `⚠️ ${excessWords} word${excessWords > 1 ? 's' : ''} over limit!`;
+            warningElement.textContent = warningMessage;
         }
         
-        // Show toast notification (only once when first exceeding)
-        if (wordCount === MAX_WORD_LIMIT + 1) {
+        // Show toast notification (only once per session of being over limit)
+        if (!hasShownToast) {
             showToast('Maximum 500 words allowed. Please reduce your text.', 'error');
+            hasShownToast = true;
         }
     } else {
         // Remove over-limit styling
@@ -1340,6 +1340,9 @@ function updateWordCount(textareaId, counterId) {
         // Hide warning message
         warningElement.classList.remove('visible');
         warningElement.textContent = '';
+        
+        // Reset toast flag when back under limit
+        hasShownToast = false;
     }
     
     return wordCount;
@@ -1377,8 +1380,8 @@ document.getElementById('humanizeBtn').addEventListener('click', async function(
         return;
     }
     
-    // Check word count limit
-    const wordCount = inputText.split(/\s+/).length;
+    // Check word count limit - use consistent word counting logic
+    const wordCount = inputText ? inputText.split(/\s+/).length : 0;
     if (wordCount > MAX_WORD_LIMIT) {
         showToast(`Text exceeds ${MAX_WORD_LIMIT} word limit. Please reduce your text.`, 'error');
         return;
