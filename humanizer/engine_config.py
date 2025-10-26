@@ -194,7 +194,7 @@ Apply these rules MECHANICALLY. Do not deviate. Your sole purpose is to output a
 }
 
 # ============================================================================
-# OPENAI ENGINE - Academic Stealth Style (STRICT)
+# OPENAI ENGINE - Academic Stealth Style (ULTRA STRICT)
 # ============================================================================
 
 OPENAI_CONFIG = {
