@@ -125,8 +125,8 @@ def humanize_ajax(request):
     selected_engine = (request.POST.get("engine") or "claude").lower()  # Default to Claude (OXO)
     word_count = len(input_text.split())
     
-    # Maximum word limit to prevent timeouts (roughly 8000 characters)
-    MAX_WORD_COUNT = 2000
+    # Maximum word limit to prevent timeouts and enforce UI limit
+    MAX_WORD_COUNT = 500
 
     logger.info(
         "Humanization request received",
@@ -146,10 +146,10 @@ def humanize_ajax(request):
         if selected_engine not in ("deepseek", "claude", "openai"):
             return JsonResponse({"error": "Invalid engine selection."}, status=400)
         
-        # Check if input is too large to prevent timeouts
+        # Check if input exceeds the 500-word limit
         if word_count > MAX_WORD_COUNT:
             return JsonResponse({
-                "error": f"Text is too long ({word_count} words). Maximum allowed: {MAX_WORD_COUNT} words. Please reduce the text size."
+                "error": f"Text exceeds maximum limit of {MAX_WORD_COUNT} words. You submitted {word_count} words. Please reduce the text size."
             }, status=400)
 
         if not profile.is_paid and word_count > state["word_balance"]:

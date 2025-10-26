@@ -352,6 +352,11 @@
         flex-direction: column;
         height: calc(100vh - 180px);
         max-height: calc(100vh - 180px);
+        transition: border-color 0.3s ease;
+    }
+    
+    .input-container.over-limit {
+        border-color: #FF3B30 !important;
     }
     
     .container-header {
@@ -400,6 +405,23 @@
         font-weight: 600;
     }
     
+    .word-count.over-limit {
+        color: #FF3B30;
+    }
+    
+    .word-limit-warning {
+        font-size: 0.75rem;
+        color: #FF3B30;
+        margin-left: 0.5rem;
+        font-weight: 500;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .word-limit-warning.visible {
+        opacity: 1;
+    }
+    
     .text-box {
         flex: 1;
         background: rgba(13, 13, 13, 0.9);
@@ -412,6 +434,11 @@
         font-family: 'Aptos', 'Segoe UI', sans-serif;
         resize: none;
         transition: all 0.3s ease;
+    }
+    
+    .text-box.over-limit {
+        border-color: #FF3B30 !important;
+        box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.15) !important;
     }
     
     .text-box:focus {
@@ -883,7 +910,10 @@
                         <div class="word-counter">
                             <span>Words:</span>
                             <span class="word-count" id="inputWordCount">0</span>
+                            <span>/</span>
+                            <span>500</span>
                         </div>
+                        <span class="word-limit-warning" id="wordLimitWarning"></span>
                     </div>
                 </div>
                 <textarea 
@@ -1236,10 +1266,90 @@ function showToast(message, type = 'success') {
 }
 
 // Word count function
+const MAX_WORD_LIMIT = 500;
+let typingTimeout = null;
+let hasShownToast = false;
+
+function countWords(text) {
+    const trimmed = text.trim();
+    return trimmed ? trimmed.split(/\s+/).length : 0;
+}
+
+function typeWarningMessage(element, message, speed = 30) {
+    element.textContent = '';
+    element.classList.add('visible');
+    let index = 0;
+    
+    function typeNextChar() {
+        if (index < message.length) {
+            element.textContent += message[index];
+            index++;
+            setTimeout(typeNextChar, speed);
+        }
+    }
+    
+    typeNextChar();
+}
+
 function updateWordCount(textareaId, counterId) {
-    const text = document.getElementById(textareaId).value.trim();
-    const wordCount = text ? text.split(/\s+/).length : 0;
-    document.getElementById(counterId).textContent = wordCount;
+    const text = document.getElementById(textareaId).value;
+    const wordCount = countWords(text);
+    const counterElement = document.getElementById(counterId);
+    const inputTextarea = document.getElementById('inputText');
+    const inputContainer = document.querySelector('.input-container');
+    const humanizeBtn = document.getElementById('humanizeBtn');
+    const warningElement = document.getElementById('wordLimitWarning');
+    
+    counterElement.textContent = wordCount;
+    
+    // Check if over limit
+    if (wordCount > MAX_WORD_LIMIT) {
+        // Add over-limit styling
+        counterElement.classList.add('over-limit');
+        inputTextarea.classList.add('over-limit');
+        inputContainer.classList.add('over-limit');
+        humanizeBtn.disabled = true;
+        humanizeBtn.style.opacity = '0.5';
+        humanizeBtn.style.cursor = 'not-allowed';
+        
+        // Clear any existing typing timeout
+        if (typingTimeout) {
+            clearTimeout(typingTimeout);
+        }
+        
+        const excessWords = wordCount - MAX_WORD_LIMIT;
+        const warningMessage = `⚠️ ${excessWords} word${excessWords > 1 ? 's' : ''} over limit!`;
+        
+        // Show warning message with typing effect (only on first appearance)
+        if (!warningElement.classList.contains('visible')) {
+            typeWarningMessage(warningElement, warningMessage);
+        } else {
+            // Update the count without re-typing
+            warningElement.textContent = warningMessage;
+        }
+        
+        // Show toast notification (only once per session of being over limit)
+        if (!hasShownToast) {
+            showToast('Maximum 500 words allowed. Please reduce your text.', 'error');
+            hasShownToast = true;
+        }
+    } else {
+        // Remove over-limit styling
+        counterElement.classList.remove('over-limit');
+        inputTextarea.classList.remove('over-limit');
+        inputContainer.classList.remove('over-limit');
+        humanizeBtn.disabled = false;
+        humanizeBtn.style.opacity = '1';
+        humanizeBtn.style.cursor = 'pointer';
+        
+        // Hide warning message
+        warningElement.classList.remove('visible');
+        warningElement.textContent = '';
+        
+        // Reset toast flag when back under limit
+        hasShownToast = false;
+    }
+    
     return wordCount;
 }
 
@@ -1272,6 +1382,13 @@ document.getElementById('humanizeBtn').addEventListener('click', async function(
     
     if (!inputText) {
         showToast('Please enter some text to humanize', 'error');
+        return;
+    }
+    
+    // Check word count limit - use consistent word counting logic
+    const wordCount = countWords(inputText);
+    if (wordCount > MAX_WORD_LIMIT) {
+        showToast(`Text exceeds ${MAX_WORD_LIMIT} word limit. Please reduce your text.`, 'error');
         return;
     }
     
