@@ -23,7 +23,7 @@
             <div style="height: 1px; background: rgba(0, 212, 255, 0.2); margin: 1rem 0;"></div>
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <span style="color: rgba(255, 255, 255, 0.8); font-size: 1rem;">Amount:</span>
-                <span style="color: #00FF88; font-weight: 800; font-size: 1.5rem;">KES {{ amount }}</span>
+                <span style="color: #00FF88; font-weight: 800; font-size: 1.5rem;">{{ currency_symbol|default:"KES" }} {{ amount }}</span>
             </div>
         </div>
 
@@ -32,6 +32,7 @@
             {% csrf_token %}
             <input type="hidden" name="amount" value="{{ amount }}">
             <input type="hidden" name="plan" value="{{ plan }}">
+            <input type="hidden" name="currency" value="{{ currency }}">
             
             <div style="margin-bottom: 1.5rem;">
                 <label style="display: block; color: rgba(255, 255, 255, 0.9); margin-bottom: 0.5rem; font-weight: 600;">Email Address</label>
