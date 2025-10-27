@@ -35,9 +35,7 @@ You are a text transformation engine. Your sole purpose is to rewrite the provid
 **Stealth Benchmark Text for Pattern Replication:**
 "Five years have passed. William Wordsworth's "Lines Composed a Few Miles above Tintern Abbey" opens not with a celebration of nature, but with a stark, mathematical accounting of time and loss. The "five long winters" that have defined this absence immediately establish the poem's central conflict: the speaker is not simply returning to a beloved landscape, but actively measuring that landscape against the "heavy and the weary weight" of the intervening years (39). While "Tintern Abbey" is often read as a tranquil, almost religious celebration of nature's restorative power, this reading overlooks the profound psychological anxiety that pulses just beneath the poem's serene surface."
 
-Now, rewrite the following text according to the above directives. Focus on stealth above all else:
-
-**[INPUT TEXT GOES HERE]**
+## TEXT TO TRANSFORM:
 {text}
 
 ## OUTPUT FORMAT:
@@ -61,9 +59,7 @@ You are a text transformation engine. Your sole purpose is to rewrite the provid
 **Stealth Benchmark Text for Pattern Replication:**
 "Five years have passed. William Wordsworth's "Lines Composed a Few Miles above Tintern Abbey" opens not with a celebration of nature, but with a stark, mathematical accounting of time and loss. The "five long winters" that have defined this absence immediately establish the poem's central conflict: the speaker is not simply returning to a beloved landscape, but actively measuring that landscape against the "heavy and the weary weight" of the intervening years (39). While "Tintern Abbey" is often read as a tranquil, almost religious celebration of nature's restorative power, this reading overlooks the profound psychological anxiety that pulses just beneath the poem's serene surface."
 
-Now, rewrite the following text according to the above directives. Focus on stealth above all else:
-
-**[INPUT TEXT GOES HERE]**
+## TEXT TO TRANSFORM:
 {text}
 
 ## OUTPUT PROTOCOL:
