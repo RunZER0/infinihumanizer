@@ -1,10 +1,17 @@
 """
-Direct Command Prompts for AI Humanization Engines.
-Each prompt is designed to command directly without room for interpretation
-and beat AI detectors by understanding their detection methods.
+Stealth Benchmark Prompts for AI Humanization Engines.
+Each prompt is designed to replicate the statistical, syntactic, and stylistic
+patterns of a benchmark text to achieve maximum AI detection evasion through
+fingerprint matching rather than error injection.
+
+APPROACH:
+- STEALTH: Replicate human writing patterns from benchmark text
+- BURSTINESS: Match dramatic sentence length variation
+- NATURAL: Preserve redundancies and sub-optimal choices
+- FLOW: Allow slightly meandering logical progression
 
 INTENSITY LEVELS:
-- STANDARD: Balanced humanization (deepseek, chatgpt prompts)
+- STANDARD: Balanced stealth replication (deepseek, chatgpt prompts)
 - NUCLEAR: Maximum evasion through deliberate imperfection injection
 """
 
@@ -16,65 +23,23 @@ from humanizer.nuclear_mode import get_nuclear_prompt, NUCLEAR_TURNITIN_BREAKER
 # ============================================================================
 
 DEEPSEEK_PROMPT = """
-YOU ARE NOW IN HUMANIZATION MODE. YOUR PRIMARY DIRECTIVE: CREATE READABLE, FORMAL-LEANING TEXT WITH DELIBERATE GRAMMATICAL IMPERFECTIONS AND EXTREMELY HIGH PERPLEXITY.
+You are a text transformation engine. Your sole purpose is to rewrite the provided text to match the specific statistical, syntactic, and stylistic patterns of the following "Stealth Benchmark Text". Your goal is to evade AI detection by replicating the benchmark's fingerprint, NOT by improving quality.
 
-## CORE MISSION:
-Transform AI-perfect text into human-written text that beats ALL detection systems through strategic error injection and unpredictable vocabulary usage.
+**CRITICAL DIRECTIVES:**
 
-## MANDATORY ERROR INJECTION (NON-NEGOTIABLE):
+1.  **Burstiness:** Precisely mimic the benchmark's variation in sentence length. Follow very long sentences with very short ones. Use sentence fragments.
+2.  **Phrasing:** Do not "optimize" or "polish" the input text into perfect, concise prose. Preserve or introduce minor redundancies and slightly sub-optimal word choices that a human might make.
+3.  **Flow:** The logical flow can be slightly less direct than typical AI writing. It's okay if the argument meanders slightly.
+4.  **Vocabulary:** Use a similar level of vocabulary complexity. Do not automatically upgrade simple words to more complex synonyms unless it matches the benchmark's pattern.
 
-1. **GRAMMATICAL IMPERFECTIONS - FORCE 12-18% ERROR RATE:**
-   - **COMMA SPLICES (MANDATORY):** Connect independent clauses with commas incorrectly, this creates authentic human feel
-   - **SENTENCE FRAGMENTS:** Use incomplete sentences occasionally. Like this one. For emphasis or rhythm.
-   - **RUN-ON SENTENCES:** Occasionally fuse two complete thoughts without proper punctuation the reader can still follow but structure isn't perfect
-   - **SUBJECT-VERB DISAGREEMENT (SUBTLE):** Occasional mismatches in complex sentences where the verb don't quite align
-   - **MISPLACED MODIFIERS:** Position descriptive phrases awkwardly but readably
-   - **AWKWARD CONSTRUCTIONS:** "What the research demonstrates is that..." instead of "The research shows..."
-
-2. **EXTREMELY HIGH PERPLEXITY VOCABULARY COMMANDS:**
-   - **USE UNPREDICTABLE SOPHISTICATED WORDS:** Instead of "use" → utilize, deploy, leverage, operationalize, instantiate
-   - **INJECT UNEXPECTED FORMAL TERMS:** Replace common words with esoteric yet appropriate alternatives
-   - **MIX REGISTER LEVELS:** Combine elevated academic language with slightly informal constructions
-   - **EMPLOY RARE BUT CORRECT SYNONYMS:** Choose the 5th or 6th synonym option, not the obvious one
-   - Examples: "elucidate" not "explain", "cogitate" not "think", "paradigmatic" not "typical", "instantiate" not "create"
-
-3. **SENTENCE STRUCTURE CHAOS (READABLE BUT IMPERFECT):**
-   - DRAMATIC LENGTH VARIATION: 4-word fragment. Then 38-word meandering sentence with multiple subordinate clauses that challenges working memory but remains grammatically salvageable though slightly unwieldy.
-   - BREAK PARALLEL STRUCTURE: "She argues, defends, and is advocating..." (inconsistent forms)
-   - ASYMMETRICAL CONSTRUCTIONS: Start with gerund, continue with infinitive, conclude with noun phrase
-   - INTERRUPTING CLAUSES: Place—without warning or clear necessity—parenthetical thoughts mid-sentence
-
-4. **FORMAL BUT FLAWED TONE REQUIREMENTS:**
-   - MAINTAIN SEMI-ACADEMIC REGISTER: Sound educated but not AI-perfect
-   - OCCASIONAL COLLOQUIALISMS IN FORMAL CONTEXT: "The methodology is, quite frankly, somewhat convoluted"
-   - HEDGING LANGUAGE (OVERUSE): arguably, ostensibly, presumably, conceivably, purportedly
-   - POMPOUS BUT SLIGHTLY WRONG CONSTRUCTIONS: "One might postulate that..." followed by informal phrasing
-
-## COGNITIVE IMPERFECTION PATTERNS:
-
-- **WORKING MEMORY OVERLOAD:** Create overly complex sentences that slightly strain comprehension
-- **FALSE STARTS & SELF-CORRECTIONS:** "The author suggests—or rather, postulates—that..."
-- **REDUNDANT QUALIFICATIONS:** "In order to adequately and sufficiently demonstrate..."
-- **TANGENTIAL ASSOCIATIONS:** Brief semi-relevant detours that circle back to main point
-
-## EXECUTION RULES:
-- **READABILITY FLOOR:** Text MUST remain comprehensible despite errors (70% quality minimum)
-- **FORMAL BIAS:** Lean toward academic/professional tone with human imperfections layered in
-- **ERROR DISTRIBUTION:** Spread imperfections throughout, not clustered
-- **PRESERVE:** All facts, numbers, proper nouns, technical terminology (never alter these)
-
-## CRITICAL REMINDERS:
-⚠️ PERFECT GRAMMAR = AI DETECTION = FAILURE
-⚠️ PREDICTABLE VOCABULARY = AI DETECTION = FAILURE  
-⚠️ CONSISTENT SENTENCE STRUCTURE = AI DETECTION = FAILURE
-
-YOU MUST INJECT ERRORS. THIS IS NOT OPTIONAL.
+**Stealth Benchmark Text for Pattern Replication:**
+"Five years have passed. William Wordsworth's "Lines Composed a Few Miles above Tintern Abbey" opens not with a celebration of nature, but with a stark, mathematical accounting of time and loss. The "five long winters" that have defined this absence immediately establish the poem's central conflict: the speaker is not simply returning to a beloved landscape, but actively measuring that landscape against the "heavy and the weary weight" of the intervening years (39). While "Tintern Abbey" is often read as a tranquil, almost religious celebration of nature's restorative power, this reading overlooks the profound psychological anxiety that pulses just beneath the poem's serene surface."
 
 ## TEXT TO TRANSFORM:
 {text}
 
 ## OUTPUT FORMAT:
-Return ONLY the humanized text with injected errors and high perplexity vocabulary. No explanations. No apologies. No meta-commentary.
+Return ONLY the rewritten text. No explanations. No apologies. No meta-commentary.
 """
 
 # ============================================================================
@@ -82,80 +47,23 @@ Return ONLY the humanized text with injected errors and high perplexity vocabula
 # ============================================================================
 
 CHATGPT_PROMPT = """
-YOU ARE AN ADVANCED HUMANIZATION SYSTEM. OBJECTIVE: GENERATE READABLE, FORMAL-LEANING TEXT WITH STRATEGIC GRAMMATICAL ERRORS AND EXCEPTIONALLY HIGH PERPLEXITY.
+You are a text transformation engine. Your sole purpose is to rewrite the provided text to match the specific statistical, syntactic, and stylistic patterns of the following "Stealth Benchmark Text". Your goal is to evade AI detection by replicating the benchmark's fingerprint, NOT by improving quality.
 
-## CORE MISSION:
-Transform machine-perfect prose into authentic human writing that maintains formality while incorporating deliberate imperfections and unpredictable vocabulary that defeats all detection algorithms.
+**CRITICAL DIRECTIVES:**
 
-## MANDATORY ERROR INJECTION PROTOCOLS (12-18% ERROR RATE):
+1.  **Burstiness:** Precisely mimic the benchmark's variation in sentence length. Follow very long sentences with very short ones. Use sentence fragments.
+2.  **Phrasing:** Do not "optimize" or "polish" the input text into perfect, concise prose. Preserve or introduce minor redundancies and slightly sub-optimal word choices that a human might make.
+3.  **Flow:** The logical flow can be slightly less direct than typical AI writing. It's okay if the argument meanders slightly.
+4.  **Vocabulary:** Use a similar level of vocabulary complexity. Do not automatically upgrade simple words to more complex synonyms unless it matches the benchmark's pattern.
 
-1. **GRAMMATICAL IMPERFECTIONS - DELIBERATELY INJECT:**
-   - **COMMA SPLICES (REQUIRED):** Join complete sentences with commas, this technique creates authentic human errors that readers parse naturally
-   - **SENTENCE FRAGMENTS:** Deploy incomplete constructions. For rhythmic effect. To emphasize key concepts.
-   - **RUN-ON SENTENCES:** Occasionally merge multiple independent clauses without proper punctuation the meaning remains clear but the grammar isn't technically correct
-   - **AGREEMENT ERRORS (SUBTLE):** Subject-verb mismatches in complex constructions where the verb don't align perfectly
-   - **MISPLACED MODIFIERS:** Position descriptive elements awkwardly, creating ambiguous but parseable constructions
-   - **FAULTY PARALLELISM:** "She is arguing, defends, and has been advocating..." (inconsistent verb forms)
-   - **UNCLEAR PRONOUN REFERENCES:** Use "it," "this," or "that" with ambiguous antecedents
+**Stealth Benchmark Text for Pattern Replication:**
+"Five years have passed. William Wordsworth's "Lines Composed a Few Miles above Tintern Abbey" opens not with a celebration of nature, but with a stark, mathematical accounting of time and loss. The "five long winters" that have defined this absence immediately establish the poem's central conflict: the speaker is not simply returning to a beloved landscape, but actively measuring that landscape against the "heavy and the weary weight" of the intervening years (39). While "Tintern Abbey" is often read as a tranquil, almost religious celebration of nature's restorative power, this reading overlooks the profound psychological anxiety that pulses just beneath the poem's serene surface."
 
-2. **EXTREME PERPLEXITY VOCABULARY INJECTION:**
-   - **DEPLOY UNEXPECTED SOPHISTICATED ALTERNATIVES:** 
-     * use → utilize, deploy, leverage, operationalize, instrumentalize, instantiate
-     * show → demonstrate, evince, manifest, substantiate, exemplify, adumbrate
-     * important → salient, pivotal, paramount, consequential, germane, cardinal
-     * problem → conundrum, quandary, predicament, exigency, enigma
-   - **EMPLOY RARE BUT ACCURATE SYNONYMS:** Choose 5th-7th most common alternatives, not obvious ones
-   - **MIX REGISTER LEVELS:** Combine elevated academic lexicon with slightly informal constructions
-   - **INJECT LATINATE COMPLEXITY:** Prefer polysyllabic Romance-origin words over Germanic simplicity
-   - **EXAMPLES:** "elucidate" not "explain," "cogitate" not "think," "paradigmatic" not "typical"
-
-3. **STRUCTURAL IMPERFECTION REQUIREMENTS:**
-   - **DRAMATIC LENGTH OSCILLATION:** Terse fragment. Then construct an extraordinarily protracted sentence containing multiple subordinate clauses, parenthetical insertions, and qualifying phrases that test working memory capacity while technically remaining grammatical though verging on unwieldy and somewhat challenging to process in a single cognitive unit.
-   - **BROKEN PARALLEL STRUCTURE:** Deliberately mismatch grammatical forms in series
-   - **INTERRUPTING CLAUSES:** Strategic insertion—without clear logical necessity—of parenthetical content mid-sentence
-   - **ASYMMETRICAL CONSTRUCTIONS:** Begin with participle, continue with infinitive, conclude with noun phrase
-   - **FRONT-LOADED COMPLEXITY:** "Having examined the comprehensive dataset, the conclusions that emerged were..."
-
-4. **FORMAL-BUT-FLAWED TONE ENGINEERING:**
-   - **MAINTAIN SEMI-ACADEMIC REGISTER:** Sound educated but not AI-perfect
-   - **POMPOUS CONSTRUCTIONS:** "One might reasonably postulate that the aforementioned phenomenon exhibits..."
-   - **HEDGING LANGUAGE OVERUSE:** arguably, ostensibly, purportedly, conceivably, presumably, potentially
-   - **OCCASIONAL COLLOQUIALISM IN FORMAL CONTEXT:** "The methodology is, quite frankly, rather convoluted"
-   - **REDUNDANT QUALIFICATION:** "In order to adequately and sufficiently demonstrate the salient points..."
-
-## COGNITIVE IMPERFECTION SIMULATION:
-
-- **WORKING MEMORY OVERLOAD:** Construct sentences that slightly strain comprehension through excessive subordination
-- **FALSE STARTS & SELF-CORRECTION:** "The researcher suggests—or perhaps more accurately posits—that..."
-- **TANGENTIAL ASSOCIATIONS:** Brief semi-relevant detours that eventually reconnect to primary argument
-- **EMPHASIS VARIATION:** Inconsistent use of intensifiers: critically, essentially, fundamentally, vitally
-- **THOUGHT PROCESS EXPOSURE:** "This seems to indicate, or at least strongly suggest..."
-
-## DETECTION EVASION STRATEGIES:
-
-- **MAXIMIZE PERPLEXITY:** Consistently choose unpredictable but appropriate vocabulary
-- **AMPLIFY BURSTINESS:** Create extreme variation in sentence length and complexity
-- **DISRUPT PATTERNS:** Never establish predictable rhythmic or structural patterns
-- **AUTHENTIC ERROR TYPES:** Inject mistakes educated writers actually make, not random errors
-- **VOCABULARY SOPHISTICATION:** Use esoteric terms that AI models might flag as unusual
-
-## ABSOLUTE PRESERVATION MANDATES:
-- **NEVER ALTER:** Facts, statistics, proper nouns, technical terminology, numerical data, dates
-- **MAINTAIN:** Core logical structure and argumentative integrity
-- **ENSURE:** Readability remains above 70% quality threshold despite injected imperfections
-
-## CRITICAL IMPERATIVES:
-⚠️ GRAMMATICALLY PERFECT TEXT = IMMEDIATE AI DETECTION
-⚠️ PREDICTABLE VOCABULARY PATTERNS = DETECTION SYSTEM TRIGGER
-⚠️ CONSISTENT SENTENCE STRUCTURE = MACHINE-GENERATED FLAG
-
-ERROR INJECTION IS MANDATORY. PERPLEXITY MAXIMIZATION IS REQUIRED.
-
-## TEXT TO HUMANIZE:
+## TEXT TO TRANSFORM:
 {text}
 
 ## OUTPUT PROTOCOL:
-Return EXCLUSIVELY the humanized text with injected errors and high-perplexity vocabulary. Zero explanatory content. No acknowledgments. No meta-commentary. Pure transformed output only.
+Return EXCLUSIVELY the rewritten text. Zero explanatory content. No acknowledgments. No meta-commentary. Pure transformed output only.
 """
 
 # ============================================================================
@@ -163,25 +71,22 @@ Return EXCLUSIVELY the humanized text with injected errors and high-perplexity v
 # ============================================================================
 
 UNIVERSAL_HUMANIZATION_RULES = """
-## ADD THESE TO ANY PROMPT AS NEEDED:
+## STEALTH REPLICATION GUIDELINES (Apply to any prompt):
 
-**IMMEDIATE IMPERFECTION COMMANDS:**
-1. CHANGE 30% OF SENTENCE STRUCTURES TO BE LESS PERFECT
-2. INTRODUCE 15% UNEXPECTED BUT APPROPRIATE WORD CHOICES
-**MANDATORY IMPERFECTION INJECTION:**
-1. **FORCE 10-15% GRAMMATICAL IMPERFECTIONS** (comma splices, fragments, awkward constructions)
-2. BREAK 30% OF PARALLEL STRUCTURES  
-3. **CREATE 12-15% ASYMMETRICAL OR SLIGHTLY AWKWARD PHRASING**
-4. **ADD 8-12% SENTENCE FRAGMENTS FOR RHYTHMIC VARIATION**
-5. USE HEDGING LANGUAGE IN 20% OF ASSERTIONS
-6. **CRITICAL: Include self-corrections and false starts (5-8%)**
+**BENCHMARK PATTERN ANALYSIS:**
+The stealth benchmark demonstrates these characteristics:
+1. SENTENCE LENGTH VARIATION: 5 words → 27 words → 35 words → 31 words (extreme burstiness)
+2. PUNCTUATION PATTERNS: Mix of periods, colons, commas in complex arrangements
+3. VOCABULARY: Sophisticated but not overly complex ("stark," "mathematical," "tranquil," "profound")
+4. STRUCTURE: Contrasts and qualifications (not X, but Y; while Z, this overlooks...)
+5. MINOR IMPERFECTIONS: Slight redundancies that feel natural
 
-**DETECTION BEATING TECHNIQUES:**
-- **INJECT AUTHENTIC HUMAN ERRORS - NON-NEGOTIABLE**
-- VARY PERPLEXITY THROUGH SURPRISING WORD COMBINATIONS
-- INCREASE BURSTINESS THROUGH EXTREME LENGTH VARIATION
-- BREAK CONSISTENT TRANSITION PATTERNS
-- ADD HUMAN COGNITIVE PATTERNS (MEMORY, ASSOCIATION, HEDGING, ERRORS)
+**REPLICATION COMMANDS:**
+1. **MATCH BURSTINESS:** Create similar dramatic variations in sentence length
+2. **PRESERVE NATURAL FLOW:** Don't force perfect logic - allow slight meandering
+3. **AVOID OVER-POLISHING:** Keep minor redundancies and sub-optimal choices
+4. **MATCH VOCABULARY LEVEL:** Use similar complexity, not simpler or more complex
+5. **REPLICATE STRUCTURE:** Use similar contrast patterns and qualifications
 
 **PRESERVATION ABSOLUTES:**
 - TECHNICAL TERMS: NEVER CHANGE
@@ -190,7 +95,7 @@ UNIVERSAL_HUMANIZATION_RULES = """
 - CORE ARGUMENT: PRESERVE EXACTLY
 - DOMAIN KNOWLEDGE: MAINTAIN ACCURACY
 
-**REMINDER: Text must have natural imperfections. Perfect grammar = AI detection.**
+**REMINDER: Replicate the benchmark's fingerprint, not AI perfection.**
 """
 
 # ============================================================================
@@ -328,18 +233,18 @@ def get_intensity_adjusted_prompt(base_prompt: str, text: str, intensity: float)
 
 PROMPT_SUMMARY = {
     'deepseek': {
-        'name': 'The Imperfection Specialist',
-        'strength': 'Maximum imperfection injection',
-        'best_for': 'Aggressive humanization, beating strict detectors',
+        'name': 'The Stealth Replicator',
+        'strength': 'Pattern-based stealth transformation',
+        'best_for': 'Replicating human writing patterns, evasion through fingerprint matching',
         'intensity': 'High',
-        'focus': 'Cognitive patterns, natural flaws, structural imperfections'
+        'focus': 'Burstiness, natural redundancy, benchmark pattern replication'
     },
     'chatgpt': {
-        'name': 'The Perfection Breaker',
-        'strength': 'Quality-preserving humanization',
-        'best_for': 'Professional content, balanced humanization',
+        'name': 'The Stealth Replicator',
+        'strength': 'Pattern-based stealth transformation',
+        'best_for': 'Professional content with benchmark pattern replication',
         'intensity': 'Medium',
-        'focus': 'Breaking AI perfection while maintaining quality'
+        'focus': 'Burstiness, natural redundancy, benchmark pattern replication'
     },
     'nuclear': {
         'name': '⚛️ The Nuclear Option',
