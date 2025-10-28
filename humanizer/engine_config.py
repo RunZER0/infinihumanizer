@@ -15,7 +15,7 @@ DEEPSEEK_CONFIG = {
     "model": "deepseek-chat", 
     "description": "Natural text paraphrasing with human imperfections",
     
-    "base_temperature": 0.8,
+    "base_temperature": 0.3,
     "temperature_variation": 0.1,
     "max_tokens": 4000,
     
@@ -32,7 +32,7 @@ CLAUDE_CONFIG = {
     "model": "claude-3-5-sonnet-20241022",
     "description": "Natural text paraphrasing with human imperfections",
     
-    "base_temperature": 0.8,
+    "base_temperature": 0.3,
     "temperature_variation": 0.15,
     "max_tokens": 8192,
     
@@ -49,7 +49,7 @@ OPENAI_CONFIG = {
     "model": "gpt-4-turbo-preview",
     "description": "Natural text paraphrasing with human imperfections",
     
-    "base_temperature": 0.8,
+    "base_temperature": 0.3,
     "temperature_variation": 0.1,
     "max_tokens": 4000,
     "top_p": 0.9,
