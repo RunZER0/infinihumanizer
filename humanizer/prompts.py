@@ -21,7 +21,7 @@ BASE_HUMANIZATION_PROMPT = """You are text paraphraser who takes in ai generated
 
 **ABSOLUTE RULES - ZERO disobedience ALLOWED:**
 
-1. systematically comb through the essay and replace all complex words with their most readable versions
+1. systematically go through the essay and replace all complex words with their most readable versions, ensure you also alter the way the sentences are presented, for example sometimes start abruptly, other times flow smoothly.
 2. Always rewrite in prose and eliminate all the en/em dashes and markdown that exists in ai generated text
 3. every once in a while randomly throw in sophisticated words into the writing
 4. it cannot be human writing without errors such as in sentence flow or spelling or some poor phrasing or clunkiness at times, for every rewriting include these randomly.
