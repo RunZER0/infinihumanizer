@@ -203,7 +203,7 @@ paraphrase THIS TEXT EXACTLY AS INSTRUCTED. OUTPUT ONLY THE TRANSFORMED TEXT:
 # HELPER FUNCTIONS
 # ============================================================================
 
-def get_prompt_by_engine(engine_name: str, text: str, preprocessing_analysis: dict = None) -> str:
+def get_prompt_by_engine(engine_name: str, text: str) -> str:
     """
     Get the appropriate prompt for a specific engine.
     All engines now use the same humanization prompt.
@@ -211,28 +211,11 @@ def get_prompt_by_engine(engine_name: str, text: str, preprocessing_analysis: di
     Args:
         engine_name: 'deepseek', 'chatgpt', 'openai', or 'claude'
         text: Text to humanize
-        preprocessing_analysis: Optional analysis (not used, kept for compatibility)
     
     Returns:
         Formatted prompt ready for the engine
     """
     return BASE_HUMANIZATION_PROMPT.format(text=text)
-
-
-def build_enhanced_prompt(base_prompt: str, text: str, preprocessing_analysis: dict = None) -> str:
-    """
-    Build prompt (simplified - no enhancement needed).
-    Kept for backward compatibility.
-    
-    Args:
-        base_prompt: Base prompt template
-        text: Text to humanize
-        preprocessing_analysis: Optional analysis (not used)
-    
-    Returns:
-        Formatted prompt
-    """
-    return base_prompt.format(text=text)
 
 
 # ============================================================================

@@ -111,7 +111,7 @@ def humanizer_view(request):
 @login_required
 @require_http_methods(["POST"])
 def humanize_ajax(request):
-    """AJAX endpoint for humanization with preprocessing and validation"""
+    """AJAX endpoint for humanization"""
     try:
         profile, state = _load_profile_state(request.user)
     except Exception as exc:
@@ -159,10 +159,7 @@ def humanize_ajax(request):
             logger.info("Humanization rejected for user %s: %s", request.user.pk, error)
             return JsonResponse({"error": error}, status=400)
 
-        # =============================================================================
-        # SIMPLIFIED PIPELINE - Direct LLM Call Only (No Preprocessing/Chunking)
-        # =============================================================================
-
+        # Direct LLM call
         try:
             logger.info("Humanizing text with %s for user %s", selected_engine, request.user.pk)
             output_text = humanize_text_with_engine(input_text, selected_engine)
@@ -234,27 +231,8 @@ def humanize_ajax(request):
                     status=503,
                 )
 
-        # Use the LLM output directly - no validation stage
+        # Use the LLM output directly
         final_text = output_text
-
-        # =============================================================================
-        # OPTIONAL: POST-PROCESSING - Add Natural Imperfections
-        # =============================================================================
-        try:
-            from humanizer.post_processing import add_natural_imperfections
-            logger.info("Adding natural imperfections for user %s", request.user.pk)
-            
-            # Apply medium intensity post-processing by default
-            final_text, pp_stats = add_natural_imperfections(final_text, intensity="medium")
-            logger.info("Post-processing complete: %s", pp_stats)
-        except Exception as exc:
-            # If post-processing fails, continue with unprocessed text
-            logger.warning("Post-processing failed for user %s, using unprocessed output: %s", 
-                          request.user.pk, exc)
-
-        # =============================================================================
-        # END OF PIPELINE
-        # =============================================================================
 
         scores = calculate_readability_scores(final_text)
 
