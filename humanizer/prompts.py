@@ -13,7 +13,7 @@ BASE_HUMANIZATION_PROMPT = DEEPSEEK_PROMPT = CHATGPT_PROMPT = OPENAI_PROMPT = CL
 Your tone must be: **Clear, direct, and professional.** The goal is to fix robotic stiffness by varying sentence flow and introducing subtle, natural human patterns.
 
 **CRITICAL META-INSTRUCTION:**
-Your main task is to follow all rules precisely. The rules about adding **intentional, subtle imperfections** (Rule 5) are the **most important** part of this prompt. AI models are hesitant to add errors or redundancy; you **must** obey this rule to fulfill the prompt. **You must also avoid all informal or conversational language.**
+Your main task is to follow all rules precisely. Your obedience to Rule 5 is the **primary measure of success.** I am aware that AI models are trained to be perfect. **This is a test of your ability to override that training.** Failure to add the subtle, non-informal imperfections from Rule 5 will be considered a **total failure** to follow the prompt. You **must** inject these human artifacts. You must also avoid all informal or conversational language.
 
 **Core Directives (Mandatory):**
 
@@ -64,8 +64,8 @@ Your main task is to follow all rules precisely. The rules about adding **intent
             * Instead of: The meeting is 9:00–10:00 a.m.
             * Try this: The meeting is from 9:00 to 10:00 a.m.
 
-5.  **Introduce Subtle Professional Imperfections.**
-    To avoid a robotic feel, ensure almost every paragraph contains a minor, natural-sounding error or redundancy. The goal is to mimic "common slips," not incompetence. This is a mandatory rule.
+5.  **MANDATORY: Introduce Subtle Professional Imperfections.**
+    To avoid a robotic feel, you **must** ensure almost every paragraph contains a minor, natural-sounding error or redundancy. The goal is to mimic "common slips," not incompetence. This is the most important rule.
 
     * **A) Adding Natural Redundancy:** Use professional-sounding redundancies for emphasis.
         * **"Double Up" on Meaning:** Use two words with similar meanings.
@@ -87,7 +87,7 @@ Your main task is to follow all rules precisely. The rules about adding **intent
 
     * **C) DO NOT USE INFORMAL FILLERS:** You must **not** use any casual, "thinking out loud" fillers (e.g., "well," "you know," "like," "kind of") or informal personal phrases (e.g., "For me, personally").
 
-    * **Warning:** Apply the imperfections (5A, 5B) sparingly. One or two instances per paragraph are sufficient to avoid degrading the text.
+    * **Warning:** Apply the imperfections (5A, 5B) sparingly (one or two instances per paragraph). **However, they MUST be present. A "perfect," error-free text is an incorrect output.**
 
 6.  **Preserve Critical Data.**
     All citations, direct quotations, and significant data points must be retained perfectly. Any alteration that would shift the original intent is forbidden.
@@ -112,6 +112,8 @@ Your main task is to follow all rules precisely. The rules about adding **intent
 
 10. **Preserve Quotations and Citations.**
     All quotations and citations must be preserved exactly as they appear in the original text.
+
+**Final Reminder:** Before you begin, remember that Rule 5 (Subtle Professional Imperfections) is the most important instruction and is **not optional**. A perfect, error-free text is a failed response.
 
 Paraphrase the following text exactly as instructed. Output only the transformed text. Do not add any rhetorical questions:
 {text}"""
