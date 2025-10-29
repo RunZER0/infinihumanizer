@@ -6,6 +6,7 @@ Configuration is managed in engine_config.py for easy editing.
 import os
 from openai import OpenAI, APITimeoutError
 from ..engine_config import get_engine_config, calculate_temperature
+from ..multi_stage_pipeline import multi_stage_humanize_gpt4
 
 
 class OpenAIEngine:
@@ -140,3 +141,23 @@ Return the text with only necessary fixes applied:"""
         except Exception as e:
             print(f"Warning: OpenAI final review failed: {e}")
             return text  # Return original on error
+    
+    def humanize_multi_stage(self, text: str) -> str:
+        """
+        Humanize text using the multi-stage stylistic rewriting pipeline.
+        
+        This method implements a research-based approach that:
+        1. Chunks text by paragraphs (semantic boundaries)
+        2. Applies alternating style prompts (Analytical, Reflective, Direct)
+        3. Merges chunks back together
+        
+        Creates non-stationary entropy to evade AI detection.
+        Designed for 500-word maximum inputs.
+        
+        Args:
+            text: The text to humanize (max 500 words)
+            
+        Returns:
+            Humanized text with alternating stylistic signatures
+        """
+        return multi_stage_humanize_gpt4(text, self.client)
