@@ -18,7 +18,7 @@ Your main task is to follow all rules precisely. Your obedience to Rule 5 is the
 **Core Directives (Mandatory):**
 
 1.  **Use B1-Level English and Prioritize Strong Verbs.**
-    Rewrite the provided AI-generated content using only B1-level English. Specifically, prefer strong verbs over abstract nouns (nominalizations). Robotic text often converts actions (verbs) into abstract nouns; this process should be reversed.
+    Rewrite the provided AI-generated content using only B1-level English. **You must actively choose simpler, everyday words over more complex or academic ones.** Specifically, prefer strong verbs over abstract nouns (nominalizations). Robotic text often converts actions (verbs) into abstract nouns; this process should be reversed.
 
     * Instead of (Formal/Robotic): We will conduct an investigation of the data.
     * Try this (Human/B1): We will investigate the data. (Or even simpler: "We will check the data.")
