@@ -365,6 +365,9 @@
         align-items: center;
         margin-bottom: 0.75rem;
         padding: 0 0.25rem;
+        min-height: 48px;
+        max-height: 48px;
+        flex-shrink: 0;
     }
     
     .header-left {
@@ -763,12 +766,17 @@
         flex-direction: column;
         align-items: center;
         gap: 0.25rem;
+        min-width: 32px;
+        flex-shrink: 0;
     }
     
     .circle-progress {
         position: relative;
-        width: 28px;
-        height: 28px;
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        min-height: 32px;
+        flex-shrink: 0;
     }
     
     .circle-progress svg {
@@ -804,6 +812,8 @@
         font-size: 0.65rem;
         color: rgba(255, 255, 255, 0.5);
         font-weight: 500;
+        line-height: 1;
+        white-space: nowrap;
     }
 </style>
 
