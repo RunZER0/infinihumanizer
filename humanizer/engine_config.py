@@ -1,10 +1,10 @@
 """
 Engine Configuration File - UPDATED
 =========================
-All engines now use the universal humanization prompt from prompts.py
+Each engine uses its own optimized humanization prompt from prompts.py
 """
 
-from .prompts import BASE_HUMANIZATION_PROMPT
+from .prompts import DEEPSEEK_PROMPT, CLAUDE_PROMPT, OPENAI_PROMPT
 
 # ============================================================================
 # DEEPSEEK ENGINE CONFIGURATION
@@ -20,7 +20,7 @@ DEEPSEEK_CONFIG = {
     "max_tokens": 4000,
     
     "system_prompt": "You are a text paraphraser who transforms AI-generated text into human-sounding output.",
-    "user_prompt_template": BASE_HUMANIZATION_PROMPT
+    "user_prompt_template": DEEPSEEK_PROMPT
 }
 
 # ============================================================================
@@ -37,7 +37,7 @@ CLAUDE_CONFIG = {
     "max_tokens": 8192,
     
     "system_prompt": "You are a text paraphraser who transforms AI-generated text into human-sounding output.",
-    "user_prompt_template": BASE_HUMANIZATION_PROMPT
+    "user_prompt_template": CLAUDE_PROMPT
 }
 
 # ============================================================================
@@ -57,7 +57,7 @@ OPENAI_CONFIG = {
     "presence_penalty": 0.2,
     
     "system_prompt": "You are a text paraphraser who transforms AI-generated text into human-sounding output.",
-    "user_prompt_template": BASE_HUMANIZATION_PROMPT
+    "user_prompt_template": OPENAI_PROMPT
 }
 
 # ============================================================================
