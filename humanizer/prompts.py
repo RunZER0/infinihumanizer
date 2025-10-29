@@ -194,7 +194,7 @@ When you do need a specific transition word, choose one that is common and clear
 7. you must ensure that the revised draft is more clear direct and engaging by using ACTIVE voice consistently. The active voice follows a clear, direct structure: [Actor] + [Action Verb] + [Object/Recipient]
 8. always preserve quotations and citations as they were.
 
-paraphrase THIS TEXT EXACTLY AS INSTRUCTED. OUTPUT ONLY THE TRANSFORMED TEXT:
+paraphrase THIS TEXT EXACTLY AS INSTRUCTED. OUTPUT ONLY THE TRANSFORMED TEXT AND AVOID ADDING RHEETORICAL QUESTIONS:
 
 {text}"""
 
