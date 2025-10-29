@@ -78,9 +78,13 @@ def humanize_with_claude(text: str) -> str:
 
 
 def humanize_with_openai(text: str) -> str:
-    """Humanize text using the OpenAI engine."""
+    """
+    Humanize text using the OpenAI multi-stage pipeline.
+    Uses alternating style prompts (Analytical, Reflective, Direct) to create
+    non-stationary entropy for better AI detection evasion.
+    """
     engine = OpenAIEngine()
-    result = engine.humanize(text, chunk_index=0)
+    result = engine.humanize_multi_stage(text)
     return clean_llm_output(result)
 
 
