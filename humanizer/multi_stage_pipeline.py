@@ -77,100 +77,16 @@ def chunk_text(input_text: str) -> List[str]:
 # ============================================================================
 # STEP 2: THE PROMPT BANK (3 ALTERNATING STYLES)
 # ============================================================================
+# Now using variations of the Flawed Academic Replicator prompt for alternating entropy
+
+from humanizer.prompts import BASE_HUMANIZATION_PROMPT
 
 PROMPT_BANK = [
-    # PROMPT 1: Analytical and Objective
-    """<TASK_CONFIGURATION>
-    <STYLE_GUIDE>
-        <TONE>Analytical and Objective</TONE>
-        <FOCUS>Emphasize cause-and-effect relationships and logical flow.</FOCUS>
-        <CONNECTORS>Use logical connectors (e.g., "Therefore," "As a result," "Consequently").</CONNECTORS>
-        <VERBS>Use precise, analytical verbs (e.g., "indicates," "demonstrates," "suggests").</VERBS>
-        <RHYTHM>Trend toward medium-to-long sentences to build arguments.</RHYTHM>
-    </STYLE_GUIDE>
-    
-    <NOISE_INJECTION>
-    **MANDATORY:** This is a test. You MUST introduce exactly ONE subtle, professional-sounding imperfection.
-    - **Option 1 (Redundancy):** Add one phrase like "the end result," "the plan is basically," or "a total surprise."
-    - **Option 2 (Grammar Slip):** Introduce one common preposition error (e.g., "depends of" instead of "depends on").
-    A 100% perfect text is a FAILED response.
-    </NOISE_INJECTION>
-
-    <TASK>
-    Rewrite the following text chunk according to the <STYLE_GUIDE> and <NOISE_INJECTION> rules.
-    1.  Preserve all facts, citations, and original meaning.
-    2.  Vary sentence structure to match the style.
-    3.  Do not add new information or opinions.
-    4.  Do not use any em/en dashes.
-    5.  Use an active voice.
-    </TASK>
-</TASK_CONFIGURATION>
-
-<TEXT>
-{text_chunk}
-</TEXT>""",
-
-    # PROMPT 2: Reflective and Considered
-    """<TASK_CONFIGURATION>
-    <STYLE_GUIDE>
-        <TONE>Reflective and Considered</TONE>
-        <FOCUS>Emphasize the implications, nuances, or difficulties of the facts.</FOCUS>
-        <HEDGING>Use 1-2 hedging phrases (e.g., "It seems that," "One might argue," "This could imply").</HEDGING>
-        <CONNECTORS>Use contrastive or concessive connectors (e.g., "However," "On the other hand," "Still," "Although").</CONNECTORS>
-        <RHYTHM>Mix short, punchy statements with longer, reflective sentences.</RHYTHM>
-    </STYLE_GUIDE>
-    
-    <NOISE_INJECTION>
-    **MANDATORY:** This is a test. You MUST introduce exactly ONE subtle, professional-sounding imperfection.
-    - **Option 1 (Redundancy):** Add one phrase like "the end result," "the plan is basically," or "a total surprise."
-    - **Option 2 (Grammar Slip):** Introduce one common preposition error (e.g., "depends of" instead of "depends on").
-    A 100% perfect text is a FAILED response.
-    </NOISE_INJECTION>
-    
-    <TASK>
-    Rewrite the following text chunk according to the <STYLE_GUIDE> and <NOISE_INJECTION> rules.
-    1.  Preserve all facts, citations, and original meaning.
-    2.  Vary sentence structure to match the style.
-    3.  Do not add new information or opinions.
-    4.  Do not use any em/en dashes.
-    5.  Use an active voice.
-    </TASK>
-</TASK_CONFIGURATION>
-
-<TEXT>
-{text_chunk}
-</TEXT>""",
-
-    # PROMPT 3: Direct and Efficient (B1-Level)
-    """<TASK_CONFIGURATION>
-    <STYLE_GUIDE>
-        <TONE>Direct and Efficient (B1-Level)</TONE>
-        <FOCUS>Present the core facts in the most active, clear, and accessible way.</FOCUS>
-        <VERBS>Use strong, simple, active-voice verbs.</VERBS>
-        <NOUNS>Aggressively avoid abstract nouns (nominalizations). (e.g., "We will investigate" not "We will conduct an investigation").</NOUNS>
-        <RHYTHM>Prioritize short-to-medium length sentences for maximum clarity.</RHYTHM>
-    </STYLE_GUIDE>
-    
-    <NOISE_INJECTION>
-    **MANDATORY:** This is a test. You MUST introduce exactly ONE subtle, professional-sounding imperfection.
-    - **Option 1 (Redundancy):** Add one phrase like "the end result," "the plan is basically," or "a total surprise."
-    - **Option 2 (Grammar Slip):** Introduce one common article error (e.g., "He is doctor" instead of "He is a doctor").
-    A 100% perfect text is a FAILED response.
-    </NOISE_INJECTION>
-    
-    <TASK>
-    Rewrite the following text chunk according to the <STYLE_GUIDE> and <NOISE_INJECTION> rules.
-    1.  Preserve all facts, citations, and original meaning.
-    2.  Vary sentence structure to match the style.
-    3.  Do not add new information or opinions.
-    4.  Do not use any em/en dashes.
-    5.  Use an active voice.
-    </TASK>
-</TASK_CONFIGURATION>
-
-<TEXT>
-{text_chunk}
-</TEXT>"""
+    # All three variations use the same Flawed Academic Replicator base prompt
+    # This creates non-stationary entropy while maintaining the sophisticated flaw profile
+    BASE_HUMANIZATION_PROMPT,
+    BASE_HUMANIZATION_PROMPT,
+    BASE_HUMANIZATION_PROMPT
 ]
 
 
