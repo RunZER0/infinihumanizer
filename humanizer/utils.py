@@ -77,38 +77,40 @@ def humanize_with_claude(text: str) -> str:
         raise RuntimeError(f"Claude API error: {str(e)}")
 
 
-def humanize_with_openai(text: str) -> str:
+def humanize_with_openai(text: str, mode: str = "recommended") -> str:
     """
-    Humanize text using the OpenAI multi-stage pipeline.
-    Uses alternating style prompts (Analytical, Reflective, Direct) to create
-    non-stationary entropy for better AI detection evasion.
+    Humanize text using the OpenAI fine-tuned model with specified mode.
+    
+    Args:
+        text: Text to humanize
+        mode: Humanization mode (recommended, formal, conversational, informal, academic)
     """
     engine = OpenAIEngine()
-    result = engine.humanize_multi_stage(text)
+    result = engine.humanize(text, mode=mode)
     return clean_llm_output(result)
 
 
 def humanize_with_deepseek(text: str) -> str:
-    """Humanize text using the DeepSeek engine."""
+    """Humanize text using the DeepSeek engine (DEPRECATED)."""
     engine = DeepSeekEngine()
     result = engine.humanize(text, chunk_index=0)
     return clean_llm_output(result)
 
 
-ENGINE_HANDLERS: Dict[str, Callable[[str], str]] = {
+ENGINE_HANDLERS: Dict[str, Callable] = {
     "claude": humanize_with_claude,
     "openai": humanize_with_openai,
     "deepseek": humanize_with_deepseek,
 }
 
 
-def humanize_text(text: str, engine: str | None = None) -> str:
+def humanize_text(text: str, engine: str | None = None, mode: str = "recommended") -> str:
     """Main entry point for text humanization."""
-    chosen = (engine or os.environ.get("HUMANIZER_ENGINE") or "claude").lower()
-    return humanize_text_with_engine(text, chosen)
+    chosen = (engine or os.environ.get("HUMANIZER_ENGINE") or "openai").lower()
+    return humanize_text_with_engine(text, chosen, mode=mode)
 
 
-def humanize_text_with_engine(text: str, engine: str) -> str:
+def humanize_text_with_engine(text: str, engine: str, mode: str = "recommended") -> str:
     """Route to the appropriate LLM engine - NO CHUNKING."""
     
     # SAFETY CHECK: Limit total input size
@@ -121,10 +123,14 @@ def humanize_text_with_engine(text: str, engine: str) -> str:
     
     # Direct call to engine - no chunking
     handler = ENGINE_HANDLERS[engine]
-    print(f"🚀 Processing with {engine} engine (no chunking)...")
+    print(f"🚀 Processing with {engine} engine (mode: {mode})...")
     
     try:
-        humanized_text = handler(text)
+        # Pass mode parameter if using OpenAI
+        if engine == "openai":
+            humanized_text = handler(text, mode=mode)
+        else:
+            humanized_text = handler(text)
         print(f"✅ Successfully processed {len(text)} → {len(humanized_text)} chars")
         return humanized_text
     except Exception as error:

@@ -15,6 +15,7 @@ from django.views.decorators.http import require_http_methods
 
 from accounts.models import Profile
 from .utils import humanize_text_with_engine, MAX_TOTAL_CHARS
+from .modes_config import get_all_modes
 
 
 logger = logging.getLogger(__name__)
@@ -108,6 +109,13 @@ def humanizer_view(request):
     )
 
 
+@require_http_methods(["GET"])
+def get_modes(request):
+    """API endpoint to get available humanization modes"""
+    modes = get_all_modes()
+    return JsonResponse({"modes": modes})
+
+
 @login_required
 @require_http_methods(["POST"])
 def humanize_ajax(request):
@@ -122,19 +130,21 @@ def humanize_ajax(request):
         )
 
     input_text = request.POST.get("text", "").strip()
-    selected_engine = (request.POST.get("engine") or "claude").lower()  # Default to Claude (OXO)
+    selected_engine = (request.POST.get("engine") or "openai").lower()  # Default to OpenAI (smurk)
+    selected_mode = request.POST.get("mode", "recommended").lower()  # Default to recommended mode
     word_count = len(input_text.split())
     
     # Maximum INPUT word limit to prevent timeouts and enforce UI limit
     # NOTE: This limit applies ONLY to input text, not output text
     # Output can be any length regardless of input size
-    MAX_WORD_COUNT = 500
+    MAX_WORD_COUNT = 1000
 
     logger.info(
         "Humanization request received",
         extra={
             "user_id": request.user.pk,
             "engine": selected_engine,
+            "mode": selected_mode,
             "word_count": word_count,
             "word_balance": state["word_balance"],
         },
@@ -145,10 +155,11 @@ def humanize_ajax(request):
         if not input_text:
             return JsonResponse({"error": "Please provide text to humanize."}, status=400)
 
-        if selected_engine not in ("deepseek", "claude", "openai"):
-            return JsonResponse({"error": "Invalid engine selection."}, status=400)
+        # Only allow openai (smurk) engine now
+        if selected_engine != "openai":
+            return JsonResponse({"error": "Invalid engine selection. Only OpenAI is supported."}, status=400)
         
-        # Check if INPUT exceeds the 500-word limit (output can be any length)
+        # Check if INPUT exceeds the 1000-word limit (output can be any length)
         if word_count > MAX_WORD_COUNT:
             return JsonResponse({
                 "error": f"Input text exceeds maximum limit of {MAX_WORD_COUNT} words. You submitted {word_count} words. Please reduce your input text size. (Note: Output text can be any length)"
@@ -159,10 +170,10 @@ def humanize_ajax(request):
             logger.info("Humanization rejected for user %s: %s", request.user.pk, error)
             return JsonResponse({"error": error}, status=400)
 
-        # Direct LLM call
+        # Direct LLM call with mode support
         try:
-            logger.info("Humanizing text with %s for user %s", selected_engine, request.user.pk)
-            output_text = humanize_text_with_engine(input_text, selected_engine)
+            logger.info("Humanizing text with %s (mode: %s) for user %s", selected_engine, selected_mode, request.user.pk)
+            output_text = humanize_text_with_engine(input_text, selected_engine, mode=selected_mode)
             
             # If output is empty or too short, something went wrong
             if not output_text or len(output_text.strip()) < 10:

@@ -9,7 +9,7 @@ Research-based approach:
 - Execution: Apply alternating style prompts (Analytical, Reflective, Direct)
 - Post-processing: Reassemble chunks with natural transitions
 
-This pipeline is designed for 500-word inputs maximum.
+This pipeline is designed for 1000-word inputs maximum.
 """
 
 import re
@@ -28,7 +28,7 @@ def chunk_text(input_text: str) -> List[str]:
     - If a single chunk is > 400 words, split at sentence boundaries
     
     Args:
-        input_text: The text to chunk (max 500 words)
+        input_text: The text to chunk (max 1000 words)
         
     Returns:
         List of text chunks
@@ -176,7 +176,7 @@ def multi_stage_humanize_gpt4(input_text: str, openai_client) -> str:
     3. Post-processing: Merge chunks back together
     
     Args:
-        input_text: User input text (max 500 words)
+        input_text: User input text (max 1000 words)
         openai_client: Initialized OpenAI client
         
     Returns:
@@ -213,7 +213,7 @@ def print_pipeline_info():
     print("\nKey Features:")
     print("  - Creates non-stationary entropy (varies style paragraph-to-paragraph)")
     print("  - Mandatory noise injection (subtle professional imperfections)")
-    print("  - Designed for 500-word maximum input")
+    print("  - Designed for 1000-word maximum input")
     print("  - Research-based approach for evading AI detection")
     print("\n" + "=" * 80)
 

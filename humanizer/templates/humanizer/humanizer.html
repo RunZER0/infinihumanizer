@@ -150,6 +150,18 @@
         border-right: none;
     }
     
+    /* Hover behavior - auto expand */
+    .sidebar:hover {
+        width: 300px;
+        padding: 1.5rem;
+        transform: translateX(0);
+        border-right: 1px solid rgba(0, 212, 255, 0.2);
+    }
+    
+    .sidebar:hover .sidebar-content {
+        opacity: 1;
+    }
+    
     .sidebar-content {
         opacity: 1;
         transition: opacity 0.3s ease;
@@ -423,6 +435,41 @@
     
     .word-limit-warning.visible {
         opacity: 1;
+    }
+    
+    /* Mode Selector */
+    .mode-selector {
+        display: flex;
+        align-items: center;
+        margin-left: 1rem;
+    }
+    
+    .mode-selector label {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .mode-dropdown {
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(0, 212, 255, 0.3);
+        border-radius: 6px;
+        color: #00D4FF;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .mode-dropdown:hover {
+        background: rgba(0, 212, 255, 0.1);
+        border-color: #00D4FF;
+    }
+    
+    .mode-dropdown:focus {
+        outline: none;
+        border-color: #00D4FF;
+        box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.2);
     }
     
     .text-box {
@@ -863,45 +910,26 @@
             </a>
         </div>
         
-        <!-- Model Selection Section -->
+        <!-- AI Model Info Section -->
         <div class="sidebar-section">
-            <div class="sidebar-title">Select AI Model</div>
+            <div class="sidebar-title">AI Model</div>
             
-            <label class="model-card" data-engine="deepseek">
-                <input type="radio" name="engine" value="deepseek">
-                <div class="model-header">
-                    <div class="model-left">
-                        <span class="model-icon">🔥</span>
-                        <span class="model-name">Loly</span>
-                    </div>
-                    <div class="model-badge">Beat Detectors</div>
-                </div>
-                <div class="model-description">Optimized to bypass AI detection systems</div>
-            </label>
-            
-            <label class="model-card selected" data-engine="claude">
-                <input type="radio" name="engine" value="claude" checked>
-                <div class="model-header">
-                    <div class="model-left">
-                        <span class="model-icon">⭕</span>
-                        <span class="model-name">OXO</span>
-                    </div>
-                    <div class="model-badge">Balanced</div>
-                </div>
-                <div class="model-description">Perfect balance of quality and authenticity</div>
-            </label>
-            
-            <label class="model-card" data-engine="openai">
-                <input type="radio" name="engine" value="openai">
+            <div class="model-card selected" style="pointer-events: none;">
                 <div class="model-header">
                     <div class="model-left">
                         <span class="model-icon">⚡</span>
                         <span class="model-name">Smurk</span>
                     </div>
-                    <div class="model-badge">Best Quality</div>
+                    <div class="model-badge">Fine-Tuned</div>
                 </div>
-                <div class="model-description">Highest quality output with natural errors</div>
-            </label>
+                <div class="model-description">Custom-trained GPT-4o Mini optimized for humanization</div>
+            </div>
+            
+            <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(0, 212, 255, 0.05); border-radius: 8px; border: 1px solid rgba(0, 212, 255, 0.2);">
+                <p style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.7); margin: 0;">
+                    💡 <strong>Tip:</strong> Use "Recommended" mode for best results beating AI detectors.
+                </p>
+            </div>
         </div>
         </div>
     </div>
@@ -915,13 +943,23 @@
                     <div class="header-left">
                         <div class="container-label">
                             <span>📝</span>
-                            <span>Input Text (Max 500 words)</span>
+                            <span>Input Text (Max 1000 words)</span>
                         </div>
                         <div class="word-counter">
                             <span>Words:</span>
                             <span class="word-count" id="inputWordCount">0</span>
                             <span>/</span>
-                            <span>500</span>
+                            <span>1000</span>
+                        </div>
+                        <div class="mode-selector">
+                            <label for="modeSelect" style="margin-right: 8px; font-weight: 600;">Mode:</label>
+                            <select id="modeSelect" class="mode-dropdown">
+                                <option value="recommended" selected>⭐ Recommended</option>
+                                <option value="formal">Formal</option>
+                                <option value="conversational">Conversational</option>
+                                <option value="informal">Informal</option>
+                                <option value="academic">Academic</option>
+                            </select>
                         </div>
                         <span class="word-limit-warning" id="wordLimitWarning"></span>
                     </div>
@@ -929,7 +967,7 @@
                 <textarea 
                     id="inputText" 
                     class="text-box" 
-                    placeholder="Paste your input text here (max 500 words). Output can be any length."
+                    placeholder="Paste your input text here (max 1000 words). Output can be any length."
                 ></textarea>
                 <button id="humanizeBtn" class="btn btn-primary">
                     <span id="btnText">🤖 Humanize Text</span>
@@ -985,7 +1023,6 @@
                     id="outputText" 
                     class="text-box" 
                     placeholder="Humanized text will appear here..."
-                    readonly
                 ></textarea>
             </div>
         </div>
@@ -1277,7 +1314,7 @@ function showToast(message, type = 'success') {
 
 // Word count function
 // Maximum INPUT word limit (output has no limit)
-const MAX_WORD_LIMIT = 500;
+const MAX_WORD_LIMIT = 1000;
 let typingTimeout = null;
 let hasShownToast = false;
 
@@ -1341,7 +1378,7 @@ function updateWordCount(textareaId, counterId) {
         
         // Show toast notification (only once per session of being over limit)
         if (!hasShownToast) {
-            showToast('Maximum 500 words allowed for INPUT. Please reduce your input text. (Output can be any length)', 'error');
+            showToast('Maximum 1000 words allowed for INPUT. Please reduce your input text. (Output can be any length)', 'error');
             hasShownToast = true;
         }
     } else {
@@ -1369,7 +1406,7 @@ document.getElementById('inputText').addEventListener('input', function() {
     updateWordCount('inputText', 'inputWordCount');
 });
 
-// Sidebar toggle
+// Sidebar hover - no need for manual toggle anymore, but keep for mobile fallback
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     const toggle = document.getElementById('sidebarToggle');
@@ -1377,19 +1414,11 @@ function toggleSidebar() {
     toggle.classList.toggle('collapsed');
 }
 
-// Model selection
-document.querySelectorAll('.model-card').forEach(card => {
-    card.addEventListener('click', function() {
-        document.querySelectorAll('.model-card').forEach(c => c.classList.remove('selected'));
-        this.classList.add('selected');
-        this.querySelector('input[type="radio"]').checked = true;
-    });
-});
-
 // Humanize button
 document.getElementById('humanizeBtn').addEventListener('click', async function() {
     const inputText = document.getElementById('inputText').value.trim();
-    const selectedEngine = document.querySelector('input[name="engine"]:checked').value;
+    const selectedEngine = 'openai';  // Only using OpenAI (smurk) now
+    const selectedMode = document.getElementById('modeSelect').value;
     
     if (!inputText) {
         showToast('Please enter some text to humanize', 'error');
@@ -1397,7 +1426,7 @@ document.getElementById('humanizeBtn').addEventListener('click', async function(
     }
     
     // Check word count limit - use consistent word counting logic
-    // NOTE: This 500-word limit applies ONLY to input, not output
+    // NOTE: This 1000-word limit applies ONLY to input, not output
     const wordCount = countWords(inputText);
     if (wordCount > MAX_WORD_LIMIT) {
         showToast(`Input text exceeds ${MAX_WORD_LIMIT} word limit. Please reduce your input text. (Output can be any length)`, 'error');
@@ -1421,7 +1450,7 @@ document.getElementById('humanizeBtn').addEventListener('click', async function(
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'X-CSRFToken': csrftoken
             },
-            body: `text=${encodeURIComponent(inputText)}&engine=${encodeURIComponent(selectedEngine)}`
+            body: `text=${encodeURIComponent(inputText)}&engine=${encodeURIComponent(selectedEngine)}&mode=${encodeURIComponent(selectedMode)}`
         });
         
         if (!response.ok) {

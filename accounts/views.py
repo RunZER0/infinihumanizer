@@ -16,7 +16,12 @@ except ImportError:
     send_email_confirmation = None
 
 from .forms import SignUpForm
-from .models import Profile
+from .models import Profile, WhatsAppVerification
+from .whatsapp_verification import (
+    generate_verification_code,
+    encode_to_morse,
+    generate_whatsapp_qr
+)
 from humanizer.utils import humanize_text_with_engine
 
 
@@ -66,17 +71,33 @@ def signup_view(request):
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            user = form.save(commit=False)
+            user.is_active = False  # User needs WhatsApp verification
+            user.save()
             
             # Create profile for new user
             Profile.objects.get_or_create(user=user)
             
-            # Log the user in with backend specified
-            from django.contrib.auth import get_backends
-            backend = get_backends()[0]
-            login(request, user, backend=f'{backend.__module__}.{backend.__class__.__name__}')
+            # Generate verification code and morse encoding
+            numeric_code = generate_verification_code()
+            encoded_code = encode_to_morse(numeric_code)
             
-            return redirect("humanizer")  # Redirect to the humanizer view
+            # Store verification data
+            WhatsAppVerification.objects.create(
+                user=user,
+                encoded_code=encoded_code,
+                numeric_code=numeric_code
+            )
+            
+            # Generate QR code
+            qr_code_base64 = generate_whatsapp_qr(user.email, encoded_code)
+            
+            # Show QR code page
+            return render(request, "account/whatsapp_verify.html", {
+                "email": user.email,
+                "qr_code": qr_code_base64,
+                "encoded_code": encoded_code
+            })
     else:
         form = SignUpForm()
     return render(request, "account/signup.html", {"form": form})
@@ -133,6 +154,47 @@ def humanizer_view(request):
     }
 
     return render(request, "humanizer/humanizer.html", context)
+
+
+def verify_whatsapp_code(request):
+    """
+    Endpoint for verifying the 6-digit numeric code sent via WhatsApp.
+    """
+    if request.method == "POST":
+        email = request.POST.get("email")
+        code = request.POST.get("code")
+        
+        try:
+            from django.contrib.auth.models import User
+            user = User.objects.get(email=email)
+            verification = WhatsAppVerification.objects.get(user=user)
+            
+            if verification.is_verified:
+                messages.info(request, "This account is already verified.")
+                return redirect("account_login")
+            
+            # Check if submitted code matches
+            if code == verification.numeric_code:
+                # Activate user
+                user.is_active = True
+                user.save()
+                
+                # Mark as verified
+                verification.is_verified = True
+                from django.utils import timezone
+                verification.verified_at = timezone.now()
+                verification.save()
+                
+                messages.success(request, "✅ Your account has been verified! You can now log in.")
+                return redirect("account_login")
+            else:
+                messages.error(request, "❌ Invalid verification code. Please try again.")
+        
+        except (User.DoesNotExist, WhatsAppVerification.DoesNotExist):
+            messages.error(request, "❌ Email not found or verification pending.")
+    
+    return render(request, "account/verify_code.html")
+
 
 
 def resend_verification(request):

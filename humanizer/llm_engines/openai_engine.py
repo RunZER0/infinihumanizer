@@ -1,16 +1,16 @@
 """
-OpenAI Engine for text humanization.
-Configuration is managed in engine_config.py for easy editing.
+OpenAI Engine for text humanization with mode support.
+Uses fine-tuned model with multiple humanization modes.
 """
 
 import os
 from openai import OpenAI, APITimeoutError
-from ..engine_config import get_engine_config, calculate_temperature
+from ..modes_config import FINETUNED_MODEL, get_mode_config, format_prompt_for_mode, DEFAULT_MODE
 from ..multi_stage_pipeline import multi_stage_humanize_gpt4
 
 
 class OpenAIEngine:
-    """OpenAI-based text humanization engine."""
+    """OpenAI-based text humanization engine with fine-tuned model and modes."""
     
     def __init__(self):
         """Initialize OpenAI engine with API key from environment."""
@@ -19,52 +19,53 @@ class OpenAIEngine:
             raise RuntimeError("OPENAI_API_KEY environment variable is not set")
         
         # Use 120s timeout to handle large inputs without worker crashes
-        # This provides enough time for processing while still failing before
-        # the Gunicorn worker timeout (180s)
         self.client = OpenAI(
             api_key=api_key,
             timeout=120.0,
             max_retries=2
         )
         
-        # Load configuration from engine_config.py
-        self.config = get_engine_config("openai")
+        # Use fine-tuned model
+        self.model = FINETUNED_MODEL
     
-    def humanize(self, text: str, chunk_index: int = 0) -> str:
+    def humanize(self, text: str, mode: str = None) -> str:
         """
-        Humanize text using OpenAI with dynamic temperature and streaming.
+        Humanize text using OpenAI with specified mode.
         
         Args:
             text: The text to humanize
-            chunk_index: Index of chunk for temperature variation
+            mode: Humanization mode (recommended, formal, conversational, informal, academic)
             
         Returns:
             Humanized text from OpenAI
         """
-        # Calculate dynamic temperature from config
-        temperature = calculate_temperature(
-            self.config["base_temperature"],
-            self.config["temperature_variation"],
-            chunk_index
-        )
+        # Default to recommended mode
+        if not mode:
+            mode = DEFAULT_MODE
         
-        # Get prompts from config
-        system_prompt = self.config["system_prompt"]
-        user_prompt = self.config["user_prompt_template"].format(text=text)
+        # Get mode configuration
+        mode_config = get_mode_config(mode)
+        
+        # Prepare prompt based on mode
+        if mode_config["use_prompt"]:
+            # Mode uses custom prompt
+            user_prompt = format_prompt_for_mode(mode, text)
+            messages = [
+                {"role": "user", "content": user_prompt}
+            ]
+        else:
+            # Recommended mode - no prompt, just the text
+            messages = [
+                {"role": "user", "content": text}
+            ]
         
         try:
             # Use streaming to avoid ReadTimeoutError on large responses
             stream = self.client.chat.completions.create(
-                model=self.config["model"],
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
-                ],
-                temperature=temperature,
-                top_p=self.config.get("top_p", 0.9),
-                frequency_penalty=self.config.get("frequency_penalty", 0.2),
-                presence_penalty=self.config.get("presence_penalty", 0.2),
-                max_tokens=self.config["max_tokens"],
+                model=self.model,
+                messages=messages,
+                temperature=mode_config["temperature"],
+                max_tokens=4000,
                 stream=True
             )
             
@@ -152,10 +153,10 @@ Return the text with only necessary fixes applied:"""
         3. Merges chunks back together
         
         Creates non-stationary entropy to evade AI detection.
-        Designed for 500-word maximum inputs.
+        Designed for 1000-word maximum inputs.
         
         Args:
-            text: The text to humanize (max 500 words)
+            text: The text to humanize (max 1000 words)
             
         Returns:
             Humanized text with alternating stylistic signatures

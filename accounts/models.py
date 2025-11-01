@@ -46,3 +46,20 @@ class EmailVerification(models.Model):
     token = models.CharField(max_length=64, blank=True, null=True)  # for your email links
     created_at = models.DateTimeField(auto_now_add=True)
 
+
+class WhatsAppVerification(models.Model):
+    """
+    Stores verification codes for WhatsApp-based signup approval.
+    Uses morse code encoding (A-J representing digits 1-0).
+    """
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='whatsapp_verification')
+    encoded_code = models.CharField(max_length=6, help_text="Morse code (A-J)")
+    numeric_code = models.CharField(max_length=6, help_text="Actual 6-digit code")
+    is_verified = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    verified_at = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"WhatsApp verification for {self.user.email} - {'Verified' if self.is_verified else 'Pending'}"
+
+

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Enter Verification Code - InfiniHumanizer{% endblock %}
+
+{% block content %}
+<div class="verification-container" style="max-width: 500px; margin: 100px auto; padding: 40px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    <h2 style="text-align: center; color: #007bff; margin-bottom: 30px;">
+        🔐 Enter Verification Code
+    </h2>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" style="padding: 15px; margin-bottom: 20px; border-radius: 6px; {% if message.tags == 'error' %}background: #f8d7da; color: #721c24;{% elif message.tags == 'success' %}background: #d4edda; color: #155724;{% else %}background: #d1ecf1; color: #0c5460;{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <p style="text-align: center; color: #666; margin-bottom: 30px;">
+        Enter the 6-digit numeric code you received via email:
+    </p>
+    
+    <form method="post" action="{% url 'verify_whatsapp_code' %}">
+        {% csrf_token %}
+        
+        <div style="margin-bottom: 20px;">
+            <label for="email" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Your Email:</label>
+            <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                required 
+                placeholder="email@example.com"
+                style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 16px;"
+            >
+        </div>
+        
+        <div style="margin-bottom: 30px;">
+            <label for="code" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Verification Code:</label>
+            <input 
+                type="text" 
+                id="code" 
+                name="code" 
+                required 
+                maxlength="6"
+                placeholder="123456"
+                pattern="[0-9]{6}"
+                style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 24px; text-align: center; letter-spacing: 8px; font-family: monospace;"
+            >
+            <small style="display: block; margin-top: 8px; color: #999;">Enter the 6-digit numeric code (not the letters)</small>
+        </div>
+        
+        <button 
+            type="submit" 
+            style="width: 100%; padding: 14px; background: #007bff; color: white; border: none; border-radius: 6px; font-size: 18px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;"
+            onmouseover="this.style.background='#0056b3'"
+            onmouseout="this.style.background='#007bff'"
+        >
+            ✅ Verify Account
+        </button>
+    </form>
+    
+    <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+        <p style="font-size: 14px; color: #666; margin: 0; text-align: center;">
+            <strong>Note:</strong> The admin will decode your request and send you a 6-digit numeric code to the email you signed up with. Check your inbox!
+        </p>
+    </div>
+    
+    <p style="text-align: center; margin-top: 20px;">
+        <a href="{% url 'account_login' %}" style="color: #007bff; text-decoration: none;">← Back to Login</a>
+    </p>
+</div>
+{% endblock %}

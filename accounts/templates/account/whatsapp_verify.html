@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}WhatsApp Verification - InfiniHumanizer{% endblock %}
+
+{% block content %}
+<div class="verification-container" style="max-width: 600px; margin: 80px auto; padding: 40px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;">
+    <h2 style="color: #25D366; margin-bottom: 20px;">
+        📱 WhatsApp Verification Required
+    </h2>
+    
+    <p style="font-size: 16px; color: #666; margin-bottom: 30px;">
+        Thank you for signing up! To verify your account, please scan the QR code below with your phone to send a WhatsApp message.
+    </p>
+    
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+        <p style="font-weight: bold; margin-bottom: 10px;">Your Email:</p>
+        <p style="color: #007bff; font-size: 18px; margin-bottom: 20px;">{{ email }}</p>
+        
+        <p style="font-weight: bold; margin-bottom: 10px;">Verification Code (for admin):</p>
+        <p style="color: #dc3545; font-size: 24px; font-family: monospace; letter-spacing: 3px;">{{ encoded_code }}</p>
+    </div>
+    
+    <div style="margin: 30px 0;">
+        <img src="data:image/png;base64,{{ qr_code }}" alt="WhatsApp QR Code" style="max-width: 300px; border: 2px solid #25D366; border-radius: 8px; padding: 10px; background: white;">
+    </div>
+    
+    <div style="background: #e7f3ff; padding: 20px; border-radius: 8px; border-left: 4px solid #007bff;">
+        <h3 style="color: #007bff; margin-bottom: 15px;">📲 How It Works</h3>
+        <ol style="text-align: left; color: #555; line-height: 1.8;">
+            <li>Scan the QR code above with your phone camera</li>
+            <li>It will open WhatsApp with a pre-filled message</li>
+            <li>Send the message to request approval</li>
+            <li>You'll receive a 6-digit numeric code via email</li>
+            <li>Enter that code to activate your account</li>
+        </ol>
+    </div>
+    
+    <div style="margin-top: 30px;">
+        <a href="{% url 'verify_whatsapp_code' %}" class="btn btn-primary" style="padding: 12px 30px; font-size: 16px; text-decoration: none; background: #007bff; color: white; border-radius: 6px; display: inline-block;">
+            I've Sent the Message - Enter Code
+        </a>
+    </div>
+    
+    <p style="margin-top: 20px; font-size: 14px; color: #999;">
+        Can't scan? Click <a href="https://wa.me/254795191421?text=Kindly%20approve%20my%20signup%20via%20email%3A%20{{ email }}%0A%0AVerification%20Code%3A%20{{ encoded_code }}" target="_blank" style="color: #25D366;">here</a> to open WhatsApp directly.
+    </p>
+</div>
+
+<style>
+.btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+</style>
+{% endblock %}
