@@ -12,10 +12,21 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         users = User.objects.all()
+        total_users = users.count()
         created_count = 0
         updated_count = 0
         
+        self.stdout.write(f"📊 Found {total_users} users in database")
+        
+        if total_users == 0:
+            self.stdout.write(
+                self.style.WARNING('⚠️  No users found in database! Database might be empty.')
+            )
+            return
+        
         for user in users:
+            self.stdout.write(f"   Checking user: {user.email} (is_active={user.is_active})")
+            
             email_address, created = EmailAddress.objects.get_or_create(
                 user=user,
                 email=user.email,
