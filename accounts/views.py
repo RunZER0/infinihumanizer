@@ -31,21 +31,27 @@ logger = logging.getLogger(__name__)
 class VerifiedEmailLoginView(LoginView):
     def form_valid(self, form):
         from django.conf import settings
+        from django.contrib.auth import login
 
         # ✅ Debug output to confirm this custom view is active
         print("✅ USING CUSTOM VerifiedEmailLoginView")
 
         user = form.user_cache
+        print(f"   📧 User: {user.username}, Email: {user.email}")
 
         # In OFFLINE_MODE or DEBUG, skip email verification entirely
         if getattr(settings, 'OFFLINE_MODE', False) or getattr(settings, 'DEBUG', False):
             print("   ⚡ Offline/Debug mode - Skipping email verification")
             self._ensure_profile(user)
+            # Explicitly log the user in
+            login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
+            print(f"   ✅ User logged in: {self.request.user.is_authenticated}")
             # Just proceed with normal login
             return super().form_valid(form)
 
         # In production, enforce verification
         verified = EmailAddress.objects.filter(user=user, verified=True).exists()
+        print(f"   🔍 Email verified: {verified}")
 
         if not verified:
             self.request.session['resend_email'] = user.email
@@ -59,6 +65,9 @@ class VerifiedEmailLoginView(LoginView):
             return render(self.request, self.template_name, context)
 
         self._ensure_profile(user)
+        # Explicitly log the user in
+        login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
+        print(f"   ✅ User logged in: {self.request.user.is_authenticated}")
         return super().form_valid(form)
 
     def _ensure_profile(self, user):
