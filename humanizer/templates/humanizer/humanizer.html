@@ -143,11 +143,10 @@
         scrollbar-color: rgba(0, 212, 255, 0.2) transparent;
     }
     
-    .sidebar.collapsed {
-        width: 0;
-        padding: 0;
+    /* Default collapsed state */
+    .sidebar {
         transform: translateX(-100%);
-        border-right: none;
+        width: 50px;
     }
     
     /* Hover behavior - auto expand */
@@ -160,15 +159,13 @@
     
     .sidebar:hover .sidebar-content {
         opacity: 1;
+        visibility: visible;
     }
     
     .sidebar-content {
-        opacity: 1;
-        transition: opacity 0.3s ease;
-    }
-    
-    .sidebar.collapsed .sidebar-content {
         opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
     }
     
     .sidebar-section {
@@ -390,12 +387,14 @@
         gap: 1rem;
         flex-wrap: nowrap;
         min-width: 0;
+        flex: 1;
     }
     
     .header-right {
         display: flex;
         align-items: center;
         gap: 1rem;
+        flex-shrink: 0;
     }
     
     .container-label {
