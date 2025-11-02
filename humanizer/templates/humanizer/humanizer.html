@@ -380,12 +380,16 @@
         min-height: 48px;
         max-height: 48px;
         flex-shrink: 0;
+        flex-wrap: nowrap;
+        overflow: hidden;
     }
     
     .header-left {
         display: flex;
         align-items: center;
         gap: 1rem;
+        flex-wrap: nowrap;
+        min-width: 0;
     }
     
     .header-right {
@@ -450,10 +454,10 @@
     }
     
     .mode-dropdown {
-        background: rgba(0, 0, 0, 0.5);
-        border: 1px solid rgba(0, 212, 255, 0.3);
+        background: #2c2c2c;
+        border: 1px solid #3a3a3a;
         border-radius: 6px;
-        color: #00D4FF;
+        color: #ffffff;
         padding: 0.4rem 0.8rem;
         font-size: 0.85rem;
         font-weight: 500;
@@ -462,7 +466,7 @@
     }
     
     .mode-dropdown:hover {
-        background: rgba(0, 212, 255, 0.1);
+        background: #3a3a3a;
         border-color: #00D4FF;
     }
     
@@ -470,6 +474,12 @@
         outline: none;
         border-color: #00D4FF;
         box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.2);
+    }
+    
+    .mode-dropdown option {
+        background: #2c2c2c;
+        color: #ffffff;
+        padding: 0.5rem;
     }
     
     .text-box {
@@ -920,9 +930,9 @@
                         <span class="model-icon">⚡</span>
                         <span class="model-name">Smurk</span>
                     </div>
-                    <div class="model-badge">Fine-Tuned</div>
+                    <div class="model-badge">Advanced</div>
                 </div>
-                <div class="model-description">Custom-trained GPT-4o Mini optimized for humanization</div>
+                <div class="model-description">Premium humanization model trained for authenticity</div>
             </div>
             
             <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(0, 212, 255, 0.05); border-radius: 8px; border: 1px solid rgba(0, 212, 255, 0.2);">
@@ -955,6 +965,7 @@
                             <label for="modeSelect" style="margin-right: 8px; font-weight: 600;">Mode:</label>
                             <select id="modeSelect" class="mode-dropdown">
                                 <option value="recommended" selected>⭐ Recommended</option>
+                                <option value="readability">📖 Readability</option>
                                 <option value="formal">Formal</option>
                                 <option value="conversational">Conversational</option>
                                 <option value="informal">Informal</option>

@@ -1,6 +1,5 @@
-"""LLM engine implementations for text humanization."""
+"""Text processing engine implementations."""
 
-from .openai_engine import OpenAIEngine
-from .deepseek_engine import DeepSeekEngine
+from .openai_engine import TextEngine
 
-__all__ = ["OpenAIEngine", "DeepSeekEngine"]
+__all__ = ["TextEngine"]

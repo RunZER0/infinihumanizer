@@ -155,9 +155,9 @@ def humanize_ajax(request):
         if not input_text:
             return JsonResponse({"error": "Please provide text to humanize."}, status=400)
 
-        # Only allow openai (smurk) engine now
+        # Only allow valid engine selection
         if selected_engine != "openai":
-            return JsonResponse({"error": "Invalid engine selection. Only OpenAI is supported."}, status=400)
+            return JsonResponse({"error": "Invalid request. Please try again."}, status=400)
         
         # Check if INPUT exceeds the 1000-word limit (output can be any length)
         if word_count > MAX_WORD_COUNT:
@@ -172,12 +172,12 @@ def humanize_ajax(request):
 
         # Direct LLM call with mode support
         try:
-            logger.info("Humanizing text with %s (mode: %s) for user %s", selected_engine, selected_mode, request.user.pk)
+            logger.info("Humanizing text with mode: %s for user %s", selected_mode, request.user.pk)
             output_text = humanize_text_with_engine(input_text, selected_engine, mode=selected_mode)
             
             # If output is empty or too short, something went wrong
             if not output_text or len(output_text.strip()) < 10:
-                raise ValueError("Engine returned empty or invalid output")
+                raise ValueError("Processing returned empty or invalid output")
         
         except ValueError as val_exc:
             # Handle input length validation errors specifically
@@ -189,11 +189,11 @@ def humanize_ajax(request):
                     {"error": f"Text is too long ({len(input_text)} characters). Maximum allowed: {MAX_TOTAL_CHARS} characters. Please reduce the text size."},
                     status=413  # 413 Payload Too Large
                 )
-            elif "Engine returned empty" in error_msg:
-                # Empty output from engine
-                logger.error("Engine returned empty output for user %s using %s", request.user.pk, selected_engine)
+            elif "Processing returned empty" in error_msg:
+                # Empty output from processing
+                logger.error("Processing returned empty output for user %s", request.user.pk)
                 return JsonResponse(
-                    {"error": "The selected engine failed to process your text. Please try again."},
+                    {"error": "Processing failed to generate output. Please try again."},
                     status=503,
                 )
             else:

@@ -1,22 +1,22 @@
 """
-OpenAI Engine for text humanization with mode support.
-Uses fine-tuned model with multiple humanization modes.
+Text humanization engine with mode support.
+Uses custom-trained model with multiple humanization modes.
 """
 
 import os
 from openai import OpenAI, APITimeoutError
-from ..modes_config import FINETUNED_MODEL, get_mode_config, format_prompt_for_mode, DEFAULT_MODE
+from ..modes_config import MODEL_ID, get_mode_config, format_prompt_for_mode, DEFAULT_MODE
 from ..multi_stage_pipeline import multi_stage_humanize_gpt4
 
 
-class OpenAIEngine:
-    """OpenAI-based text humanization engine with fine-tuned model and modes."""
+class TextEngine:
+    """Text humanization engine with custom-trained model and modes."""
     
     def __init__(self):
-        """Initialize OpenAI engine with API key from environment."""
+        """Initialize engine with API key from environment."""
         api_key = os.environ.get("OPENAI_API_KEY")
         if not api_key:
-            raise RuntimeError("OPENAI_API_KEY environment variable is not set")
+            raise RuntimeError("API key not configured")
         
         # Use 120s timeout to handle large inputs without worker crashes
         self.client = OpenAI(
@@ -25,19 +25,19 @@ class OpenAIEngine:
             max_retries=2
         )
         
-        # Use fine-tuned model
-        self.model = FINETUNED_MODEL
+        # Use custom model
+        self.model = MODEL_ID
     
     def humanize(self, text: str, mode: str = None) -> str:
         """
-        Humanize text using OpenAI with specified mode.
+        Humanize text using specified mode.
         
         Args:
             text: The text to humanize
-            mode: Humanization mode (recommended, formal, conversational, informal, academic)
+            mode: Humanization mode (recommended, readability, formal, conversational, informal, academic)
             
         Returns:
-            Humanized text from OpenAI
+            Humanized text
         """
         # Default to recommended mode
         if not mode:
@@ -76,16 +76,16 @@ class OpenAIEngine:
                     humanized_text += chunk.choices[0].delta.content
             
             if not humanized_text:
-                raise RuntimeError("OpenAI returned empty response")
+                raise RuntimeError("Processing returned empty response")
             
             return humanized_text.strip()
             
         except APITimeoutError as e:
-            # Specific handling for OpenAI timeout errors
-            raise RuntimeError(f"OpenAI API timeout after 120 seconds. The request took too long - try reducing input size or try again later.") from e
+            # Specific handling for timeout errors
+            raise RuntimeError(f"Request timed out after 120 seconds. The request took too long - try reducing input size or try again later.") from e
         except Exception as e:
             # Handle other errors
-            raise RuntimeError(f"OpenAI API error: {str(e)}") from e
+            raise RuntimeError(f"Processing error: {str(e)}") from e
     
     def final_review(self, text: str, chunk_count: int) -> str:
         """
@@ -140,7 +140,7 @@ Return the text with only necessary fixes applied:"""
             return reviewed_text.strip()
             
         except Exception as e:
-            print(f"Warning: OpenAI final review failed: {e}")
+            print(f"Warning: Final review failed: {e}")
             return text  # Return original on error
     
     def humanize_multi_stage(self, text: str) -> str:

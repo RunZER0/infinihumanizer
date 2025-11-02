@@ -1,12 +1,11 @@
 """
 Humanization Modes Configuration
 =================================
-Defines 5 modes for text humanization with different styles and temperatures.
-All modes use the fine-tuned model: ft:gpt-4.1-mini-2025-04-14:valdace-ai:humanizerb0:CXCYIoX9
+Defines 6 modes for text humanization with different styles and temperatures.
 """
 
-# Fine-tuned model identifier
-FINETUNED_MODEL = "ft:gpt-4o-mini-2024-07-18:valdace-ai:humanizerb0:CXCYIoX9"
+# Model identifier
+MODEL_ID = "ft:gpt-4o-mini-2024-07-18:valdace-ai:humanizerb0:CXCYIoX9"
 
 # ============================================================================
 # MODE DEFINITIONS
@@ -15,11 +14,30 @@ FINETUNED_MODEL = "ft:gpt-4o-mini-2024-07-18:valdace-ai:humanizerb0:CXCYIoX9"
 MODES = {
     "recommended": {
         "name": "Recommended",
-        "description": "⭐ Best for AI detection evasion - Uses fine-tuned model with optimal settings",
+        "description": "⭐ Best for AI detection evasion - Optimized settings for natural output",
         "temperature": 0.2,
         "use_prompt": False,  # No additional prompt instructions
         "badge": "RECOMMENDED",
         "badge_color": "#28a745"
+    },
+    
+    "readability": {
+        "name": "Readability",
+        "description": "Clear and easy to understand - Perfect for general audiences",
+        "temperature": 0.3,
+        "use_prompt": True,
+        "prompt": """Transform this text to be highly readable and accessible:
+
+- Use clear, straightforward language
+- Keep sentences short and easy to follow
+- Maintain a natural flow that anyone can understand
+- Include subtle variations that feel human
+- Preserve all key information
+
+Text to transform:
+{text}""",
+        "badge": None,
+        "badge_color": None
     },
     
     "formal": {

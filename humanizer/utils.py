@@ -1,4 +1,4 @@
-"""Utilities for routing humanization requests to supported LLM engines."""
+"""Utilities for routing humanization requests."""
 
 from __future__ import annotations
 
@@ -6,8 +6,7 @@ import os
 import re
 from typing import Callable, Dict
 
-from .llm_engines import DeepSeekEngine, OpenAIEngine
-from .llm_engines.claude_engine import humanize_text_claude
+from .llm_engines.openai_engine import TextEngine
 
 # Character limit for safety
 MAX_TOTAL_CHARS = 10000
@@ -67,40 +66,21 @@ def clean_llm_output(text: str) -> str:
     return cleaned.strip()
 
 
-def humanize_with_claude(text: str) -> str:
-    """Humanize text using the Claude engine."""
-    try:
-        # Claude engine expects a list, returns a list
-        result = humanize_text_claude([text])[0]
-        return clean_llm_output(result)
-    except Exception as e:
-        raise RuntimeError(f"Claude API error: {str(e)}")
-
-
-def humanize_with_openai(text: str, mode: str = "recommended") -> str:
+def humanize_with_text_engine(text: str, mode: str = "recommended") -> str:
     """
-    Humanize text using the OpenAI fine-tuned model with specified mode.
+    Humanize text using the custom model with specified mode.
     
     Args:
         text: Text to humanize
-        mode: Humanization mode (recommended, formal, conversational, informal, academic)
+        mode: Humanization mode (recommended, readability, formal, conversational, informal, academic)
     """
-    engine = OpenAIEngine()
+    engine = TextEngine()
     result = engine.humanize(text, mode=mode)
     return clean_llm_output(result)
 
 
-def humanize_with_deepseek(text: str) -> str:
-    """Humanize text using the DeepSeek engine (DEPRECATED)."""
-    engine = DeepSeekEngine()
-    result = engine.humanize(text, chunk_index=0)
-    return clean_llm_output(result)
-
-
 ENGINE_HANDLERS: Dict[str, Callable] = {
-    "claude": humanize_with_claude,
-    "openai": humanize_with_openai,
-    "deepseek": humanize_with_deepseek,
+    "openai": humanize_with_text_engine,
 }
 
 
@@ -111,7 +91,7 @@ def humanize_text(text: str, engine: str | None = None, mode: str = "recommended
 
 
 def humanize_text_with_engine(text: str, engine: str, mode: str = "recommended") -> str:
-    """Route to the appropriate LLM engine - NO CHUNKING."""
+    """Route to the appropriate processing handler - NO CHUNKING."""
     
     # SAFETY CHECK: Limit total input size
     if len(text) > MAX_TOTAL_CHARS:
@@ -119,20 +99,16 @@ def humanize_text_with_engine(text: str, engine: str, mode: str = "recommended")
     
     engine = engine.lower()
     if engine not in ENGINE_HANDLERS:
-        raise ValueError(f"Unknown engine: {engine}")
+        raise ValueError(f"Invalid request")
     
-    # Direct call to engine - no chunking
+    # Direct call to handler - no chunking
     handler = ENGINE_HANDLERS[engine]
-    print(f"🚀 Processing with {engine} engine (mode: {mode})...")
+    print(f"🚀 Processing text (mode: {mode})...")
     
     try:
-        # Pass mode parameter if using OpenAI
-        if engine == "openai":
-            humanized_text = handler(text, mode=mode)
-        else:
-            humanized_text = handler(text)
+        humanized_text = handler(text, mode=mode)
         print(f"✅ Successfully processed {len(text)} → {len(humanized_text)} chars")
         return humanized_text
     except Exception as error:
-        print(f"❌ Engine failed: {error}")
+        print(f"❌ Processing failed: {error}")
         raise
