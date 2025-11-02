@@ -101,6 +101,17 @@
         overflow: hidden;
     }
     
+    /* Hover trigger zone - visible area at left edge to trigger sidebar */
+    .sidebar-hover-zone {
+        position: fixed;
+        left: 0;
+        top: 60px;
+        width: 20px;
+        height: calc(100vh - 60px);
+        z-index: 49;
+        background: transparent;
+    }
+
     /* Collapsible Left Sidebar - Auto-hide and show on hover */
     .sidebar {
         width: 280px;
@@ -117,21 +128,10 @@
         z-index: 50;
     }
 
-    /* Show sidebar on hover */
+    /* Show sidebar on hover of trigger zone OR sidebar itself */
+    .sidebar-hover-zone:hover ~ .sidebar,
     .sidebar:hover {
         transform: translateX(0);
-    }
-
-    /* Hover trigger area - invisible element at left edge */
-    .sidebar::before {
-        content: '';
-        position: fixed;
-        left: 0;
-        top: 60px;
-        width: 10px;
-        height: calc(100vh - 60px);
-        background: transparent;
-        z-index: 51;
     }
     
     /* Custom scrollbar for sidebar - blending cyberpunk style */
@@ -888,6 +888,9 @@
 
 <!-- Main Layout -->
 <div class="humanizer-layout">
+    <!-- Hover trigger zone for sidebar -->
+    <div class="sidebar-hover-zone"></div>
+    
     <!-- Collapsible Left Sidebar -->
     <div class="sidebar collapsed" id="sidebar">
         <div class="sidebar-content">
