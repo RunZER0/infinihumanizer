@@ -198,6 +198,13 @@ def verify_whatsapp_code(request):
                 verification.verified_at = timezone.now()
                 verification.save()
                 
+                # Create verified EmailAddress record for allauth
+                EmailAddress.objects.get_or_create(
+                    user=user,
+                    email=user.email,
+                    defaults={'verified': True, 'primary': True}
+                )
+                
                 messages.success(request, "✅ Your account has been verified! You can now log in.")
                 return redirect("account_login")
             else:
