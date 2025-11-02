@@ -9,7 +9,10 @@ python manage.py wait_for_db
 echo "🗃️ Running database migrations..."
 python manage.py migrate --noinput
 
-echo "🚀 Starting Gunicorn server..."
+echo "� Creating missing EmailAddress records..."
+python manage.py create_missing_emailaddress
+
+echo "�🚀 Starting Gunicorn server..."
 exec gunicorn core.wsgi:application \
     --bind 0.0.0.0:${PORT:-10000} \
     --workers ${GUNICORN_WORKERS:-2} \
