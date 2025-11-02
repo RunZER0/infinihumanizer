@@ -33,6 +33,26 @@ print("="*80)
 
 
 class VerifiedEmailLoginView(LoginView):
+    
+    def post(self, request, *args, **kwargs):
+        """Override post to see ALL login attempts"""
+        print(f"\n{'='*60}")
+        print(f"🔐 POST to LOGIN VIEW")
+        print(f"{'='*60}")
+        print(f"   📧 Email from POST: {request.POST.get('login', 'N/A')}")
+        print(f"   🔑 Password provided: {'Yes' if request.POST.get('password') else 'No'}")
+        return super().post(request, *args, **kwargs)
+    
+    def form_invalid(self, form):
+        """Called when form validation fails"""
+        print(f"\n{'='*60}")
+        print(f"❌ LOGIN FORM INVALID")
+        print(f"{'='*60}")
+        print(f"   Errors: {form.errors}")
+        print(f"   Non-field errors: {form.non_field_errors()}")
+        print(f"{'='*60}\n")
+        return super().form_invalid(form)
+    
     def form_valid(self, form):
         from django.conf import settings
         from django.contrib.auth import login
