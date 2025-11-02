@@ -1,57 +1,327 @@
-{% extends 'base.html' %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Verification - InfiniHumanizer</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-{% block title %}WhatsApp Verification - InfiniHumanizer{% endblock %}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
 
-{% block content %}
-<div class="verification-container" style="max-width: 600px; margin: 80px auto; padding: 40px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;">
-    <h2 style="color: #25D366; margin-bottom: 20px;">
-        📱 WhatsApp Verification Required
-    </h2>
-    
-    <p style="font-size: 16px; color: #666; margin-bottom: 30px;">
-        Thank you for signing up! To verify your account, please scan the QR code below with your phone to send a WhatsApp message.
-    </p>
-    
-    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
-        <p style="font-weight: bold; margin-bottom: 10px;">Your Email:</p>
-        <p style="color: #007bff; font-size: 18px; margin-bottom: 20px;">{{ email }}</p>
-        
-        <p style="font-weight: bold; margin-bottom: 10px;">Verification Code (for admin):</p>
-        <p style="color: #dc3545; font-size: 24px; font-family: monospace; letter-spacing: 3px;">{{ encoded_code }}</p>
-    </div>
-    
-    <div style="margin: 30px 0;">
-        <img src="data:image/png;base64,{{ qr_code }}" alt="WhatsApp QR Code" style="max-width: 300px; border: 2px solid #25D366; border-radius: 8px; padding: 10px; background: white;">
-    </div>
-    
-    <div style="background: #e7f3ff; padding: 20px; border-radius: 8px; border-left: 4px solid #007bff;">
-        <h3 style="color: #007bff; margin-bottom: 15px;">📲 How It Works</h3>
-        <ol style="text-align: left; color: #555; line-height: 1.8;">
-            <li>Scan the QR code above with your phone camera</li>
-            <li>It will open WhatsApp with a pre-filled message</li>
-            <li>Send the message to request approval</li>
-            <li>You'll receive a 6-digit numeric code via email</li>
-            <li>Enter that code to activate your account</li>
-        </ol>
-    </div>
-    
-    <div style="margin-top: 30px;">
-        <a href="{% url 'verify_whatsapp_code' %}" class="btn btn-primary" style="padding: 12px 30px; font-size: 16px; text-decoration: none; background: #007bff; color: white; border-radius: 6px; display: inline-block;">
-            I've Sent the Message - Enter Code
-        </a>
-    </div>
-    
-    <p style="margin-top: 20px; font-size: 14px; color: #999;">
-        Can't scan? Click <a href="https://wa.me/254795191421?text=Kindly%20approve%20my%20signup%20via%20email%3A%20{{ email }}%0A%0AVerification%20Code%3A%20{{ encoded_code }}" target="_blank" style="color: #25D366;">here</a> to open WhatsApp directly.
-    </p>
-</div>
+        body::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
+            animation: particle-float 15s ease-in-out infinite;
+            pointer-events: none;
+        }
 
-<style>
-.btn-primary:hover {
-    opacity: 0.9;
-    transform: translateY(-2px);
-    transition: all 0.3s ease;
-}
-</style>
-{% endblock %}
+        @keyframes particle-float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(50px, -50px); }
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fade-in 0.8s ease-out;
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #00D4FF 0%, #0099CC 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .header-subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1rem;
+        }
+
+        .verification-card {
+            background: rgba(20, 20, 30, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slide-up 0.6s ease-out 0.2s both;
+        }
+
+        @keyframes slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .icon-header {
+            text-align: center;
+            font-size: 4rem;
+            margin-bottom: 24px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .section-title {
+            color: #00D4FF;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .info-box {
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .info-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .info-value {
+            color: #00D4FF;
+            font-size: 1.2rem;
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        .info-value.code {
+            font-family: 'Courier New', monospace;
+            font-size: 2rem;
+            letter-spacing: 4px;
+            color: #FF3B30;
+            text-shadow: 0 0 10px rgba(255, 59, 48, 0.3);
+        }
+
+        .qr-container {
+            text-align: center;
+            margin: 32px 0;
+            padding: 32px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .qr-code {
+            max-width: 280px;
+            width: 100%;
+            height: auto;
+            border-radius: 16px;
+            background: white;
+            padding: 16px;
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3); }
+            50% { box-shadow: 0 10px 40px rgba(0, 212, 255, 0.5); }
+        }
+
+        .instructions {
+            background: rgba(0, 212, 255, 0.05);
+            border-left: 4px solid #00D4FF;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 32px 0;
+        }
+
+        .instructions h3 {
+            color: #00D4FF;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .instructions ol {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 2;
+            padding-left: 24px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #00D4FF 0%, #0099CC 100%);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            margin-top: 32px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .alternative-link {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .alternative-link p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .alternative-link a {
+            color: #00D4FF;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .alternative-link a:hover {
+            color: #00F0FF;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .verification-card {
+                padding: 24px;
+            }
+
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            .icon-header {
+                font-size: 3rem;
+            }
+
+            .qr-container {
+                padding: 20px;
+            }
+
+            .info-value.code {
+                font-size: 1.5rem;
+                letter-spacing: 2px;
+            }
+
+            .instructions {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>InfiniHumanizer</h1>
+            <p class="header-subtitle">Almost there! Let's verify your account</p>
+        </div>
+
+        <div class="verification-card">
+            <div class="icon-header">📱</div>
+            
+            <h2 class="section-title">WhatsApp Verification Required</h2>
+
+            <div class="info-box">
+                <div class="info-label">Your Email</div>
+                <div class="info-value">{{ email }}</div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-label">Verification Code</div>
+                <div class="info-value code">{{ encoded_code }}</div>
+            </div>
+
+            <div class="qr-container">
+                <img src="data:image/png;base64,{{ qr_code }}" alt="WhatsApp QR Code" class="qr-code">
+            </div>
+
+            <div class="instructions">
+                <h3>📲 How It Works</h3>
+                <ol>
+                    <li>Scan the QR code with your phone camera</li>
+                    <li>WhatsApp will open with a pre-filled message</li>
+                    <li>Send the message to request approval</li>
+                    <li>You'll receive a 6-digit code via email</li>
+                    <li>Enter that code to activate your account</li>
+                </ol>
+            </div>
+
+            <a href="{% url 'verify_whatsapp_code' %}" class="btn-primary">
+                ✅ I've Sent the Message - Enter Code
+            </a>
+
+            <div class="alternative-link">
+                <p>Can't scan the QR code?</p>
+                <a href="https://wa.me/254795191421?text=Kindly%20approve%20my%20signup%20via%20email%3A%20{{ email }}%0A%0AVerification%20Code%3A%20{{ encoded_code }}" target="_blank">
+                    Click here to open WhatsApp directly →
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -5,8 +5,319 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - InfiniHumanizer</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
+            animation: particle-float 15s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes particle-float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(50px, -50px); }
+        }
+
+        .auth-container {
+            max-width: 480px;
+            width: 100%;
+            background: rgba(20, 20, 30, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 48px 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slide-up 0.6s ease-out;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+            animation: fade-in 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #00D4FF 0%, #0099CC 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .logo p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            animation: fade-in 0.8s ease-out 0.4s both;
+        }
+
+        .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-group input[type="email"],
+        .form-group input[type="password"] {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #00D4FF;
+            background: rgba(0, 212, 255, 0.05);
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .form-group small {
+            display: block;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+            margin-top: 6px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: start;
+            gap: 12px;
+            margin-bottom: 24px;
+            animation: fade-in 0.8s ease-out 0.5s both;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-top: 4px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.875rem;
+            cursor: pointer;
+            line-height: 1.5;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #00D4FF 0%, #0099CC 100%);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+            animation: fade-in 0.8s ease-out 0.6s both;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .divider {
+            margin: 32px 0;
+            padding: 24px 0;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            text-align: center;
+            animation: fade-in 0.8s ease-out 0.7s both;
+        }
+
+        .divider p {
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            padding: 12px 32px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            color: #00D4FF;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 212, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 32px;
+            animation: fade-in 0.8s ease-out 0.8s both;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 16px 12px;
+            background: rgba(0, 212, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 212, 255, 0.3);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .feature-title {
+            color: #00D4FF;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .feature-text {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.75rem;
+        }
+
+        .messages {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 400px;
+        }
+
+        .message {
+            padding: 16px 20px;
+            background: rgba(0, 212, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            color: #fff;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            animation: slide-in-right 0.4s ease;
+        }
+
+        .message.error {
+            background: rgba(255, 59, 48, 0.9);
+        }
+
+        .message.success {
+            background: rgba(52, 199, 89, 0.9);
+        }
+
+        @keyframes slide-in-right {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                padding: 32px 24px;
+            }
+
+            .logo h1 {
+                font-size: 1.75rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .feature {
+                padding: 12px;
+            }
+
+            .messages {
+                left: 20px;
+                right: 20px;
+                max-width: none;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Messages -->
@@ -20,110 +331,87 @@
     </div>
     {% endif %}
 
-    <div class="auth-wrapper">
-        <!-- Left Side - Branding -->
-        <div class="auth-left">
-            <div class="auth-branding">
-                <h1 class="gradient-text">InfiniHumanizer</h1>
-                <p class="tagline" style="font-size: 1.3rem; color: var(--luminous-blue); margin-bottom: 1.5rem;">
-                    Start Your Journey
-                </p>
-                <p>
-                    Join thousands of users who trust InfiniHumanizer to transform their AI-generated 
-                    content into natural, human-sounding text.
-                </p>
-                
-                <div class="auth-features">
-                    <div class="auth-feature">
-                        <div class="auth-feature-icon">🎁</div>
-                        <div style="color: var(--luminous-blue); font-weight: 600;">Free Trial</div>
-                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">1000 words to start</p>
-                    </div>
-                    <div class="auth-feature">
-                        <div class="auth-feature-icon">⚡</div>
-                        <div style="color: var(--luminous-blue); font-weight: 600;">Instant Access</div>
-                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">No credit card needed</p>
-                    </div>
-                    <div class="auth-feature">
-                        <div class="auth-feature-icon">🌟</div>
-                        <div style="color: var(--luminous-blue); font-weight: 600;">Premium Quality</div>
-                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">GPT-4 & Gemini powered</p>
-                    </div>
-                </div>
+    <div class="auth-container">
+        <div class="logo">
+            <h1>InfiniHumanizer</h1>
+            <p>Start Your Journey</p>
+        </div>
+
+        <form method="post" action="{% url 'account_signup' %}">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="id_email">Email Address</label>
+                <input 
+                    type="email" 
+                    name="email" 
+                    id="id_email" 
+                    placeholder="Enter your email"
+                    required
+                    autocomplete="email"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="id_password1">Password</label>
+                <input 
+                    type="password" 
+                    name="password1" 
+                    id="id_password1" 
+                    placeholder="Create a strong password"
+                    required
+                    autocomplete="new-password"
+                >
+                <small>Must be at least 8 characters</small>
+            </div>
+
+            <div class="form-group">
+                <label for="id_password2">Confirm Password</label>
+                <input 
+                    type="password" 
+                    name="password2" 
+                    id="id_password2" 
+                    placeholder="Re-enter your password"
+                    required
+                    autocomplete="new-password"
+                >
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" name="terms" id="id_terms" required>
+                <label for="id_terms">
+                    I agree to the Terms of Service and Privacy Policy
+                </label>
+            </div>
+
+            <button type="submit" class="btn-primary">
+                ✨ Create Account
+            </button>
+        </form>
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🎁</div>
+                <div class="feature-title">Free Trial</div>
+                <div class="feature-text">1000 words</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-title">Instant</div>
+                <div class="feature-text">No card needed</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🌟</div>
+                <div class="feature-title">Premium</div>
+                <div class="feature-text">Best quality</div>
             </div>
         </div>
 
-        <!-- Right Side - Signup Form -->
-        <div class="auth-right">
-            <div class="auth-form-container">
-                <div class="auth-form-header">
-                    <h2>Create Account</h2>
-                    <p>Get started with InfiniHumanizer today</p>
-                </div>
-
-                <div class="form-container">
-                    <form method="post" action="{% url 'account_signup' %}">
-                        {% csrf_token %}
-                        
-                        <div class="form-group">
-                            <label for="id_email">Email Address</label>
-                            <input 
-                                type="email" 
-                                name="email" 
-                                id="id_email" 
-                                placeholder="Enter your email"
-                                required
-                                autocomplete="email"
-                            >
-                        </div>
-
-                        <div class="form-group">
-                            <label for="id_password1">Password</label>
-                            <input 
-                                type="password" 
-                                name="password1" 
-                                id="id_password1" 
-                                placeholder="Create a strong password"
-                                required
-                                autocomplete="new-password"
-                            >
-                            <small style="color: var(--text-gray); display: block; margin-top: 0.5rem;">
-                                Must be at least 8 characters
-                            </small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="id_password2">Confirm Password</label>
-                            <input 
-                                type="password" 
-                                name="password2" 
-                                id="id_password2" 
-                                placeholder="Re-enter your password"
-                                required
-                                autocomplete="new-password"
-                            >
-                        </div>
-
-                        <div class="form-group" style="display: flex; align-items: start; gap: 0.5rem;">
-                            <input type="checkbox" name="terms" id="id_terms" required style="width: auto; margin-top: 0.3rem;">
-                            <label for="id_terms" style="margin: 0; cursor: pointer; font-size: 0.9rem;">
-                                I agree to the Terms of Service and Privacy Policy
-                            </label>
-                        </div>
-
-                        <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;">
-                            ✨ Create Account
-                        </button>
-                    </form>
-
-                    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(0, 212, 255, 0.1); text-align: center;">
-                        <p style="color: var(--text-gray); margin-bottom: 1rem;">Already have an account?</p>
-                        <a href="{% url 'account_login' %}" class="btn-secondary" style="display: inline-block;">
-                            🔐 Sign In
-                        </a>
-                    </div>
-                </div>
-            </div>
+        <div class="divider">
+            <p>Already have an account?</p>
+            <a href="{% url 'account_login' %}" class="btn-secondary">
+                🔐 Sign In
+            </a>
         </div>
     </div>
 
@@ -133,24 +421,13 @@
             const messages = document.querySelectorAll('.message');
             messages.forEach(function(message) {
                 setTimeout(function() {
-                    message.style.animation = 'slideOut 0.3s ease';
+                    message.style.animation = 'slide-in-right 0.4s ease reverse';
                     setTimeout(function() {
                         message.remove();
-                    }, 300);
+                    }, 400);
                 }, 5000);
             });
         });
-
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideOut {
-                to {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>

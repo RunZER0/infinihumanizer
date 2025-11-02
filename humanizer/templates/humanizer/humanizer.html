@@ -871,6 +871,109 @@
         line-height: 1;
         white-space: nowrap;
     }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        .humanizer-layout {
+            flex-direction: column;
+            padding: 0;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            height: calc(100vh - 60px);
+            width: 280px;
+            z-index: 100;
+            transform: translateX(-100%);
+        }
+
+        .sidebar:hover {
+            transform: translateX(0);
+        }
+
+        .content-area {
+            width: 100%;
+            padding: 16px;
+            margin-top: 60px;
+        }
+
+        .work-window {
+            flex-direction: column;
+            gap: 16px;
+            height: auto;
+        }
+
+        .input-container,
+        .output-container {
+            width: 100%;
+            height: auto;
+            min-height: 300px;
+            max-height: none;
+        }
+
+        .text-box {
+            min-height: 200px;
+        }
+
+        .container-header {
+            flex-wrap: wrap;
+            min-height: auto;
+            max-height: none;
+            gap: 8px;
+        }
+
+        .header-left {
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .mode-selector {
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .mode-dropdown {
+            width: 100%;
+        }
+
+        .top-ribbon {
+            padding: 12px 16px;
+        }
+
+        .app-title span:last-child {
+            font-size: 0.9rem;
+        }
+
+        .user-info {
+            font-size: 0.85rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .container-label {
+            font-size: 0.9rem;
+        }
+
+        .word-counter {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .mode-selector label {
+            font-size: 0.85rem;
+        }
+
+        .btn-primary {
+            padding: 12px;
+            font-size: 0.9rem;
+        }
+
+        .top-ribbon {
+            padding: 10px 12px;
+        }
+    }
 </style>
 
 <!-- Modern Top Ribbon -->
