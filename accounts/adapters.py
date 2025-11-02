@@ -13,13 +13,6 @@ from django.urls import reverse
 logger = logging.getLogger(__name__)
 
 class CustomAccountAdapter(DefaultAccountAdapter):
-    def login(self, request, user):
-        """
-        TEMPORARILY DISABLED - Email verification handled in VerifiedEmailLoginView
-        """
-        print("⚠️  CustomAccountAdapter.login() called - SKIPPING to let view handle it")
-        # Just call parent login directly
-        return super().login(request, user)
 
     def send_mail(self, template_prefix, email_template, context, from_email=None, to_email=None):
         """

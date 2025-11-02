@@ -27,91 +27,35 @@ from humanizer.utils import humanize_text_with_engine
 
 logger = logging.getLogger(__name__)
 
-print("="*80)
-print("🔥 ACCOUNTS.VIEWS MODULE LOADED - VerifiedEmailLoginView is defined here!")
-print("="*80)
-
 
 class VerifiedEmailLoginView(LoginView):
-    
-    def post(self, request, *args, **kwargs):
-        """Override post to see ALL login attempts"""
-        print(f"\n{'='*60}")
-        print(f"🔐 POST to LOGIN VIEW")
-        print(f"{'='*60}")
-        print(f"   📧 Email from POST: {request.POST.get('login', 'N/A')}")
-        print(f"   🔑 Password provided: {'Yes' if request.POST.get('password') else 'No'}")
-        return super().post(request, *args, **kwargs)
-    
-    def form_invalid(self, form):
-        """Called when form validation fails"""
-        print(f"\n{'='*60}")
-        print(f"❌ LOGIN FORM INVALID")
-        print(f"{'='*60}")
-        print(f"   Errors: {form.errors}")
-        print(f"   Non-field errors: {form.non_field_errors()}")
-        print(f"{'='*60}\n")
-        return super().form_invalid(form)
-    
     def form_valid(self, form):
         from django.conf import settings
         from django.contrib.auth import login
 
-        # ✅ Debug output to confirm this custom view is active
-        print(f"\n{'='*60}")
-        print("🔐 LOGIN ATTEMPT - CUSTOM VerifiedEmailLoginView")
-        print(f"{'='*60}")
-
         user = form.user_cache
-        print(f"   📧 User: {user.username}, Email: {user.email}")
-        print(f"   🔓 User is_active: {user.is_active}")
-        print(f"   🔧 DEBUG: {getattr(settings, 'DEBUG', False)}")
-        print(f"   💻 OFFLINE_MODE: {getattr(settings, 'OFFLINE_MODE', False)}")
-
-        # Check if EmailAddress exists
-        email_address = EmailAddress.objects.filter(user=user).first()
-        print(f"   📮 EmailAddress exists: {email_address is not None}")
-        if email_address:
-            print(f"   ✅ EmailAddress verified: {email_address.verified}")
-            print(f"   🎯 EmailAddress primary: {email_address.primary}")
-        else:
-            print(f"   ❌ NO EmailAddress record found!")
 
         # In OFFLINE_MODE or DEBUG, skip email verification entirely
         if getattr(settings, 'OFFLINE_MODE', False) or getattr(settings, 'DEBUG', False):
-            print("   ⚡ Offline/Debug mode - Skipping email verification")
             self._ensure_profile(user)
-            # Explicitly log the user in
             login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
-            print(f"   ✅ User logged in: {self.request.user.is_authenticated}")
-            print(f"   🎯 Redirecting to: {settings.LOGIN_REDIRECT_URL}")
-            print(f"{'='*60}\n")
-            # Just proceed with normal login
             return super().form_valid(form)
 
         # In production, enforce verification
         verified = EmailAddress.objects.filter(user=user, verified=True).exists()
-        print(f"   🔍 Email verified: {verified}")
 
         if not verified:
-            print(f"   ❌ Login DENIED - Email not verified")
-            print(f"{'='*60}\n")
             self.request.session['resend_email'] = user.email
             messages.error(
                 self.request,
                 "⚠️ Your email is not verified. Please check your inbox or resend the link."
             )
-
-            # ✅ Render the login form again with session available immediately
             context = self.get_context_data(form=form)
             return render(self.request, self.template_name, context)
 
-        print(f"   ✅ Email verification passed")
         self._ensure_profile(user)
-        # Explicitly log the user in
         login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
-        print(f"   ✅ User logged in: {self.request.user.is_authenticated}")
-        print(f"   🎯 Redirecting to: {settings.LOGIN_REDIRECT_URL}")
+        return super().form_valid(form)
         print(f"{'='*60}\n")
         return super().form_valid(form)
 
