@@ -142,12 +142,8 @@ else:
         raise RuntimeError("dj_database_url is required when not using SQLite/DEBUG/OFFLINE.")
     DATABASES = {
         'default': dj_database_url.config(
-            default=os.getenv(
-                "DATABASE_URL",
-                # Use transaction pooler (port 6543) for IPv4 compatibility with Render
-                "postgresql://postgres.lbgowbtsxonniutjxcmv:6mOO4TupU1bE82pr@aws-0-us-east-2.pooler.supabase.com:6543/postgres?sslmode=require"
-            ),
-            conn_max_age=int(os.getenv("DATABASE_CONN_MAX_AGE", "0")),  # Disable connection pooling with pgbouncer
+            default=os.getenv("DATABASE_URL"),
+            conn_max_age=int(os.getenv("DATABASE_CONN_MAX_AGE", "600")),  # Connection pooling for better performance
             ssl_require=True,
         )
     }
