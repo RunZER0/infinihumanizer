@@ -140,9 +140,17 @@ if DEBUG or OFFLINE_MODE or not os.getenv("DATABASE_URL"):
 else:
     if dj_database_url is None:
         raise RuntimeError("dj_database_url is required when not using SQLite/DEBUG/OFFLINE.")
+    
+    database_url = os.getenv("DATABASE_URL")
+    if not database_url:
+        raise RuntimeError(
+            "DATABASE_URL environment variable is not set! "
+            "Please set it in your Render dashboard with your Neon PostgreSQL connection string."
+        )
+    
     DATABASES = {
         'default': dj_database_url.config(
-            default=os.getenv("DATABASE_URL"),
+            default=database_url,
             conn_max_age=int(os.getenv("DATABASE_CONN_MAX_AGE", "600")),  # Connection pooling for better performance
             ssl_require=True,
         )
