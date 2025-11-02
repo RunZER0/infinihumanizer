@@ -9,15 +9,11 @@ from accounts.views import VerifiedEmailLoginView
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # ✅ Custom login view
-    path('accounts/login/', VerifiedEmailLoginView.as_view(), name='account_login'),
-
-    # ✅ Accounts app URLs (signup, resend_verification, etc.)
+    # ✅ Accounts app URLs FIRST (includes custom login)
     path('accounts/', include('accounts.urls')),
 
-    # ✅ Allauth and Auth URLs
+    # ✅ Allauth URLs (but our custom login overrides it)
     path('accounts/', include('allauth.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),  # ✅ Add this line
 
     # ✅ Humanizer app
     path('humanizer/', include('humanizer.urls')),
