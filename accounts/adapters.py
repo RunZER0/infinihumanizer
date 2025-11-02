@@ -14,23 +14,11 @@ logger = logging.getLogger(__name__)
 
 class CustomAccountAdapter(DefaultAccountAdapter):
     def login(self, request, user):
-        from django.conf import settings
-        
-        # Skip email verification in offline/debug mode
-        if getattr(settings, 'OFFLINE_MODE', False) or getattr(settings, 'DEBUG', False):
-            # Directly call parent's login to authenticate user
-            return super().login(request, user)
-        
-        # In production, enforce email verification AFTER checking credentials
-        email_verified = EmailAddress.objects.filter(user=user, verified=True).exists()
-        if not email_verified:
-            messages.error(request, "⚠️ Your email is not verified. Please verify to continue.")
-            request.session['resend_email'] = user.email
-            # Don't redirect here - let the view handle it
-            # Just don't call super().login() which would authenticate them
-            return None  # Signal that login should not proceed
-            
-        # Email is verified, proceed with normal login
+        """
+        TEMPORARILY DISABLED - Email verification handled in VerifiedEmailLoginView
+        """
+        print("⚠️  CustomAccountAdapter.login() called - SKIPPING to let view handle it")
+        # Just call parent login directly
         return super().login(request, user)
 
     def send_mail(self, template_prefix, email_template, context, from_email=None, to_email=None):

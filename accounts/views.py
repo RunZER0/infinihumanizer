@@ -27,6 +27,10 @@ from humanizer.utils import humanize_text_with_engine
 
 logger = logging.getLogger(__name__)
 
+print("="*80)
+print("🔥 ACCOUNTS.VIEWS MODULE LOADED - VerifiedEmailLoginView is defined here!")
+print("="*80)
+
 
 class VerifiedEmailLoginView(LoginView):
     def form_valid(self, form):
