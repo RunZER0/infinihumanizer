@@ -101,7 +101,7 @@
         overflow: hidden;
     }
     
-    /* Collapsible Left Sidebar */
+    /* Collapsible Left Sidebar - Auto-hide and show on hover */
     .sidebar {
         width: 280px;
         background: rgba(0, 0, 0, 0.6);
@@ -109,13 +109,29 @@
         padding: 1.5rem;
         overflow-y: auto;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: fixed;
+        left: 0;
+        top: 60px;
+        height: calc(100vh - 60px);
         transform: translateX(-100%);
-        position: relative;
+        z-index: 50;
     }
-    
-    /* Hover to expand */
+
+    /* Show sidebar on hover */
     .sidebar:hover {
         transform: translateX(0);
+    }
+
+    /* Hover trigger area - invisible element at left edge */
+    .sidebar::before {
+        content: '';
+        position: fixed;
+        left: 0;
+        top: 60px;
+        width: 10px;
+        height: calc(100vh - 60px);
+        background: transparent;
+        z-index: 51;
     }
     
     /* Custom scrollbar for sidebar - blending cyberpunk style */
