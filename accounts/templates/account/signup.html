@@ -340,6 +340,19 @@
         <form method="post" action="{% url 'account_signup' %}">
             {% csrf_token %}
             
+            {% if form.errors %}
+            <div style="background: rgba(255, 59, 48, 0.1); border: 1px solid rgba(255, 59, 48, 0.3); border-radius: 12px; padding: 16px; margin-bottom: 24px;">
+                <div style="color: #FF3B30; font-weight: 600; margin-bottom: 8px;">⚠️ Please fix the following errors:</div>
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <div style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; margin-top: 4px;">
+                            • {% if field != '__all__' %}{{ field }}: {% endif %}{{ error }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            
             <div class="form-group">
                 <label for="id_email">Email Address</label>
                 <input 
@@ -349,6 +362,7 @@
                     placeholder="Enter your email"
                     required
                     autocomplete="email"
+                    value="{{ form.email.value|default:'' }}"
                 >
             </div>
 
