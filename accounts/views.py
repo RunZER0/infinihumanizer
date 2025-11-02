@@ -34,10 +34,24 @@ class VerifiedEmailLoginView(LoginView):
         from django.contrib.auth import login
 
         # ✅ Debug output to confirm this custom view is active
-        print("✅ USING CUSTOM VerifiedEmailLoginView")
+        print(f"\n{'='*60}")
+        print("🔐 LOGIN ATTEMPT - CUSTOM VerifiedEmailLoginView")
+        print(f"{'='*60}")
 
         user = form.user_cache
         print(f"   📧 User: {user.username}, Email: {user.email}")
+        print(f"   🔓 User is_active: {user.is_active}")
+        print(f"   🔧 DEBUG: {getattr(settings, 'DEBUG', False)}")
+        print(f"   💻 OFFLINE_MODE: {getattr(settings, 'OFFLINE_MODE', False)}")
+
+        # Check if EmailAddress exists
+        email_address = EmailAddress.objects.filter(user=user).first()
+        print(f"   📮 EmailAddress exists: {email_address is not None}")
+        if email_address:
+            print(f"   ✅ EmailAddress verified: {email_address.verified}")
+            print(f"   🎯 EmailAddress primary: {email_address.primary}")
+        else:
+            print(f"   ❌ NO EmailAddress record found!")
 
         # In OFFLINE_MODE or DEBUG, skip email verification entirely
         if getattr(settings, 'OFFLINE_MODE', False) or getattr(settings, 'DEBUG', False):
@@ -46,6 +60,8 @@ class VerifiedEmailLoginView(LoginView):
             # Explicitly log the user in
             login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
             print(f"   ✅ User logged in: {self.request.user.is_authenticated}")
+            print(f"   🎯 Redirecting to: {settings.LOGIN_REDIRECT_URL}")
+            print(f"{'='*60}\n")
             # Just proceed with normal login
             return super().form_valid(form)
 
@@ -54,6 +70,8 @@ class VerifiedEmailLoginView(LoginView):
         print(f"   🔍 Email verified: {verified}")
 
         if not verified:
+            print(f"   ❌ Login DENIED - Email not verified")
+            print(f"{'='*60}\n")
             self.request.session['resend_email'] = user.email
             messages.error(
                 self.request,
@@ -64,10 +82,13 @@ class VerifiedEmailLoginView(LoginView):
             context = self.get_context_data(form=form)
             return render(self.request, self.template_name, context)
 
+        print(f"   ✅ Email verification passed")
         self._ensure_profile(user)
         # Explicitly log the user in
         login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
         print(f"   ✅ User logged in: {self.request.user.is_authenticated}")
+        print(f"   🎯 Redirecting to: {settings.LOGIN_REDIRECT_URL}")
+        print(f"{'='*60}\n")
         return super().form_valid(form)
 
     def _ensure_profile(self, user):
