@@ -98,6 +98,10 @@ def signup_view(request):
                 "qr_code": qr_code_base64,
                 "encoded_code": encoded_code
             })
+        else:
+            # Form is invalid - log errors for debugging
+            logger.error("Signup form validation failed: %s", form.errors)
+            messages.error(request, "Please correct the errors below.")
     else:
         form = SignUpForm()
     return render(request, "account/signup.html", {"form": form})

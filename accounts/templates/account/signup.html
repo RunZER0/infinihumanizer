@@ -341,15 +341,24 @@
             {% csrf_token %}
             
             {% if form.errors %}
-            <div style="background: rgba(255, 59, 48, 0.1); border: 1px solid rgba(255, 59, 48, 0.3); border-radius: 12px; padding: 16px; margin-bottom: 24px;">
+            <div style="background: rgba(255, 59, 48, 0.1); border: 1px solid rgba(255, 59, 48, 0.3); border-radius: 12px; padding: 16px; margin-bottom: 24px; animation: fade-in 0.5s ease-out;">
                 <div style="color: #FF3B30; font-weight: 600; margin-bottom: 8px;">⚠️ Please fix the following errors:</div>
-                {% for field, errors in form.errors.items %}
-                    {% for error in errors %}
+                {% for field in form %}
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                            <div style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; margin-top: 4px;">
+                                • {{ field.label }}: {{ error }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+                {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
                         <div style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; margin-top: 4px;">
-                            • {% if field != '__all__' %}{{ field }}: {% endif %}{{ error }}
+                            • {{ error }}
                         </div>
                     {% endfor %}
-                {% endfor %}
+                {% endif %}
             </div>
             {% endif %}
             
