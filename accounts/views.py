@@ -131,21 +131,40 @@ def humanizer_view(request):
             messages.error(request, "Invalid engine selection.")
         elif not input_text:
             messages.error(request, "Please provide text to humanize.")
-        elif word_count > word_balance:
-            messages.error(
-                request,
-                f"You've exceeded your word balance ({word_balance} words left)."
-            )
         else:
-            try:
-                output_text = humanize_text_with_engine(input_text, selected_engine)
-            except Exception as exc:  # pragma: no cover - defensive logging
-                logger.exception("Humanizer request failed: %s", exc)
-                messages.error(
-                    request,
-                    "We couldn't humanize your text right now. "
-                    "Please check your API keys and try again.",
-                )
+            # Enforce server-side word balance strictly. If the user submitted more
+            # words than their balance, truncate the input to the allowed number
+            # of words and show a warning. This prevents clients from bypassing
+            # any client-side limits or manipulated requests.
+            if word_count > word_balance:
+                if word_balance <= 0:
+                    messages.error(
+                        request,
+                        f"You've exceeded your word balance ({word_balance} words left)."
+                    )
+                    # Do not proceed to humanize when there's no balance left
+                    input_text = ''
+                else:
+                    # Truncate to allowed words and inform the user
+                    words = input_text.split()
+                    truncated = words[:word_balance]
+                    input_text = " ".join(truncated)
+                    word_count = len(truncated)
+                    messages.warning(
+                        request,
+                        f"Input was truncated to {word_count} words due to your word balance."
+                    )
+
+            if input_text:
+                try:
+                    output_text = humanize_text_with_engine(input_text, selected_engine)
+                except Exception as exc:  # pragma: no cover - defensive logging
+                    logger.exception("Humanizer request failed: %s", exc)
+                    messages.error(
+                        request,
+                        "We couldn't humanize your text right now. "
+                        "Please check your API keys and try again.",
+                    )
 
     context = {
         "input_text": input_text,

@@ -9,8 +9,11 @@ python manage.py wait_for_db
 echo "🗃️ Running database migrations..."
 python manage.py migrate --noinput
 
-echo "� Creating missing EmailAddress records..."
+echo "📧 Creating missing EmailAddress records..."
 python manage.py create_missing_emailaddress
+
+echo "� Activating verified users..."
+python manage.py fix_inactive_users
 
 echo "�🚀 Starting Gunicorn server..."
 exec gunicorn core.wsgi:application \
