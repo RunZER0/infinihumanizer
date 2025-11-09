@@ -952,13 +952,13 @@
                     <div class="header-left">
                         <div class="container-label">
                             <span>📝</span>
-                            <span>Input Text (Max 1000 words)</span>
+                            <span>Input Text (Max {{ word_balance }} words)</span>
                         </div>
                         <div class="word-counter">
                             <span>Words:</span>
                             <span class="word-count" id="inputWordCount">0</span>
                             <span>/</span>
-                            <span>1000</span>
+                            <span>{{ word_balance }}</span>
                         </div>
                         <div class="mode-selector">
                             <label for="modeSelect" style="margin-right: 8px; font-weight: 600;">Mode:</label>
@@ -977,7 +977,7 @@
                 <textarea 
                     id="inputText" 
                     class="text-box" 
-                    placeholder="Paste your input text here (max 1000 words). Output can be any length."
+                    placeholder="Paste your input text here (max {{ word_balance }} words). Output can be any length."
                 ></textarea>
                 <button id="humanizeBtn" class="btn btn-primary">
                     <span id="btnText">🤖 Humanize Text</span>
@@ -1324,7 +1324,8 @@ function showToast(message, type = 'success') {
 
 // Word count function
 // Maximum INPUT word limit (output has no limit)
-const MAX_WORD_LIMIT = 1000;
+// Use the user's actual word balance from their profile instead of hardcoded limit
+const MAX_WORD_LIMIT = {{ word_balance|default:0 }};
 let typingTimeout = null;
 let hasShownToast = false;
 
@@ -1388,7 +1389,7 @@ function updateWordCount(textareaId, counterId) {
         
         // Show toast notification (only once per session of being over limit)
         if (!hasShownToast) {
-            showToast('Maximum 1000 words allowed for INPUT. Please reduce your input text. (Output can be any length)', 'error');
+            showToast(`Maximum ${MAX_WORD_LIMIT} words allowed for INPUT. Please reduce your input text. (Output can be any length)`, 'error');
             hasShownToast = true;
         }
     } else {
