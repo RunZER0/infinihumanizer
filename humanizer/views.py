@@ -443,6 +443,7 @@ def start_payment(request):
         email = request.POST.get('email')
         amount = int(request.POST.get('amount'))
         currency = request.POST.get('currency', 'KES')
+        plan = request.POST.get('plan', 'Standard')  # Get plan from form
 
         # Convert to KES for Paystack (which only accepts KES)
         # Paystack expects amount in kobo (smallest unit), so multiply by 100
@@ -459,7 +460,7 @@ def start_payment(request):
                 'status': True,
                 'message': 'Authorization URL created',
                 'data': {
-                    'authorization_url': f"http://localhost:8000/humanizer/verify-payment/?reference=OFFLINE_REF&amount={amount}&currency={currency}",
+                    'authorization_url': f"http://localhost:8000/humanizer/verify-payment/?reference=OFFLINE_REF&amount={amount}&currency={currency}&plan={plan}",
                     'access_code': 'OFFLINE_ACCESS',
                     'reference': 'OFFLINE_REF'
                 },
@@ -470,7 +471,7 @@ def start_payment(request):
             "email": email,
             "amount": int(kes_amount),
             "currency": "KES",
-            "callback_url": f"http://localhost:8000/humanizer/verify-payment/?amount={amount}&currency={currency}"
+            "callback_url": f"http://localhost:8000/humanizer/verify-payment/?amount={amount}&currency={currency}&plan={plan}"
         }
 
         headers = {
@@ -491,15 +492,12 @@ def verify_payment(request):
     reference = request.GET.get('reference')
     amount = int(request.GET.get('amount', 0))
     currency = request.GET.get('currency', 'KES')
+    plan = request.GET.get('plan', '')  # Get plan type from query params
 
     # Offline mode: assume success and apply plan
     if getattr(settings, 'OFFLINE_MODE', False):
         profile = request.user.profile
-        profile.word_quota = PLAN_WORD_QUOTAS.get(amount, 0)
-        profile.words_used = 0
-        profile.is_paid = True
-        profile.account_type = PLAN_TIERS.get(amount, 'FREE')
-        profile.save()
+        apply_plan_to_profile(profile, plan, amount, currency)
         return redirect('humanizer')
 
     headers = {
@@ -512,11 +510,53 @@ def verify_payment(request):
 
     if res_data['status'] and res_data['data']['status'] == 'success':
         profile = request.user.profile
+        apply_plan_to_profile(profile, plan, amount, currency)
+        return redirect('humanizer')
+
+    return redirect('pricing')
+
+
+def apply_plan_to_profile(profile, plan, amount, currency):
+    """
+    Apply the purchased plan to user profile.
+    Handles both word-based plans (USD/KES) and time-based Kenya plans.
+    """
+    from datetime import timedelta
+    from django.utils import timezone
+    
+    # Set currency
+    profile.currency = currency
+    
+    # Kenya time-based plans
+    if plan in ['KE_DAILY', 'KE_WEEKLY', 'KE_MONTHLY', 'KE_MULTI_DEVICE']:
+        profile.account_type = plan
+        profile.is_paid = True
+        
+        # Set plan expiry based on plan type
+        now = timezone.now()
+        if plan == 'KE_DAILY':
+            profile.plan_expires_at = now + timedelta(days=1)
+            profile.max_concurrent_devices = 1
+        elif plan == 'KE_WEEKLY':
+            profile.plan_expires_at = now + timedelta(days=7)
+            profile.max_concurrent_devices = 1
+        elif plan == 'KE_MONTHLY':
+            profile.plan_expires_at = now + timedelta(days=30)
+            profile.max_concurrent_devices = 1
+        elif plan == 'KE_MULTI_DEVICE':
+            profile.plan_expires_at = now + timedelta(days=30)
+            profile.max_concurrent_devices = 5
+        
+        # Reset word quota for unlimited plans (set to very high number)
+        profile.word_quota = 999_999_999
+        profile.words_used = 0
+    else:
+        # Word-based plans (original behavior)
         profile.word_quota = PLAN_WORD_QUOTAS.get(amount, 0)
         profile.words_used = 0
         profile.is_paid = True
         profile.account_type = PLAN_TIERS.get(amount, 'FREE')
-        profile.save()
-        return redirect('humanizer')
-
-    return redirect('pricing')
+        profile.plan_expires_at = None  # Word-based plans don't expire
+        profile.max_concurrent_devices = 999  # No device limit for word-based plans
+    
+    profile.save()

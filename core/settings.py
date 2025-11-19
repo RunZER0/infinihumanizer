@@ -98,6 +98,7 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',  # Required for django-allauth
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'accounts.middleware.DeviceLimitMiddleware',  # Device tracking for Kenya plans
 ]
 
 # URL Configuration
