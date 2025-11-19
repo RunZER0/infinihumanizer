@@ -130,31 +130,33 @@ nav {
 
 /* Individual Plan Styling - Seamless Blended Design */
 .plan {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.02);
     padding: 3rem 2.5rem;
-    border-radius: 30px;
+    border-radius: 24px;
     position: relative;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    display: flex;
+    flex-direction: column;
 }
 
 .plan::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.06), transparent 40%);
+    background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.04), transparent 40%);
     opacity: 0;
     transition: opacity 0.5s;
     pointer-events: none;
 }
 
 .plan:hover {
-    transform: translateY(-10px);
-    background: rgba(255, 255, 255, 0.05);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-    border-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.04);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.08);
 }
 
 .plan:hover::before {
@@ -163,64 +165,61 @@ nav {
 
 /* Featured Plan (Pro) - Seamless Glow */
 .plan.featured {
-    background: linear-gradient(180deg, rgba(0, 212, 255, 0.05) 0%, rgba(0, 255, 136, 0.02) 100%);
-    border: 1px solid rgba(0, 212, 255, 0.2);
-    box-shadow: 0 0 40px rgba(0, 212, 255, 0.1);
-    transform: scale(1.05);
+    background: linear-gradient(180deg, rgba(0, 212, 255, 0.03) 0%, rgba(0, 255, 136, 0.01) 100%);
+    border: 1px solid rgba(0, 212, 255, 0.15);
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.05);
     z-index: 10;
 }
 
 .plan.featured:hover {
-    transform: scale(1.05) translateY(-10px);
-    box-shadow: 0 30px 80px rgba(0, 212, 255, 0.2);
-    border-color: rgba(0, 212, 255, 0.4);
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(0, 212, 255, 0.15);
+    border-color: rgba(0, 212, 255, 0.3);
 }
 
 .plan.featured .badge {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    background: rgba(0, 212, 255, 0.15);
+    top: 1.5rem;
+    right: 1.5rem;
+    background: rgba(0, 212, 255, 0.1);
     color: #00D4FF;
-    padding: 0.5rem 1rem;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 0.75rem;
-    letter-spacing: 1px;
-    border: 1px solid rgba(0, 212, 255, 0.3);
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(0, 212, 255, 0.2);
     backdrop-filter: blur(5px);
 }
 
 /* Plan Header */
 .plan-name {
-    font-size: 1.5rem;
-    color: rgba(255, 255, 255, 0.9);
-    font-weight: 700;
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 600;
     margin-bottom: 0.5rem;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
 }
 
 .plan-price {
     display: flex;
     align-items: baseline;
-    gap: 0.3rem;
+    gap: 0.2rem;
     margin-bottom: 0.5rem;
 }
 
 .currency {
-    font-size: 1.5rem;
-    color: rgba(255, 255, 255, 0.4);
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.5);
     font-weight: 500;
 }
 
 .amount {
-    font-size: 3.5rem;
-    background: linear-gradient(135deg, #fff 0%, #ccc 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-weight: 800;
+    font-size: 3rem;
+    color: #fff;
+    font-weight: 700;
     line-height: 1;
+    letter-spacing: -1px;
 }
 
 .plan.featured .amount {
@@ -231,10 +230,10 @@ nav {
 }
 
 .plan-words {
-    color: rgba(255, 255, 255, 0.4);
-    font-size: 1rem;
-    margin-bottom: 2.5rem;
-    padding-bottom: 2rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -242,44 +241,46 @@ nav {
 .features-list {
     list-style: none;
     padding: 0;
-    margin: 0 0 3rem 0;
+    margin: 0 0 2.5rem 0;
+    flex-grow: 1;
 }
 
 .features-list li {
-    padding: 0.8rem 0;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.95rem;
+    padding: 0.6rem 0;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
     display: flex;
     align-items: center;
-    gap: 1rem;
-    transition: all 0.3s ease;
+    gap: 0.8rem;
+    transition: color 0.3s ease;
 }
 
 .features-list li:hover {
     color: #fff;
-    transform: translateX(5px);
 }
 
 .feature-icon {
-    font-size: 1.1rem;
+    font-size: 1rem;
     flex-shrink: 0;
-    opacity: 0.7;
+    opacity: 0.8;
+    color: #00D4FF;
 }
 
 /* Select Button - Glassmorphism */
 .select-button {
     width: 100%;
-    padding: 1.2rem;
+    padding: 1rem;
     border: none;
-    border-radius: 16px;
-    font-size: 1rem;
-    font-weight: 700;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 1px;
     position: relative;
     overflow: hidden;
+    margin-top: auto;
 }
 
 /* Button Variants */
@@ -291,19 +292,20 @@ nav {
 
 .btn-standard:hover {
     background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
 }
 
 .btn-pro {
-    background: linear-gradient(135deg, #00D4FF, #0099FF);
-    color: #0D0D0D;
-    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+    background: #00D4FF;
+    color: #000;
+    box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2);
 }
 
 .btn-pro:hover {
+    background: #33ddff;
     transform: translateY(-2px);
-    box-shadow: 0 15px 40px rgba(0, 212, 255, 0.4);
+    box-shadow: 0 8px 30px rgba(0, 212, 255, 0.3);
 }
 
 .btn-enterprise {
@@ -315,7 +317,7 @@ nav {
 .btn-enterprise:hover {
     background: rgba(0, 255, 136, 0.2);
     border-color: #00FF88;
-    box-shadow: 0 10px 30px rgba(0, 255, 136, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 255, 136, 0.1);
     transform: translateY(-2px);
 }
 

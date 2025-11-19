@@ -147,9 +147,9 @@ Return the text with only necessary fixes applied:"""
             
             return reviewed_text.strip()
             
-        except Exception as e:
-            print(f"Warning: Final review failed: {e}")
+        except Exception:
             return text  # Return original on error
+
     
     def humanize_multi_stage(self, text: str) -> str:
         """

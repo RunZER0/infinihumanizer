@@ -41,62 +41,207 @@
     background-clip: text;
 }
 
-/* Devices Page */
+/* Devices Page - Modern Layout */
 .devices-container {
-    margin-top: 50px;
+    margin-top: 0;
     min-height: 100vh;
     background: linear-gradient(180deg, #0D0D14 0%, #1a1a2e 50%, #0D0D14 100%);
-    padding: 3rem 2rem;
+    padding: 4rem 2rem;
+    margin-left: 0;
+    transition: margin-left 0.4s ease;
 }
 
 .devices-header {
-    text-align: center;
-    margin-bottom: 4rem;
+    text-align: left;
+    margin-bottom: 3rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
 }
 
 .devices-header h1 {
-    font-size: 3rem;
-    background: linear-gradient(135deg, #00D4FF, #00FF88);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-weight: 900;
+    font-size: 2.5rem;
+    color: #fff;
+    font-weight: 700;
     margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
 }
 
 .devices-header p {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1rem;
 }
 
-/* Stats Cards */
+/* Stats Cards - Modern */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
+    gap: 1.5rem;
     max-width: 1200px;
     margin: 0 auto 3rem;
 }
 
 .stat-card {
-    background: linear-gradient(135deg, rgba(26, 26, 26, 0.8), rgba(13, 13, 20, 0.6));
-    padding: 2rem;
-    border-radius: 20px;
-    border: 1px solid rgba(0, 212, 255, 0.2);
-    text-align: center;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 1.5rem;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .stat-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    font-size: 2rem;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 212, 255, 0.1);
+    border-radius: 12px;
+    color: #00D4FF;
+    margin-bottom: 0;
+}
+
+.stat-content {
+    flex-grow: 1;
+    text-align: left;
 }
 
 .stat-value {
-    font-size: 2.5rem;
-    color: #00D4FF;
-    font-weight: 900;
-    margin-bottom: 0.5rem;
+    font-size: 2rem;
+    color: #fff;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+    line-height: 1;
 }
+
+.stat-label {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Device List - Modern Table */
+.device-list-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.device-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.device-table th {
+    text-align: left;
+    padding: 1.5rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.device-table td {
+    padding: 1.5rem;
+    color: rgba(255, 255, 255, 0.8);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    font-size: 0.95rem;
+}
+
+.device-table tr:last-child td {
+    border-bottom: none;
+}
+
+.device-table tr:hover td {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.device-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.device-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #fff;
+}
+
+.device-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.device-name {
+    font-weight: 600;
+    color: #fff;
+}
+
+.device-meta {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.status-active {
+    background: rgba(0, 255, 136, 0.1);
+    color: #00FF88;
+    border: 1px solid rgba(0, 255, 136, 0.2);
+}
+
+.status-inactive {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.current-device-badge {
+    background: rgba(0, 212, 255, 0.1);
+    color: #00D4FF;
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+}
+
 
 .stat-label {
     color: rgba(255, 255, 255, 0.7);
@@ -236,23 +381,92 @@
 <div class="devices-container">
     <!-- Header -->
     <div class="devices-header">
-        <h1>📱 Device Management</h1>
-        <p>Track and manage devices logged into your account</p>
+        <div>
+            <h1>Device Management</h1>
+            <p>Monitor active sessions and device limits</p>
+        </div>
     </div>
 
     <!-- Stats Grid -->
     <div class="stats-grid">
         <div class="stat-card">
-            <div class="stat-icon">✅</div>
-            <div class="stat-value">{{ active_sessions.count }}</div>
-            <div class="stat-label">Active Devices</div>
+            <div class="stat-icon">📱</div>
+            <div class="stat-content">
+                <div class="stat-value">{{ active_count }} / {{ max_concurrent }}</div>
+                <div class="stat-label">Active Sessions</div>
+            </div>
         </div>
-
         <div class="stat-card">
-            <div class="stat-icon">📊</div>
-            <div class="stat-value">{{ profile.max_concurrent_devices }}</div>
-            <div class="stat-label">Max Allowed</div>
+            <div class="stat-icon">🔄</div>
+            <div class="stat-content">
+                <div class="stat-value">{{ daily_switches }} / {{ max_daily }}</div>
+                <div class="stat-label">Daily Devices Used</div>
+            </div>
         </div>
+        <div class="stat-card">
+            <div class="stat-icon">�</div>
+            <div class="stat-content">
+                <div class="stat-value">{{ user.profile.plan_expires_at|date:"M d" }}</div>
+                <div class="stat-label">Plan Expiry</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Device List Table -->
+    <div class="device-list-container">
+        <table class="device-table">
+            <thead>
+                <tr>
+                    <th>Device</th>
+                    <th>IP Address</th>
+                    <th>Last Seen</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for session in sessions %}
+                <tr>
+                    <td>
+                        <div class="device-info">
+                            <div class="device-icon">
+                                {% if 'Mobile' in session.user_agent %}📱{% else %}💻{% endif %}
+                            </div>
+                            <div class="device-details">
+                                <div class="device-name">
+                                    {% if 'Windows' in session.user_agent %}Windows PC
+                                    {% elif 'Mac' in session.user_agent %}Mac
+                                    {% elif 'Android' in session.user_agent %}Android
+                                    {% elif 'iPhone' in session.user_agent %}iPhone
+                                    {% else %}Unknown Device{% endif %}
+                                    {% if session.device_fingerprint == current_fingerprint %}
+                                    <span class="current-device-badge">THIS DEVICE</span>
+                                    {% endif %}
+                                </div>
+                                <div class="device-meta">{{ session.user_agent|truncatechars:40 }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ session.ip_address }}</td>
+                    <td>{{ session.last_seen|timesince }} ago</td>
+                    <td>
+                        {% if session.is_active %}
+                        <span class="status-badge status-active">● Active</span>
+                        {% else %}
+                        <span class="status-badge status-inactive">● Inactive</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 3rem; color: rgba(255,255,255,0.4);">
+                        No active devices found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
         <div class="stat-card">
             <div class="stat-icon">📅</div>

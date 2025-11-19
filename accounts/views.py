@@ -56,10 +56,9 @@ class VerifiedEmailLoginView(LoginView):
         self._ensure_profile(user)
         login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
         return super().form_valid(form)
-        print(f"{'='*60}\n")
-        return super().form_valid(form)
 
     def _ensure_profile(self, user):
+
         profile, created = Profile.objects.get_or_create(user=user)
         if created:
             logger.info("Created profile for user %s during login", user.pk)

@@ -76,13 +76,19 @@ def _load_profile_state(user) -> Tuple[Profile, Dict[str, int]]:
 
     word_quota = max(0, word_quota)
     words_used = max(0, words_used)
-    word_balance = max(0, word_quota - words_used)
+    
+    # For Kenya plans (time-based), show unlimited balance if plan is active
+    if profile.is_kenya_plan() and profile.has_quota(1):
+        word_balance = 999999999  # Effectively infinite
+    else:
+        word_balance = max(0, word_quota - words_used)
 
     return profile, {
         "word_quota": word_quota,
         "words_used": words_used,
         "word_balance": word_balance,
     }
+
 
 
 @login_required
@@ -94,10 +100,11 @@ def humanizer_view(request):
     user = request.user
 
     profile, state = _load_profile_state(user)
-    if state["word_balance"] == 0 and state["word_quota"]:
+    if state["word_balance"] == 0 and state["word_quota"] and not profile.is_kenya_plan():
         messages.warning(
             request,
             "You've used your available words. Upgrade your plan to unlock more humanizations."
+
         )
 
     return render(
@@ -315,12 +322,12 @@ def is_african_ip(ip_address):
             # Check if Africa or specifically Kenya
             if continent == 'Africa' or country_code == 'KE':
                 return True
-    except Exception as e:
-        print(f"Error detecting location: {e}")
+    except Exception:
         # On error, default to international pricing
         return False
     
     return False
+
 
 
 @login_required
@@ -488,13 +495,19 @@ def start_payment(request):
             # Already in KES, just convert to kobo
             kes_amount = amount * 100
 
+        # Build absolute URI for callback
+        from django.urls import reverse
+        callback_path = reverse('verify-payment')
+        base_url = request.build_absolute_uri('/')[:-1]  # Remove trailing slash
+        callback_url = f"{base_url}{callback_path}?amount={amount}&currency={currency}&plan={plan}"
+
         # Offline mode: return a mocked init response
         if getattr(settings, 'OFFLINE_MODE', False):
             return JsonResponse({
                 'status': True,
                 'message': 'Authorization URL created',
                 'data': {
-                    'authorization_url': f"http://localhost:8000/humanizer/verify-payment/?reference=OFFLINE_REF&amount={amount}&currency={currency}&plan={plan}",
+                    'authorization_url': f"{callback_url}&reference=OFFLINE_REF",
                     'access_code': 'OFFLINE_ACCESS',
                     'reference': 'OFFLINE_REF'
                 },
@@ -505,8 +518,9 @@ def start_payment(request):
             "email": email,
             "amount": int(kes_amount),
             "currency": "KES",
-            "callback_url": f"http://localhost:8000/humanizer/verify-payment/?amount={amount}&currency={currency}&plan={plan}"
+            "callback_url": callback_url
         }
+
 
         headers = {
             "Authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}",
