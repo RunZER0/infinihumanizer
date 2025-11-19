@@ -304,7 +304,7 @@
                             {% endif %}
                         </div>
                         <div class="device-details">
-                            IP: {{ session.ip_address|truncatechars:20 }} • Last active: {{ session.last_active|timesince }} ago
+                            IP: {{ session.ip_address|truncatechars:20 }} • Last active: {{ session.last_seen|timesince }} ago
                         </div>
                     </div>
                     
@@ -356,7 +356,7 @@
                             {% endif %}
                         </div>
                         <div class="device-details">
-                            IP: {{ session.ip_address|truncatechars:20 }} • Created: {{ session.created_at|time }} • Last active: {{ session.last_active|timesince }} ago
+                            IP: {{ session.ip_address|truncatechars:20 }} • Created: {{ session.created_at|time }} • Last active: {{ session.last_seen|timesince }} ago
                         </div>
                     </div>
                     

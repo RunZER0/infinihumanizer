@@ -402,7 +402,7 @@ def devices_view(request):
     active_sessions = DeviceSession.objects.filter(
         user=request.user,
         is_active=True
-    ).order_by('-last_active')
+    ).order_by('-last_seen')
     
     # Get device sessions from today
     today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)

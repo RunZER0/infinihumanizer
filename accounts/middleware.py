@@ -125,8 +125,10 @@ class DeviceLimitMiddleware:
         
         # Enforce limits based on plan type
         if profile.account_type == 'KE_MULTI_DEVICE':
-            # Multi-device plan: up to 5 concurrent devices
+            # Multi-device plan: up to 5 concurrent devices, max 5 different devices per day
             max_concurrent = 5
+            max_daily_devices = 5
+            
             if active_devices > max_concurrent:
                 messages.error(
                     request,
@@ -134,6 +136,13 @@ class DeviceLimitMiddleware:
                     f"Please log out from another device."
                 )
                 return redirect('settings')
+                
+            if devices_today > max_daily_devices:
+                messages.error(
+                    request,
+                    f"Daily device limit reached. To prevent abuse, even Multi-Device plans are limited to {max_daily_devices} unique devices per day."
+                )
+                return redirect('pricing')
         else:
             # Basic Kenya plans: 1 device at a time, max 3 different devices per day
             max_concurrent = 1

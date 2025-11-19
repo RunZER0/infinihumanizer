@@ -128,74 +128,76 @@ nav {
     .plans-grid.kenya-grid { grid-template-columns: 1fr; }
 }
 
-/* Individual Plan Styling */
+/* Individual Plan Styling - Seamless Blended Design */
 .plan {
-    background: linear-gradient(135deg, rgba(26, 26, 26, 0.8), rgba(13, 13, 20, 0.6));
+    background: rgba(255, 255, 255, 0.03);
     padding: 3rem 2.5rem;
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
     position: relative;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .plan::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, transparent, #00D4FF, transparent);
+    inset: 0;
+    background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.06), transparent 40%);
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.5s;
+    pointer-events: none;
 }
 
 .plan:hover {
     transform: translateY(-10px);
-    border-color: rgba(0, 212, 255, 0.4);
-    box-shadow: 0 20px 60px rgba(0, 212, 255, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
 .plan:hover::before {
     opacity: 1;
 }
 
-/* Featured Plan (Pro) */
+/* Featured Plan (Pro) - Seamless Glow */
 .plan.featured {
-    background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(0, 255, 136, 0.05));
-    border: 2px solid rgba(0, 212, 255, 0.4);
-    box-shadow: 0 10px 40px rgba(0, 212, 255, 0.2);
+    background: linear-gradient(180deg, rgba(0, 212, 255, 0.05) 0%, rgba(0, 255, 136, 0.02) 100%);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    box-shadow: 0 0 40px rgba(0, 212, 255, 0.1);
     transform: scale(1.05);
+    z-index: 10;
 }
 
-.plan.featured::before {
-    opacity: 1;
-    height: 5px;
+.plan.featured:hover {
+    transform: scale(1.05) translateY(-10px);
+    box-shadow: 0 30px 80px rgba(0, 212, 255, 0.2);
+    border-color: rgba(0, 212, 255, 0.4);
 }
 
 .plan.featured .badge {
     position: absolute;
-    top: -15px;
+    top: 20px;
     right: 20px;
-    background: linear-gradient(135deg, #00D4FF, #00FF88);
-    color: #0D0D0D;
-    padding: 0.5rem 1.5rem;
-    border-radius: 20px;
-    font-weight: 800;
+    background: rgba(0, 212, 255, 0.15);
+    color: #00D4FF;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    font-weight: 700;
     font-size: 0.75rem;
     letter-spacing: 1px;
-    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    backdrop-filter: blur(5px);
 }
 
 /* Plan Header */
 .plan-name {
-    font-size: 1.8rem;
-    color: #00D4FF;
-    font-weight: 800;
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
 }
 
 .plan-price {
@@ -207,60 +209,71 @@ nav {
 
 .currency {
     font-size: 1.5rem;
-    color: rgba(255, 255, 255, 0.6);
-    font-weight: 600;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 500;
 }
 
 .amount {
-    font-size: 4rem;
-    color: #FFF;
-    font-weight: 900;
+    font-size: 3.5rem;
+    background: linear-gradient(135deg, #fff 0%, #ccc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800;
     line-height: 1;
 }
 
+.plan.featured .amount {
+    background: linear-gradient(135deg, #00D4FF 0%, #00FF88 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
 .plan-words {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 1.1rem;
-    margin-bottom: 2rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 1rem;
+    margin-bottom: 2.5rem;
     padding-bottom: 2rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 /* Features List */
 .features-list {
     list-style: none;
     padding: 0;
-    margin: 0 0 2.5rem 0;
+    margin: 0 0 3rem 0;
 }
 
 .features-list li {
     padding: 0.8rem 0;
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.95rem;
     display: flex;
     align-items: center;
-    gap: 0.8rem;
+    gap: 1rem;
     transition: all 0.3s ease;
 }
 
 .features-list li:hover {
-    color: #00D4FF;
+    color: #fff;
     transform: translateX(5px);
 }
 
 .feature-icon {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     flex-shrink: 0;
+    opacity: 0.7;
 }
 
-/* Select Button */
+/* Select Button - Glassmorphism */
 .select-button {
     width: 100%;
     padding: 1.2rem;
     border: none;
     border-radius: 16px;
-    font-size: 1.1rem;
-    font-weight: 800;
+    font-size: 1rem;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
     text-transform: uppercase;
@@ -269,64 +282,41 @@ nav {
     overflow: hidden;
 }
 
-.select-button::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
-}
-
-.select-button:hover::before {
-    width: 300px;
-    height: 300px;
-}
-
-.select-button span {
-    position: relative;
-    z-index: 1;
-}
-
 /* Button Variants */
 .btn-standard {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    background: rgba(255, 255, 255, 0.05);
     color: #FFF;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .btn-standard:hover {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
-    border-color: rgba(0, 212, 255, 0.5);
-    box-shadow: 0 8px 30px rgba(0, 212, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
 }
 
 .btn-pro {
     background: linear-gradient(135deg, #00D4FF, #0099FF);
     color: #0D0D0D;
-    border: none;
-    box-shadow: 0 8px 30px rgba(0, 212, 255, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
 }
 
 .btn-pro:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 40px rgba(0, 212, 255, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(0, 212, 255, 0.4);
 }
 
 .btn-enterprise {
-    background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 212, 255, 0.2));
+    background: rgba(0, 255, 136, 0.1);
     color: #00FF88;
-    border: 2px solid rgba(0, 255, 136, 0.4);
+    border: 1px solid rgba(0, 255, 136, 0.3);
 }
 
 .btn-enterprise:hover {
-    background: linear-gradient(135deg, rgba(0, 255, 136, 0.3), rgba(0, 212, 255, 0.3));
-    border-color: rgba(0, 255, 136, 0.6);
-    box-shadow: 0 8px 30px rgba(0, 255, 136, 0.3);
+    background: rgba(0, 255, 136, 0.2);
+    border-color: #00FF88;
+    box-shadow: 0 10px 30px rgba(0, 255, 136, 0.1);
+    transform: translateY(-2px);
 }
 
 /* Info Banner */

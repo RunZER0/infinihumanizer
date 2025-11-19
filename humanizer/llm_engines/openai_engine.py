@@ -4,6 +4,7 @@ Uses custom-trained model with multiple humanization modes.
 """
 
 import os
+import random
 from openai import OpenAI, APITimeoutError
 from ..modes_config import MODEL_ID, get_mode_config, format_prompt_for_mode, DEFAULT_MODE
 from ..multi_stage_pipeline import multi_stage_humanize_gpt4
@@ -15,6 +16,7 @@ class TextEngine:
     def __init__(self):
         """Initialize engine with API key from environment."""
         api_key = os.environ.get("OPENAI_API_KEY")
+
         if not api_key:
             raise RuntimeError("API key not configured")
         
@@ -59,12 +61,18 @@ class TextEngine:
                 {"role": "user", "content": text}
             ]
         
+        # Add random variation to temperature for uniqueness
+        # Variation of +/- 0.05 to keep it close to the optimized setting
+        base_temp = mode_config["temperature"]
+        random_variation = random.uniform(-0.05, 0.05)
+        final_temperature = max(0.1, min(1.0, base_temp + random_variation))
+        
         try:
             # Use streaming to avoid ReadTimeoutError on large responses
             stream = self.client.chat.completions.create(
                 model=self.model,
                 messages=messages,
-                temperature=mode_config["temperature"],
+                temperature=final_temperature,
                 max_tokens=4000,
                 stream=True
             )
