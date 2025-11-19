@@ -335,6 +335,12 @@ def pricing_view(request):
         pricing = {
             'currency': 'KES',
             'currency_symbol': 'KSh',
+            # Time-based unlimited plans (NEW)
+            'daily': {'price': 40, 'duration': 'Daily', 'words': 'Unlimited', 'devices': 1},
+            'weekly': {'price': 200, 'duration': 'Weekly', 'words': 'Unlimited', 'devices': 1},
+            'monthly': {'price': 700, 'duration': 'Monthly', 'words': 'Unlimited', 'devices': 1},
+            'multi_device': {'price': 1500, 'duration': 'Monthly', 'words': 'Unlimited', 'devices': 5},
+            # Original word-based plans (still available)
             'standard': {'price': 1500, 'words': 100000},
             'pro': {'price': 3200, 'words': 250000},
             'enterprise': {'price': 6400, 'words': 600000},
@@ -382,14 +388,19 @@ def settings_view(request):
 
 
 PLAN_WORD_QUOTAS = {
-    # USD amounts
+    # USD amounts (word-based plans)
     30: 100_000,
     75: 250_000,
     150: 600_000,
-    # KES amounts (for backward compatibility and Kenyan users)
+    # KES amounts - word-based plans
     1500: 100_000,
     3200: 250_000,
     6400: 600_000,
+    # KES amounts - time-based unlimited plans (these are unlimited, so we use -1 to indicate that)
+    40: -1,   # Daily unlimited
+    200: -1,  # Weekly unlimited
+    700: -1,  # Monthly unlimited
+    1500: -1, # Multi-device monthly unlimited (note: overlaps with word-based 1500, will differentiate by plan type)
 }
 
 PLAN_TIERS = {
@@ -397,10 +408,15 @@ PLAN_TIERS = {
     30: 'STANDARD',
     75: 'PRO',
     150: 'ENTERPRISE',
-    # KES amounts
+    # KES word-based amounts
     1500: 'STANDARD',
     3200: 'PRO',
     6400: 'ENTERPRISE',
+    # KES time-based amounts
+    40: 'KE_DAILY',
+    200: 'KE_WEEKLY',
+    700: 'KE_MONTHLY',
+    # Multi-device handled separately as it overlaps with 1500
 }
 
 

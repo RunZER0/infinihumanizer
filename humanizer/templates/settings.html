@@ -302,41 +302,6 @@
 
     <!-- Action Panels (Horizontal) -->
     <div class="action-grid">
-        <!-- AI Model Preferences -->
-        <div class="action-panel">
-            <div class="panel-title">
-                <span>🤖</span> AI Model Preferences
-            </div>
-            <div class="panel-description">
-                Choose your default AI engine for humanization
-            </div>
-            
-            <form method="post" id="preferencesForm">
-                {% csrf_token %}
-                
-                <div class="model-selector">
-                    <div class="model-option selected" data-engine="claude">
-                        <div class="model-name">OXO</div>
-                        <div class="model-desc">Balanced</div>
-                    </div>
-                    <div class="model-option" data-engine="openai">
-                        <div class="model-name">Smurk</div>
-                        <div class="model-desc">Pro</div>
-                    </div>
-                    <div class="model-option" data-engine="deepseek">
-                        <div class="model-name">Loly</div>
-                        <div class="model-desc">Fast</div>
-                    </div>
-                </div>
-                
-                <input type="hidden" name="engine" id="selectedEngine" value="claude">
-                
-                <button type="submit" class="action-btn btn-primary-modern">
-                    💾 Save Preferences
-                </button>
-            </form>
-        </div>
-
         <!-- Security Panel -->
         <div class="action-panel">
             <div class="panel-title">
@@ -347,7 +312,7 @@
             </div>
             
             <a href="{% url 'account_change_password' %}" class="action-btn btn-secondary-modern" style="text-decoration: none;">
-                � Change Password
+                🔐 Change Password
             </a>
         </div>
     </div>

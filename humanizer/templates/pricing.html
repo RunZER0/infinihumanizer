@@ -50,8 +50,15 @@
     margin: 0 auto 4rem;
 }
 
+/* Kenya plans - 2x2 grid */
+.plans-grid.kenya-grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 1000px;
+}
+
 @media (max-width: 1024px) {
     .plans-grid { grid-template-columns: 1fr; }
+    .plans-grid.kenya-grid { grid-template-columns: 1fr; }
 }
 
 /* Individual Plan Styling */
@@ -292,7 +299,98 @@
     </div>
 
     <!-- Plans Grid -->
-    <div class="plans-grid">
+    <div class="plans-grid {% if pricing.currency == 'KES' %}kenya-grid{% endif %}">
+        
+        {% if pricing.currency == 'KES' %}
+        <!-- Kenya Plans: Time-based Unlimited -->
+        
+        <!-- Daily Plan -->
+        <div class="plan">
+            <div class="plan-name">Daily</div>
+            <div class="plan-price">
+                <span class="currency">{{ pricing.currency_symbol }}</span>
+                <span class="amount">{{ pricing.daily.price }}</span>
+            </div>
+            <div class="plan-words">Unlimited words for 24 hours</div>
+            
+            <ul class="features-list">
+                <li><span class="feature-icon">✨</span> Unlimited humanizations for 1 day</li>
+                <li><span class="feature-icon">🔒</span> 1 device at a time</li>
+                <li><span class="feature-icon">📱</span> Max 3 devices per day</li>
+                <li><span class="feature-icon">📋</span> Copy + download tools</li>
+            </ul>
+            
+            <button class="select-button btn-standard select-btn" data-plan="KE_DAILY" data-amount="{{ pricing.daily.price }}" data-currency="{{ pricing.currency }}">
+                <span>Select Daily</span>
+            </button>
+        </div>
+
+        <!-- Weekly Plan -->
+        <div class="plan">
+            <div class="plan-name">Weekly</div>
+            <div class="plan-price">
+                <span class="currency">{{ pricing.currency_symbol }}</span>
+                <span class="amount">{{ pricing.weekly.price }}</span>
+            </div>
+            <div class="plan-words">Unlimited words for 7 days</div>
+            
+            <ul class="features-list">
+                <li><span class="feature-icon">✨</span> Unlimited humanizations for 1 week</li>
+                <li><span class="feature-icon">🔒</span> 1 device at a time</li>
+                <li><span class="feature-icon">📱</span> Max 3 devices per day</li>
+                <li><span class="feature-icon">⚡</span> Best value for short-term use</li>
+            </ul>
+            
+            <button class="select-button btn-standard select-btn" data-plan="KE_WEEKLY" data-amount="{{ pricing.weekly.price }}" data-currency="{{ pricing.currency }}">
+                <span>Select Weekly</span>
+            </button>
+        </div>
+
+        <!-- Monthly Plan (Featured) -->
+        <div class="plan featured">
+            <div class="badge">⭐ BEST VALUE</div>
+            <div class="plan-name">Monthly</div>
+            <div class="plan-price">
+                <span class="currency">{{ pricing.currency_symbol }}</span>
+                <span class="amount">{{ pricing.monthly.price }}</span>
+            </div>
+            <div class="plan-words">Unlimited words for 30 days</div>
+            
+            <ul class="features-list">
+                <li><span class="feature-icon">✨</span> Unlimited humanizations for 1 month</li>
+                <li><span class="feature-icon">🔒</span> 1 device at a time</li>
+                <li><span class="feature-icon">📱</span> Max 3 devices per day</li>
+                <li><span class="feature-icon">💬</span> Email support</li>
+            </ul>
+            
+            <button class="select-button btn-pro select-btn" data-plan="KE_MONTHLY" data-amount="{{ pricing.monthly.price }}" data-currency="{{ pricing.currency }}">
+                <span>Select Monthly</span>
+            </button>
+        </div>
+
+        <!-- Multi-Device Plan -->
+        <div class="plan">
+            <div class="plan-name">Multi-Device</div>
+            <div class="plan-price">
+                <span class="currency">{{ pricing.currency_symbol }}</span>
+                <span class="amount">{{ pricing.multi_device.price }}</span>
+            </div>
+            <div class="plan-words">Unlimited words • 5 devices</div>
+            
+            <ul class="features-list">
+                <li><span class="feature-icon">✨</span> Unlimited humanizations for 1 month</li>
+                <li><span class="feature-icon">👥</span> Up to 5 concurrent devices</li>
+                <li><span class="feature-icon">🚀</span> Perfect for teams or multiple devices</li>
+                <li><span class="feature-icon">💬</span> Priority email support</li>
+            </ul>
+            
+            <button class="select-button btn-enterprise select-btn" data-plan="KE_MULTI_DEVICE" data-amount="{{ pricing.multi_device.price }}" data-currency="{{ pricing.currency }}">
+                <span>Select Multi-Device</span>
+            </button>
+        </div>
+        
+        {% else %}
+        <!-- International Plans: Word-based -->
         
         <!-- Standard Plan -->
         <div class="plan">
@@ -305,7 +403,7 @@
             
             <ul class="features-list">
                 <li><span class="feature-icon">✨</span> Unlimited rehumanizations</li>
-                <li><span class="feature-icon">🤖</span> GPT-4 refinement engine</li>
+                <li><span class="feature-icon">🎯</span> Advanced refinement engine</li>
                 <li><span class="feature-icon">📊</span> Word usage tracking</li>
                 <li><span class="feature-icon">📋</span> Copy + download tools</li>
             </ul>
@@ -357,6 +455,8 @@
                 <span>Select Enterprise</span>
             </button>
         </div>
+        
+        {% endif %}
     </div>
 
     <!-- Info Banner -->

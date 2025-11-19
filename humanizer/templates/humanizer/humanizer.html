@@ -919,24 +919,16 @@
             </a>
         </div>
         
-        <!-- AI Model Info Section -->
+        <!-- Usage Tips Section -->
         <div class="sidebar-section">
-            <div class="sidebar-title">AI Model</div>
+            <div class="sidebar-title">Pro Tips</div>
             
-            <div class="model-card selected" style="pointer-events: none;">
-                <div class="model-header">
-                    <div class="model-left">
-                        <span class="model-icon">⚡</span>
-                        <span class="model-name">Smurk</span>
-                    </div>
-                    <div class="model-badge">Advanced</div>
-                </div>
-                <div class="model-description">Premium humanization model trained for authenticity</div>
-            </div>
-            
-            <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(0, 212, 255, 0.05); border-radius: 8px; border: 1px solid rgba(0, 212, 255, 0.2);">
+            <div style="margin-top: 0.5rem; padding: 0.75rem; background: rgba(0, 212, 255, 0.05); border-radius: 8px; border: 1px solid rgba(0, 212, 255, 0.2);">
+                <p style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.7); margin: 0 0 0.75rem 0;">
+                    💡 <strong>Tip:</strong> Use "Recommended" mode for best results.
+                </p>
                 <p style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.7); margin: 0;">
-                    💡 <strong>Tip:</strong> Use "Recommended" mode for best results beating AI detectors.
+                    📝 For longer texts, break them into smaller sections for optimal quality.
                 </p>
             </div>
         </div>
@@ -1158,10 +1150,10 @@
             <div style="width: 120px; height: 3px; background: linear-gradient(90deg, transparent, #00D4FF, transparent); margin: 0 auto 2.5rem;"></div>
             
             <p style="color: rgba(255, 255, 255, 0.9); line-height: 2; font-size: 1.2rem; margin-bottom: 1.8rem;">
-                InfiniAI Humanizer uses cutting-edge AI technology to transform robotic text into natural, authentic human writing.
+                InfiniHumanizer uses advanced technology to transform robotic text into natural, authentic human writing.
             </p>
             <p style="color: rgba(255, 255, 255, 0.75); line-height: 1.9; font-size: 1.1rem; max-width: 800px; margin: 0 auto;">
-                We combine multiple AI engines (DeepSeek, Claude, OpenAI) with sophisticated humanization algorithms to deliver the most authentic results possible. Our platform ensures your content bypasses AI detection while maintaining quality and readability.
+                Our sophisticated humanization algorithms deliver authentic results that maintain quality and readability while ensuring your content sounds naturally human.
             </p>
         </div>
     </div>
@@ -1428,7 +1420,7 @@ function toggleSidebar() {
 // Humanize button
 document.getElementById('humanizeBtn').addEventListener('click', async function() {
     const inputText = document.getElementById('inputText').value.trim();
-    const selectedEngine = 'openai';  // Only using OpenAI (smurk) now
+    const selectedEngine = 'openai';  // Internal engine selection
     const selectedMode = document.getElementById('modeSelect').value;
     
     if (!inputText) {
@@ -1535,15 +1527,9 @@ document.getElementById('pdfBtn').addEventListener('click', function() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         
-        // Get selected engine - use only brand names
+        // Get selected engine - simplified
         const selectedEngine = document.querySelector('input[name="engine"]:checked');
-        const engineName = selectedEngine ? selectedEngine.value : 'Unknown';
-        const engineLabels = {
-            'deepseek': 'Loly',
-            'claude': 'OXO',
-            'openai': 'Smurk'
-        };
-        const engineDisplayName = engineLabels[engineName] || engineName;
+        const engineName = 'InfiniHumanizer';
         
         // Generate 6-character alphanumeric ID
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -1551,7 +1537,7 @@ document.getElementById('pdfBtn').addEventListener('click', function() {
         for (let i = 0; i < 6; i++) {
             docId += chars.charAt(Math.floor(Math.random() * chars.length));
         }
-        const fullDocId = `${engineDisplayName.toUpperCase()}-${docId}`;
+        const fullDocId = `IH-${docId}`;
         
         // Get current date
         const now = new Date();
@@ -1776,28 +1762,28 @@ scrollTopBtn.addEventListener('click', function() {
             <div style="margin-bottom: 2.5rem; padding-left: 2rem; border-left: 2px solid rgba(0, 212, 255, 0.4); position: relative;">
                 <div style="position: absolute; left: -5px; top: 0; width: 8px; height: 8px; background: #00D4FF; border-radius: 50%; box-shadow: 0 0 10px rgba(0, 212, 255, 0.6);"></div>
                 <div style="color: #00D4FF; font-weight: 700; margin-bottom: 0.8rem; font-size: 1.05rem;">
-                    ✨ Version 4.5 - Advanced Model Integration
+                    ✨ Version 4.5 - Advanced Features
                 </div>
                 <ul style="color: rgba(255, 255, 255, 0.75); line-height: 1.9; list-style: none; padding-left: 0; font-size: 0.95rem;">
                     <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
                         <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.6);">•</span>
-                        Added Claude (OXO) - Balanced humanization model
+                        Enhanced humanization algorithms
                     </li>
                     <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
                         <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.6);">•</span>
-                        Enhanced DeepSeek (Loly) for detector evasion
+                        Improved detection bypass capabilities
                     </li>
                     <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
                         <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.6);">•</span>
-                        Upgraded OpenAI (Smurk) with authentic patterns
+                        Multiple writing modes added
                     </li>
                     <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
                         <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.6);">•</span>
-                        Implemented verbosity & natural error injection
+                        Natural error injection system
                     </li>
                     <li style="padding-left: 1.2rem; position: relative;">
                         <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.6);">•</span>
-                        Dynamic temperature for variation
+                        Dynamic text variation
                     </li>
                 </ul>
             </div>
@@ -1815,7 +1801,7 @@ scrollTopBtn.addEventListener('click', function() {
                     </li>
                     <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
                         <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.4);">•</span>
-                        High perplexity vocabulary integration
+                        Advanced vocabulary integration
                     </li>
                     <li style="padding-left: 1.2rem; position: relative;">
                         <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.4);">•</span>
