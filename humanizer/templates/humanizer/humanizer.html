@@ -888,52 +888,8 @@
 
 <!-- Main Layout -->
 <div class="humanizer-layout">
-    <!-- Hover trigger zone for sidebar -->
-    <div class="sidebar-hover-zone"></div>
-    
-    <!-- Collapsible Left Sidebar -->
-    <div class="sidebar collapsed" id="sidebar">
-        <div class="sidebar-content">
-        <!-- Navigation Section -->
-        <div class="sidebar-section">
-            <div class="sidebar-title">Navigation</div>
-            <a href="{% url 'pricing' %}" class="nav-link">
-                <span>💎</span>
-                <span>Pricing</span>
-            </a>
-            <a href="{% url 'settings' %}" class="nav-link">
-                <span>⚙️</span>
-                <span>Settings</span>
-            </a>
-            <a href="{% url 'about' %}" class="nav-link">
-                <span>ℹ️</span>
-                <span>About</span>
-            </a>
-            <a href="{% url 'contact' %}" class="nav-link">
-                <span>📧</span>
-                <span>Contact</span>
-            </a>
-            <a href="{% url 'account_logout' %}" class="nav-link logout">
-                <span>🚪</span>
-                <span>Logout</span>
-            </a>
-        </div>
-        
-        <!-- Usage Tips Section -->
-        <div class="sidebar-section">
-            <div class="sidebar-title">Pro Tips</div>
-            
-            <div style="margin-top: 0.5rem; padding: 0.75rem; background: rgba(0, 212, 255, 0.05); border-radius: 8px; border: 1px solid rgba(0, 212, 255, 0.2);">
-                <p style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.7); margin: 0 0 0.75rem 0;">
-                    💡 <strong>Tip:</strong> Use "Recommended" mode for best results.
-                </p>
-                <p style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.7); margin: 0;">
-                    📝 For longer texts, break them into smaller sections for optimal quality.
-                </p>
-            </div>
-        </div>
-        </div>
-    </div>
+    <!-- Include Sidebar -->
+    {% include 'includes/sidebar.html' %}
 
     <!-- Work Area -->
     <div class="content-area">

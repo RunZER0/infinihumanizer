@@ -4,9 +4,46 @@
 
 {% block content %}
 
+<!-- Include sidebar styles -->
+{% include 'includes/sidebar_styles.html' %}
+
 <style>
+/* Top Ribbon */
+.top-ribbon {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: linear-gradient(90deg, #1a1a2e 0%, #0f3460 50%, #1a1a2e 100%);
+    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    box-shadow: 0 2px 20px rgba(0, 212, 255, 0.1);
+}
+
+.ribbon-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.ribbon-logo {
+    font-size: 1.2rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #00D4FF, #00FF88);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
 /* About Page Redesign - Modern, Flowing, No Cards */
 .about-container {
+    margin-top: 50px; /* Account for top ribbon */
     min-height: 100vh;
     background: linear-gradient(180deg, #0D0D14 0%, #1a1a2e 30%, #0D0D14 70%, #1a1a2e 100%);
     padding: 4rem 2rem;
@@ -217,6 +254,18 @@
     margin: 5rem 0;
 }
 </style>
+
+<!-- Top Ribbon -->
+<div class="top-ribbon">
+    <div class="ribbon-content">
+        <span class="ribbon-logo">InfiniHumanizer</span>
+        <span>|</span>
+        <span>✨ Transform AI to Human Instantly</span>
+    </div>
+</div>
+
+<!-- Floating Sidebar -->
+{% include 'includes/sidebar.html' %}
 
 <div class="about-container">
     <!-- Hero -->

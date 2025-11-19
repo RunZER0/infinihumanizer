@@ -324,6 +324,7 @@ def is_african_ip(ip_address):
 
 
 @login_required
+@login_required
 def pricing_view(request):
     # Detect user location
     client_ip = get_client_ip(request)

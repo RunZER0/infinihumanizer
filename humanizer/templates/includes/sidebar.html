@@ -1,0 +1,88 @@
+<!-- Hover trigger zone for sidebar -->
+<div class="sidebar-hover-zone"></div>
+
+<!-- Collapsible Left Sidebar -->
+<div class="sidebar collapsed" id="sidebar">
+    <div class="sidebar-content">
+        <!-- Navigation Section -->
+        <div class="sidebar-section">
+            <div class="sidebar-title">Navigation</div>
+            <a href="{% url 'humanizer' %}" class="nav-link">
+                <span>🤖</span>
+                <span>Humanizer</span>
+            </a>
+            <a href="{% url 'pricing' %}" class="nav-link">
+                <span>💎</span>
+                <span>Pricing</span>
+            </a>
+            <a href="{% url 'settings' %}" class="nav-link">
+                <span>⚙️</span>
+                <span>Settings</span>
+            </a>
+            <a href="{% url 'about' %}" class="nav-link">
+                <span>ℹ️</span>
+                <span>About</span>
+            </a>
+            <a href="{% url 'contact' %}" class="nav-link">
+                <span>📧</span>
+                <span>Contact</span>
+            </a>
+            <a href="{% url 'account_logout' %}" class="nav-link logout">
+                <span>🚪</span>
+                <span>Logout</span>
+            </a>
+        </div>
+        
+        {% if user.is_authenticated and user.profile.is_kenya_plan %}
+        <!-- Device Tracking Section (Kenya Plans Only) -->
+        <div class="sidebar-section">
+            <div class="sidebar-title">Device Tracking</div>
+            
+            <div style="margin-top: 0.5rem; padding: 0.75rem; background: rgba(0, 212, 255, 0.05); border-radius: 8px; border: 1px solid rgba(0, 212, 255, 0.2);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <span style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.7);">Active Devices:</span>
+                    <span style="font-size: 0.9rem; color: #00D4FF; font-weight: 700;">{{ user.profile.current_active_devices }}/{{ user.profile.max_concurrent_devices }}</span>
+                </div>
+                
+                {% if user.profile.account_type != 'KE_MULTI_DEVICE' %}
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <span style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.7);">Devices Today:</span>
+                    <span style="font-size: 0.9rem; color: #00D4FF; font-weight: 700;">{{ user.profile.daily_device_switches }}/3</span>
+                </div>
+                {% endif %}
+                
+                {% if user.profile.plan_expires_at %}
+                <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 0.5rem; margin-top: 0.5rem;">
+                    <span style="font-size: 0.75rem; color: rgba(255, 255, 255, 0.5);">Plan expires:</span>
+                    <div style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.8); margin-top: 0.25rem;">
+                        {{ user.profile.plan_expires_at|date:"M d, Y" }}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <p style="font-size: 0.75rem; color: rgba(255, 255, 255, 0.5); margin: 0.5rem 0 0 0;">
+                    {% if user.profile.account_type == 'KE_MULTI_DEVICE' %}
+                    ✨ Multi-Device: Up to 5 devices
+                    {% else %}
+                    🔒 1 device at a time, max 3/day
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Usage Tips Section -->
+        <div class="sidebar-section">
+            <div class="sidebar-title">Pro Tips</div>
+            
+            <div style="margin-top: 0.5rem; padding: 0.75rem; background: rgba(0, 212, 255, 0.05); border-radius: 8px; border: 1px solid rgba(0, 212, 255, 0.2);">
+                <p style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.7); margin: 0 0 0.75rem 0;">
+                    💡 <strong>Tip:</strong> Use "Recommended" mode for best results.
+                </p>
+                <p style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.7); margin: 0;">
+                    📝 For longer texts, break them into smaller sections for optimal quality.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

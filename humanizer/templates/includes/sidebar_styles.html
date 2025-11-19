@@ -1,0 +1,114 @@
+<style>
+    /* Hover trigger zone - visible area at left edge to trigger sidebar */
+    .sidebar-hover-zone {
+        position: fixed;
+        left: 0;
+        top: 60px;
+        width: 20px;
+        height: calc(100vh - 60px);
+        z-index: 49;
+        background: transparent;
+    }
+
+    /* Collapsible Left Sidebar - Auto-hide and show on hover */
+    .sidebar {
+        width: 280px;
+        background: rgba(0, 0, 0, 0.6);
+        border-right: 1px solid rgba(0, 212, 255, 0.2);
+        padding: 1.5rem;
+        overflow-y: auto;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: fixed;
+        left: 0;
+        top: 60px;
+        height: calc(100vh - 60px);
+        transform: translateX(-100%);
+        z-index: 50;
+        backdrop-filter: blur(10px);
+    }
+
+    /* Show sidebar on hover of trigger zone OR sidebar itself */
+    .sidebar-hover-zone:hover ~ .sidebar,
+    .sidebar:hover {
+        transform: translateX(0);
+    }
+    
+    /* Custom scrollbar for sidebar */
+    .sidebar::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .sidebar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    
+    .sidebar::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, 
+            rgba(0, 212, 255, 0.1), 
+            rgba(0, 212, 255, 0.3), 
+            rgba(0, 212, 255, 0.1));
+        border-radius: 3px;
+        transition: background 0.3s ease;
+    }
+    
+    .sidebar::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, 
+            rgba(0, 212, 255, 0.3), 
+            rgba(0, 212, 255, 0.5), 
+            rgba(0, 212, 255, 0.3));
+    }
+    
+    /* Firefox scrollbar */
+    .sidebar {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(0, 212, 255, 0.2) transparent;
+    }
+    
+    .sidebar-section {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+    }
+    
+    .sidebar-section:last-child {
+        border-bottom: none;
+    }
+    
+    .sidebar-title {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.5);
+        letter-spacing: 1px;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    
+    /* Navigation Links */
+    .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.875rem 1rem;
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+    
+    .nav-link:hover {
+        background: rgba(0, 212, 255, 0.1);
+        color: #00D4FF;
+        transform: translateX(4px);
+    }
+    
+    .nav-link.logout {
+        color: rgba(255, 59, 48, 0.8);
+    }
+    
+    .nav-link.logout:hover {
+        background: rgba(255, 59, 48, 0.1);
+        color: #FF3B30;
+    }
+</style>
