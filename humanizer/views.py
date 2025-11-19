@@ -324,7 +324,6 @@ def is_african_ip(ip_address):
 
 
 @login_required
-@login_required
 def pricing_view(request):
     # Detect user location
     client_ip = get_client_ip(request)
@@ -386,6 +385,37 @@ def settings_view(request):
         "profile": profile,
         "percent_used": percent_used,
     })
+
+
+@login_required
+def devices_view(request):
+    """View to show all active devices for the current user"""
+    from accounts.models import DeviceSession
+    from django.utils import timezone
+    
+    profile = request.user.profile
+    
+    # Get all active device sessions
+    active_sessions = DeviceSession.objects.filter(
+        user=request.user,
+        is_active=True
+    ).order_by('-last_active')
+    
+    # Get device sessions from today
+    today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    today_sessions = DeviceSession.objects.filter(
+        user=request.user,
+        created_at__gte=today_start
+    ).order_by('-created_at')
+    
+    context = {
+        'profile': profile,
+        'active_sessions': active_sessions,
+        'today_sessions': today_sessions,
+        'is_kenya_plan': profile.is_kenya_plan(),
+    }
+    
+    return render(request, "devices.html", context)
 
 
 PLAN_WORD_QUOTAS = {

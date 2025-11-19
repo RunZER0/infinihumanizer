@@ -1,0 +1,401 @@
+{% extends "base.html" %}
+
+{% block title %}Device Management - InfiniHumanizer{% endblock %}
+
+{% block content %}
+
+<!-- Include sidebar styles -->
+{% include 'includes/sidebar_styles.html' %}
+
+<style>
+/* Top Ribbon */
+.top-ribbon {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: linear-gradient(90deg, #1a1a2e 0%, #0f3460 50%, #1a1a2e 100%);
+    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    box-shadow: 0 2px 20px rgba(0, 212, 255, 0.1);
+}
+
+.ribbon-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.ribbon-logo {
+    font-size: 1.2rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #00D4FF, #00FF88);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Devices Page */
+.devices-container {
+    margin-top: 50px;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #0D0D14 0%, #1a1a2e 50%, #0D0D14 100%);
+    padding: 3rem 2rem;
+}
+
+.devices-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.devices-header h1 {
+    font-size: 3rem;
+    background: linear-gradient(135deg, #00D4FF, #00FF88);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+}
+
+.devices-header p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.1rem;
+}
+
+/* Stats Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto 3rem;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.8), rgba(13, 13, 20, 0.6));
+    padding: 2rem;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    text-align: center;
+}
+
+.stat-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    color: #00D4FF;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1rem;
+}
+
+/* Device List */
+.devices-section {
+    max-width: 1200px;
+    margin: 0 auto 3rem;
+}
+
+.section-title {
+    font-size: 1.8rem;
+    color: #00D4FF;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.device-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.device-item {
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.6), rgba(13, 13, 20, 0.4));
+    padding: 1.5rem;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1.5rem;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.device-item:hover {
+    border-color: rgba(0, 212, 255, 0.4);
+    transform: translateX(5px);
+}
+
+.device-item.active {
+    border-color: rgba(0, 255, 136, 0.4);
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.05), rgba(0, 212, 255, 0.05));
+}
+
+.device-icon-large {
+    font-size: 2.5rem;
+}
+
+.device-info {
+    flex: 1;
+}
+
+.device-name {
+    font-size: 1.1rem;
+    color: #FFF;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.device-details {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+}
+
+.device-status {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.status-active {
+    background: rgba(0, 255, 136, 0.2);
+    color: #00FF88;
+    border: 1px solid rgba(0, 255, 136, 0.4);
+}
+
+.status-inactive {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.no-devices {
+    text-align: center;
+    padding: 3rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.1rem;
+}
+
+.info-banner {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(0, 255, 136, 0.05));
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 20px;
+    padding: 2rem;
+}
+
+.info-banner h3 {
+    color: #00D4FF;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.info-banner ul {
+    list-style: none;
+    padding: 0;
+}
+
+.info-banner li {
+    padding: 0.5rem 0;
+    color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+</style>
+
+<!-- Top Ribbon -->
+<div class="top-ribbon">
+    <div class="ribbon-content">
+        <span class="ribbon-logo">InfiniHumanizer</span>
+        <span>|</span>
+        <span>📱 Device Management</span>
+    </div>
+</div>
+
+<!-- Floating Sidebar -->
+{% include 'includes/sidebar.html' %}
+
+<div class="devices-container">
+    <!-- Header -->
+    <div class="devices-header">
+        <h1>📱 Device Management</h1>
+        <p>Track and manage devices logged into your account</p>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-value">{{ active_sessions.count }}</div>
+            <div class="stat-label">Active Devices</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-value">{{ profile.max_concurrent_devices }}</div>
+            <div class="stat-label">Max Allowed</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">📅</div>
+            <div class="stat-value">{{ today_sessions.count }}</div>
+            <div class="stat-label">Devices Today</div>
+        </div>
+
+        {% if is_kenya_plan and profile.account_type != 'KE_MULTI_DEVICE' %}
+        <div class="stat-card">
+            <div class="stat-icon">⚠️</div>
+            <div class="stat-value">{{ profile.daily_device_switches }}/3</div>
+            <div class="stat-label">Daily Switches</div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Active Devices -->
+    <div class="devices-section">
+        <h2 class="section-title">
+            <span>✅</span> Active Devices
+        </h2>
+        
+        <div class="device-list">
+            {% if active_sessions %}
+                {% for session in active_sessions %}
+                <div class="device-item active">
+                    <div class="device-icon-large">
+                        {% if 'Mobile' in session.user_agent or 'Android' in session.user_agent or 'iPhone' in session.user_agent %}
+                            📱
+                        {% elif 'Tablet' in session.user_agent or 'iPad' in session.user_agent %}
+                            📱
+                        {% else %}
+                            💻
+                        {% endif %}
+                    </div>
+                    
+                    <div class="device-info">
+                        <div class="device-name">
+                            {% if 'Chrome' in session.user_agent %}
+                                Chrome Browser
+                            {% elif 'Firefox' in session.user_agent %}
+                                Firefox Browser
+                            {% elif 'Safari' in session.user_agent %}
+                                Safari Browser
+                            {% elif 'Edge' in session.user_agent %}
+                                Edge Browser
+                            {% else %}
+                                Unknown Browser
+                            {% endif %}
+                        </div>
+                        <div class="device-details">
+                            IP: {{ session.ip_address|truncatechars:20 }} • Last active: {{ session.last_active|timesince }} ago
+                        </div>
+                    </div>
+                    
+                    <div class="device-status status-active">
+                        🟢 Active Now
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-devices">
+                    No active devices found
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Today's Devices -->
+    <div class="devices-section">
+        <h2 class="section-title">
+            <span>📅</span> Devices Used Today
+        </h2>
+        
+        <div class="device-list">
+            {% if today_sessions %}
+                {% for session in today_sessions %}
+                <div class="device-item {% if session.is_active %}active{% endif %}">
+                    <div class="device-icon-large">
+                        {% if 'Mobile' in session.user_agent or 'Android' in session.user_agent or 'iPhone' in session.user_agent %}
+                            📱
+                        {% elif 'Tablet' in session.user_agent or 'iPad' in session.user_agent %}
+                            📱
+                        {% else %}
+                            💻
+                        {% endif %}
+                    </div>
+                    
+                    <div class="device-info">
+                        <div class="device-name">
+                            {% if 'Chrome' in session.user_agent %}
+                                Chrome Browser
+                            {% elif 'Firefox' in session.user_agent %}
+                                Firefox Browser
+                            {% elif 'Safari' in session.user_agent %}
+                                Safari Browser
+                            {% elif 'Edge' in session.user_agent %}
+                                Edge Browser
+                            {% else %}
+                                Unknown Browser
+                            {% endif %}
+                        </div>
+                        <div class="device-details">
+                            IP: {{ session.ip_address|truncatechars:20 }} • Created: {{ session.created_at|time }} • Last active: {{ session.last_active|timesince }} ago
+                        </div>
+                    </div>
+                    
+                    {% if session.is_active %}
+                        <div class="device-status status-active">
+                            🟢 Active Now
+                        </div>
+                    {% else %}
+                        <div class="device-status status-inactive">
+                            ⚫ Logged Out
+                        </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-devices">
+                    No devices used today
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Info Banner -->
+    {% if is_kenya_plan %}
+    <div class="info-banner">
+        <h3>🔒 Device Limit Information</h3>
+        <ul>
+            {% if profile.account_type == 'KE_MULTI_DEVICE' %}
+                <li>✨ <strong>Multi-Device Plan:</strong> Up to 5 devices can be logged in simultaneously</li>
+                <li>🔄 No daily switching limits</li>
+            {% else %}
+                <li>🔒 <strong>Single Device Plan:</strong> Only 1 device can be logged in at a time</li>
+                <li>📱 Maximum of 3 different devices per day</li>
+                <li>🔄 When you log in from a new device, other devices are automatically logged out</li>
+            {% endif %}
+            <li>📅 Your plan expires: {{ profile.plan_expires_at|date:"M d, Y" }}</li>
+        </ul>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
