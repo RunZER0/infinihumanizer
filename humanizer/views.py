@@ -329,6 +329,9 @@ def pricing_view(request):
     client_ip = get_client_ip(request)
     is_africa = is_african_ip(client_ip)
     
+    # FORCE Kenya pricing for testing (remove this later for production)
+    is_africa = True
+    
     # Set pricing based on location
     if is_africa:
         # Kenya/Africa pricing in KES

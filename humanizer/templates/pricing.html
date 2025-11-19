@@ -377,6 +377,18 @@ nav {
 {% include 'includes/sidebar.html' %}
 
 <div class="pricing-container">
+    <!-- DEBUG INFO - Remove after testing -->
+    <div style="background: rgba(255, 0, 0, 0.1); padding: 1rem; margin-bottom: 2rem; border: 1px solid red; border-radius: 8px;">
+        <h3 style="color: #ff0; margin-bottom: 0.5rem;">DEBUG INFO:</h3>
+        <p style="color: #fff; font-size: 0.9rem;">Currency: {{ pricing.currency }}</p>
+        <p style="color: #fff; font-size: 0.9rem;">Is Africa: {{ is_africa }}</p>
+        <p style="color: #fff; font-size: 0.9rem;">Client IP: {{ client_ip }}</p>
+        <p style="color: #fff; font-size: 0.9rem;">User: {{ user.username }}</p>
+        <p style="color: #fff; font-size: 0.9rem;">User authenticated: {{ user.is_authenticated }}</p>
+        <p style="color: #fff; font-size: 0.9rem;">Account Type: {{ user.profile.account_type }}</p>
+        <p style="color: #fff; font-size: 0.9rem;">Is Kenya Plan: {{ user.profile.is_kenya_plan }}</p>
+    </div>
+    
     <!-- Header -->
     <div class="pricing-header">
         <h1>💎 Choose Your Plan</h1>

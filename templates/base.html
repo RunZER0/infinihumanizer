@@ -35,9 +35,9 @@
     </div>
     {% endif %}
 
-    <!-- Navigation -->
+    <!-- Navigation - HIDDEN (using sidebar instead) -->
     {% if user.is_authenticated %}
-    <nav>
+    <nav style="display: none;">
         <div class="nav-container">
             <a href="{% url 'humanizer' %}" class="logo">InfiniHumanizer</a>
             <button class="hamburger" id="hamburger" aria-label="Toggle menu">
