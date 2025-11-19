@@ -5,9 +5,11 @@ Uses custom-trained model with multiple humanization modes.
 
 import os
 import random
+import concurrent.futures
 from openai import OpenAI, APITimeoutError
 from ..modes_config import MODEL_ID, get_mode_config, format_prompt_for_mode, DEFAULT_MODE
-from ..multi_stage_pipeline import multi_stage_humanize_gpt4
+from ..multi_stage_pipeline import multi_stage_humanize_gpt4, chunk_text
+
 
 
 class TextEngine:
@@ -32,21 +34,79 @@ class TextEngine:
     
     def humanize(self, text: str, mode: str = None) -> str:
         """
-        Humanize text using specified mode.
+        Humanize text using specified mode with intelligent parallel chunking.
+        
+        Supports up to 3000 words with:
+        - Structure preservation (titles, headings, references)
+        - Parallel processing for speed
+        - Order preservation for coherence
         
         Args:
             text: The text to humanize
             mode: Humanization mode (recommended, readability, formal, conversational, informal, academic)
             
         Returns:
-            Humanized text
+            Humanized text with structure preserved
         """
         # Default to recommended mode
         if not mode:
             mode = DEFAULT_MODE
+
+        # --- PARALLEL CHUNKING LOGIC ---
+        # Check word count to decide on chunking
+        word_count = len(text.split())
+        
+        # If text is large (> 350 words), use parallel chunking
+        # This allows processing 3000+ words quickly by running chunks in parallel
+        if word_count > 350:
+            chunks = chunk_text(text)
+            
+            # Only proceed with parallel processing if we actually have multiple chunks
+            if len(chunks) > 1:
+                # Helper function for parallel execution
+                def process_chunk(index_chunk_tuple):
+                    index, chunk = index_chunk_tuple
+                    try:
+                        # Check if chunk is a title/heading (< 15 words, no period at end)
+                        chunk_words = len(chunk.split())
+                        is_title = chunk_words < 15 and not chunk.rstrip().endswith('.')
+                        
+                        # Check if chunk is references (starts with References, Bibliography, etc.)
+                        is_reference = any(chunk.strip().lower().startswith(kw) for kw in 
+                                         ['references', 'bibliography', 'works cited', 'citations'])
+                        
+                        # Skip processing for titles and references - return as-is
+                        if is_title or is_reference:
+                            return index, chunk
+                        
+                        # Recursive call - will hit the "small text" path below
+                        # We pass the same mode to ensure consistency
+                        return index, self.humanize(chunk, mode)
+                    except Exception:
+                        # Return original on error to prevent data loss
+                        return index, chunk 
+                
+                results = []
+                # Use ThreadPoolExecutor to run API calls in parallel
+                # 5 workers is a good balance for rate limits vs speed
+                with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+                    # Pass tuples of (index, chunk) to preserve order
+                    indexed_chunks = list(enumerate(chunks))
+                    futures = [executor.submit(process_chunk, item) for item in indexed_chunks]
+                    for future in concurrent.futures.as_completed(futures):
+                        results.append(future.result())
+                
+                # Sort by index to restore original order (CRITICAL for structure)
+                results.sort(key=lambda x: x[0])
+                
+                # Join with double newlines to preserve paragraph structure
+                return "\n\n".join([r[1] for r in results])
+        # -------------------------------
         
         # Get mode configuration
         mode_config = get_mode_config(mode)
+
+
         
         # Prepare prompt based on mode
         if mode_config["use_prompt"]:

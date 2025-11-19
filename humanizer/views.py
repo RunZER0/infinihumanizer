@@ -144,7 +144,9 @@ def humanize_ajax(request):
     # Maximum INPUT word limit to prevent timeouts and enforce UI limit
     # NOTE: This limit applies ONLY to input text, not output text
     # Output can be any length regardless of input size
-    MAX_WORD_COUNT = 1000
+    MAX_WORD_COUNT = 3000
+
+
 
     logger.info(
         "Humanization request received",

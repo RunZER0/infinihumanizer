@@ -21,57 +21,122 @@ from typing import List
 
 def chunk_text(input_text: str) -> List[str]:
     """
-    Splits input text into semantic chunks (paragraphs).
+    Splits input text into semantic chunks while preserving structure.
     
     Logic:
-    - Split by double newlines (paragraphs)
-    - If a single chunk is > 400 words, split at sentence boundaries
+    - Detects and preserves titles/headings (lines that are short and followed by newline)
+    - Detects and preserves references/bibliography sections
+    - Splits remaining text by paragraphs (double newlines)
+    - If a single paragraph is > 400 words, splits at sentence boundaries
     
     Args:
-        input_text: The text to chunk (max 1000 words)
+        input_text: The text to chunk (up to 3000 words)
         
     Returns:
-        List of text chunks
+        List of text chunks with metadata preserved
     """
-    # Split by paragraphs (double newlines)
-    chunks = input_text.split('\n\n')
+    lines = input_text.split('\n')
+    chunks = []
+    current_chunk = []
+    in_references = False
     
-    # Clean up empty chunks
-    chunks = [chunk.strip() for chunk in chunks if chunk.strip()]
+    # Patterns to detect titles/headings
+    title_patterns = [
+        r'^[A-Z][A-Za-z\s]{3,50}$',  # Short capitalized line (likely title)
+        r'^#+\s+.+$',  # Markdown heading
+        r'^[IVX]+\.\s+.+$',  # Roman numeral heading
+        r'^\d+\.\s+[A-Z].+$',  # Numbered heading
+    ]
     
-    # Handle overly long paragraphs (> 400 words)
-    processed_chunks = []
-    for chunk in chunks:
-        word_count = len(chunk.split())
+    # Patterns to detect references section
+    ref_patterns = [
+        r'^(References?|Bibliography|Works\s+Cited|Citations?)\s*$',
+        r'^\[?\d+\]?\s+[A-Z]',  # Numbered reference
+        r'^[A-Z][a-z]+,\s+[A-Z]\.',  # Author citation (Smith, J.)
+    ]
+    
+    i = 0
+    while i < len(lines):
+        line = lines[i].strip()
         
-        if word_count > 400:
-            # Split at sentence boundaries
-            sentences = re.split(r'(?<=[.!?])\s+', chunk)
-            
-            # Group sentences into smaller chunks
-            current_chunk = []
-            current_word_count = 0
-            
-            for sentence in sentences:
-                sentence_words = len(sentence.split())
-                
-                if current_word_count + sentence_words > 250:
-                    # Save current chunk and start new one
-                    if current_chunk:
-                        processed_chunks.append(' '.join(current_chunk))
-                    current_chunk = [sentence]
-                    current_word_count = sentence_words
-                else:
-                    current_chunk.append(sentence)
-                    current_word_count += sentence_words
-            
-            # Add remaining sentences
+        # Check if entering references section
+        if any(re.match(pattern, line, re.IGNORECASE) for pattern in ref_patterns[:1]):
+            # Save current chunk if exists
             if current_chunk:
-                processed_chunks.append(' '.join(current_chunk))
-        else:
-            processed_chunks.append(chunk)
+                chunks.append('\n'.join(current_chunk))
+                current_chunk = []
+            in_references = True
+            current_chunk.append(line)
+            i += 1
+            continue
+        
+        # If in references, keep adding until we hit a blank line followed by non-reference
+        if in_references:
+            if line:
+                current_chunk.append(line)
+            elif current_chunk and i + 1 < len(lines):
+                next_line = lines[i + 1].strip()
+                if next_line and not any(re.match(p, next_line) for p in ref_patterns):
+                    # End of references
+                    chunks.append('\n'.join(current_chunk))
+                    current_chunk = []
+                    in_references = False
+            i += 1
+            continue
+        
+        # Check if line is a title/heading
+        is_title = any(re.match(pattern, line) for pattern in title_patterns)
+        
+        if is_title:
+            # Save current chunk if exists
+            if current_chunk:
+                chunks.append('\n'.join(current_chunk))
+                current_chunk = []
+            # Title becomes its own chunk (to preserve formatting)
+            chunks.append(line)
+            i += 1
+            continue
+        
+        # Regular paragraph handling
+        if line:
+            current_chunk.append(line)
+        elif current_chunk:
+            # Empty line - end of paragraph
+            para_text = '\n'.join(current_chunk)
+            word_count = len(para_text.split())
+            
+            if word_count > 400:
+                # Split long paragraphs at sentence boundaries
+                sentences = re.split(r'(?<=[.!?])\s+', para_text)
+                temp_chunk = []
+                temp_word_count = 0
+                
+                for sentence in sentences:
+                    sentence_words = len(sentence.split())
+                    
+                    if temp_word_count + sentence_words > 300:
+                        if temp_chunk:
+                            chunks.append(' '.join(temp_chunk))
+                        temp_chunk = [sentence]
+                        temp_word_count = sentence_words
+                    else:
+                        temp_chunk.append(sentence)
+                        temp_word_count += sentence_words
+                
+                if temp_chunk:
+                    chunks.append(' '.join(temp_chunk))
+            else:
+                chunks.append(para_text)
+            
+            current_chunk = []
+        
+        i += 1
     
-    return processed_chunks
+    # Add any remaining content
+    if current_chunk:
+        chunks.append('\n'.join(current_chunk))
+    
+    return [c for c in chunks if c.strip()]
 
 
 # ============================================================================

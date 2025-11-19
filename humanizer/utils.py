@@ -8,8 +8,9 @@ from typing import Callable, Dict
 
 from .llm_engines.openai_engine import TextEngine
 
-# Character limit for safety
-MAX_TOTAL_CHARS = 10000
+# Character limit for safety (increased for 2500 word support)
+MAX_TOTAL_CHARS = 30000
+
 
 
 def clean_llm_output(text: str) -> str:
