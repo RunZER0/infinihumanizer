@@ -67,15 +67,16 @@ def clean_llm_output(text: str) -> str:
     return cleaned.strip()
 
 
-def humanize_with_text_engine(text: str, mode: str = "recommended") -> str:
+def humanize_with_text_engine(text: str, mode: str = "recommended", model: str = "premium") -> str:
     """
     Humanize text using the custom model with specified mode.
     
     Args:
         text: Text to humanize
         mode: Humanization mode (recommended, readability, formal, conversational, informal, academic)
+        model: Model selection (balanced, premium, experimental)
     """
-    engine = TextEngine()
+    engine = TextEngine(model=model)
     result = engine.humanize(text, mode=mode)
     return clean_llm_output(result)
 
@@ -85,13 +86,13 @@ ENGINE_HANDLERS: Dict[str, Callable] = {
 }
 
 
-def humanize_text(text: str, engine: str | None = None, mode: str = "recommended") -> str:
+def humanize_text(text: str, engine: str | None = None, mode: str = "recommended", model: str = "premium") -> str:
     """Main entry point for text humanization."""
     chosen = (engine or os.environ.get("HUMANIZER_ENGINE") or "openai").lower()
-    return humanize_text_with_engine(text, chosen, mode=mode)
+    return humanize_text_with_engine(text, chosen, mode=mode, model=model)
 
 
-def humanize_text_with_engine(text: str, engine: str, mode: str = "recommended") -> str:
+def humanize_text_with_engine(text: str, engine: str, mode: str = "recommended", model: str = "premium") -> str:
     """Route to the appropriate processing handler - NO CHUNKING."""
     
     # SAFETY CHECK: Limit total input size
@@ -104,12 +105,9 @@ def humanize_text_with_engine(text: str, engine: str, mode: str = "recommended")
     
     # Direct call to handler - no chunking
     handler = ENGINE_HANDLERS[engine]
-    print(f"🚀 Processing text (mode: {mode})...")
     
     try:
-        humanized_text = handler(text, mode=mode)
-        print(f"✅ Successfully processed {len(text)} → {len(humanized_text)} chars")
+        humanized_text = handler(text, mode=mode, model=model)
         return humanized_text
     except Exception as error:
-        print(f"❌ Processing failed: {error}")
         raise

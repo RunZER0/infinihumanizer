@@ -2,10 +2,37 @@
 Humanization Modes Configuration
 =================================
 Defines 6 modes for text humanization with different styles and temperatures.
+Supports multiple fine-tuned models for quality selection.
 """
 
-# Model identifier
-MODEL_ID = "ft:gpt-4.1-mini-2025-04-14:valdace-ai:humanizer:Cdiy4TfU"
+# ============================================================================
+# MODEL SELECTION
+# ============================================================================
+
+AVAILABLE_MODELS = {
+    "balanced": {
+        "id": "ft:gpt-4.1-mini-2025-04-14:valdace-ai:humanizerb0:CXCYIoX9",
+        "name": "Balanced (Fast)",
+        "description": "⚡ Fast processing with good quality - Best for general use",
+        "badge": "BALANCED"
+    },
+    "premium": {
+        "id": "ft:gpt-4.1-mini-2025-04-14:valdace-ai:humanizer:Cdiy4TfU",
+        "name": "Premium (Higher Quality)",
+        "description": "⭐ Enhanced quality output - Recommended for important documents",
+        "badge": "PREMIUM"
+    },
+    "experimental": {
+        "id": "ft:gpt-4.1-mini-2025-04-14:valdace-ai:humanizer:Cdiy3QH6:ckpt-step-98",
+        "name": "Experimental (Beta)",
+        "description": "🧪 Checkpoint model - Testing new features",
+        "badge": "BETA"
+    }
+}
+
+# Default model
+DEFAULT_MODEL = "premium"
+MODEL_ID = AVAILABLE_MODELS[DEFAULT_MODEL]["id"]
 
 # ============================================================================
 # MODE DEFINITIONS
@@ -171,3 +198,24 @@ def format_prompt_for_mode(mode_name: str, text: str) -> str:
         return None
     
     return config["prompt"].format(text=text)
+
+
+def get_all_models():
+    """Get all available models as a list of dicts"""
+    return [
+        {
+            "id": model_id,
+            "name": config["name"],
+            "description": config["description"],
+            "badge": config.get("badge"),
+            "model_id": config["id"]
+        }
+        for model_id, config in AVAILABLE_MODELS.items()
+    ]
+
+
+def get_model_id(model_key: str = None) -> str:
+    """Get the actual model ID for a given model key"""
+    if not model_key or model_key not in AVAILABLE_MODELS:
+        model_key = DEFAULT_MODEL
+    return AVAILABLE_MODELS[model_key]["id"]

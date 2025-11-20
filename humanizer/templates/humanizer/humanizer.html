@@ -919,6 +919,14 @@
                                 <option value="academic">Academic</option>
                             </select>
                         </div>
+                        <div class="mode-selector" style="margin-left: 1rem;">
+                            <label for="modelSelect" style="margin-right: 8px; font-weight: 600;">Model:</label>
+                            <select id="modelSelect" class="mode-dropdown">
+                                <option value="balanced">⚡ Balanced (Fast)</option>
+                                <option value="premium" selected>⭐ Premium (Higher Quality)</option>
+                                <option value="experimental">🧪 Experimental (Beta)</option>
+                            </select>
+                        </div>
                         <span class="word-limit-warning" id="wordLimitWarning"></span>
                     </div>
                 </div>
@@ -1378,6 +1386,7 @@ document.getElementById('humanizeBtn').addEventListener('click', async function(
     const inputText = document.getElementById('inputText').value.trim();
     const selectedEngine = 'openai';  // Internal engine selection
     const selectedMode = document.getElementById('modeSelect').value;
+    const selectedModel = document.getElementById('modelSelect').value;
     
     if (!inputText) {
         showToast('Please enter some text to humanize', 'error');
@@ -1385,7 +1394,7 @@ document.getElementById('humanizeBtn').addEventListener('click', async function(
     }
     
     // Check word count limit - use consistent word counting logic
-    // NOTE: This 1000-word limit applies ONLY to input, not output
+    // NOTE: This 3000-word limit applies ONLY to input, not output
     const wordCount = countWords(inputText);
     if (wordCount > MAX_WORD_LIMIT) {
         showToast(`Input text exceeds ${MAX_WORD_LIMIT} word limit. Please reduce your input text. (Output can be any length)`, 'error');
@@ -1409,7 +1418,7 @@ document.getElementById('humanizeBtn').addEventListener('click', async function(
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'X-CSRFToken': csrftoken
             },
-            body: `text=${encodeURIComponent(inputText)}&engine=${encodeURIComponent(selectedEngine)}&mode=${encodeURIComponent(selectedMode)}`
+            body: `text=${encodeURIComponent(inputText)}&engine=${encodeURIComponent(selectedEngine)}&mode=${encodeURIComponent(selectedMode)}&model=${encodeURIComponent(selectedModel)}`
         });
         
         if (!response.ok) {
@@ -1483,9 +1492,10 @@ document.getElementById('pdfBtn').addEventListener('click', function() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         
-        // Get selected engine - simplified
-        const selectedEngine = document.querySelector('input[name="engine"]:checked');
-        const engineName = 'InfiniHumanizer';
+        // Get selected model and mode
+        const selectedMode = document.getElementById('modeSelect').value || 'Recommended';
+        const selectedModel = document.getElementById('modelSelect').value || 'Premium';
+        const engineName = `InfiniHumanizer (${selectedModel.charAt(0).toUpperCase() + selectedModel.slice(1)})`;
         
         // Generate 6-character alphanumeric ID
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -1522,7 +1532,7 @@ document.getElementById('pdfBtn').addEventListener('click', function() {
         doc.setFontSize(10);
         doc.setFont(undefined, 'normal');
         doc.setTextColor(100, 100, 100);
-        doc.text(`Model: ${engineDisplayName} | Doc ID: ${fullDocId}`, margins.left, 30);
+        doc.text(`Model: ${engineName} | Doc ID: ${fullDocId}`, margins.left, 30);
         doc.text(`Generated: ${formattedDate}`, margins.left, 36);
         
         // Divider line

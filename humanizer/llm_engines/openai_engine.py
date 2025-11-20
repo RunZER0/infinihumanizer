@@ -7,15 +7,14 @@ import os
 import random
 import concurrent.futures
 from openai import OpenAI, APITimeoutError
-from ..modes_config import MODEL_ID, get_mode_config, format_prompt_for_mode, DEFAULT_MODE
+from ..modes_config import get_mode_config, format_prompt_for_mode, DEFAULT_MODE, get_model_id
 from ..multi_stage_pipeline import multi_stage_humanize_gpt4, chunk_text
-
 
 
 class TextEngine:
     """Text humanization engine with custom-trained model and modes."""
     
-    def __init__(self):
+    def __init__(self, model: str = "premium"):
         """Initialize engine with API key from environment."""
         api_key = os.environ.get("OPENAI_API_KEY")
 
@@ -29,8 +28,8 @@ class TextEngine:
             max_retries=2
         )
         
-        # Use custom model
-        self.model = MODEL_ID
+        # Use the specified model
+        self.model = get_model_id(model)
     
     def humanize(self, text: str, mode: str = None) -> str:
         """
@@ -56,9 +55,9 @@ class TextEngine:
         # Check word count to decide on chunking
         word_count = len(text.split())
         
-        # If text is large (> 350 words), use parallel chunking
+        # If text is large (> 500 words), use parallel chunking
         # This allows processing 3000+ words quickly by running chunks in parallel
-        if word_count > 350:
+        if word_count > 500:
             chunks = chunk_text(text)
             
             # Only proceed with parallel processing if we actually have multiple chunks
@@ -79,9 +78,38 @@ class TextEngine:
                         if is_title or is_reference:
                             return index, chunk
                         
-                        # Recursive call - will hit the "small text" path below
-                        # We pass the same mode to ensure consistency
-                        return index, self.humanize(chunk, mode)
+                        # Process this chunk WITHOUT recursion - call the core humanization logic directly
+                        mode_config = get_mode_config(mode)
+                        
+                        # Prepare prompt based on mode
+                        if mode_config["use_prompt"]:
+                            user_prompt = format_prompt_for_mode(mode, chunk)
+                            messages = [{"role": "user", "content": user_prompt}]
+                        else:
+                            messages = [{"role": "user", "content": chunk}]
+                        
+                        # Add random variation to temperature
+                        base_temp = mode_config["temperature"]
+                        random_variation = random.uniform(-0.05, 0.05)
+                        final_temperature = max(0.1, min(1.0, base_temp + random_variation))
+                        
+                        # Make the API call
+                        stream = self.client.chat.completions.create(
+                            model=self.model,
+                            messages=messages,
+                            temperature=final_temperature,
+                            max_tokens=4000,
+                            stream=True
+                        )
+                        
+                        # Collect content
+                        humanized_chunk = ""
+                        for chunk_item in stream:
+                            if chunk_item.choices and chunk_item.choices[0].delta.content:
+                                humanized_chunk += chunk_item.choices[0].delta.content
+                        
+                        return index, humanized_chunk.strip() if humanized_chunk else chunk
+                        
                     except Exception:
                         # Return original on error to prevent data loss
                         return index, chunk 

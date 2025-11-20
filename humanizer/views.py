@@ -15,7 +15,7 @@ from django.views.decorators.http import require_http_methods
 
 from accounts.models import Profile
 from .utils import humanize_text_with_engine, MAX_TOTAL_CHARS
-from .modes_config import get_all_modes
+from .modes_config import get_all_modes, get_all_models
 
 
 logger = logging.getLogger(__name__)
@@ -123,6 +123,13 @@ def get_modes(request):
     return JsonResponse({"modes": modes})
 
 
+@require_http_methods(["GET"])
+def get_models(request):
+    """API endpoint to get available AI models"""
+    models = get_all_models()
+    return JsonResponse({"models": models})
+
+
 @login_required
 @require_http_methods(["POST"])
 def humanize_ajax(request):
@@ -139,6 +146,7 @@ def humanize_ajax(request):
     input_text = request.POST.get("text", "").strip()
     selected_engine = (request.POST.get("engine") or "openai").lower()  # Default to OpenAI (smurk)
     selected_mode = request.POST.get("mode", "recommended").lower()  # Default to recommended mode
+    selected_model = request.POST.get("model", "premium").lower()  # Default to premium model
     word_count = len(input_text.split())
     
     # Maximum INPUT word limit to prevent timeouts and enforce UI limit
@@ -179,10 +187,10 @@ def humanize_ajax(request):
             logger.info("Humanization rejected for user %s: %s", request.user.pk, error)
             return JsonResponse({"error": error}, status=400)
 
-        # Direct LLM call with mode support
+        # Direct LLM call with mode and model support
         try:
-            logger.info("Humanizing text with mode: %s for user %s", selected_mode, request.user.pk)
-            output_text = humanize_text_with_engine(input_text, selected_engine, mode=selected_mode)
+            logger.info("Humanizing text with mode: %s, model: %s for user %s", selected_mode, selected_model, request.user.pk)
+            output_text = humanize_text_with_engine(input_text, selected_engine, mode=selected_mode, model=selected_model)
             
             # If output is empty or too short, something went wrong
             if not output_text or len(output_text.strip()) < 10:
