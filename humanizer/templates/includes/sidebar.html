@@ -37,16 +37,6 @@
             </a>
         </div>
         
-        <!-- DEBUG: Check if Kenya plan detection works -->
-        <div class="sidebar-section" style="background: rgba(255, 0, 0, 0.2); border: 1px solid red;">
-            <div class="sidebar-title" style="color: yellow;">DEBUG</div>
-            <p style="font-size: 0.75rem; color: #fff; margin: 0.25rem 0;">Authenticated: {{ user.is_authenticated }}</p>
-            <p style="font-size: 0.75rem; color: #fff; margin: 0.25rem 0;">Account Type: {{ user.profile.account_type }}</p>
-            <p style="font-size: 0.75rem; color: #fff; margin: 0.25rem 0;">Is Kenya Plan: {{ user.profile.is_kenya_plan }}</p>
-            <p style="font-size: 0.75rem; color: #fff; margin: 0.25rem 0;">Active Devices: {{ user.profile.current_active_devices }}</p>
-            <p style="font-size: 0.75rem; color: #fff; margin: 0.25rem 0;">Max Devices: {{ user.profile.max_concurrent_devices }}</p>
-        </div>
-        
         {% if user.is_authenticated and user.profile.is_kenya_plan %}
         <!-- Device Tracking Section (Kenya Plans Only) -->
         <div class="sidebar-section">
