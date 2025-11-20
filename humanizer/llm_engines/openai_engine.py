@@ -102,13 +102,50 @@ class TextEngine:
                             stream=True
                         )
                         
-                        # Collect content
+                        # Collect content with repetition detection
                         humanized_chunk = ""
+                        last_sentences = []  # Track last few sentences to detect loops
+                        
                         for chunk_item in stream:
                             if chunk_item.choices and chunk_item.choices[0].delta.content:
-                                humanized_chunk += chunk_item.choices[0].delta.content
+                                content = chunk_item.choices[0].delta.content
+                                humanized_chunk += content
+                                
+                                # Check for sentence repetition (detect loops)
+                                # Split by sentence endings and check last 3 sentences
+                                sentences = humanized_chunk.split('. ')
+                                if len(sentences) > 3:
+                                    recent = sentences[-3:]
+                                    # If the same sentence appears 3+ times in a row, stop streaming
+                                    if len(recent) >= 3 and recent[-1] == recent[-2] == recent[-3]:
+                                        break
                         
-                        return index, humanized_chunk.strip() if humanized_chunk else chunk
+                        # Clean up any trailing repetitions before returning
+                        result = humanized_chunk.strip() if humanized_chunk else chunk
+                        
+                        # Post-process: remove repetitive sentences at the end
+                        sentences = result.split('. ')
+                        if len(sentences) > 2:
+                            # Check if last sentence repeats
+                            cleaned = []
+                            prev_sentence = None
+                            repeat_count = 0
+                            
+                            for sentence in sentences:
+                                if sentence.strip() == prev_sentence:
+                                    repeat_count += 1
+                                    # Skip after 2 repetitions
+                                    if repeat_count >= 2:
+                                        continue
+                                else:
+                                    repeat_count = 0
+                                    prev_sentence = sentence.strip()
+                                
+                                cleaned.append(sentence)
+                            
+                            result = '. '.join(cleaned)
+                        
+                        return index, result
                         
                     except Exception:
                         # Return original on error to prevent data loss
@@ -165,11 +202,45 @@ class TextEngine:
                 stream=True
             )
             
-            # Collect content from stream chunks
+            # Collect content from stream chunks with repetition detection
             humanized_text = ""
             for chunk in stream:
                 if chunk.choices and chunk.choices[0].delta.content:
-                    humanized_text += chunk.choices[0].delta.content
+                    content = chunk.choices[0].delta.content
+                    humanized_text += content
+                    
+                    # Check for sentence repetition during streaming
+                    sentences = humanized_text.split('. ')
+                    if len(sentences) > 3:
+                        recent = sentences[-3:]
+                        # If same sentence repeats 3+ times, stop streaming
+                        if len(recent) >= 3 and recent[-1] == recent[-2] == recent[-3]:
+                            break
+            
+            # Post-process: clean up any repetitions that slipped through
+            sentences = humanized_text.split('. ')
+            if len(sentences) > 2:
+                cleaned = []
+                prev_sentence = None
+                repeat_count = 0
+                
+                for sentence in sentences:
+                    sentence = sentence.strip()
+                    if not sentence:
+                        continue
+                        
+                    if sentence == prev_sentence:
+                        repeat_count += 1
+                        # Skip after 2 repetitions
+                        if repeat_count >= 2:
+                            continue
+                    else:
+                        repeat_count = 0
+                        prev_sentence = sentence
+                    
+                    cleaned.append(sentence)
+                
+                humanized_text = '. '.join(cleaned)
             
             if not humanized_text:
                 raise RuntimeError("Processing returned empty response")

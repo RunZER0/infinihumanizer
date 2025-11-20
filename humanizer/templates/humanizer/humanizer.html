@@ -900,7 +900,7 @@
                     <div class="header-left">
                         <div class="container-label">
                             <span>📝</span>
-                            <span>Input Text (Max {{ word_balance }} words)</span>
+                            <span>Original Text</span>
                         </div>
                         <div class="word-counter">
                             <span>Words:</span>
@@ -908,32 +908,13 @@
                             <span>/</span>
                             <span>{{ word_balance }}</span>
                         </div>
-                        <div class="mode-selector">
-                            <label for="modeSelect" style="margin-right: 8px; font-weight: 600;">Mode:</label>
-                            <select id="modeSelect" class="mode-dropdown">
-                                <option value="recommended" selected>⭐ Recommended</option>
-                                <option value="readability">📖 Readability</option>
-                                <option value="formal">Formal</option>
-                                <option value="conversational">Conversational</option>
-                                <option value="informal">Informal</option>
-                                <option value="academic">Academic</option>
-                            </select>
-                        </div>
-                        <div class="mode-selector" style="margin-left: 1rem;">
-                            <label for="modelSelect" style="margin-right: 8px; font-weight: 600;">Model:</label>
-                            <select id="modelSelect" class="mode-dropdown">
-                                <option value="balanced">⚡ Balanced (Fast)</option>
-                                <option value="premium" selected>⭐ Premium (Higher Quality)</option>
-                                <option value="experimental">🧪 Experimental (Beta)</option>
-                            </select>
-                        </div>
                         <span class="word-limit-warning" id="wordLimitWarning"></span>
                     </div>
                 </div>
                 <textarea 
                     id="inputText" 
                     class="text-box" 
-                    placeholder="Paste your input text here (max {{ word_balance }} words). Output can be any length."
+                    placeholder="Paste your text here (up to {{ word_balance }} words)"
                 ></textarea>
                 <button id="humanizeBtn" class="btn btn-primary">
                     <span id="btnText">🤖 Humanize Text</span>
@@ -946,7 +927,7 @@
                     <div class="header-left">
                         <div class="container-label">
                             <span>✨</span>
-                            <span>Humanized Output (No limit)</span>
+                            <span>Humanized Text</span>
                         </div>
                         <div class="word-counter">
                             <span>Words:</span>
@@ -988,19 +969,43 @@
                 <textarea 
                     id="outputText" 
                     class="text-box" 
-                    placeholder="Humanized text will appear here..."
+                    placeholder="Your humanized text will appear here..."
                 ></textarea>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Glitching Version Badge - Reduced Height -->
-<div style="text-align: center; padding: 2rem 2rem 1.5rem; background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(13, 13, 20, 0.5) 100%);">
-    <div class="glitch-version" style="font-size: 2rem; font-weight: 900; color: #00D4FF; position: relative; display: inline-block; letter-spacing: 0.15rem;">
-        <span style="position: relative; z-index: 1;">NEURAL-X v3.0</span>
+<!-- Control Panel - Mode & Model Selection -->
+<div style="text-align: center; padding: 2rem; background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(13, 13, 20, 0.5) 100%); border-top: 1px solid rgba(0, 212, 255, 0.2); border-bottom: 1px solid rgba(0, 212, 255, 0.2);">
+    <div style="max-width: 800px; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 3rem;">
+        <!-- Mode Selector -->
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; min-width: 300px;">
+            <label for="modeSelect" style="font-weight: 700; font-size: 0.95rem; color: #00D4FF; text-transform: uppercase; letter-spacing: 1px;">
+                🎯 Humanization Mode
+            </label>
+            <select id="modeSelect" class="mode-dropdown" style="padding: 0.75rem 1rem; font-size: 1rem; border-radius: 8px; background: rgba(26, 26, 26, 0.8); border: 1px solid rgba(0, 212, 255, 0.3); color: #FFF; cursor: pointer; transition: all 0.3s ease;">
+                <option value="recommended" selected>⭐ Recommended</option>
+                <option value="readability">📖 Readability</option>
+                <option value="formal">Formal</option>
+                <option value="conversational">Conversational</option>
+                <option value="informal">Informal</option>
+                <option value="academic">Academic</option>
+            </select>
+        </div>
+        
+        <!-- Model Selector -->
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; min-width: 300px;">
+            <label for="modelSelect" style="font-weight: 700; font-size: 0.95rem; color: #00D4FF; text-transform: uppercase; letter-spacing: 1px;">
+                🤖 AI Model
+            </label>
+            <select id="modelSelect" class="mode-dropdown" style="padding: 0.75rem 1rem; font-size: 1rem; border-radius: 8px; background: rgba(26, 26, 26, 0.8); border: 1px solid rgba(0, 212, 255, 0.3); color: #FFF; cursor: pointer; transition: all 0.3s ease;">
+                <option value="premium" selected>⭐ Original (Highest Quality)</option>
+                <option value="balanced">🛡️ Current (Best for AI Detectors)</option>
+                <option value="experimental">⚖️ Beta (Balanced)</option>
+            </select>
+        </div>
     </div>
-    <p style="color: rgba(255, 255, 255, 0.5); margin-top: 0.5rem; font-size: 0.95rem;">Advanced AI Humanization Platform</p>
 </div>
 
 <!-- Smooth Separator -->

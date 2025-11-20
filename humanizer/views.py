@@ -411,28 +411,56 @@ def settings_view(request):
 def devices_view(request):
     """View to show all active devices for the current user"""
     from accounts.models import DeviceSession
+    from accounts.middleware import get_device_fingerprint
     from django.utils import timezone
+    from datetime import timedelta
     
     profile = request.user.profile
     
-    # Get all active device sessions
-    active_sessions = DeviceSession.objects.filter(
-        user=request.user,
-        is_active=True
+    # Get current device fingerprint to mark it
+    current_device_fingerprint = get_device_fingerprint(request)
+    
+    # Time threshold for "active" (last seen in 10 minutes)
+    active_threshold = timezone.now() - timedelta(minutes=10)
+    
+    # Get all device sessions (not just active ones)
+    all_sessions = DeviceSession.objects.filter(
+        user=request.user
     ).order_by('-last_seen')
+    
+    # Count active sessions
+    active_count = all_sessions.filter(
+        is_active=True,
+        last_seen__gte=active_threshold
+    ).count()
     
     # Get device sessions from today
     today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
-    today_sessions = DeviceSession.objects.filter(
-        user=request.user,
-        created_at__gte=today_start
-    ).order_by('-created_at')
+    devices_today = all_sessions.filter(
+        last_seen__gte=today_start
+    ).count()
+    
+    # Determine max concurrent devices based on plan
+    if profile.account_type == 'KE_MULTI_DEVICE':
+        max_concurrent = 5
+        max_daily = 5
+    elif profile.is_kenya_plan():
+        max_concurrent = 1
+        max_daily = 3
+    else:
+        max_concurrent = 1  # Default for non-Kenya plans
+        max_daily = 3
     
     context = {
         'profile': profile,
-        'active_sessions': active_sessions,
-        'today_sessions': today_sessions,
+        'all_sessions': all_sessions,
+        'active_count': active_count,
+        'devices_today': devices_today,
+        'max_concurrent': max_concurrent,
+        'max_daily': max_daily,
         'is_kenya_plan': profile.is_kenya_plan(),
+        'current_device_fingerprint': current_device_fingerprint,
+        'active_threshold': active_threshold,
     }
     
     return render(request, "devices.html", context)
