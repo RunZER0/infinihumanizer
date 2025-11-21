@@ -22,6 +22,12 @@ AVAILABLE_MODELS = {
         "description": "⭐ Enhanced quality output - Recommended for important documents",
         "badge": "PREMIUM"
     },
+    "pro": {
+        "id": "ft:gpt-4.1-mini-2025-04-14:valdace-ai:humanizerco:CeBLtu9z",
+        "name": "Pro (Detector Killer)",
+        "description": "🛡️ Beats all AI detectors - Perfect balance of quality and evasion",
+        "badge": "PRO"
+    },
     "experimental": {
         "id": "ft:gpt-4.1-mini-2025-04-14:valdace-ai:humanizer:Cdiy3QH6:ckpt-step-98",
         "name": "Experimental (Beta)",
