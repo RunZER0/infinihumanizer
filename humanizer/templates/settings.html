@@ -8,32 +8,47 @@
 {% include 'includes/sidebar_styles.html' %}
 
 <style>
-/* Top Ribbon */
+/* Reset & Base */
+body {
+    background: linear-gradient(180deg, #0A0A12 0%, #1a1a2e 30%, #0f1729 70%, #0A0A12 100%);
+    margin: 0;
+    padding: 0;
+    font-family: 'Aptos', 'Segoe UI', sans-serif;
+    min-height: 100vh;
+}
+
+main {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Floating Top Ribbon - Glassmorphic */
 .top-ribbon {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 50px;
-    background: linear-gradient(90deg, #1a1a2e 0%, #0f3460 50%, #1a1a2e 100%);
-    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+    height: 60px;
+    background: rgba(10, 10, 18, 0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0, 212, 255, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 999;
-    box-shadow: 0 2px 20px rgba(0, 212, 255, 0.1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
 }
 
-.ribbon-content {
+.ribbon-brand {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.8rem;
     color: #fff;
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
 .ribbon-logo {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     font-weight: 900;
     background: linear-gradient(135deg, #00D4FF, #00FF88);
     -webkit-background-clip: text;
@@ -41,62 +56,164 @@
     background-clip: text;
 }
 
-/* Settings Page Redesign - No Cards, Horizontal Layout */
-.settings-container {
-    margin-top: 50px; /* Account for top ribbon */
-    min-height: 100vh;
-    background: linear-gradient(180deg, #0D0D14 0%, #1a1a2e 50%, #0D0D14 100%);
-    padding: 3rem 2rem;
+/* Settings Area - Blended Background */
+.settings-area {
+    margin-top: 60px;
+    min-height: calc(100vh - 60px);
+    padding: 4rem 2rem;
+    margin-left: 0;
+    transition: margin-left 0.4s ease;
 }
 
-.settings-header {
+/* Hero Section - No Container */
+.hero-section {
     text-align: center;
-    margin-bottom: 4rem;
+    margin-bottom: 5rem;
     position: relative;
 }
 
-.settings-header h1 {
-    font-size: 3rem;
+.hero-section h1 {
+    font-size: 4rem;
     background: linear-gradient(135deg, #00D4FF, #00FF88);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     font-weight: 900;
-    margin-bottom: 0.5rem;
-    text-shadow: 0 0 40px rgba(0, 212, 255, 0.3);
+    margin-bottom: 0.8rem;
+    letter-spacing: -2px;
+    animation: glow-pulse 3s ease-in-out infinite;
 }
 
-.settings-header p {
+@keyframes glow-pulse {
+    0%, 100% { filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.3)); }
+    50% { filter: drop-shadow(0 0 50px rgba(0, 212, 255, 0.5)); }
+}
+
+.hero-section p {
     color: rgba(255, 255, 255, 0.6);
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    font-weight: 300;
 }
 
-/* Horizontal Stats Grid */
-.stats-grid {
+/* Stats River - Flowing Layout */
+.stats-river {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
     max-width: 1200px;
-    margin: 0 auto 3rem;
+    margin: 0 auto 5rem;
+    position: relative;
 }
 
-.stat-item {
-    background: linear-gradient(135deg, rgba(26, 26, 26, 0.6), rgba(13, 13, 20, 0.4));
-    padding: 1.5rem;
-    border-radius: 16px;
-    border: 1px solid rgba(0, 212, 255, 0.15);
-    transition: all 0.3s ease;
+.stats-river::after {
+    content: '';
+    position: absolute;
+    bottom: -2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.3), transparent);
+}
+
+.stat-orb {
+    padding: 2.5rem 2rem;
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(0, 255, 136, 0.02));
+    border-radius: 24px;
+    border: 1px solid rgba(0, 212, 255, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+.stat-orb::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.1), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.stat-orb:hover::before {
+    opacity: 1;
+}
+
+.stat-orb:hover {
+    transform: translateY(-10px) scale(1.02);
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(0, 255, 136, 0.05));
+    border-color: rgba(0, 212, 255, 0.3);
+    box-shadow: 0 20px 60px rgba(0, 212, 255, 0.2);
+}
+
+.stat-orb-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.stat-orb-label {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.8rem;
+}
+
+.stat-orb-value {
+    color: #FFF;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+/* Progress Wave */
+.progress-wave {
+    margin-top: 1rem;
+}
+
+.wave-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.wave-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00D4FF, #00FF88);
+    border-radius: 10px;
+    transition: width 0.6s ease;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.6);
+}
+
+/* Action Flow - Smooth Panels */
+.action-flow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2.5rem;
+    max-width: 1200px;
+    margin: 0 auto 5rem;
+}
+
+@media (max-width: 768px) {
+    .action-flow {
+        grid-template-columns: 1fr;
+    }
+}
+
+.action-bubble {
+    padding: 3rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
 }
 
-.stat-item:hover {
-    transform: translateY(-5px);
-    border-color: rgba(0, 212, 255, 0.4);
-    box-shadow: 0 10px 40px rgba(0, 212, 255, 0.2);
-}
-
-.stat-item::before {
+.action-bubble::before {
     content: '';
     position: absolute;
     top: 0;
@@ -104,201 +221,146 @@
     right: 0;
     height: 3px;
     background: linear-gradient(90deg, transparent, #00D4FF, transparent);
+    transform: scaleX(0);
+    transition: transform 0.5s ease;
 }
 
-.stat-label {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 0.5rem;
+.action-bubble:hover::before {
+    transform: scaleX(1);
 }
 
-.stat-value {
-    color: #FFF;
-    font-size: 1.4rem;
-    font-weight: 700;
+.action-bubble:hover {
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(0, 255, 136, 0.02));
+    border-color: rgba(0, 212, 255, 0.2);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 50px rgba(0, 212, 255, 0.1);
 }
 
-.stat-icon {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-    display: block;
-}
-
-/* Word Balance Progress */
-.word-progress {
-    margin-top: 0.8rem;
-}
-
-.progress-bar {
-    height: 6px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
-}
-
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #00D4FF, #00FF88);
-    border-radius: 10px;
-    transition: width 0.6s ease;
-    box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
-}
-
-/* Horizontal Action Panels */
-.action-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    max-width: 1200px;
-    margin: 0 auto 3rem;
-}
-
-@media (max-width: 768px) {
-    .action-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-.action-panel {
-    background: linear-gradient(135deg, rgba(26, 26, 26, 0.8), rgba(13, 13, 20, 0.6));
-    padding: 2rem;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s ease;
-}
-
-.action-panel:hover {
-    border-color: rgba(0, 212, 255, 0.3);
-}
-
-.panel-title {
-    font-size: 1.5rem;
+.bubble-header {
+    font-size: 1.8rem;
     color: #00D4FF;
     font-weight: 800;
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.8rem;
 }
 
-.panel-description {
+.bubble-text {
     color: rgba(255, 255, 255, 0.7);
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
+    margin-bottom: 2rem;
+    line-height: 1.7;
+    font-size: 1rem;
 }
 
-/* Modern Buttons */
-.action-btn {
+/* Smooth Buttons */
+.smooth-btn {
     width: 100%;
-    padding: 1rem 1.5rem;
+    padding: 1.2rem 1.5rem;
     border: none;
-    border-radius: 12px;
+    border-radius: 14px;
     font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 0.6rem;
+    text-decoration: none;
 }
 
-.btn-primary-modern {
+.btn-glow {
     background: linear-gradient(135deg, #00D4FF, #0099FF);
-    color: #0D0D0D;
+    color: #000;
     box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
 }
 
-.btn-primary-modern:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 30px rgba(0, 212, 255, 0.5);
+.btn-glow:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 35px rgba(0, 212, 255, 0.5);
 }
 
-.btn-secondary-modern {
-    background: rgba(255, 255, 255, 0.05);
+.btn-ghost {
+    background: rgba(255, 255, 255, 0.04);
     color: #FFF;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.btn-secondary-modern:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(0, 212, 255, 0.5);
+.btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(0, 212, 255, 0.4);
+    transform: translateY(-3px);
 }
 
-.btn-danger-modern {
-    background: linear-gradient(135deg, rgba(255, 59, 48, 0.2), rgba(255, 59, 48, 0.1));
+.btn-danger-soft {
+    background: linear-gradient(135deg, rgba(255, 59, 48, 0.15), rgba(255, 59, 48, 0.08));
     color: #FF3B30;
-    border: 1px solid rgba(255, 59, 48, 0.4);
+    border: 1px solid rgba(255, 59, 48, 0.3);
 }
 
-.btn-danger-modern:hover {
-    background: linear-gradient(135deg, rgba(255, 59, 48, 0.3), rgba(255, 59, 48, 0.2));
-    border-color: rgba(255, 59, 48, 0.6);
+.btn-danger-soft:hover {
+    background: linear-gradient(135deg, rgba(255, 59, 48, 0.25), rgba(255, 59, 48, 0.15));
+    border-color: rgba(255, 59, 48, 0.5);
+    transform: translateY(-3px);
 }
 
-/* AI Model Selector */
-.model-selector {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+/* Smooth Divider */
+.smooth-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+    margin: 4rem 0;
 }
 
-.model-option {
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.03);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: center;
-}
-
-.model-option:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(0, 212, 255, 0.3);
-}
-
-.model-option.selected {
-    background: rgba(0, 212, 255, 0.1);
-    border-color: #00D4FF;
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
-}
-
-.model-name {
-    font-weight: 700;
-    color: #FFF;
-    margin-bottom: 0.3rem;
-}
-
-.model-desc {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.5);
-}
-
-/* Danger Zone */
+/* Danger Zone - Smooth Blend */
 .danger-zone {
     max-width: 1200px;
     margin: 0 auto;
-    background: linear-gradient(135deg, rgba(255, 59, 48, 0.05), rgba(255, 59, 48, 0.02));
-    padding: 2rem;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 59, 48, 0.2);
+    padding: 3.5rem;
+    background: linear-gradient(135deg, rgba(255, 59, 48, 0.04), rgba(255, 59, 48, 0.01));
+    border-radius: 24px;
+    border: 1px solid rgba(255, 59, 48, 0.15);
+    position: relative;
+    overflow: hidden;
 }
 
-.separator {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
-    margin: 3rem 0;
+.danger-zone::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 59, 48, 0.05) 0%, transparent 70%);
+    animation: danger-pulse 6s ease-in-out infinite;
+}
+
+@keyframes danger-pulse {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(5%, 5%); }
+}
+
+.danger-zone .bubble-header {
+    color: #FF3B30;
+    position: relative;
+    z-index: 1;
+}
+
+.danger-zone .bubble-text {
+    position: relative;
+    z-index: 1;
+}
+
+.danger-zone .smooth-btn {
+    max-width: 350px;
+    position: relative;
+    z-index: 1;
 }
 </style>
 
 <!-- Top Ribbon -->
 <div class="top-ribbon">
-    <div class="ribbon-content">
+    <div class="ribbon-brand">
         <span class="ribbon-logo">InfiniHumanizer</span>
         <span>|</span>
         <span>✨ Transform AI to Human Instantly</span>
@@ -308,76 +370,76 @@
 <!-- Floating Sidebar -->
 {% include 'includes/sidebar.html' %}
 
-<div class="settings-container">
-    <!-- Header -->
-    <div class="settings-header">
+<div class="settings-area">
+    <!-- Hero Section -->
+    <div class="hero-section">
         <h1>⚙️ Settings</h1>
         <p>Manage your account, preferences, and security</p>
     </div>
 
-    <!-- Stats Grid (Horizontal) -->
-    <div class="stats-grid">
-        <div class="stat-item">
-            <span class="stat-icon">📧</span>
-            <div class="stat-label">Email</div>
-            <div class="stat-value" style="font-size: 1rem;">{{ user.email }}</div>
+    <!-- Stats River -->
+    <div class="stats-river">
+        <div class="stat-orb">
+            <span class="stat-orb-icon">📧</span>
+            <div class="stat-orb-label">Email</div>
+            <div class="stat-orb-value" style="font-size: 0.95rem; word-break: break-all;">{{ user.email }}</div>
         </div>
 
-        <div class="stat-item">
-            <span class="stat-icon">👤</span>
-            <div class="stat-label">Account Type</div>
-            <div class="stat-value" style="color: #00FF88;">{{ user.profile.account_type|default:"FREE" }}</div>
+        <div class="stat-orb">
+            <span class="stat-orb-icon">👤</span>
+            <div class="stat-orb-label">Account Type</div>
+            <div class="stat-orb-value" style="color: #00FF88;">{{ user.profile.account_type|default:"FREE" }}</div>
         </div>
 
-        <div class="stat-item">
-            <span class="stat-icon">📊</span>
-            <div class="stat-label">Words Balance</div>
-            <div class="stat-value">{{ user.profile.words_used|default:"0" }} / {{ user.profile.word_quota|default:"100000" }}</div>
-            <div class="word-progress">
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: {% widthratio user.profile.words_used user.profile.word_quota 100 %}%"></div>
+        <div class="stat-orb">
+            <span class="stat-orb-icon">📊</span>
+            <div class="stat-orb-label">Words Balance</div>
+            <div class="stat-orb-value">{{ user.profile.words_used|default:"0" }} / {{ user.profile.word_quota|default:"100000" }}</div>
+            <div class="progress-wave">
+                <div class="wave-bar">
+                    <div class="wave-fill" style="width: {% widthratio user.profile.words_used user.profile.word_quota 100 %}%"></div>
                 </div>
             </div>
         </div>
 
-        <div class="stat-item">
-            <span class="stat-icon">📅</span>
-            <div class="stat-label">Member Since</div>
-            <div class="stat-value">{{ user.date_joined|date:"M Y" }}</div>
+        <div class="stat-orb">
+            <span class="stat-orb-icon">📅</span>
+            <div class="stat-orb-label">Member Since</div>
+            <div class="stat-orb-value">{{ user.date_joined|date:"M Y" }}</div>
         </div>
     </div>
 
-    <div class="separator"></div>
+    <div class="smooth-divider"></div>
 
-    <!-- Action Panels (Horizontal) -->
-    <div class="action-grid">
-        <!-- Security Panel -->
-        <div class="action-panel">
-            <div class="panel-title">
+    <!-- Action Flow -->
+    <div class="action-flow">
+        <!-- Security Bubble -->
+        <div class="action-bubble">
+            <div class="bubble-header">
                 <span>🔒</span> Security
             </div>
-            <div class="panel-description">
-                Keep your account secure with a strong password
+            <div class="bubble-text">
+                Keep your account secure with a strong password. Update it regularly to maintain maximum protection.
             </div>
             
-            <a href="{% url 'account_change_password' %}" class="action-btn btn-secondary-modern" style="text-decoration: none;">
+            <a href="{% url 'account_change_password' %}" class="smooth-btn btn-ghost">
                 🔐 Change Password
             </a>
         </div>
     </div>
 
-    <div class="separator"></div>
+    <div class="smooth-divider"></div>
 
     <!-- Danger Zone -->
     <div class="danger-zone">
-        <div class="panel-title" style="color: #FF3B30;">
+        <div class="bubble-header">
             <span>⚠️</span> Danger Zone
         </div>
-        <div class="panel-description">
-            Once you delete your account, there is no going back. All your data, word balance, and preferences will be permanently erased.
+        <div class="bubble-text">
+            Once you delete your account, there is no going back. All your data, word balance, and preferences will be permanently erased. This action cannot be undone.
         </div>
         
-        <button class="action-btn btn-danger-modern" onclick="confirmDelete()" style="max-width: 300px;">
+        <button class="smooth-btn btn-danger-soft" onclick="confirmDelete()">
             🗑️ Delete Account Permanently
         </button>
     </div>
@@ -387,26 +449,10 @@
 
 {% block extra_scripts %}
 <script>
-// Model selector interaction
-document.querySelectorAll('.model-option').forEach(option => {
-    option.addEventListener('click', function() {
-        // Remove selected from all
-        document.querySelectorAll('.model-option').forEach(opt => opt.classList.remove('selected'));
-        
-        // Add selected to this one
-        this.classList.add('selected');
-        
-        // Update hidden input
-        const engine = this.dataset.engine;
-        document.getElementById('selectedEngine').value = engine;
-    });
-});
-
 // Delete account confirmation
 function confirmDelete() {
     if (confirm('⚠️ Are you absolutely sure you want to delete your account?\n\nThis action CANNOT be undone!')) {
         if (confirm('🚨 FINAL WARNING: All your data will be permanently erased.\n\nDelete account permanently?')) {
-            // Redirect to account deletion endpoint
             window.location.href = '/accounts/delete/';
         }
     }

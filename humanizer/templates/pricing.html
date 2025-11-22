@@ -10,12 +10,13 @@
 {% include 'includes/sidebar_styles.html' %}
 
 <style>
-/* Reset base.html styles */
+/* Reset & Base */
 body {
-    background: #0D0D0D !important;
+    background: linear-gradient(180deg, #0A0A12 0%, #1a1a2e 25%, #0f1729 50%, #1a1a2e 75%, #0A0A12 100%);
     margin: 0;
     padding: 0;
     font-family: 'Aptos', 'Segoe UI', sans-serif;
+    min-height: 100vh;
 }
 
 main {
@@ -23,457 +24,494 @@ main {
     margin: 0 !important;
 }
 
-/* Hide base navigation */
 nav {
     display: none !important;
 }
 
-/* Modern Top Ribbon */
-.top-ribbon {
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(26, 26, 26, 0.95));
-    border-bottom: 1px solid rgba(0, 212, 255, 0.3);
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    backdrop-filter: blur(10px);
+/* Floating Top Bar - Ultra Smooth */
+.top-bar {
     position: sticky;
     top: 0;
     z-index: 100;
+    background: rgba(10, 10, 18, 0.7);
+    backdrop-filter: blur(25px);
+    border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+    padding: 1rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
 }
 
-.ribbon-left {
+.brand-section {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-}
-
-.app-title {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #00D4FF;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.ribbon-right {
-    display: flex;
     gap: 1rem;
-    align-items: center;
 }
 
-.user-info {
+.brand-mark {
+    font-size: 1.4rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #00D4FF, #00FF88);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.user-badge {
     color: rgba(255, 255, 255, 0.7);
     font-size: 0.95rem;
 }
 
-.user-info strong {
+.user-badge strong {
     color: #00D4FF;
 }
 
-/* Pricing Page Redesign - Modern, No Cards */
-.pricing-container {
+/* Pricing Universe - No Boxes */
+.pricing-universe {
     min-height: 100vh;
-    background: linear-gradient(180deg, #0D0D14 0%, #1a1a2e 50%, #0D0D14 100%);
-    padding: 4rem 2rem;
+    padding: 5rem 2rem;
     margin-left: 0;
     transition: margin-left 0.4s ease;
 }
 
-.pricing-header {
+/* Cosmic Header */
+.cosmic-header {
     text-align: center;
-    margin-bottom: 5rem;
+    margin-bottom: 6rem;
+    position: relative;
 }
 
-.pricing-header h1 {
-    font-size: 3.5rem;
+.cosmic-header h1 {
+    font-size: 4.5rem;
     background: linear-gradient(135deg, #00D4FF, #00FF88);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     font-weight: 900;
-    margin-bottom: 1rem;
-    animation: glow 2s ease-in-out infinite alternate;
+    margin-bottom: 1.2rem;
+    letter-spacing: -2px;
+    animation: cosmic-glow 3s ease-in-out infinite;
 }
 
-.pricing-header p {
+@keyframes cosmic-glow {
+    0%, 100% { 
+        filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.4));
+        transform: scale(1);
+    }
+    50% { 
+        filter: drop-shadow(0 0 60px rgba(0, 212, 255, 0.6));
+        transform: scale(1.01);
+    }
+}
+
+.cosmic-subtitle {
     color: rgba(255, 255, 255, 0.7);
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     font-weight: 300;
+    letter-spacing: 0.5px;
 }
 
-@keyframes glow {
-    from { text-shadow: 0 0 20px rgba(0, 212, 255, 0.3); }
-    to { text-shadow: 0 0 40px rgba(0, 212, 255, 0.6); }
-}
-
-/* Horizontal Plans Grid */
-.plans-grid {
+/* Plans Constellation */
+.plans-constellation {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    max-width: 1400px;
-    margin: 0 auto 4rem;
+    gap: 2.5rem;
+    max-width: 1500px;
+    margin: 0 auto 5rem;
 }
 
-/* Kenya plans - 2x2 grid */
-.plans-grid.kenya-grid {
+.plans-constellation.kenya-constellation {
     grid-template-columns: repeat(2, 1fr);
-    max-width: 1000px;
+    max-width: 1100px;
 }
 
-@media (max-width: 1024px) {
-    .plans-grid { grid-template-columns: 1fr; }
-    .plans-grid.kenya-grid { grid-template-columns: 1fr; }
+@media (max-width: 1200px) {
+    .plans-constellation { grid-template-columns: 1fr; }
+    .plans-constellation.kenya-constellation { grid-template-columns: 1fr; }
 }
 
-/* Individual Plan Styling - Seamless Blended Design */
-.plan {
-    background: rgba(255, 255, 255, 0.02);
-    padding: 3rem 2.5rem;
-    border-radius: 24px;
+/* Individual Plan Star - Smooth Blend */
+.plan-star {
+    padding: 3.5rem 3rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.005));
+    border-radius: 28px;
     position: relative;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.04);
     display: flex;
     flex-direction: column;
 }
 
-.plan::before {
+.plan-star::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.04), transparent 40%);
+    background: radial-gradient(
+        800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(0, 212, 255, 0.08),
+        transparent 50%
+    );
     opacity: 0;
-    transition: opacity 0.5s;
+    transition: opacity 0.6s ease;
     pointer-events: none;
 }
 
-.plan:hover {
-    transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.04);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-    border-color: rgba(255, 255, 255, 0.08);
+.plan-star::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #00D4FF, transparent);
+    transform: translateX(-100%);
+    transition: transform 0.8s ease;
 }
 
-.plan:hover::before {
+.plan-star:hover {
+    transform: translateY(-12px) scale(1.02);
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(0, 255, 136, 0.02));
+    box-shadow: 0 25px 70px rgba(0, 212, 255, 0.15);
+    border-color: rgba(0, 212, 255, 0.2);
+}
+
+.plan-star:hover::before {
     opacity: 1;
 }
 
-/* Featured Plan (Pro) - Seamless Glow */
-.plan.featured {
-    background: linear-gradient(180deg, rgba(0, 212, 255, 0.03) 0%, rgba(0, 255, 136, 0.01) 100%);
-    border: 1px solid rgba(0, 212, 255, 0.15);
-    box-shadow: 0 0 30px rgba(0, 212, 255, 0.05);
-    z-index: 10;
+.plan-star:hover::after {
+    transform: translateX(100%);
 }
 
-.plan.featured:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 50px rgba(0, 212, 255, 0.15);
-    border-color: rgba(0, 212, 255, 0.3);
-}
-
-.plan.featured .badge {
-    position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
-    background: rgba(0, 212, 255, 0.1);
-    color: #00D4FF;
-    padding: 0.4rem 0.8rem;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.7rem;
-    letter-spacing: 0.5px;
+/* Featured Star - Supreme Glow */
+.plan-star.featured-star {
+    background: linear-gradient(180deg, rgba(0, 212, 255, 0.06) 0%, rgba(0, 255, 136, 0.02) 100%);
     border: 1px solid rgba(0, 212, 255, 0.2);
-    backdrop-filter: blur(5px);
+    box-shadow: 0 0 50px rgba(0, 212, 255, 0.08);
+}
+
+.plan-star.featured-star:hover {
+    box-shadow: 0 30px 80px rgba(0, 212, 255, 0.25);
+    border-color: rgba(0, 212, 255, 0.4);
+}
+
+.featured-badge {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 255, 136, 0.08));
+    color: #00D4FF;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.2);
 }
 
 /* Plan Header */
-.plan-name {
-    font-size: 1.25rem;
+.plan-title {
+    font-size: 1.4rem;
     color: rgba(255, 255, 255, 0.95);
-    font-weight: 600;
-    margin-bottom: 0.5rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
     letter-spacing: 0.5px;
 }
 
-.plan-price {
+.price-display {
     display: flex;
     align-items: baseline;
-    gap: 0.2rem;
-    margin-bottom: 0.5rem;
+    gap: 0.3rem;
+    margin-bottom: 0.8rem;
 }
 
-.currency {
-    font-size: 1.2rem;
+.currency-symbol {
+    font-size: 1.4rem;
     color: rgba(255, 255, 255, 0.5);
-    font-weight: 500;
+    font-weight: 600;
 }
 
-.amount {
-    font-size: 3rem;
+.price-amount {
+    font-size: 3.5rem;
     color: #fff;
-    font-weight: 700;
+    font-weight: 800;
     line-height: 1;
-    letter-spacing: -1px;
+    letter-spacing: -2px;
 }
 
-.plan.featured .amount {
+.plan-star.featured-star .price-amount {
     background: linear-gradient(135deg, #00D4FF 0%, #00FF88 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
-.plan-words {
+.plan-quota {
     color: rgba(255, 255, 255, 0.5);
-    font-size: 0.9rem;
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.95rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 
-/* Features List */
-.features-list {
+/* Features Constellation */
+.features-constellation {
     list-style: none;
     padding: 0;
-    margin: 0 0 2.5rem 0;
+    margin: 0 0 3rem 0;
     flex-grow: 1;
 }
 
-.features-list li {
-    padding: 0.6rem 0;
+.features-constellation li {
+    padding: 0.8rem 0;
     color: rgba(255, 255, 255, 0.7);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     display: flex;
     align-items: center;
-    gap: 0.8rem;
-    transition: color 0.3s ease;
+    gap: 1rem;
+    transition: all 0.3s ease;
 }
 
-.features-list li:hover {
+.features-constellation li:hover {
     color: #fff;
+    transform: translateX(5px);
 }
 
-.feature-icon {
-    font-size: 1rem;
+.feature-spark {
+    font-size: 1.1rem;
     flex-shrink: 0;
-    opacity: 0.8;
     color: #00D4FF;
 }
 
-/* Select Button - Glassmorphism */
-.select-button {
+/* Action Buttons - Smooth Glow */
+.action-btn {
     width: 100%;
-    padding: 1rem;
+    padding: 1.2rem;
     border: none;
-    border-radius: 12px;
-    font-size: 0.95rem;
-    font-weight: 600;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
     position: relative;
     overflow: hidden;
     margin-top: auto;
 }
 
-/* Button Variants */
-.btn-standard {
-    background: rgba(255, 255, 255, 0.05);
+.btn-smooth {
+    background: rgba(255, 255, 255, 0.04);
     color: #FFF;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.btn-standard:hover {
-    background: rgba(255, 255, 255, 0.1);
+.btn-smooth:hover {
+    background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.05);
 }
 
-.btn-pro {
-    background: #00D4FF;
+.btn-supreme {
+    background: linear-gradient(135deg, #00D4FF, #0099FF);
     color: #000;
-    box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2);
+    box-shadow: 0 6px 25px rgba(0, 212, 255, 0.3);
+    font-weight: 800;
 }
 
-.btn-pro:hover {
-    background: #33ddff;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(0, 212, 255, 0.3);
+.btn-supreme:hover {
+    background: linear-gradient(135deg, #33ddff, #00aaff);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 212, 255, 0.5);
 }
 
-.btn-enterprise {
-    background: rgba(0, 255, 136, 0.1);
+.btn-premium {
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.12), rgba(0, 255, 136, 0.08));
     color: #00FF88;
     border: 1px solid rgba(0, 255, 136, 0.3);
 }
 
-.btn-enterprise:hover {
-    background: rgba(0, 255, 136, 0.2);
+.btn-premium:hover {
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.12));
     border-color: #00FF88;
-    box-shadow: 0 4px 20px rgba(0, 255, 136, 0.1);
-    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 255, 136, 0.2);
+    transform: translateY(-4px);
 }
 
-/* Info Banner */
-.info-banner {
-    max-width: 900px;
+/* Info Nebula - Smooth Blend */
+.info-nebula {
+    max-width: 1000px;
     margin: 0 auto;
-    background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(0, 255, 136, 0.05));
-    border: 1px solid rgba(0, 212, 255, 0.2);
-    border-radius: 20px;
-    padding: 2rem 3rem;
+    padding: 3.5rem 4rem;
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.04), rgba(0, 255, 136, 0.02));
+    border-radius: 28px;
+    border: 1px solid rgba(0, 212, 255, 0.12);
     text-align: center;
+    position: relative;
+    overflow: hidden;
 }
 
-.info-title {
+.info-nebula::before {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 300%;
+    height: 300%;
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.06) 0%, transparent 60%);
+    animation: nebula-float 10s ease-in-out infinite;
+}
+
+@keyframes nebula-float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(10%, 10%) rotate(180deg); }
+}
+
+.nebula-title {
     color: #00D4FF;
     font-weight: 700;
-    font-size: 1.2rem;
-    margin-bottom: 0.8rem;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 0.6rem;
+    position: relative;
+    z-index: 1;
 }
 
-.info-text {
+.nebula-content {
     color: rgba(255, 255, 255, 0.7);
-    font-size: 1rem;
-    line-height: 1.6;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
+}
+
+@media (max-width: 768px) {
+    .cosmic-header h1 {
+        font-size: 3rem;
+    }
+    
+    .plan-star {
+        padding: 2.5rem 2rem;
+    }
 }
 </style>
 
-<!-- Modern Top Ribbon -->
-<div class="top-ribbon">
-    <div class="ribbon-left">
-        <div class="app-title">
-            <span>🤖</span>
-            <span>InfiniHumanizer</span>
-        </div>
+<!-- Floating Top Bar -->
+<div class="top-bar">
+    <div class="brand-section">
+        <div class="brand-mark">🤖 InfiniHumanizer</div>
     </div>
-    <div class="ribbon-right">
-        <div class="user-info">
-            <strong>{{ user.username }}</strong>
-        </div>
+    <div class="user-badge">
+        <strong>{{ user.username }}</strong>
     </div>
 </div>
 
 <!-- Include Sidebar -->
 {% include 'includes/sidebar.html' %}
 
-<div class="pricing-container">
-    <!-- DEBUG INFO - Remove after testing -->
-    <div style="background: rgba(255, 0, 0, 0.1); padding: 1rem; margin-bottom: 2rem; border: 1px solid red; border-radius: 8px;">
-        <h3 style="color: #ff0; margin-bottom: 0.5rem;">DEBUG INFO:</h3>
-        <p style="color: #fff; font-size: 0.9rem;">Currency: {{ pricing.currency }}</p>
-        <p style="color: #fff; font-size: 0.9rem;">Is Africa: {{ is_africa }}</p>
-        <p style="color: #fff; font-size: 0.9rem;">Client IP: {{ client_ip }}</p>
-        <p style="color: #fff; font-size: 0.9rem;">User: {{ user.username }}</p>
-        <p style="color: #fff; font-size: 0.9rem;">User authenticated: {{ user.is_authenticated }}</p>
-        <p style="color: #fff; font-size: 0.9rem;">Account Type: {{ user.profile.account_type }}</p>
-        <p style="color: #fff; font-size: 0.9rem;">Is Kenya Plan: {{ user.profile.is_kenya_plan }}</p>
-    </div>
-    
-    <!-- Header -->
-    <div class="pricing-header">
+<div class="pricing-universe">
+    <!-- Cosmic Header -->
+    <div class="cosmic-header">
         <h1>💎 Choose Your Plan</h1>
-        <p>Flexible pricing for every kind of writer</p>
+        <p class="cosmic-subtitle">Flexible pricing for every kind of writer</p>
     </div>
 
-    <!-- Plans Grid -->
-    <div class="plans-grid {% if pricing.currency == 'KES' %}kenya-grid{% endif %}">
+    <!-- Plans Constellation -->
+    <div class="plans-constellation {% if pricing.currency == 'KES' %}kenya-constellation{% endif %}">
         
         {% if pricing.currency == 'KES' %}
         <!-- Kenya Plans: Time-based Unlimited -->
         
         <!-- Daily Plan -->
-        <div class="plan">
-            <div class="plan-name">Daily</div>
-            <div class="plan-price">
-                <span class="currency">{{ pricing.currency_symbol }}</span>
-                <span class="amount">{{ pricing.daily.price }}</span>
+        <div class="plan-star">
+            <div class="plan-title">Daily</div>
+            <div class="price-display">
+                <span class="currency-symbol">{{ pricing.currency_symbol }}</span>
+                <span class="price-amount">{{ pricing.daily.price }}</span>
             </div>
-            <div class="plan-words">Unlimited words for 24 hours</div>
+            <div class="plan-quota">Unlimited words for 24 hours</div>
             
-            <ul class="features-list">
-                <li><span class="feature-icon">✨</span> Unlimited humanizations for 1 day</li>
-                <li><span class="feature-icon">🔒</span> 1 device at a time</li>
-                <li><span class="feature-icon">📱</span> Max 3 devices per day</li>
-                <li><span class="feature-icon">📋</span> Copy + download tools</li>
+            <ul class="features-constellation">
+                <li><span class="feature-spark">✨</span> Unlimited humanizations for 1 day</li>
+                <li><span class="feature-spark">🔒</span> 1 device at a time</li>
+                <li><span class="feature-spark">📱</span> Max 3 devices per day</li>
+                <li><span class="feature-spark">📋</span> Copy + download tools</li>
             </ul>
             
-            <button class="select-button btn-standard select-btn" data-plan="KE_DAILY" data-amount="{{ pricing.daily.price }}" data-currency="{{ pricing.currency }}">
+            <button class="action-btn btn-smooth select-btn" data-plan="KE_DAILY" data-amount="{{ pricing.daily.price }}" data-currency="{{ pricing.currency }}">
                 <span>Select Daily</span>
             </button>
         </div>
 
         <!-- Weekly Plan -->
-        <div class="plan">
-            <div class="plan-name">Weekly</div>
-            <div class="plan-price">
-                <span class="currency">{{ pricing.currency_symbol }}</span>
-                <span class="amount">{{ pricing.weekly.price }}</span>
+        <div class="plan-star">
+            <div class="plan-title">Weekly</div>
+            <div class="price-display">
+                <span class="currency-symbol">{{ pricing.currency_symbol }}</span>
+                <span class="price-amount">{{ pricing.weekly.price }}</span>
             </div>
-            <div class="plan-words">Unlimited words for 7 days</div>
+            <div class="plan-quota">Unlimited words for 7 days</div>
             
-            <ul class="features-list">
-                <li><span class="feature-icon">✨</span> Unlimited humanizations for 1 week</li>
-                <li><span class="feature-icon">🔒</span> 1 device at a time</li>
-                <li><span class="feature-icon">📱</span> Max 3 devices per day</li>
-                <li><span class="feature-icon">⚡</span> Best value for short-term use</li>
+            <ul class="features-constellation">
+                <li><span class="feature-spark">✨</span> Unlimited humanizations for 1 week</li>
+                <li><span class="feature-spark">🔒</span> 1 device at a time</li>
+                <li><span class="feature-spark">📱</span> Max 3 devices per day</li>
+                <li><span class="feature-spark">⚡</span> Best value for short-term use</li>
             </ul>
             
-            <button class="select-button btn-standard select-btn" data-plan="KE_WEEKLY" data-amount="{{ pricing.weekly.price }}" data-currency="{{ pricing.currency }}">
+            <button class="action-btn btn-smooth select-btn" data-plan="KE_WEEKLY" data-amount="{{ pricing.weekly.price }}" data-currency="{{ pricing.currency }}">
                 <span>Select Weekly</span>
             </button>
         </div>
 
         <!-- Monthly Plan (Featured) -->
-        <div class="plan featured">
-            <div class="badge">⭐ BEST VALUE</div>
-            <div class="plan-name">Monthly</div>
-            <div class="plan-price">
-                <span class="currency">{{ pricing.currency_symbol }}</span>
-                <span class="amount">{{ pricing.monthly.price }}</span>
+        <div class="plan-star featured-star">
+            <div class="featured-badge">⭐ BEST VALUE</div>
+            <div class="plan-title">Monthly</div>
+            <div class="price-display">
+                <span class="currency-symbol">{{ pricing.currency_symbol }}</span>
+                <span class="price-amount">{{ pricing.monthly.price }}</span>
             </div>
-            <div class="plan-words">Unlimited words for 30 days</div>
+            <div class="plan-quota">Unlimited words for 30 days</div>
             
-            <ul class="features-list">
-                <li><span class="feature-icon">✨</span> Unlimited humanizations for 1 month</li>
-                <li><span class="feature-icon">🔒</span> 1 device at a time</li>
-                <li><span class="feature-icon">📱</span> Max 3 devices per day</li>
-                <li><span class="feature-icon">💬</span> Email support</li>
+            <ul class="features-constellation">
+                <li><span class="feature-spark">✨</span> Unlimited humanizations for 1 month</li>
+                <li><span class="feature-spark">🔒</span> 1 device at a time</li>
+                <li><span class="feature-spark">📱</span> Max 3 devices per day</li>
+                <li><span class="feature-spark">💬</span> Email support</li>
             </ul>
             
-            <button class="select-button btn-pro select-btn" data-plan="KE_MONTHLY" data-amount="{{ pricing.monthly.price }}" data-currency="{{ pricing.currency }}">
+            <button class="action-btn btn-supreme select-btn" data-plan="KE_MONTHLY" data-amount="{{ pricing.monthly.price }}" data-currency="{{ pricing.currency }}">
                 <span>Select Monthly</span>
             </button>
         </div>
 
         <!-- Multi-Device Plan -->
-        <div class="plan">
-            <div class="plan-name">Multi-Device</div>
-            <div class="plan-price">
-                <span class="currency">{{ pricing.currency_symbol }}</span>
-                <span class="amount">{{ pricing.multi_device.price }}</span>
+        <div class="plan-star">
+            <div class="plan-title">Multi-Device</div>
+            <div class="price-display">
+                <span class="currency-symbol">{{ pricing.currency_symbol }}</span>
+                <span class="price-amount">{{ pricing.multi_device.price }}</span>
             </div>
-            <div class="plan-words">Unlimited words • 5 devices</div>
+            <div class="plan-quota">Unlimited words • 5 devices</div>
             
-            <ul class="features-list">
-                <li><span class="feature-icon">✨</span> Unlimited humanizations for 1 month</li>
-                <li><span class="feature-icon">👥</span> Up to 5 concurrent devices</li>
-                <li><span class="feature-icon">🚀</span> Perfect for teams or multiple devices</li>
-                <li><span class="feature-icon">💬</span> Priority email support</li>
+            <ul class="features-constellation">
+                <li><span class="feature-spark">✨</span> Unlimited humanizations for 1 month</li>
+                <li><span class="feature-spark">👥</span> Up to 5 concurrent devices</li>
+                <li><span class="feature-spark">🚀</span> Perfect for teams or multiple devices</li>
+                <li><span class="feature-spark">💬</span> Priority email support</li>
             </ul>
             
-            <button class="select-button btn-enterprise select-btn" data-plan="KE_MULTI_DEVICE" data-amount="{{ pricing.multi_device.price }}" data-currency="{{ pricing.currency }}">
+            <button class="action-btn btn-premium select-btn" data-plan="KE_MULTI_DEVICE" data-amount="{{ pricing.multi_device.price }}" data-currency="{{ pricing.currency }}">
                 <span>Select Multi-Device</span>
             </button>
         </div>
@@ -482,65 +520,65 @@ nav {
         <!-- International Plans: Word-based -->
         
         <!-- Standard Plan -->
-        <div class="plan">
-            <div class="plan-name">Standard</div>
-            <div class="plan-price">
-                <span class="currency">{{ pricing.currency_symbol }}</span>
-                <span class="amount">{{ pricing.standard.price }}</span>
+        <div class="plan-star">
+            <div class="plan-title">Standard</div>
+            <div class="price-display">
+                <span class="currency-symbol">{{ pricing.currency_symbol }}</span>
+                <span class="price-amount">{{ pricing.standard.price }}</span>
             </div>
-            <div class="plan-words">{{ pricing.standard.words|floatformat:0|intcomma }} words</div>
+            <div class="plan-quota">{{ pricing.standard.words|floatformat:0|intcomma }} words</div>
             
-            <ul class="features-list">
-                <li><span class="feature-icon">✨</span> Unlimited rehumanizations</li>
-                <li><span class="feature-icon">🎯</span> Advanced refinement engine</li>
-                <li><span class="feature-icon">📊</span> Word usage tracking</li>
-                <li><span class="feature-icon">📋</span> Copy + download tools</li>
+            <ul class="features-constellation">
+                <li><span class="feature-spark">✨</span> Unlimited rehumanizations</li>
+                <li><span class="feature-spark">🎯</span> Advanced refinement engine</li>
+                <li><span class="feature-spark">📊</span> Word usage tracking</li>
+                <li><span class="feature-spark">📋</span> Copy + download tools</li>
             </ul>
             
-            <button class="select-button btn-standard select-btn" data-plan="Standard" data-amount="{{ pricing.standard.price }}" data-currency="{{ pricing.currency }}">
+            <button class="action-btn btn-smooth select-btn" data-plan="Standard" data-amount="{{ pricing.standard.price }}" data-currency="{{ pricing.currency }}">
                 <span>Select Standard</span>
             </button>
         </div>
 
         <!-- Pro Plan (Featured) -->
-        <div class="plan featured">
-            <div class="badge">⭐ BEST VALUE</div>
-            <div class="plan-name">Pro</div>
-            <div class="plan-price">
-                <span class="currency">{{ pricing.currency_symbol }}</span>
-                <span class="amount">{{ pricing.pro.price }}</span>
+        <div class="plan-star featured-star">
+            <div class="featured-badge">⭐ BEST VALUE</div>
+            <div class="plan-title">Pro</div>
+            <div class="price-display">
+                <span class="currency-symbol">{{ pricing.currency_symbol }}</span>
+                <span class="price-amount">{{ pricing.pro.price }}</span>
             </div>
-            <div class="plan-words">{{ pricing.pro.words|floatformat:0|intcomma }} words</div>
+            <div class="plan-quota">{{ pricing.pro.words|floatformat:0|intcomma }} words</div>
             
-            <ul class="features-list">
-                <li><span class="feature-icon">✨</span> Everything in Standard</li>
-                <li><span class="feature-icon">🎯</span> Enhanced human tone detection</li>
-                <li><span class="feature-icon">⚡</span> Batch processing for larger chunks</li>
-                <li><span class="feature-icon">💬</span> Priority email support</li>
+            <ul class="features-constellation">
+                <li><span class="feature-spark">✨</span> Everything in Standard</li>
+                <li><span class="feature-spark">🎯</span> Enhanced human tone detection</li>
+                <li><span class="feature-spark">⚡</span> Batch processing for larger chunks</li>
+                <li><span class="feature-spark">💬</span> Priority email support</li>
             </ul>
             
-            <button class="select-button btn-pro select-btn" data-plan="Pro" data-amount="{{ pricing.pro.price }}" data-currency="{{ pricing.currency }}">
+            <button class="action-btn btn-supreme select-btn" data-plan="Pro" data-amount="{{ pricing.pro.price }}" data-currency="{{ pricing.currency }}">
                 <span>Select Pro</span>
             </button>
         </div>
 
         <!-- Enterprise Plan -->
-        <div class="plan">
-            <div class="plan-name">Enterprise</div>
-            <div class="plan-price">
-                <span class="currency">{{ pricing.currency_symbol }}</span>
-                <span class="amount">{{ pricing.enterprise.price }}</span>
+        <div class="plan-star">
+            <div class="plan-title">Enterprise</div>
+            <div class="price-display">
+                <span class="currency-symbol">{{ pricing.currency_symbol }}</span>
+                <span class="price-amount">{{ pricing.enterprise.price }}</span>
             </div>
-            <div class="plan-words">{{ pricing.enterprise.words|floatformat:0|intcomma }} words</div>
+            <div class="plan-quota">{{ pricing.enterprise.words|floatformat:0|intcomma }} words</div>
             
-            <ul class="features-list">
-                <li><span class="feature-icon">✨</span> Everything in Pro</li>
-                <li><span class="feature-icon">👥</span> Team access (invite support)</li>
-                <li><span class="feature-icon">📦</span> Bulk document handling <span style="color: rgba(255, 255, 255, 0.4); font-size: 0.8rem;">(coming soon)</span></li>
-                <li><span class="feature-icon">🚀</span> Early access to new features</li>
+            <ul class="features-constellation">
+                <li><span class="feature-spark">✨</span> Everything in Pro</li>
+                <li><span class="feature-spark">👥</span> Team access (invite support)</li>
+                <li><span class="feature-spark">📦</span> Bulk document handling <span style="color: rgba(255, 255, 255, 0.3); font-size: 0.85rem;">(coming soon)</span></li>
+                <li><span class="feature-spark">🚀</span> Early access to new features</li>
             </ul>
             
-            <button class="select-button btn-enterprise select-btn" data-plan="Enterprise" data-amount="{{ pricing.enterprise.price }}" data-currency="{{ pricing.currency }}">
+            <button class="action-btn btn-premium select-btn" data-plan="Enterprise" data-amount="{{ pricing.enterprise.price }}" data-currency="{{ pricing.currency }}">
                 <span>Select Enterprise</span>
             </button>
         </div>
@@ -548,16 +586,16 @@ nav {
         {% endif %}
     </div>
 
-    <!-- Info Banner -->
-    <div class="info-banner">
-        <div class="info-title">
-            <span>💡</span> Payment Information
+    <!-- Info Nebula -->
+    <div class="info-nebula">
+        <div class="nebula-title">
+            <span>💡</span> Secure Payment Information
         </div>
-        <div class="info-text">
+        <div class="nebula-content">
             {% if pricing.currency == 'KES' %}
-            All prices are shown in Kenyan Shillings (KES). Payments are processed securely through Paystack with bank-level encryption.
+            All prices are shown in Kenyan Shillings (KES). Payments are processed securely through Paystack with bank-level encryption and fraud protection.
             {% else %}
-            All prices are shown in US Dollars (USD). Payments are processed securely through Paystack with bank-level encryption.
+            All prices are shown in US Dollars (USD). Payments are processed securely through Paystack with bank-level encryption and fraud protection.
             {% endif %}
         </div>
     </div>
@@ -567,13 +605,24 @@ nav {
 
 {% block extra_scripts %}
 <script>
+// Mouse tracking for hover effects
+document.querySelectorAll('.plan-star').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+    });
+});
+
+// Plan selection
 document.querySelectorAll('.select-btn').forEach(btn => {
     btn.addEventListener('click', function() {
         const plan = this.dataset.plan;
         const amount = this.dataset.amount;
         const currency = this.dataset.currency;
         
-        // Redirect to payment endpoint
         window.location.href = `/humanizer/start-payment/?plan=${plan}&amount=${amount}&currency=${currency}`;
     });
 });

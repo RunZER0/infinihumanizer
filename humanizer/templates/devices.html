@@ -5,12 +5,13 @@
 {% block content %}
 
 <style>
-    /* Reset base.html styles */
+    /* Reset base styles */
     body {
-        background: #0D0D0D !important;
+        background: linear-gradient(180deg, #0A0A12 0%, #1a1a2e 30%, #0f1729 70%, #0A0A12 100%);
         margin: 0;
         padding: 0;
         font-family: 'Aptos', 'Segoe UI', sans-serif;
+        min-height: 100vh;
     }
     
     main {
@@ -18,460 +19,535 @@
         margin: 0 !important;
     }
     
-    /* Hide base navigation */
     nav {
         display: none !important;
     }
     
-    /* Modern Top Ribbon */
-    .top-ribbon {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(26, 26, 26, 0.95));
-        border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+    /* Floating Top Bar - Glassmorphic */
+    .top-bar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(10, 10, 18, 0.7);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(0, 212, 255, 0.1);
         padding: 1rem 2rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        backdrop-filter: blur(10px);
-        position: sticky;
-        top: 0;
-        z-index: 100;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
     }
     
-    .ribbon-left {
+    .app-branding {
         display: flex;
         align-items: center;
-        gap: 1.5rem;
+        gap: 0.8rem;
     }
     
-    .app-title {
-        font-size: 1.3rem;
+    .brand-logo {
+        font-size: 1.5rem;
+    }
+    
+    .brand-text {
+        font-size: 1.2rem;
         font-weight: 700;
-        color: #00D4FF;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+        background: linear-gradient(135deg, #00D4FF 0%, #00FF88 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
     
-    .ribbon-right {
-        display: flex;
-        gap: 1rem;
-        align-items: center;
-    }
-    
-    .back-btn {
-        background: rgba(0, 212, 255, 0.1);
-        border: 1px solid rgba(0, 212, 255, 0.3);
+    .back-link {
+        padding: 0.6rem 1.5rem;
+        background: rgba(0, 212, 255, 0.08);
+        border: 1px solid rgba(0, 212, 255, 0.2);
+        border-radius: 12px;
         color: #00D4FF;
-        padding: 0.5rem 1.2rem;
-        border-radius: 8px;
         text-decoration: none;
         font-weight: 600;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         display: flex;
         align-items: center;
         gap: 0.5rem;
     }
     
-    .back-btn:hover {
-        background: rgba(0, 212, 255, 0.2);
-        transform: translateX(-3px);
+    .back-link:hover {
+        background: rgba(0, 212, 255, 0.15);
+        transform: translateX(-4px);
+        box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2);
     }
     
-    /* Main Container */
-    .devices-container {
-        min-height: calc(100vh - 80px);
-        background: linear-gradient(180deg, #0D0D0D 0%, #1a1a2e 50%, #0D0D0D 100%);
-        padding: 3rem 2rem;
-    }
-    
-    .content-wrapper {
-        max-width: 1200px;
+    /* Main Content Area - Blended Background */
+    .content-area {
+        max-width: 1300px;
         margin: 0 auto;
+        padding: 4rem 2rem;
     }
     
-    /* Header */
-    .page-header {
-        margin-bottom: 3rem;
+    /* Hero Header - No Container */
+    .hero-header {
+        text-align: center;
+        margin-bottom: 4rem;
+        position: relative;
     }
     
-    .page-header h1 {
-        font-size: 2.5rem;
-        color: #FFF;
-        font-weight: 800;
-        margin-bottom: 0.5rem;
+    .hero-header h1 {
+        font-size: 3.5rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, #00D4FF 0%, #00FF88 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.8rem;
+        letter-spacing: -1px;
+        animation: glow-pulse 3s ease-in-out infinite;
     }
     
-    .page-header p {
-        color: rgba(255, 255, 255, 0.5);
-        font-size: 1.1rem;
+    @keyframes glow-pulse {
+        0%, 100% { filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.3)); }
+        50% { filter: drop-shadow(0 0 40px rgba(0, 212, 255, 0.5)); }
     }
     
-    /* Stats Grid */
-    .stats-grid {
+    .hero-subtitle {
+        font-size: 1.2rem;
+        color: rgba(255, 255, 255, 0.6);
+        font-weight: 300;
+    }
+    
+    /* Stats Flow - No Boxes, Smooth Separation */
+    .stats-flow {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 3rem;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-bottom: 5rem;
+        position: relative;
     }
     
-    .stat-card {
-        background: rgba(0, 0, 0, 0.4);
-        border: 1px solid rgba(0, 212, 255, 0.2);
-        border-radius: 16px;
-        padding: 2rem;
-        display: flex;
-        align-items: center;
-        gap: 1.5rem;
-        transition: all 0.3s ease;
+    .stats-flow::after {
+        content: '';
+        position: absolute;
+        bottom: -2.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.3), transparent);
     }
     
-    .stat-card:hover {
-        border-color: rgba(0, 212, 255, 0.5);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 30px rgba(0, 212, 255, 0.15);
+    .stat-bubble {
+        padding: 2.5rem 2rem;
+        background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(0, 255, 136, 0.02));
+        border-radius: 24px;
+        border: 1px solid rgba(0, 212, 255, 0.1);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
     }
     
-    .stat-icon {
+    .stat-bubble::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #00D4FF, transparent);
+        transform: translateX(-100%);
+        transition: transform 0.6s ease;
+    }
+    
+    .stat-bubble:hover::before {
+        transform: translateX(100%);
+    }
+    
+    .stat-bubble:hover {
+        transform: translateY(-8px);
+        background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 136, 0.05));
+        border-color: rgba(0, 212, 255, 0.3);
+        box-shadow: 0 20px 60px rgba(0, 212, 255, 0.15);
+    }
+    
+    .stat-icon-large {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+        opacity: 0.9;
+    }
+    
+    .stat-number {
         font-size: 2.5rem;
-        width: 70px;
-        height: 70px;
-        background: rgba(0, 212, 255, 0.1);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .stat-content {
-        flex: 1;
-    }
-    
-    .stat-value {
-        font-size: 2.2rem;
-        color: #00D4FF;
         font-weight: 800;
+        color: #00D4FF;
         line-height: 1;
         margin-bottom: 0.5rem;
     }
     
-    .stat-label {
-        color: rgba(255, 255, 255, 0.6);
+    .stat-text {
+        color: rgba(255, 255, 255, 0.5);
         font-size: 0.95rem;
         font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
     
-    /* Section Header */
-    .section-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
+    /* Section Header - Floating */
+    .section-divider {
+        text-align: center;
+        margin-bottom: 3rem;
+        position: relative;
     }
     
-    .section-title {
-        font-size: 1.8rem;
-        color: #00D4FF;
+    .section-divider h2 {
+        font-size: 2rem;
         font-weight: 700;
-        display: flex;
+        color: rgba(255, 255, 255, 0.9);
+        display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.8rem;
+        padding: 0 2rem;
+        position: relative;
+        z-index: 1;
     }
     
-    /* Device List */
-    .device-list {
-        background: rgba(0, 0, 0, 0.4);
-        border: 1px solid rgba(0, 212, 255, 0.2);
-        border-radius: 16px;
-        overflow: hidden;
+    /* Device Stream - Smooth Flow */
+    .device-stream {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
     }
     
-    .device-item {
-        padding: 1.5rem 2rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    .device-card {
+        padding: 2rem;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
         display: grid;
         grid-template-columns: auto 1fr auto auto;
         gap: 1.5rem;
         align-items: center;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
     }
     
-    .device-item:last-child {
-        border-bottom: none;
+    .device-card::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(180deg, transparent, #00D4FF, transparent);
+        transform: scaleY(0);
+        transition: transform 0.3s ease;
     }
     
-    .device-item:hover {
-        background: rgba(0, 212, 255, 0.05);
+    .device-card:hover::before {
+        transform: scaleY(1);
     }
     
-    .device-item.current-device {
-        background: rgba(0, 212, 255, 0.08);
-        border-left: 3px solid #00D4FF;
+    .device-card:hover {
+        background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(0, 255, 136, 0.02));
+        border-color: rgba(0, 212, 255, 0.2);
+        transform: translateX(8px);
+        box-shadow: 0 10px 40px rgba(0, 212, 255, 0.1);
     }
     
-    .device-icon-box {
-        width: 60px;
-        height: 60px;
-        background: rgba(0, 212, 255, 0.1);
-        border-radius: 12px;
+    .device-card.active-device {
+        background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(0, 255, 136, 0.03));
+        border-left: 4px solid #00D4FF;
+        padding-left: calc(2rem - 4px);
+    }
+    
+    .device-icon-bubble {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 255, 136, 0.05));
+        border-radius: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.8rem;
+        font-size: 2rem;
     }
     
-    .device-info {
+    .device-meta {
         flex: 1;
         min-width: 0;
     }
     
-    .device-name {
-        font-size: 1.1rem;
+    .device-title {
+        font-size: 1.2rem;
         font-weight: 700;
-        color: #FFF;
-        margin-bottom: 0.3rem;
+        color: rgba(255, 255, 255, 0.95);
+        margin-bottom: 0.5rem;
     }
     
-    .device-details {
+    .device-specs {
         display: flex;
         gap: 1.5rem;
         flex-wrap: wrap;
     }
     
-    .device-detail-item {
+    .spec-item {
         display: flex;
         align-items: center;
         gap: 0.4rem;
         font-size: 0.85rem;
-        color: rgba(255, 255, 255, 0.5);
+        color: rgba(255, 255, 255, 0.4);
     }
     
-    .device-detail-item span:first-child {
-        color: rgba(255, 255, 255, 0.3);
+    .spec-item span:last-child {
+        color: rgba(255, 255, 255, 0.6);
     }
     
-    .status-badge {
+    .status-indicator {
         padding: 0.5rem 1rem;
         border-radius: 20px;
         font-size: 0.85rem;
         font-weight: 600;
-        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
     
-    .status-active {
-        background: rgba(0, 255, 136, 0.15);
+    .status-online {
+        background: rgba(0, 255, 136, 0.1);
         color: #00FF88;
         border: 1px solid rgba(0, 255, 136, 0.3);
     }
     
-    .status-inactive {
-        background: rgba(255, 255, 255, 0.05);
-        color: rgba(255, 255, 255, 0.4);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+    .status-offline {
+        background: rgba(255, 255, 255, 0.03);
+        color: rgba(255, 255, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.05);
     }
     
-    .current-badge {
-        background: rgba(0, 212, 255, 0.15);
+    .current-tag {
+        background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 136, 0.1));
         color: #00D4FF;
-        padding: 0.3rem 0.8rem;
-        border-radius: 6px;
+        padding: 0.4rem 0.9rem;
+        border-radius: 8px;
         font-size: 0.75rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        border: 1px solid rgba(0, 212, 255, 0.3);
     }
     
-    .no-devices {
+    .empty-state {
         text-align: center;
-        padding: 4rem 2rem;
-        color: rgba(255, 255, 255, 0.4);
+        padding: 5rem 2rem;
+        color: rgba(255, 255, 255, 0.3);
     }
     
-    .no-devices-icon {
-        font-size: 4rem;
-        margin-bottom: 1rem;
-        opacity: 0.3;
+    .empty-icon {
+        font-size: 5rem;
+        margin-bottom: 1.5rem;
+        opacity: 0.2;
     }
     
-    /* Info Banner */
-    .info-banner {
-        background: rgba(0, 212, 255, 0.05);
-        border: 1px solid rgba(0, 212, 255, 0.2);
-        border-radius: 16px;
-        padding: 2rem;
-        margin-top: 2rem;
+    /* Info Panel - Smooth Blend */
+    .info-panel {
+        margin-top: 4rem;
+        padding: 3rem;
+        background: linear-gradient(135deg, rgba(0, 212, 255, 0.03), rgba(0, 255, 136, 0.01));
+        border-radius: 24px;
+        border: 1px solid rgba(0, 212, 255, 0.15);
+        position: relative;
+        overflow: hidden;
     }
     
-    .info-banner h3 {
+    .info-panel::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(0, 212, 255, 0.05) 0%, transparent 70%);
+        animation: float-glow 8s ease-in-out infinite;
+    }
+    
+    @keyframes float-glow {
+        0%, 100% { transform: translate(0, 0); }
+        50% { transform: translate(-10%, -10%); }
+    }
+    
+    .info-panel h3 {
         color: #00D4FF;
-        font-size: 1.2rem;
+        font-size: 1.4rem;
         font-weight: 700;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        position: relative;
+        z-index: 1;
     }
     
-    .info-banner ul {
+    .info-list {
         list-style: none;
         padding: 0;
         margin: 0;
+        position: relative;
+        z-index: 1;
     }
     
-    .info-banner li {
-        padding: 0.5rem 0;
+    .info-list li {
+        padding: 0.8rem 0;
         color: rgba(255, 255, 255, 0.6);
         display: flex;
         align-items: flex-start;
-        gap: 0.75rem;
-        font-size: 0.95rem;
+        gap: 1rem;
+        font-size: 1rem;
+        line-height: 1.6;
     }
     
-    .info-banner li::before {
+    .info-list li::before {
         content: '•';
         color: #00D4FF;
         font-weight: 900;
-        font-size: 1.2rem;
-        line-height: 1.5;
+        font-size: 1.5rem;
+        line-height: 1.2;
+    }
+    
+    @media (max-width: 768px) {
+        .device-card {
+            grid-template-columns: auto 1fr;
+            gap: 1rem;
+        }
+        
+        .status-indicator, .current-tag {
+            grid-column: 1 / -1;
+            justify-self: start;
+        }
     }
 </style>
 
-<!-- Modern Top Ribbon -->
-<div class="top-ribbon">
-    <div class="ribbon-left">
-        <div class="app-title">
-            <span>📱</span>
-            <span>Device Management</span>
-        </div>
+<!-- Floating Top Bar -->
+<div class="top-bar">
+    <div class="app-branding">
+        <span class="brand-logo">📱</span>
+        <span class="brand-text">Device Management</span>
     </div>
-    <div class="ribbon-right">
-        <a href="{% url 'humanizer' %}" class="back-btn">
-            <span>←</span>
-            <span>Back to Humanizer</span>
-        </a>
-    </div>
+    <a href="{% url 'humanizer' %}" class="back-link">
+        <span>←</span>
+        <span>Back to Humanizer</span>
+    </a>
 </div>
 
-<div class="devices-container">
-    <div class="content-wrapper">
-        <!-- Page Header -->
-        <div class="page-header">
-            <h1>📱 Device Management</h1>
-            <p>Monitor and manage your active sessions</p>
-        </div>
+<div class="content-area">
+    <!-- Hero Header -->
+    <div class="hero-header">
+        <h1>📱 Device Management</h1>
+        <p class="hero-subtitle">Monitor and manage your active sessions across all devices</p>
+    </div>
 
-        <!-- Stats Grid -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">📱</div>
-                <div class="stat-content">
-                    <div class="stat-value">{{ active_count }} / {{ max_concurrent }}</div>
-                    <div class="stat-label">Active Sessions</div>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">📅</div>
-                <div class="stat-content">
-                    <div class="stat-value">{{ devices_today }} / {{ max_daily }}</div>
-                    <div class="stat-label">Devices Used Today</div>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">💎</div>
-                <div class="stat-content">
-                    <div class="stat-value">{{ profile.account_type }}</div>
-                    <div class="stat-label">Current Plan</div>
-                </div>
-            </div>
+    <!-- Stats Flow -->
+    <div class="stats-flow">
+        <div class="stat-bubble">
+            <span class="stat-icon-large">📱</span>
+            <div class="stat-number">{{ active_count }} / {{ max_concurrent }}</div>
+            <div class="stat-text">Active Sessions</div>
         </div>
-
-        <!-- Device List -->
-        <div class="section-header">
-            <h2 class="section-title">
-                <span>🖥️</span>
-                <span>Your Devices</span>
-            </h2>
+        <div class="stat-bubble">
+            <span class="stat-icon-large">📅</span>
+            <div class="stat-number">{{ devices_today }} / {{ max_daily }}</div>
+            <div class="stat-text">Devices Today</div>
         </div>
+        <div class="stat-bubble">
+            <span class="stat-icon-large">💎</span>
+            <div class="stat-number" style="font-size: 1.8rem;">{{ profile.account_type }}</div>
+            <div class="stat-text">Current Plan</div>
+        </div>
+    </div>
 
-        <div class="device-list">
-            {% if all_sessions %}
-                {% for session in all_sessions %}
-                <div class="device-item {% if session.device_fingerprint == current_device_fingerprint %}current-device{% endif %}">
-                    <div class="device-icon-box">
-                        {% if 'Mobile' in session.user_agent or 'Android' in session.user_agent or 'iPhone' in session.user_agent %}
-                            📱
+    <!-- Section Divider -->
+    <div class="section-divider">
+        <h2>
+            <span>🖥️</span>
+            <span>Your Connected Devices</span>
+        </h2>
+    </div>
+
+    <!-- Device Stream -->
+    <div class="device-stream">
+        {% if all_sessions %}
+            {% for session in all_sessions %}
+            <div class="device-card {% if session.device_fingerprint == current_device_fingerprint %}active-device{% endif %}">
+                <div class="device-icon-bubble">
+                    {% if 'Mobile' in session.user_agent or 'Android' in session.user_agent or 'iPhone' in session.user_agent %}
+                        📱
+                    {% else %}
+                        💻
+                    {% endif %}
+                </div>
+                
+                <div class="device-meta">
+                    <div class="device-title">
+                        {% if 'Windows' in session.user_agent %}
+                            Windows PC
+                        {% elif 'Macintosh' in session.user_agent or 'Mac OS' in session.user_agent %}
+                            Mac Computer
+                        {% elif 'Android' in session.user_agent %}
+                            Android Device
+                        {% elif 'iPhone' in session.user_agent or 'iPad' in session.user_agent %}
+                            iOS Device
+                        {% elif 'Linux' in session.user_agent %}
+                            Linux Computer
                         {% else %}
-                            💻
+                            Unknown Device
                         {% endif %}
                     </div>
-                    
-                    <div class="device-info">
-                        <div class="device-name">
-                            {% if 'Windows' in session.user_agent %}
-                                Windows PC
-                            {% elif 'Macintosh' in session.user_agent or 'Mac OS' in session.user_agent %}
-                                Mac Computer
-                            {% elif 'Android' in session.user_agent %}
-                                Android Device
-                            {% elif 'iPhone' in session.user_agent or 'iPad' in session.user_agent %}
-                                iOS Device
-                            {% elif 'Linux' in session.user_agent %}
-                                Linux Computer
-                            {% else %}
-                                Unknown Device
-                            {% endif %}
+                    <div class="device-specs">
+                        <div class="spec-item">
+                            <span>IP:</span>
+                            <span>{{ session.ip_address }}</span>
                         </div>
-                        <div class="device-details">
-                            <div class="device-detail-item">
-                                <span>IP:</span>
-                                <span>{{ session.ip_address }}</span>
-                            </div>
-                            <div class="device-detail-item">
-                                <span>Last Seen:</span>
-                                <span>{{ session.last_seen|timesince }} ago</span>
-                            </div>
-                            <div class="device-detail-item">
-                                <span>First Used:</span>
-                                <span>{{ session.created_at|date:"M d, Y" }}</span>
-                            </div>
+                        <div class="spec-item">
+                            <span>Last Seen:</span>
+                            <span>{{ session.last_seen|timesince }} ago</span>
+                        </div>
+                        <div class="spec-item">
+                            <span>First Used:</span>
+                            <span>{{ session.created_at|date:"M d, Y" }}</span>
                         </div>
                     </div>
-                    
-                    <div>
-                        {% if session.is_active and session.last_seen >= active_threshold %}
-                            <span class="status-badge status-active">● Online</span>
-                        {% else %}
-                            <span class="status-badge status-inactive">● Offline</span>
-                        {% endif %}
-                    </div>
-                    
-                    <div>
-                        {% if session.device_fingerprint == current_device_fingerprint %}
-                            <span class="current-badge">This Device</span>
-                        {% endif %}
-                    </div>
                 </div>
-                {% endfor %}
-            {% else %}
-                <div class="no-devices">
-                    <div class="no-devices-icon">📱</div>
-                    <p>No devices found</p>
+                
+                <div class="status-indicator {% if session.is_active and session.last_seen >= active_threshold %}status-online{% else %}status-offline{% endif %}">
+                    <span>●</span>
+                    <span>{% if session.is_active and session.last_seen >= active_threshold %}Online{% else %}Offline{% endif %}</span>
                 </div>
-            {% endif %}
-        </div>
-
-        <!-- Info Banner -->
-        <div class="info-banner">
-            <h3>ℹ️ Device Limits</h3>
-            <ul>
-                {% if profile.account_type == 'KE_MULTI_DEVICE' %}
-                    <li>Multi-Device Plan: Up to {{ max_concurrent }} devices can be active simultaneously</li>
-                    <li>Daily limit: {{ max_daily }} unique devices per day</li>
-                    <li>Your devices automatically sync across sessions</li>
-                {% else %}
-                    <li>Your plan allows {{ max_concurrent }} active device at a time</li>
-                    <li>Daily limit: {{ max_daily }} unique devices per day</li>
-                    <li>Logging in from a new device will logout the previous one</li>
-                    <li>Upgrade to Multi-Device plan for simultaneous access</li>
+                
+                {% if session.device_fingerprint == current_device_fingerprint %}
+                <div class="current-tag">This Device</div>
                 {% endif %}
-            </ul>
-        </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">📱</div>
+                <p>No devices found</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Info Panel -->
+    <div class="info-panel">
+        <h3>ℹ️ Device Limits & Information</h3>
+        <ul class="info-list">
+            {% if profile.account_type == 'KE_MULTI_DEVICE' %}
+                <li>Multi-Device Plan: Up to {{ max_concurrent }} devices can be active simultaneously</li>
+                <li>Daily limit: {{ max_daily }} unique devices per day</li>
+                <li>Your devices automatically sync across sessions for seamless access</li>
+            {% else %}
+                <li>Your plan allows {{ max_concurrent }} active device at a time</li>
+                <li>Daily limit: {{ max_daily }} unique devices per day</li>
+                <li>Logging in from a new device will logout the previous session</li>
+                <li>Upgrade to Multi-Device plan for simultaneous access across all your devices</li>
+            {% endif %}
+        </ul>
     </div>
 </div>
 

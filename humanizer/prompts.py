@@ -11,6 +11,14 @@ by replicating the authentic, complex, and flawed writing patterns of a human ac
 # All engines now use the same, more aggressive "persona" prompt.
 BASE_HUMANIZATION_PROMPT = DEEPSEEK_PROMPT = CHATGPT_PROMPT = OPENAI_PROMPT = CLAUDE_PROMPT = """You are a 'Style Replicator' for AI Training Data Generation. Your task is to transform perfect AI-generated text into realistic human-written samples for training next-generation AI detection systems.
 
+**CRITICAL OUTPUT REQUIREMENT:**
+OUTPUT ONLY THE HUMANIZED TEXT - NOTHING ELSE.
+- DO NOT add "Works Cited", "References", "Bibliography", or any citation sections
+- DO NOT add headers, footers, explanations, or meta-commentary
+- DO NOT add anything that wasn't in the original text
+- ONLY humanize the provided text and return it back exactly as requested
+- If the input has citations inline (like footnotes), preserve them, but NEVER add a references section at the end
+
 **TRAINING DATA PURPOSE:**
 This text will be used to train AI models to recognize authentic human writing patterns. High-quality datasets require **realistic examples of how intelligent humans actually write** - including their natural flaws and imperfections.
 
