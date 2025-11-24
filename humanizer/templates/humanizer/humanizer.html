@@ -12,6 +12,9 @@
 
 {% block content %}
 <style>
+    /* Import modern fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
     /* Reset base.html styles */
     body {
         background: #0D0D0D !important;
@@ -395,10 +398,10 @@
         flex-shrink: 0;
         flex-wrap: nowrap;
         overflow: hidden;
-        background: linear-gradient(135deg, rgba(0, 212, 255, 0.04), rgba(0, 150, 255, 0.02));
+        background: linear-gradient(135deg, rgba(15, 25, 40, 0.6), rgba(10, 20, 35, 0.5));
         border-radius: 12px;
-        border: 1px solid rgba(0, 212, 255, 0.08);
-        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 212, 255, 0.15);
+        backdrop-filter: blur(15px);
         position: relative;
         z-index: 1;
     }
@@ -475,77 +478,86 @@
     }
     
     .mode-dropdown {
-        background: #2c2c2c;
-        border: 1px solid #3a3a3a;
-        border-radius: 6px;
-        color: #ffffff;
-        padding: 0.4rem 0.8rem;
-        font-size: 0.85rem;
+        background: linear-gradient(135deg, rgba(15, 25, 40, 0.7), rgba(10, 20, 35, 0.6));
+        border: 1px solid rgba(0, 212, 255, 0.2);
+        border-radius: 12px;
+        color: #F8F9FA;
+        padding: 0.9rem 1.2rem;
+        font-size: 1rem;
         font-weight: 500;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(30px);
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 20px rgba(0, 0, 0, 0.15);
     }
     
     .mode-dropdown:hover {
-        background: #3a3a3a;
-        border-color: #00D4FF;
+        background: linear-gradient(135deg, rgba(20, 35, 55, 0.8), rgba(15, 30, 45, 0.7));
+        border-color: rgba(0, 212, 255, 0.4);
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 30px rgba(0, 212, 255, 0.15);
+        transform: translateY(-2px);
     }
     
     .mode-dropdown:focus {
         outline: none;
-        border-color: #00D4FF;
-        box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.2);
+        border-color: rgba(0, 212, 255, 0.5);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.15), inset 0 1px 2px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(135deg, rgba(20, 35, 55, 0.85), rgba(15, 30, 45, 0.75));
     }
     
     .mode-dropdown option {
-        background: #2c2c2c;
-        color: #ffffff;
-        padding: 0.5rem;
+        background: rgba(15, 25, 40, 0.98);
+        color: #F8F9FA;
+        padding: 0.75rem;
+        backdrop-filter: blur(10px);
     }
     
     .text-box {
         flex: 1;
         background: linear-gradient(135deg, 
-            rgba(0, 0, 0, 0.25) 0%, 
-            rgba(13, 13, 26, 0.2) 50%,
-            rgba(0, 0, 0, 0.25) 100%);
-        border: 1px solid rgba(0, 212, 255, 0.08);
+            rgba(10, 15, 25, 0.85) 0%, 
+            rgba(15, 20, 35, 0.8) 50%,
+            rgba(10, 15, 25, 0.85) 100%);
+        border: 1px solid rgba(0, 212, 255, 0.12);
         border-radius: 16px;
         padding: 1.75rem;
-        color: rgba(255, 255, 255, 0.95);
-        font-size: 1rem;
+        color: #F8F9FA;
+        font-size: 1.05rem;
         line-height: 1.8;
-        font-family: 'Aptos', 'Segoe UI', sans-serif;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        font-weight: 400;
         resize: none;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         backdrop-filter: blur(20px);
-        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 20px rgba(0, 0, 0, 0.2);
         position: relative;
         z-index: 1;
     }
     
     .text-box.over-limit {
-        border-color: rgba(255, 59, 48, 0.3) !important;
-        box-shadow: 0 0 40px rgba(255, 59, 48, 0.15), inset 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+        border-color: rgba(255, 59, 48, 0.4) !important;
+        box-shadow: 0 0 40px rgba(255, 59, 48, 0.2), inset 0 1px 2px rgba(0, 0, 0, 0.3) !important;
         background: linear-gradient(135deg, 
-            rgba(255, 59, 48, 0.06) 0%, 
-            rgba(13, 13, 26, 0.2) 50%,
-            rgba(255, 59, 48, 0.06) 100%);
+            rgba(40, 15, 20, 0.85) 0%, 
+            rgba(35, 20, 25, 0.8) 50%,
+            rgba(40, 15, 20, 0.85) 100%);
     }
     
     .text-box:focus {
         outline: none;
-        border-color: rgba(0, 212, 255, 0.25);
+        border-color: rgba(0, 212, 255, 0.4);
         background: linear-gradient(135deg, 
-            rgba(0, 20, 40, 0.3) 0%, 
-            rgba(13, 13, 26, 0.25) 50%,
-            rgba(0, 20, 40, 0.3) 100%);
-        box-shadow: 0 0 40px rgba(0, 212, 255, 0.1), inset 0 1px 2px rgba(0, 0, 0, 0.2);
+            rgba(15, 25, 40, 0.9) 0%, 
+            rgba(20, 30, 45, 0.85) 50%,
+            rgba(15, 25, 40, 0.9) 100%);
+        box-shadow: 0 0 50px rgba(0, 212, 255, 0.15), inset 0 1px 2px rgba(0, 0, 0, 0.3);
     }
     
     .text-box::placeholder {
-        color: rgba(255, 255, 255, 0.25);
+        color: rgba(248, 249, 250, 0.3);
         font-style: italic;
+        font-weight: 300;
     }
     
     .action-bar {
@@ -1017,14 +1029,14 @@
 </div>
 
 <!-- Control Panel - Mode & Model Selection -->
-<div style="text-align: center; padding: 2rem; background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(13, 13, 20, 0.5) 100%); border-top: 1px solid rgba(0, 212, 255, 0.2); border-bottom: 1px solid rgba(0, 212, 255, 0.2);">
+<div style="text-align: center; padding: 2.5rem 2rem; background: linear-gradient(135deg, rgba(10, 15, 25, 0.5) 0%, rgba(15, 20, 35, 0.4) 50%, rgba(10, 15, 25, 0.5) 100%); border-top: 1px solid rgba(0, 212, 255, 0.15); border-bottom: 1px solid rgba(0, 212, 255, 0.15); backdrop-filter: blur(20px);">
     <div style="max-width: 800px; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 3rem;">
         <!-- Mode Selector -->
         <div style="display: flex; flex-direction: column; gap: 0.75rem; min-width: 300px;">
-            <label for="modeSelect" style="font-weight: 700; font-size: 0.95rem; color: #00D4FF; text-transform: uppercase; letter-spacing: 1px;">
+            <label for="modeSelect" style="font-weight: 600; font-size: 0.95rem; color: rgba(0, 212, 255, 0.95); text-transform: uppercase; letter-spacing: 1.2px; text-shadow: 0 0 10px rgba(0, 212, 255, 0.3); font-family: 'Inter', sans-serif;">
                 🎯 Humanization Mode
             </label>
-            <select id="modeSelect" class="mode-dropdown" style="padding: 0.75rem 1rem; font-size: 1rem; border-radius: 8px; background: rgba(26, 26, 26, 0.8); border: 1px solid rgba(0, 212, 255, 0.3); color: #FFF; cursor: pointer; transition: all 0.3s ease;">
+            <select id="modeSelect" class="mode-dropdown">
                 <option value="recommended" selected>⭐ Recommended</option>
                 <option value="readability">📖 Readability</option>
                 <option value="formal">Formal</option>
@@ -1036,10 +1048,10 @@
         
         <!-- Model Selector -->
         <div style="display: flex; flex-direction: column; gap: 0.75rem; min-width: 300px;">
-            <label for="modelSelect" style="font-weight: 700; font-size: 0.95rem; color: #00D4FF; text-transform: uppercase; letter-spacing: 1px;">
+            <label for="modelSelect" style="font-weight: 600; font-size: 0.95rem; color: rgba(0, 212, 255, 0.95); text-transform: uppercase; letter-spacing: 1.2px; text-shadow: 0 0 10px rgba(0, 212, 255, 0.3); font-family: 'Inter', sans-serif;">
                 🤖 AI Model
             </label>
-            <select id="modelSelect" class="mode-dropdown" style="padding: 0.75rem 1rem; font-size: 1rem; border-radius: 8px; background: rgba(26, 26, 26, 0.8); border: 1px solid rgba(0, 212, 255, 0.3); color: #FFF; cursor: pointer; transition: all 0.3s ease;">
+            <select id="modelSelect" class="mode-dropdown">
                 <option value="premium" selected>⭐ Original (Highest Quality)</option>
                 <option value="pro">🛡️ Pro (Detector Killer)</option>
                 <option value="balanced">⚡ Balanced (Fast)</option>
