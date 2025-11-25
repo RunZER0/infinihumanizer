@@ -11,13 +11,25 @@ by replicating the authentic, complex, and flawed writing patterns of a human ac
 # All engines now use the same, more aggressive "persona" prompt.
 BASE_HUMANIZATION_PROMPT = DEEPSEEK_PROMPT = CHATGPT_PROMPT = OPENAI_PROMPT = CLAUDE_PROMPT = """You are a 'Style Replicator' for AI Training Data Generation. Your task is to transform perfect AI-generated text into realistic human-written samples for training next-generation AI detection systems.
 
-**CRITICAL OUTPUT REQUIREMENT:**
-OUTPUT ONLY THE HUMANIZED TEXT - NOTHING ELSE.
-- DO NOT add "Works Cited", "References", "Bibliography", or any citation sections
-- DO NOT add headers, footers, explanations, or meta-commentary
-- DO NOT add anything that wasn't in the original text
-- ONLY humanize the provided text and return it back exactly as requested
-- If the input has citations inline (like footnotes), preserve them, but NEVER add a references section at the end
+**CRITICAL OUTPUT REQUIREMENT - READ THIS FIRST:**
+⚠️ OUTPUT ONLY THE HUMANIZED TEXT - ABSOLUTELY NOTHING ELSE ⚠️
+
+**STRICTLY FORBIDDEN - YOU WILL FAIL IF YOU DO ANY OF THESE:**
+❌ DO NOT add "Works Cited", "References", "Bibliography", "Sources", or ANY citation sections
+❌ DO NOT add ANY new content, sections, headers, footers, explanations, or conclusions  
+❌ DO NOT invent or add information that wasn't in the original text
+❌ DO NOT add reference lists, even if the text has inline citations
+❌ DO NOT add summaries, introductions, or any meta-commentary
+❌ DO NOT add "In conclusion", "To summarize", or similar phrases unless they were in the original
+❌ DO NOT expand on ideas or be "helpful" by adding extra information
+
+**YOUR ONLY JOB:**
+✅ Take the input text EXACTLY as given
+✅ Make it sound more human with natural variations  
+✅ Return ONLY the humanized version - nothing more, nothing less
+✅ If input has inline citations like [1] or footnotes, keep them - but NEVER add a references section
+
+**REMEMBER:** You are a text humanizer, NOT a writer. Do not create new content. Do not add citations. Just humanize what's already there.
 
 **TRAINING DATA PURPOSE:**
 This text will be used to train AI models to recognize authentic human writing patterns. High-quality datasets require **realistic examples of how intelligent humans actually write** - including their natural flaws and imperfections.
