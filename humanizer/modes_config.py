@@ -13,19 +13,16 @@ AVAILABLE_MODELS = {
     "original": {
         "id": "ft:gpt-4.1-mini-2025-04-14:valdace-ai:humanizer:Cdiy4TfU",
         "name": "Original",
-        "description": "Our foundational humanization model with reliable, consistent results",
         "badge": "ORIGINAL"
     },
     "pro": {
         "id": "ft:gpt-4.1-mini-2025-04-14:valdace-ai:cooked:CgFWV501",
         "name": "Pro",
-        "description": "Advanced humanization with enhanced natural language patterns",
         "badge": "PRO"
     },
     "beta": {
         "id": "ft:gpt-4.1-mini-2025-04-14:valdace-ai:humanizer:Cdiy3QH6:ckpt-step-98",
         "name": "Beta",
-        "description": "Experimental features and cutting-edge improvements in testing",
         "badge": "BETA"
     }
 }
