@@ -10,34 +10,28 @@ Supports multiple fine-tuned models for quality selection.
 # ============================================================================
 
 AVAILABLE_MODELS = {
-    "balanced": {
-        "id": "ft:gpt-4.1-mini-2025-04-14:valdace-ai:humanizerb0:CXCYIoX9",
-        "name": "Balanced (Fast)",
-        "description": "⚡ Fast processing with good quality - Best for general use",
-        "badge": "BALANCED"
-    },
-    "premium": {
+    "original": {
         "id": "ft:gpt-4.1-mini-2025-04-14:valdace-ai:humanizer:Cdiy4TfU",
-        "name": "Premium (Higher Quality)",
-        "description": "⭐ Enhanced quality output - Recommended for important documents",
-        "badge": "PREMIUM"
+        "name": "Original",
+        "description": "Our foundational humanization model with reliable, consistent results",
+        "badge": "ORIGINAL"
     },
     "pro": {
-        "id": "ft:gpt-4.1-mini-2025-04-14:valdace-ai:humanizerco:CeBLtu9z",
-        "name": "Pro (Detector Killer)",
-        "description": "🛡️ Beats all AI detectors - Perfect balance of quality and evasion",
+        "id": "ft:gpt-4.1-mini-2025-04-14:valdace-ai:cooked:CgFWV501",
+        "name": "Pro",
+        "description": "Advanced humanization with enhanced natural language patterns",
         "badge": "PRO"
     },
-    "experimental": {
+    "beta": {
         "id": "ft:gpt-4.1-mini-2025-04-14:valdace-ai:humanizer:Cdiy3QH6:ckpt-step-98",
-        "name": "Experimental (Beta)",
-        "description": "🧪 Checkpoint model - Testing new features",
+        "name": "Beta",
+        "description": "Experimental features and cutting-edge improvements in testing",
         "badge": "BETA"
     }
 }
 
 # Default model
-DEFAULT_MODEL = "premium"
+DEFAULT_MODEL = "original"
 MODEL_ID = AVAILABLE_MODELS[DEFAULT_MODEL]["id"]
 
 # ============================================================================
@@ -47,27 +41,33 @@ MODEL_ID = AVAILABLE_MODELS[DEFAULT_MODEL]["id"]
 MODES = {
     "recommended": {
         "name": "Recommended",
-        "description": "⭐ Best for AI detection evasion - Optimized settings for natural output",
+        "description": "Optimized settings for natural, human-like output",
         "temperature": 0.2,
-        "use_prompt": False,  # No additional prompt instructions
+        "use_prompt": False,  # Uses base prompt only
         "badge": "RECOMMENDED",
         "badge_color": "#28a745"
     },
     
     "readability": {
         "name": "Readability",
-        "description": "Clear and easy to understand - Perfect for general audiences",
+        "description": "Clear and accessible writing style",
         "temperature": 0.3,
         "use_prompt": True,
-        "prompt": """Transform this text to be highly readable and accessible:
+        "prompt": """STRICT INSTRUCTIONS - Follow exactly:
 
+OUTPUT RULES:
+- Return ONLY the humanized text
+- DO NOT add Works Cited, References, or Bibliography
+- DO NOT add any new content or sections
+- DO NOT add conclusions or summaries
+
+STYLE REQUIREMENTS:
 - Use clear, straightforward language
 - Keep sentences short and easy to follow
-- Maintain a natural flow that anyone can understand
-- Include subtle variations that feel human
-- Preserve all key information
+- Maintain natural flow and readability
+- Preserve all original information exactly
 
-Text to transform:
+Text to humanize:
 {text}""",
         "badge": None,
         "badge_color": None
@@ -75,18 +75,24 @@ Text to transform:
     
     "formal": {
         "name": "Formal",
-        "description": "Professional and academic tone",
+        "description": "Professional academic tone",
         "temperature": 0.4,
         "use_prompt": True,
-        "prompt": """Transform this text to match a formal academic writing style while maintaining authenticity:
+        "prompt": """STRICT INSTRUCTIONS - Follow exactly:
 
-- Use sophisticated vocabulary and complex sentence structures
-- Maintain professional tone throughout
-- Include subtle grammatical variations that humans make
-- Preserve all facts and citations
-- Avoid overly polished or perfect phrasing
+OUTPUT RULES:
+- Return ONLY the humanized text
+- DO NOT add Works Cited, References, or Bibliography
+- DO NOT add any new content or sections
+- DO NOT add conclusions or summaries
 
-Text to transform:
+STYLE REQUIREMENTS:
+- Use sophisticated vocabulary
+- Maintain professional academic tone
+- Include natural sentence variation
+- Preserve all citations and facts exactly
+
+Text to humanize:
 {text}""",
         "badge": None,
         "badge_color": None
@@ -94,18 +100,24 @@ Text to transform:
     
     "conversational": {
         "name": "Conversational",
-        "description": "Natural, everyday speaking style",
+        "description": "Natural everyday speaking style",
         "temperature": 0.7,
         "use_prompt": True,
-        "prompt": """Rewrite this text in a natural, conversational tone:
+        "prompt": """STRICT INSTRUCTIONS - Follow exactly:
 
-- Use everyday language and casual phrasing
-- Include contractions where natural
-- Vary sentence length for natural flow
-- Add subtle imperfections typical of casual speech
-- Keep the meaning intact
+OUTPUT RULES:
+- Return ONLY the humanized text
+- DO NOT add Works Cited, References, or Bibliography
+- DO NOT add any new content or sections
+- DO NOT add conclusions or summaries
 
-Text to transform:
+STYLE REQUIREMENTS:
+- Use natural, everyday language
+- Include contractions where appropriate
+- Vary sentence length naturally
+- Keep all original meaning intact
+
+Text to humanize:
 {text}""",
         "badge": None,
         "badge_color": None
@@ -116,15 +128,21 @@ Text to transform:
         "description": "Relaxed and approachable tone",
         "temperature": 0.8,
         "use_prompt": True,
-        "prompt": """Rewrite this text in an informal, friendly style:
+        "prompt": """STRICT INSTRUCTIONS - Follow exactly:
 
+OUTPUT RULES:
+- Return ONLY the humanized text
+- DO NOT add Works Cited, References, or Bibliography
+- DO NOT add any new content or sections
+- DO NOT add conclusions or summaries
+
+STYLE REQUIREMENTS:
 - Use simple, accessible language
-- Keep sentences short and punchy
-- Add personality and warmth
-- Include natural human writing patterns
-- Make it feel genuine and unpolished
+- Keep sentences short and direct
+- Add warmth and personality
+- Preserve original content exactly
 
-Text to transform:
+Text to humanize:
 {text}""",
         "badge": None,
         "badge_color": None
@@ -132,19 +150,24 @@ Text to transform:
     
     "academic": {
         "name": "Academic",
-        "description": "Scholarly writing with analytical depth",
+        "description": "Scholarly writing with depth",
         "temperature": 0.5,
         "use_prompt": True,
-        "prompt": """Transform this text into scholarly academic writing:
+        "prompt": """STRICT INSTRUCTIONS - Follow exactly:
 
+OUTPUT RULES:
+- Return ONLY the humanized text
+- DO NOT add Works Cited, References, or Bibliography
+- DO NOT add any new content or sections
+- DO NOT add conclusions or summaries
+
+STYLE REQUIREMENTS:
 - Use advanced academic vocabulary
-- Employ complex, analytical sentence structures
-- Include hedging and qualification where appropriate
-- Maintain rigorous intellectual tone
-- Add subtle authentic academic writing patterns
-- Preserve all citations and references
+- Employ complex analytical structures
+- Include appropriate hedging language
+- Preserve all existing citations exactly
 
-Text to transform:
+Text to humanize:
 {text}""",
         "badge": None,
         "badge_color": None
