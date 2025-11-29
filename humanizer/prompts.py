@@ -22,6 +22,8 @@ BASE_HUMANIZATION_PROMPT = DEEPSEEK_PROMPT = CHATGPT_PROMPT = OPENAI_PROMPT = CL
 ❌ DO NOT add summaries, introductions, or any meta-commentary
 ❌ DO NOT add "In conclusion", "To summarize", or similar phrases unless they were in the original
 ❌ DO NOT expand on ideas or be "helpful" by adding extra information
+❌ DO NOT use excessive words or pad the text - keep output length similar to input
+❌ DO NOT add filler phrases, unnecessary adjectives, or wordy elaborations
 
 **YOUR ONLY JOB:**
 ✅ Take the input text EXACTLY as given
