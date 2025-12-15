@@ -13,17 +13,12 @@ AVAILABLE_MODELS = {
     "original": {
         "id": "ft:gpt-4.1-mini-2025-04-14:valdace-ai:humanizer:Cdiy4TfU",
         "name": "Original",
-        "badge": "ORIGINAL"
-    },
-    "pro": {
-        "id": "ft:gpt-4.1-mini-2025-04-14:valdace-ai:cooked:CgFWV501",
-        "name": "Pro",
-        "badge": "PRO"
+        "badge": "STABLE"
     },
     "beta": {
         "id": "ft:gpt-4.1-mini-2025-04-14:valdace-ai:humanizer:Cdiy3QH6:ckpt-step-98",
         "name": "Beta",
-        "badge": "BETA"
+        "badge": "EXPERIMENTAL"
     }
 }
 
