@@ -11,14 +11,9 @@ Supports multiple fine-tuned models for quality selection.
 
 AVAILABLE_MODELS = {
     "original": {
-        "id": "ft:gpt-4.1-mini-2025-04-14:valdace-ai:humanizer:Cdiy4TfU",
+        "id": "ft:gpt-4.1-mini-2025-04-14:ynai:infinifinal:DFcgTrol",
         "name": "Original",
         "badge": "STABLE"
-    },
-    "beta": {
-        "id": "ft:gpt-4.1-mini-2025-04-14:valdace-ai:humanizer:Cdiy3QH6:ckpt-step-98",
-        "name": "Beta",
-        "badge": "EXPERIMENTAL"
     }
 }
 
