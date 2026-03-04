@@ -276,6 +276,7 @@ def humanize_ajax(request):
 
         logger.info(
             "Humanization complete for user %s",
+            request.user.pk,
             extra={
                 "engine": selected_engine,
                 "word_count": word_count,

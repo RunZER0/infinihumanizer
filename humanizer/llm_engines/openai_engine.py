@@ -147,9 +147,9 @@ class TextEngine:
                         
                         return index, result
                         
-                    except Exception:
-                        # Return original on error to prevent data loss
-                        return index, chunk 
+                    except Exception as chunk_exc:
+                        # Re-raise so the caller knows humanization failed
+                        raise RuntimeError(f"Chunk {index} failed: {chunk_exc}") from chunk_exc
                 
                 results = []
                 # Use ThreadPoolExecutor to run API calls in parallel
