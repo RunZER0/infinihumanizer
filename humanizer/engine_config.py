@@ -4,7 +4,7 @@ Engine Configuration File - UPDATED
 Each engine uses its own optimized humanization prompt from prompts.py
 """
 
-from .prompts import DEEPSEEK_PROMPT, CLAUDE_PROMPT, OPENAI_PROMPT
+from .prompts import DEEPSEEK_PROMPT, OPENAI_PROMPT
 
 # ============================================================================
 # DEEPSEEK ENGINE CONFIGURATION
@@ -21,23 +21,6 @@ DEEPSEEK_CONFIG = {
     
     "system_prompt": "You are a text paraphraser who transforms AI-generated text into human-sounding output.",
     "user_prompt_template": DEEPSEEK_PROMPT
-}
-
-# ============================================================================
-# CLAUDE ENGINE CONFIGURATION
-# ============================================================================
-
-CLAUDE_CONFIG = {
-    "name": "Claude Human Paraphraser",
-    "model": "claude-3-7-sonnet-20250219",
-    "description": "Natural text paraphrasing with human imperfections",
-    
-    "base_temperature": 0.3,
-    "temperature_variation": 0.15,
-    "max_tokens": 8192,
-    
-    "system_prompt": "You are a text paraphraser who transforms AI-generated text into human-sounding output.",
-    "user_prompt_template": CLAUDE_PROMPT
 }
 
 # ============================================================================
@@ -69,7 +52,7 @@ def get_engine_config(engine_name: str) -> dict:
     Get configuration for a specific engine.
     
     Args:
-        engine_name: 'deepseek', 'claude', or 'openai'
+        engine_name: 'deepseek' or 'openai'
         
     Returns:
         Configuration dictionary for the engine
@@ -81,12 +64,10 @@ def get_engine_config(engine_name: str) -> dict:
     
     if engine_name == "deepseek":
         return DEEPSEEK_CONFIG
-    elif engine_name in ("claude", "anthropic"):
-        return CLAUDE_CONFIG
     elif engine_name in ("openai", "gpt"):
         return OPENAI_CONFIG
     else:
-        raise ValueError(f"Unknown engine: {engine_name}. Valid options: 'deepseek', 'claude', 'openai'")
+        raise ValueError(f"Unknown engine: {engine_name}. Valid options: 'deepseek', 'openai'")
 
 
 def calculate_temperature(base_temp: float, variation: float, chunk_index: int) -> float:
@@ -112,7 +93,7 @@ def list_available_engines():
     print("AVAILABLE HUMANIZATION ENGINES")
     print("=" * 80)
     
-    engines = [DEEPSEEK_CONFIG, CLAUDE_CONFIG, OPENAI_CONFIG]
+    engines = [DEEPSEEK_CONFIG, OPENAI_CONFIG]
     for config in engines:
         print(f"\n{config['name']}")
         print(f"  Model: {config['model']}")

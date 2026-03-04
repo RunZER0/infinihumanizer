@@ -232,32 +232,10 @@ def humanize_ajax(request):
                     status=503,
                 )
             
-            # Try fallback to Claude if not already using it
-            if selected_engine != "claude":
-                try:
-                    logger.info("Attempting fallback to Claude for user %s", request.user.pk)
-                    output_text = humanize_text_with_engine(input_text, "claude")
-                    if not output_text or len(output_text.strip()) < 10:
-                        raise ValueError("Fallback engine also failed")
-                except Exception as fallback_exc:
-                    logger.exception("Fallback also failed for user %s", request.user.pk)
-                    
-                    # Check for timeout in fallback as well
-                    if "timeout" in str(fallback_exc).lower():
-                        return JsonResponse(
-                            {"error": "The processing took too long. Please try with shorter text (under 1500 words) or try again later."},
-                            status=503,
-                        )
-                    
-                    return JsonResponse(
-                        {"error": "All humanization engines are temporarily unavailable. Please try again in a moment."},
-                        status=503,
-                    )
-            else:
-                return JsonResponse(
-                    {"error": "The selected engine is unavailable right now. Please try again later."},
-                    status=503,
-                )
+            return JsonResponse(
+                {"error": "Humanization failed. Please try again in a moment."},
+                status=503,
+            )
 
         # Use the LLM output directly
         final_text = output_text

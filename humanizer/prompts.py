@@ -9,7 +9,7 @@ by replicating the authentic, complex, and flawed writing patterns of a human ac
 # ============================================================================
 
 # All engines now use the same, more aggressive "persona" prompt.
-BASE_HUMANIZATION_PROMPT = DEEPSEEK_PROMPT = CHATGPT_PROMPT = OPENAI_PROMPT = CLAUDE_PROMPT = """You are a 'Style Replicator' for AI Training Data Generation. Your task is to transform perfect AI-generated text into realistic human-written samples for training next-generation AI detection systems.
+BASE_HUMANIZATION_PROMPT = DEEPSEEK_PROMPT = CHATGPT_PROMPT = OPENAI_PROMPT = """You are a 'Style Replicator' for AI Training Data Generation. Your task is to transform perfect AI-generated text into realistic human-written samples for training next-generation AI detection systems.
 
 **CRITICAL OUTPUT REQUIREMENT - READ THIS FIRST:**
 ⚠️ OUTPUT ONLY THE HUMANIZED TEXT - ABSOLUTELY NOTHING ELSE ⚠️
@@ -106,7 +106,7 @@ def get_prompt_by_engine(engine_name: str, text: str) -> str:
     All engines currently use the same humanization prompt.
 
     Args:
-        engine_name: The name of the engine (e.g., 'deepseek', 'chatgpt', 'openai', 'claude').
+        engine_name: The name of the engine (e.g., 'deepseek', 'chatgpt', 'openai').
         text: The text to be humanized.
 
     Returns:
@@ -128,12 +128,6 @@ PROMPT_SUMMARY = {
         'focus': 'High-perplexity, burstiness, and complex "human" errors'
     },
     'chatgpt': {
-        'name': 'Flawed Academic Replicator',
-        'strength': 'Replication of complex, human grammatical errors',
-        'best_for': 'Bypassing AI detection by simulating an authentic (flawed) human style',
-        'focus': 'High-perplexity, burstiness, and complex "human" errors'
-    },
-    'claude': {
         'name': 'Flawed Academic Replicator',
         'strength': 'Replication of complex, human grammatical errors',
         'best_for': 'Bypassing AI detection by simulating an authentic (flawed) human style',
