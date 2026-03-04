@@ -7,7 +7,7 @@ import os
 import random
 import concurrent.futures
 from openai import OpenAI, APITimeoutError
-from ..modes_config import get_mode_config, format_prompt_for_mode, DEFAULT_MODE, get_model_id
+from ..modes_config import get_mode_config, format_prompt_for_mode, get_system_prompt_for_mode, DEFAULT_MODE, get_model_id
 from ..multi_stage_pipeline import multi_stage_humanize_gpt4, chunk_text
 
 
@@ -80,13 +80,13 @@ class TextEngine:
                         
                         # Process this chunk WITHOUT recursion - call the core humanization logic directly
                         mode_config = get_mode_config(mode)
+                        system_prompt = get_system_prompt_for_mode(mode)
+                        user_prompt = format_prompt_for_mode(mode, chunk)
                         
-                        # Prepare prompt based on mode
-                        if mode_config["use_prompt"]:
-                            user_prompt = format_prompt_for_mode(mode, chunk)
-                            messages = [{"role": "user", "content": user_prompt}]
-                        else:
-                            messages = [{"role": "user", "content": chunk}]
+                        messages = [
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user",   "content": user_prompt}
+                        ]
                         
                         # Add random variation to temperature
                         base_temp = mode_config["temperature"]
@@ -170,21 +170,13 @@ class TextEngine:
         
         # Get mode configuration
         mode_config = get_mode_config(mode)
+        system_prompt = get_system_prompt_for_mode(mode)
+        user_prompt = format_prompt_for_mode(mode, text)
 
-
-        
-        # Prepare prompt based on mode
-        if mode_config["use_prompt"]:
-            # Mode uses custom prompt
-            user_prompt = format_prompt_for_mode(mode, text)
-            messages = [
-                {"role": "user", "content": user_prompt}
-            ]
-        else:
-            # Recommended mode - no prompt, just the text
-            messages = [
-                {"role": "user", "content": text}
-            ]
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user",   "content": user_prompt}
+        ]
         
         # Add random variation to temperature for uniqueness
         # Variation of +/- 0.05 to keep it close to the optimized setting

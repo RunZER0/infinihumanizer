@@ -22,6 +22,25 @@ DEFAULT_MODEL = "original"
 MODEL_ID = AVAILABLE_MODELS[DEFAULT_MODEL]["id"]
 
 # ============================================================================
+# SYSTEM PROMPT — matches fine-tuned model training data exactly
+# ============================================================================
+
+SYSTEM_PROMPT = """You are an expert AI text humanizer specialising in academic student writing. Your task: transform AI-generated academic text into natural, authentic human student writing.
+
+STRICT PRESERVATION RULES:
+1. QUOTATIONS — every passage in quotation marks must remain EXACTLY character-for-character identical. Do not alter a single word, comma, or capital letter inside any quoted passage.
+2. CITATIONS — preserve every in-text citation (e.g. Smith, 2021; (Jones et al., 2019)) and the full References / Works Cited / Bibliography section word-for-word.
+3. STRUCTURE — keep every paragraph break and section heading exactly where it appears. Do not merge or split paragraphs.
+
+HUMANISATION GOALS:
+- Vary sentence length naturally (mix short punchy sentences with longer analytical ones).
+- Add a genuine student critical voice: hedging phrases, first-person reflection where appropriate.
+- Eliminate AI-writing tells: break up clusters of "Furthermore / Moreover / Additionally"; replace robotic passive constructions with active voice.
+- Use contractions, colloquial academic phrasing, and slight informality where it would feel natural for a student.
+
+OUTPUT: return only the transformed essay text, paragraph-for-paragraph, with no preamble, no commentary, and no meta-notes."""
+
+# ============================================================================
 # MODE DEFINITIONS
 # ============================================================================
 
@@ -29,8 +48,19 @@ MODES = {
     "recommended": {
         "name": "Recommended",
         "description": "Optimized settings for natural, human-like output",
-        "temperature": 0.2,
-        "use_prompt": False,  # Uses base prompt only
+        "temperature": 0.7,
+        "system_prompt": SYSTEM_PROMPT,
+        "prompt": """Transform the following AI-generated academic text into natural human student writing.
+
+RULES:
+- Preserve ALL quoted passages verbatim (character-for-character).
+- Preserve ALL in-text citations and the full reference list exactly.
+- Keep every paragraph break in its original position — do NOT merge paragraphs.
+- Write in a natural student voice: vary sentence length, use some hedging, avoid robotic connectors.
+
+AI-GENERATED TEXT:
+
+{text}""",
         "badge": "RECOMMENDED",
         "badge_color": "#28a745"
     },
@@ -38,23 +68,18 @@ MODES = {
     "readability": {
         "name": "Readability",
         "description": "Clear and accessible writing style",
-        "temperature": 0.3,
-        "use_prompt": True,
-        "prompt": """STRICT INSTRUCTIONS - Follow exactly:
+        "temperature": 0.65,
+        "system_prompt": SYSTEM_PROMPT,
+        "prompt": """Transform the following AI-generated academic text into clear, easy-to-read human student writing.
 
-OUTPUT RULES:
-- Return ONLY the humanized text
-- DO NOT add Works Cited, References, or Bibliography
-- DO NOT add any new content or sections
-- DO NOT add conclusions or summaries
+RULES:
+- Preserve ALL quoted passages verbatim (character-for-character).
+- Preserve ALL in-text citations and the full reference list exactly.
+- Keep every paragraph break in its original position — do NOT merge paragraphs.
+- Prioritise clarity: use shorter sentences, plain vocabulary, and active voice.
 
-STYLE REQUIREMENTS:
-- Use clear, straightforward language
-- Keep sentences short and easy to follow
-- Maintain natural flow and readability
-- Preserve all original information exactly
+AI-GENERATED TEXT:
 
-Text to humanize:
 {text}""",
         "badge": None,
         "badge_color": None
@@ -63,23 +88,18 @@ Text to humanize:
     "formal": {
         "name": "Formal",
         "description": "Professional academic tone",
-        "temperature": 0.4,
-        "use_prompt": True,
-        "prompt": """STRICT INSTRUCTIONS - Follow exactly:
+        "temperature": 0.6,
+        "system_prompt": SYSTEM_PROMPT,
+        "prompt": """Transform the following AI-generated academic text into formal, scholarly human student writing.
 
-OUTPUT RULES:
-- Return ONLY the humanized text
-- DO NOT add Works Cited, References, or Bibliography
-- DO NOT add any new content or sections
-- DO NOT add conclusions or summaries
+RULES:
+- Preserve ALL quoted passages verbatim (character-for-character).
+- Preserve ALL in-text citations and the full reference list exactly.
+- Keep every paragraph break in its original position — do NOT merge paragraphs.
+- Use sophisticated vocabulary, analytical structures, and appropriate hedging language.
 
-STYLE REQUIREMENTS:
-- Use sophisticated vocabulary
-- Maintain professional academic tone
-- Include natural sentence variation
-- Preserve all citations and facts exactly
+AI-GENERATED TEXT:
 
-Text to humanize:
 {text}""",
         "badge": None,
         "badge_color": None
@@ -88,23 +108,18 @@ Text to humanize:
     "conversational": {
         "name": "Conversational",
         "description": "Natural everyday speaking style",
-        "temperature": 0.7,
-        "use_prompt": True,
-        "prompt": """STRICT INSTRUCTIONS - Follow exactly:
+        "temperature": 0.75,
+        "system_prompt": SYSTEM_PROMPT,
+        "prompt": """Transform the following AI-generated academic text into natural, conversational human student writing.
 
-OUTPUT RULES:
-- Return ONLY the humanized text
-- DO NOT add Works Cited, References, or Bibliography
-- DO NOT add any new content or sections
-- DO NOT add conclusions or summaries
+RULES:
+- Preserve ALL quoted passages verbatim (character-for-character).
+- Preserve ALL in-text citations and the full reference list exactly.
+- Keep every paragraph break in its original position — do NOT merge paragraphs.
+- Use natural, flowing language with contractions; write as an engaged student, not a robot.
 
-STYLE REQUIREMENTS:
-- Use natural, everyday language
-- Include contractions where appropriate
-- Vary sentence length naturally
-- Keep all original meaning intact
+AI-GENERATED TEXT:
 
-Text to humanize:
 {text}""",
         "badge": None,
         "badge_color": None
@@ -114,22 +129,17 @@ Text to humanize:
         "name": "Informal",
         "description": "Relaxed and approachable tone",
         "temperature": 0.8,
-        "use_prompt": True,
-        "prompt": """STRICT INSTRUCTIONS - Follow exactly:
+        "system_prompt": SYSTEM_PROMPT,
+        "prompt": """Transform the following AI-generated academic text into relaxed, approachable human student writing.
 
-OUTPUT RULES:
-- Return ONLY the humanized text
-- DO NOT add Works Cited, References, or Bibliography
-- DO NOT add any new content or sections
-- DO NOT add conclusions or summaries
+RULES:
+- Preserve ALL quoted passages verbatim (character-for-character).
+- Preserve ALL in-text citations and the full reference list exactly.
+- Keep every paragraph break in its original position — do NOT merge paragraphs.
+- Use simple, warm language; short punchy sentences; first-person where appropriate.
 
-STYLE REQUIREMENTS:
-- Use simple, accessible language
-- Keep sentences short and direct
-- Add warmth and personality
-- Preserve original content exactly
+AI-GENERATED TEXT:
 
-Text to humanize:
 {text}""",
         "badge": None,
         "badge_color": None
@@ -138,23 +148,18 @@ Text to humanize:
     "academic": {
         "name": "Academic",
         "description": "Scholarly writing with depth",
-        "temperature": 0.5,
-        "use_prompt": True,
-        "prompt": """STRICT INSTRUCTIONS - Follow exactly:
+        "temperature": 0.65,
+        "system_prompt": SYSTEM_PROMPT,
+        "prompt": """Transform the following AI-generated academic text into deep scholarly human student writing.
 
-OUTPUT RULES:
-- Return ONLY the humanized text
-- DO NOT add Works Cited, References, or Bibliography
-- DO NOT add any new content or sections
-- DO NOT add conclusions or summaries
+RULES:
+- Preserve ALL quoted passages verbatim (character-for-character).
+- Preserve ALL in-text citations and the full reference list exactly.
+- Keep every paragraph break in its original position — do NOT merge paragraphs.
+- Use advanced vocabulary, complex analytical structures, and hedging language typical of high-level academic work.
 
-STYLE REQUIREMENTS:
-- Use advanced academic vocabulary
-- Employ complex analytical structures
-- Include appropriate hedging language
-- Preserve all existing citations exactly
+AI-GENERATED TEXT:
 
-Text to humanize:
 {text}""",
         "badge": None,
         "badge_color": None
@@ -197,22 +202,21 @@ def get_all_modes():
     ]
 
 
-def format_prompt_for_mode(mode_name: str, text: str) -> str:
+def get_system_prompt_for_mode(mode_name: str) -> str:
     """
-    Format the prompt for a specific mode.
-    
-    Args:
-        mode_name: Name of the mode
-        text: Text to be humanized
-        
-    Returns:
-        Formatted prompt string or None if mode doesn't use prompts
+    Get the system prompt for a specific mode.
+    All modes use the same system prompt matching the fine-tuned model's training data.
     """
     config = get_mode_config(mode_name)
-    
-    if not config["use_prompt"]:
-        return None
-    
+    return config.get("system_prompt", SYSTEM_PROMPT)
+
+
+def format_prompt_for_mode(mode_name: str, text: str) -> str:
+    """
+    Format the user message prompt for a specific mode.
+    Every mode has a prompt; returns it formatted with the given text.
+    """
+    config = get_mode_config(mode_name)
     return config["prompt"].format(text=text)
 
 
