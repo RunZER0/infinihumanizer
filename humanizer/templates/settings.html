@@ -1,461 +1,147 @@
 {% extends "base.html" %}
 
-{% block title %}Settings - InfiniHumanizer{% endblock %}
+{% block title %}Settings — InfiniHumanizer{% endblock %}
 
 {% block content %}
-
-<!-- Include sidebar styles -->
-{% include 'includes/sidebar_styles.html' %}
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* Reset & Base */
-body {
-    background: linear-gradient(180deg, #0A0A12 0%, #1a1a2e 30%, #0f1729 70%, #0A0A12 100%);
-    margin: 0;
-    padding: 0;
-    font-family: 'Aptos', 'Segoe UI', sans-serif;
-    min-height: 100vh;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', -apple-system, sans-serif !important; background: #0D0D0D !important; color: #EFEFEF !important; min-height: 100vh; }
+main { padding: 0 !important; margin: 0 !important; }
+nav  { display: none !important; }
 
-main {
-    padding: 0 !important;
-    margin: 0 !important;
+.st-topbar {
+  position: sticky; top: 0; z-index: 200; height: 56px;
+  display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
+  background: rgba(5,7,15,.92); border-bottom: 1px solid rgba(0,212,255,.1); backdrop-filter: blur(24px);
 }
+.st-brand { font-size: 1.05rem; font-weight: 800; letter-spacing: -.3px; background: linear-gradient(135deg,#00D4FF,#0088FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.st-back { font-size: .78rem; color: rgba(0,212,255,.7); text-decoration: none; border: 1px solid rgba(0,212,255,.18); border-radius: 7px; padding: 5px 12px; transition: all .15s; }
+.st-back:hover { color: #00D4FF; border-color: rgba(0,212,255,.4); }
 
-/* Floating Top Ribbon - Glassmorphic */
-.top-ribbon {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
-    background: rgba(10, 10, 18, 0.8);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(0, 212, 255, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+.st-page { max-width: 1050px; margin: 0 auto; padding: 72px 32px 80px; }
+.st-eyebrow { font-size: .62rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(0,212,255,.6); margin-bottom: 14px; }
+.st-hero-title { font-size: clamp(2.2rem,4vw,3.4rem); font-weight: 800; letter-spacing: -1.2px; color: #fff; line-height: 1.1; margin-bottom: 14px; }
+.st-hero-sub { font-size: .95rem; color: rgba(255,255,255,.35); margin-bottom: 56px; }
+
+/* Account info — flat stat row */
+.st-account { display: grid; grid-template-columns: repeat(4,1fr); border: 1px solid rgba(255,255,255,.06); margin-bottom: 52px; }
+.st-acct-cell { padding: 28px 24px; border-right: 1px solid rgba(255,255,255,.06); }
+.st-acct-cell:last-child { border-right: none; }
+.st-acct-lbl { font-size: .62rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(255,255,255,.2); margin-bottom: 8px; }
+.st-acct-val { font-size: .95rem; font-weight: 700; color: rgba(255,255,255,.7); word-break: break-all; }
+.st-acct-val.accent { color: #00D4FF; }
+
+/* Progress bar */
+.st-bar { margin-top: 10px; height: 3px; background: rgba(255,255,255,.07); border-radius: 2px; overflow: hidden; }
+.st-bar-fill { height: 100%; background: linear-gradient(90deg,#00D4FF,#00e87a); border-radius: 2px; transition: width .6s ease; }
+
+/* Divider */
+.st-divider { height: 1px; background: rgba(255,255,255,.06); margin: 40px 0; }
+
+/* Setting rows */
+.st-section-label { font-size: .62rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.2); margin-bottom: 20px; }
+
+.st-row { display: flex; align-items: center; justify-content: space-between; padding: 24px 0; border-bottom: 1px solid rgba(255,255,255,.05); gap: 24px; }
+.st-row:first-of-type { border-top: 1px solid rgba(255,255,255,.05); }
+.st-row-info { flex: 1; }
+.st-row-title { font-size: .9rem; font-weight: 600; color: rgba(255,255,255,.7); margin-bottom: 4px; }
+.st-row-desc { font-size: .78rem; color: rgba(255,255,255,.28); line-height: 1.6; }
+.st-row-action { flex-shrink: 0; }
+
+.st-btn {
+  height: 38px; border-radius: 7px; border: none;
+  font-family: 'Inter',sans-serif; font-size: .8rem; font-weight: 600;
+  cursor: pointer; padding: 0 20px; text-decoration: none; display: inline-flex; align-items: center;
+  transition: all .15s;
 }
+.st-btn-ghost { background: transparent; color: rgba(255,255,255,.55); border: 1px solid rgba(255,255,255,.1); }
+.st-btn-ghost:hover { border-color: rgba(0,212,255,.3); color: #fff; }
+.st-btn-danger { background: transparent; color: rgba(255,70,55,.65); border: 1px solid rgba(255,70,55,.2); }
+.st-btn-danger:hover { border-color: rgba(255,70,55,.45); color: #ff5040; }
 
-.ribbon-brand {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    color: #fff;
-    font-size: 1rem;
-}
+/* Danger zone — thin red border, no heavy bg */
+.st-danger-zone { margin-top: 52px; border: 1px solid rgba(255,60,45,.14); border-radius: 6px; padding: 32px 28px; }
+.st-danger-label { font-size: .6rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,60,45,.5); margin-bottom: 14px; }
+.st-danger-title { font-size: .95rem; font-weight: 700; color: rgba(255,255,255,.55); margin-bottom: 8px; }
+.st-danger-desc { font-size: .8rem; color: rgba(255,255,255,.25); line-height: 1.7; margin-bottom: 20px; }
 
-.ribbon-logo {
-    font-size: 1.4rem;
-    font-weight: 900;
-    background: linear-gradient(135deg, #00D4FF, #00FF88);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-/* Settings Area - Blended Background */
-.settings-area {
-    margin-top: 60px;
-    min-height: calc(100vh - 60px);
-    padding: 4rem 2rem;
-    margin-left: 0;
-    transition: margin-left 0.4s ease;
-}
-
-/* Hero Section - No Container */
-.hero-section {
-    text-align: center;
-    margin-bottom: 5rem;
-    position: relative;
-}
-
-.hero-section h1 {
-    font-size: 4rem;
-    background: linear-gradient(135deg, #00D4FF, #00FF88);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-weight: 900;
-    margin-bottom: 0.8rem;
-    letter-spacing: -2px;
-    animation: glow-pulse 3s ease-in-out infinite;
-}
-
-@keyframes glow-pulse {
-    0%, 100% { filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.3)); }
-    50% { filter: drop-shadow(0 0 50px rgba(0, 212, 255, 0.5)); }
-}
-
-.hero-section p {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 1.2rem;
-    font-weight: 300;
-}
-
-/* Stats River - Flowing Layout */
-.stats-river {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 2rem;
-    max-width: 1200px;
-    margin: 0 auto 5rem;
-    position: relative;
-}
-
-.stats-river::after {
-    content: '';
-    position: absolute;
-    bottom: -2.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 50%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.3), transparent);
-}
-
-.stat-orb {
-    padding: 2.5rem 2rem;
-    background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(0, 255, 136, 0.02));
-    border-radius: 24px;
-    border: 1px solid rgba(0, 212, 255, 0.1);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-    text-align: center;
-}
-
-.stat-orb::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.1), transparent 70%);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-}
-
-.stat-orb:hover::before {
-    opacity: 1;
-}
-
-.stat-orb:hover {
-    transform: translateY(-10px) scale(1.02);
-    background: linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(0, 255, 136, 0.05));
-    border-color: rgba(0, 212, 255, 0.3);
-    box-shadow: 0 20px 60px rgba(0, 212, 255, 0.2);
-}
-
-.stat-orb-icon {
-    font-size: 2.5rem;
-    display: block;
-    margin-bottom: 1rem;
-}
-
-.stat-orb-label {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 0.8rem;
-}
-
-.stat-orb-value {
-    color: #FFF;
-    font-size: 1.3rem;
-    font-weight: 700;
-}
-
-/* Progress Wave */
-.progress-wave {
-    margin-top: 1rem;
-}
-
-.wave-bar {
-    height: 6px;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
-}
-
-.wave-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #00D4FF, #00FF88);
-    border-radius: 10px;
-    transition: width 0.6s ease;
-    box-shadow: 0 0 15px rgba(0, 255, 136, 0.6);
-}
-
-/* Action Flow - Smooth Panels */
-.action-flow {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 2.5rem;
-    max-width: 1200px;
-    margin: 0 auto 5rem;
-}
-
-@media (max-width: 768px) {
-    .action-flow {
-        grid-template-columns: 1fr;
-    }
-}
-
-.action-bubble {
-    padding: 3rem;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-}
-
-.action-bubble::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, #00D4FF, transparent);
-    transform: scaleX(0);
-    transition: transform 0.5s ease;
-}
-
-.action-bubble:hover::before {
-    transform: scaleX(1);
-}
-
-.action-bubble:hover {
-    background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(0, 255, 136, 0.02));
-    border-color: rgba(0, 212, 255, 0.2);
-    transform: translateY(-5px);
-    box-shadow: 0 15px 50px rgba(0, 212, 255, 0.1);
-}
-
-.bubble-header {
-    font-size: 1.8rem;
-    color: #00D4FF;
-    font-weight: 800;
-    margin-bottom: 1.2rem;
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-}
-
-.bubble-text {
-    color: rgba(255, 255, 255, 0.7);
-    margin-bottom: 2rem;
-    line-height: 1.7;
-    font-size: 1rem;
-}
-
-/* Smooth Buttons */
-.smooth-btn {
-    width: 100%;
-    padding: 1.2rem 1.5rem;
-    border: none;
-    border-radius: 14px;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    text-decoration: none;
-}
-
-.btn-glow {
-    background: linear-gradient(135deg, #00D4FF, #0099FF);
-    color: #000;
-    box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
-}
-
-.btn-glow:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 35px rgba(0, 212, 255, 0.5);
-}
-
-.btn-ghost {
-    background: rgba(255, 255, 255, 0.04);
-    color: #FFF;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.btn-ghost:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(0, 212, 255, 0.4);
-    transform: translateY(-3px);
-}
-
-.btn-danger-soft {
-    background: linear-gradient(135deg, rgba(255, 59, 48, 0.15), rgba(255, 59, 48, 0.08));
-    color: #FF3B30;
-    border: 1px solid rgba(255, 59, 48, 0.3);
-}
-
-.btn-danger-soft:hover {
-    background: linear-gradient(135deg, rgba(255, 59, 48, 0.25), rgba(255, 59, 48, 0.15));
-    border-color: rgba(255, 59, 48, 0.5);
-    transform: translateY(-3px);
-}
-
-/* Smooth Divider */
-.smooth-divider {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
-    margin: 4rem 0;
-}
-
-/* Danger Zone - Smooth Blend */
-.danger-zone {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 3.5rem;
-    background: linear-gradient(135deg, rgba(255, 59, 48, 0.04), rgba(255, 59, 48, 0.01));
-    border-radius: 24px;
-    border: 1px solid rgba(255, 59, 48, 0.15);
-    position: relative;
-    overflow: hidden;
-}
-
-.danger-zone::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255, 59, 48, 0.05) 0%, transparent 70%);
-    animation: danger-pulse 6s ease-in-out infinite;
-}
-
-@keyframes danger-pulse {
-    0%, 100% { transform: translate(0, 0); }
-    50% { transform: translate(5%, 5%); }
-}
-
-.danger-zone .bubble-header {
-    color: #FF3B30;
-    position: relative;
-    z-index: 1;
-}
-
-.danger-zone .bubble-text {
-    position: relative;
-    z-index: 1;
-}
-
-.danger-zone .smooth-btn {
-    max-width: 350px;
-    position: relative;
-    z-index: 1;
+@media (max-width: 760px) {
+  .st-account { grid-template-columns: 1fr 1fr; }
+  .st-acct-cell:nth-child(2) { border-right: none; }
+  .st-acct-cell:nth-child(3) { border-top: 1px solid rgba(255,255,255,.06); border-right: 1px solid rgba(255,255,255,.06); }
+  .st-acct-cell:last-child { border-top: 1px solid rgba(255,255,255,.06); }
+  .st-row { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .st-topbar,.st-page { padding-left: 20px; padding-right: 20px; }
+  .st-page { padding-top: 44px; }
 }
 </style>
 
-<!-- Top Ribbon -->
-<div class="top-ribbon">
-    <div class="ribbon-brand">
-        <span class="ribbon-logo">InfiniHumanizer</span>
-        <span>|</span>
-        <span>✨ Transform AI to Human Instantly</span>
-    </div>
+<div class="st-topbar">
+  <span class="st-brand">InfiniHumanizer</span>
+  <a href="{% url 'humanizer' %}" class="st-back">← Humanizer</a>
 </div>
 
-<!-- Floating Sidebar -->
-{% include 'includes/sidebar.html' %}
+<div class="st-page">
+  <div class="st-eyebrow">Account</div>
+  <h1 class="st-hero-title">Settings</h1>
+  <p class="st-hero-sub">Manage your account preferences and security.</p>
 
-<div class="settings-area">
-    <!-- Hero Section -->
-    <div class="hero-section">
-        <h1>⚙️ Settings</h1>
-        <p>Manage your account, preferences, and security</p>
+  <!-- Account overview -->
+  <div class="st-account">
+    <div class="st-acct-cell">
+      <div class="st-acct-lbl">Email</div>
+      <div class="st-acct-val" style="font-size:.84rem">{{ user.email }}</div>
     </div>
-
-    <!-- Stats River -->
-    <div class="stats-river">
-        <div class="stat-orb">
-            <span class="stat-orb-icon">📧</span>
-            <div class="stat-orb-label">Email</div>
-            <div class="stat-orb-value" style="font-size: 0.95rem; word-break: break-all;">{{ user.email }}</div>
-        </div>
-
-        <div class="stat-orb">
-            <span class="stat-orb-icon">👤</span>
-            <div class="stat-orb-label">Account Type</div>
-            <div class="stat-orb-value" style="color: #00FF88;">{{ user.profile.account_type|default:"FREE" }}</div>
-        </div>
-
-        <div class="stat-orb">
-            <span class="stat-orb-icon">📊</span>
-            <div class="stat-orb-label">Words Balance</div>
-            <div class="stat-orb-value">{{ user.profile.words_used|default:"0" }} / {{ user.profile.word_quota|default:"100000" }}</div>
-            <div class="progress-wave">
-                <div class="wave-bar">
-                    <div class="wave-fill" style="width: {% widthratio user.profile.words_used user.profile.word_quota 100 %}%"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="stat-orb">
-            <span class="stat-orb-icon">📅</span>
-            <div class="stat-orb-label">Member Since</div>
-            <div class="stat-orb-value">{{ user.date_joined|date:"M Y" }}</div>
-        </div>
+    <div class="st-acct-cell">
+      <div class="st-acct-lbl">Account type</div>
+      <div class="st-acct-val accent">{{ user.profile.account_type|default:"FREE" }}</div>
     </div>
-
-    <div class="smooth-divider"></div>
-
-    <!-- Action Flow -->
-    <div class="action-flow">
-        <!-- Security Bubble -->
-        <div class="action-bubble">
-            <div class="bubble-header">
-                <span>🔒</span> Security
-            </div>
-            <div class="bubble-text">
-                Keep your account secure with a strong password. Update it regularly to maintain maximum protection.
-            </div>
-            
-            <a href="{% url 'account_change_password' %}" class="smooth-btn btn-ghost">
-                🔐 Change Password
-            </a>
-        </div>
+    <div class="st-acct-cell">
+      <div class="st-acct-lbl">Words balance</div>
+      <div class="st-acct-val">{{ user.profile.words_used|default:"0" }} / {{ user.profile.word_quota|default:"100000" }}</div>
+      <div class="st-bar">
+        <div class="st-bar-fill" style="width:{% widthratio user.profile.words_used user.profile.word_quota 100 %}%"></div>
+      </div>
     </div>
-
-    <div class="smooth-divider"></div>
-
-    <!-- Danger Zone -->
-    <div class="danger-zone">
-        <div class="bubble-header">
-            <span>⚠️</span> Danger Zone
-        </div>
-        <div class="bubble-text">
-            Once you delete your account, there is no going back. All your data, word balance, and preferences will be permanently erased. This action cannot be undone.
-        </div>
-        
-        <button class="smooth-btn btn-danger-soft" onclick="confirmDelete()">
-            🗑️ Delete Account Permanently
-        </button>
+    <div class="st-acct-cell">
+      <div class="st-acct-lbl">Member since</div>
+      <div class="st-acct-val">{{ user.date_joined|date:"M Y" }}</div>
     </div>
+  </div>
+
+  <!-- Security section -->
+  <div class="st-section-label">Security</div>
+
+  <div class="st-row">
+    <div class="st-row-info">
+      <div class="st-row-title">Password</div>
+      <div class="st-row-desc">Update your password regularly to keep your account secure. Use a strong, unique password.</div>
+    </div>
+    <div class="st-row-action">
+      <a href="{% url 'account_change_password' %}" class="st-btn st-btn-ghost">Change Password</a>
+    </div>
+  </div>
+
+  <!-- Danger zone -->
+  <div class="st-danger-zone">
+    <div class="st-danger-label">Danger zone</div>
+    <div class="st-danger-title">Delete account</div>
+    <div class="st-danger-desc">Permanently delete your account and all associated data — word balance, history, and preferences. This action cannot be undone.</div>
+    <button class="st-btn st-btn-danger" onclick="confirmDelete()">Delete Account Permanently</button>
+  </div>
 </div>
-
 {% endblock %}
 
 {% block extra_scripts %}
 <script>
-// Delete account confirmation
 function confirmDelete() {
-    if (confirm('⚠️ Are you absolutely sure you want to delete your account?\n\nThis action CANNOT be undone!')) {
-        if (confirm('🚨 FINAL WARNING: All your data will be permanently erased.\n\nDelete account permanently?')) {
-            window.location.href = '/accounts/delete/';
-        }
+  if (confirm('Are you absolutely sure you want to delete your account?\n\nThis action CANNOT be undone.')) {
+    if (confirm('FINAL WARNING: All your data will be permanently erased.\n\nProceed with deletion?')) {
+      window.location.href = '/accounts/delete/';
     }
+  }
 }
 </script>
 {% endblock %}

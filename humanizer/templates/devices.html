@@ -1,554 +1,170 @@
 {% extends "base.html" %}
 
-{% block title %}Device Management - InfiniHumanizer{% endblock %}
+{% block title %}Device Management — InfiniHumanizer{% endblock %}
 
 {% block content %}
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-    /* Reset base styles */
-    body {
-        background: linear-gradient(180deg, #0A0A12 0%, #1a1a2e 30%, #0f1729 70%, #0A0A12 100%);
-        margin: 0;
-        padding: 0;
-        font-family: 'Aptos', 'Segoe UI', sans-serif;
-        min-height: 100vh;
-    }
-    
-    main {
-        padding: 0 !important;
-        margin: 0 !important;
-    }
-    
-    nav {
-        display: none !important;
-    }
-    
-    /* Floating Top Bar - Glassmorphic */
-    .top-bar {
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        background: rgba(10, 10, 18, 0.7);
-        backdrop-filter: blur(20px);
-        border-bottom: 1px solid rgba(0, 212, 255, 0.1);
-        padding: 1rem 2rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-    }
-    
-    .app-branding {
-        display: flex;
-        align-items: center;
-        gap: 0.8rem;
-    }
-    
-    .brand-logo {
-        font-size: 1.5rem;
-    }
-    
-    .brand-text {
-        font-size: 1.2rem;
-        font-weight: 700;
-        background: linear-gradient(135deg, #00D4FF 0%, #00FF88 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-    
-    .back-link {
-        padding: 0.6rem 1.5rem;
-        background: rgba(0, 212, 255, 0.08);
-        border: 1px solid rgba(0, 212, 255, 0.2);
-        border-radius: 12px;
-        color: #00D4FF;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .back-link:hover {
-        background: rgba(0, 212, 255, 0.15);
-        transform: translateX(-4px);
-        box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2);
-    }
-    
-    /* Main Content Area - Blended Background */
-    .content-area {
-        max-width: 1300px;
-        margin: 0 auto;
-        padding: 4rem 2rem;
-    }
-    
-    /* Hero Header - No Container */
-    .hero-header {
-        text-align: center;
-        margin-bottom: 4rem;
-        position: relative;
-    }
-    
-    .hero-header h1 {
-        font-size: 3.5rem;
-        font-weight: 900;
-        background: linear-gradient(135deg, #00D4FF 0%, #00FF88 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 0.8rem;
-        letter-spacing: -1px;
-        animation: glow-pulse 3s ease-in-out infinite;
-    }
-    
-    @keyframes glow-pulse {
-        0%, 100% { filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.3)); }
-        50% { filter: drop-shadow(0 0 40px rgba(0, 212, 255, 0.5)); }
-    }
-    
-    .hero-subtitle {
-        font-size: 1.2rem;
-        color: rgba(255, 255, 255, 0.6);
-        font-weight: 300;
-    }
-    
-    /* Stats Flow - No Boxes, Smooth Separation */
-    .stats-flow {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 2rem;
-        margin-bottom: 5rem;
-        position: relative;
-    }
-    
-    .stats-flow::after {
-        content: '';
-        position: absolute;
-        bottom: -2.5rem;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 60%;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.3), transparent);
-    }
-    
-    .stat-bubble {
-        padding: 2.5rem 2rem;
-        background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(0, 255, 136, 0.02));
-        border-radius: 24px;
-        border: 1px solid rgba(0, 212, 255, 0.1);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .stat-bubble::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, #00D4FF, transparent);
-        transform: translateX(-100%);
-        transition: transform 0.6s ease;
-    }
-    
-    .stat-bubble:hover::before {
-        transform: translateX(100%);
-    }
-    
-    .stat-bubble:hover {
-        transform: translateY(-8px);
-        background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 136, 0.05));
-        border-color: rgba(0, 212, 255, 0.3);
-        box-shadow: 0 20px 60px rgba(0, 212, 255, 0.15);
-    }
-    
-    .stat-icon-large {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-        display: block;
-        opacity: 0.9;
-    }
-    
-    .stat-number {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: #00D4FF;
-        line-height: 1;
-        margin-bottom: 0.5rem;
-    }
-    
-    .stat-text {
-        color: rgba(255, 255, 255, 0.5);
-        font-size: 0.95rem;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    
-    /* Section Header - Floating */
-    .section-divider {
-        text-align: center;
-        margin-bottom: 3rem;
-        position: relative;
-    }
-    
-    .section-divider h2 {
-        font-size: 2rem;
-        font-weight: 700;
-        color: rgba(255, 255, 255, 0.9);
-        display: inline-flex;
-        align-items: center;
-        gap: 0.8rem;
-        padding: 0 2rem;
-        position: relative;
-        z-index: 1;
-    }
-    
-    /* Device Stream - Smooth Flow */
-    .device-stream {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    .device-card {
-        padding: 2rem;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        display: grid;
-        grid-template-columns: auto 1fr auto auto;
-        gap: 1.5rem;
-        align-items: center;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .device-card::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 3px;
-        background: linear-gradient(180deg, transparent, #00D4FF, transparent);
-        transform: scaleY(0);
-        transition: transform 0.3s ease;
-    }
-    
-    .device-card:hover::before {
-        transform: scaleY(1);
-    }
-    
-    .device-card:hover {
-        background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(0, 255, 136, 0.02));
-        border-color: rgba(0, 212, 255, 0.2);
-        transform: translateX(8px);
-        box-shadow: 0 10px 40px rgba(0, 212, 255, 0.1);
-    }
-    
-    .device-card.active-device {
-        background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(0, 255, 136, 0.03));
-        border-left: 4px solid #00D4FF;
-        padding-left: calc(2rem - 4px);
-    }
-    
-    .device-icon-bubble {
-        width: 70px;
-        height: 70px;
-        background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 255, 136, 0.05));
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-    }
-    
-    .device-meta {
-        flex: 1;
-        min-width: 0;
-    }
-    
-    .device-title {
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: rgba(255, 255, 255, 0.95);
-        margin-bottom: 0.5rem;
-    }
-    
-    .device-specs {
-        display: flex;
-        gap: 1.5rem;
-        flex-wrap: wrap;
-    }
-    
-    .spec-item {
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-        font-size: 0.85rem;
-        color: rgba(255, 255, 255, 0.4);
-    }
-    
-    .spec-item span:last-child {
-        color: rgba(255, 255, 255, 0.6);
-    }
-    
-    .status-indicator {
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .status-online {
-        background: rgba(0, 255, 136, 0.1);
-        color: #00FF88;
-        border: 1px solid rgba(0, 255, 136, 0.3);
-    }
-    
-    .status-offline {
-        background: rgba(255, 255, 255, 0.03);
-        color: rgba(255, 255, 255, 0.3);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    
-    .current-tag {
-        background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 136, 0.1));
-        color: #00D4FF;
-        padding: 0.4rem 0.9rem;
-        border-radius: 8px;
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        border: 1px solid rgba(0, 212, 255, 0.3);
-    }
-    
-    .empty-state {
-        text-align: center;
-        padding: 5rem 2rem;
-        color: rgba(255, 255, 255, 0.3);
-    }
-    
-    .empty-icon {
-        font-size: 5rem;
-        margin-bottom: 1.5rem;
-        opacity: 0.2;
-    }
-    
-    /* Info Panel - Smooth Blend */
-    .info-panel {
-        margin-top: 4rem;
-        padding: 3rem;
-        background: linear-gradient(135deg, rgba(0, 212, 255, 0.03), rgba(0, 255, 136, 0.01));
-        border-radius: 24px;
-        border: 1px solid rgba(0, 212, 255, 0.15);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .info-panel::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(0, 212, 255, 0.05) 0%, transparent 70%);
-        animation: float-glow 8s ease-in-out infinite;
-    }
-    
-    @keyframes float-glow {
-        0%, 100% { transform: translate(0, 0); }
-        50% { transform: translate(-10%, -10%); }
-    }
-    
-    .info-panel h3 {
-        color: #00D4FF;
-        font-size: 1.4rem;
-        font-weight: 700;
-        margin-bottom: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        position: relative;
-        z-index: 1;
-    }
-    
-    .info-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        position: relative;
-        z-index: 1;
-    }
-    
-    .info-list li {
-        padding: 0.8rem 0;
-        color: rgba(255, 255, 255, 0.6);
-        display: flex;
-        align-items: flex-start;
-        gap: 1rem;
-        font-size: 1rem;
-        line-height: 1.6;
-    }
-    
-    .info-list li::before {
-        content: '•';
-        color: #00D4FF;
-        font-weight: 900;
-        font-size: 1.5rem;
-        line-height: 1.2;
-    }
-    
-    @media (max-width: 768px) {
-        .device-card {
-            grid-template-columns: auto 1fr;
-            gap: 1rem;
-        }
-        
-        .status-indicator, .current-tag {
-            grid-column: 1 / -1;
-            justify-self: start;
-        }
-    }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', -apple-system, sans-serif !important; background: #0D0D0D !important; color: #EFEFEF !important; min-height: 100vh; }
+main { padding: 0 !important; margin: 0 !important; }
+nav  { display: none !important; }
+
+.dv-topbar {
+  position: sticky; top: 0; z-index: 200; height: 56px;
+  display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
+  background: rgba(5,7,15,.92); border-bottom: 1px solid rgba(0,212,255,.1); backdrop-filter: blur(24px);
+}
+.dv-brand { font-size: 1.05rem; font-weight: 800; letter-spacing: -.3px; background: linear-gradient(135deg,#00D4FF,#0088FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.dv-back { font-size: .78rem; color: rgba(0,212,255,.7); text-decoration: none; border: 1px solid rgba(0,212,255,.18); border-radius: 7px; padding: 5px 12px; transition: all .15s; }
+.dv-back:hover { color: #00D4FF; border-color: rgba(0,212,255,.4); }
+
+.dv-page { max-width: 1100px; margin: 0 auto; padding: 72px 32px 80px; }
+.dv-eyebrow { font-size: .62rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(0,212,255,.6); margin-bottom: 14px; }
+.dv-hero-title { font-size: clamp(2.2rem,4vw,3.4rem); font-weight: 800; letter-spacing: -1.2px; color: #fff; line-height: 1.1; margin-bottom: 14px; }
+.dv-hero-sub { font-size: .95rem; color: rgba(255,255,255,.35); margin-bottom: 52px; }
+
+/* Stats row — inline numbers, no cards */
+.dv-stats { display: grid; grid-template-columns: repeat(3,1fr); border: 1px solid rgba(255,255,255,.06); margin-bottom: 52px; }
+.dv-stat { padding: 32px 28px; border-right: 1px solid rgba(255,255,255,.06); }
+.dv-stat:last-child { border-right: none; }
+.dv-stat-val { font-size: 2.6rem; font-weight: 800; letter-spacing: -1.5px; color: #00D4FF; line-height: 1; margin-bottom: 6px; }
+.dv-stat-lbl { font-size: .62rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(255,255,255,.22); }
+
+/* Section header */
+.dv-section-label { font-size: .62rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.22); margin-bottom: 16px; }
+
+/* Device list — flat rows */
+.dv-list { display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,.06); }
+.dv-row {
+  display: grid; grid-template-columns: 40px 1fr auto auto;
+  gap: 20px; align-items: center;
+  padding: 22px 28px;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+  transition: background .15s;
+}
+.dv-row:last-child { border-bottom: none; }
+.dv-row:hover { background: rgba(0,212,255,.02); }
+.dv-row.is-current { border-left: 2px solid rgba(0,212,255,.5); padding-left: 26px; }
+
+.dv-icon { font-size: 1.4rem; text-align: center; color: rgba(255,255,255,.35); }
+
+.dv-meta-title { font-size: .9rem; font-weight: 600; color: rgba(255,255,255,.8); margin-bottom: 5px; }
+.dv-meta-specs { display: flex; gap: 20px; flex-wrap: wrap; }
+.dv-spec { font-size: .75rem; color: rgba(255,255,255,.28); }
+.dv-spec span { color: rgba(255,255,255,.46); margin-left: 4px; }
+
+.dv-status {
+  font-size: .7rem; font-weight: 600; letter-spacing: .5px; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 4px;
+}
+.dv-online  { color: #00e87a; background: rgba(0,230,120,.07); }
+.dv-offline { color: rgba(255,255,255,.25); background: rgba(255,255,255,.04); }
+
+.dv-this-tag {
+  font-size: .62rem; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;
+  color: rgba(0,212,255,.7); border: 1px solid rgba(0,212,255,.2); border-radius: 4px; padding: 3px 8px;
+}
+
+.dv-empty { padding: 60px 28px; text-align: center; color: rgba(255,255,255,.2); font-size: .88rem; border: 1px solid rgba(255,255,255,.06); }
+
+/* Info block — flat */
+.dv-info { margin-top: 44px; border-top: 1px solid rgba(255,255,255,.06); padding-top: 36px; }
+.dv-info-title { font-size: .62rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.22); margin-bottom: 18px; }
+.dv-info-list { display: flex; flex-direction: column; gap: 12px; }
+.dv-info-item { display: flex; gap: 12px; align-items: flex-start; font-size: .82rem; line-height: 1.6; color: rgba(255,255,255,.38); }
+.dv-info-item::before { content: '—'; color: rgba(0,212,255,.4); font-weight: 700; flex-shrink: 0; }
+
+@media (max-width: 768px) {
+  .dv-stats { grid-template-columns: 1fr; }
+  .dv-stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,.06); }
+  .dv-stat:last-child { border-bottom: none; }
+  .dv-row { grid-template-columns: 32px 1fr; gap: 14px; }
+  .dv-status,.dv-this-tag { grid-column: 2; }
+  .dv-topbar,.dv-page { padding-left: 20px; padding-right: 20px; }
+  .dv-page { padding-top: 44px; }
+}
 </style>
 
-<!-- Floating Top Bar -->
-<div class="top-bar">
-    <div class="app-branding">
-        <span class="brand-logo">📱</span>
-        <span class="brand-text">Device Management</span>
-    </div>
-    <a href="{% url 'humanizer' %}" class="back-link">
-        <span>←</span>
-        <span>Back to Humanizer</span>
-    </a>
+<div class="dv-topbar">
+  <span class="dv-brand">InfiniHumanizer</span>
+  <a href="{% url 'humanizer' %}" class="dv-back">← Humanizer</a>
 </div>
 
-<div class="content-area">
-    <!-- Hero Header -->
-    <div class="hero-header">
-        <h1>📱 Device Management</h1>
-        <p class="hero-subtitle">Monitor and manage your active sessions across all devices</p>
-    </div>
+<div class="dv-page">
+  <div class="dv-eyebrow">Account Management</div>
+  <h1 class="dv-hero-title">Device sessions</h1>
+  <p class="dv-hero-sub">Monitor your active sessions across all devices.</p>
 
-    <!-- Stats Flow -->
-    <div class="stats-flow">
-        <div class="stat-bubble">
-            <span class="stat-icon-large">📱</span>
-            <div class="stat-number">{{ active_count }} / {{ max_concurrent }}</div>
-            <div class="stat-text">Active Sessions</div>
+  <div class="dv-stats">
+    <div class="dv-stat">
+      <div class="dv-stat-val">{{ active_count }}/{{ max_concurrent }}</div>
+      <div class="dv-stat-lbl">Active sessions</div>
+    </div>
+    <div class="dv-stat">
+      <div class="dv-stat-val">{{ devices_today }}/{{ max_daily }}</div>
+      <div class="dv-stat-lbl">Devices today</div>
+    </div>
+    <div class="dv-stat">
+      <div class="dv-stat-val" style="font-size:1.4rem;letter-spacing:-.5px">{{ profile.account_type }}</div>
+      <div class="dv-stat-lbl">Current plan</div>
+    </div>
+  </div>
+
+  <div class="dv-section-label">Connected devices</div>
+
+  {% if all_sessions %}
+  <div class="dv-list">
+    {% for session in all_sessions %}
+    <div class="dv-row {% if session.device_fingerprint == current_device_fingerprint %}is-current{% endif %}">
+      <div class="dv-icon">
+        {% if 'Mobile' in session.user_agent or 'Android' in session.user_agent or 'iPhone' in session.user_agent %}📱{% else %}💻{% endif %}
+      </div>
+      <div>
+        <div class="dv-meta-title">
+          {% if 'Windows' in session.user_agent %}Windows PC
+          {% elif 'Macintosh' in session.user_agent or 'Mac OS' in session.user_agent %}Mac Computer
+          {% elif 'Android' in session.user_agent %}Android Device
+          {% elif 'iPhone' in session.user_agent or 'iPad' in session.user_agent %}iOS Device
+          {% elif 'Linux' in session.user_agent %}Linux Computer
+          {% else %}Unknown Device{% endif %}
         </div>
-        <div class="stat-bubble">
-            <span class="stat-icon-large">📅</span>
-            <div class="stat-number">{{ devices_today }} / {{ max_daily }}</div>
-            <div class="stat-text">Devices Today</div>
+        <div class="dv-meta-specs">
+          <span class="dv-spec">IP<span>{{ session.ip_address }}</span></span>
+          <span class="dv-spec">Last seen<span>{{ session.last_seen|timesince }} ago</span></span>
+          <span class="dv-spec">First used<span>{{ session.created_at|date:"M d, Y" }}</span></span>
         </div>
-        <div class="stat-bubble">
-            <span class="stat-icon-large">💎</span>
-            <div class="stat-number" style="font-size: 1.8rem;">{{ profile.account_type }}</div>
-            <div class="stat-text">Current Plan</div>
-        </div>
+      </div>
+      <div class="dv-status {% if session.is_active and session.last_seen >= active_threshold %}dv-online{% else %}dv-offline{% endif %}">
+        {% if session.is_active and session.last_seen >= active_threshold %}Online{% else %}Offline{% endif %}
+      </div>
+      {% if session.device_fingerprint == current_device_fingerprint %}
+      <div class="dv-this-tag">This device</div>
+      {% else %}
+      <div></div>
+      {% endif %}
     </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="dv-empty">No device sessions found.</div>
+  {% endif %}
 
-    <!-- Section Divider -->
-    <div class="section-divider">
-        <h2>
-            <span>🖥️</span>
-            <span>Your Connected Devices</span>
-        </h2>
+  <div class="dv-info">
+    <div class="dv-info-title">Device limit rules</div>
+    <div class="dv-info-list">
+      {% if profile.account_type == 'KE_MULTI_DEVICE' %}
+      <div class="dv-info-item">Multi-Device plan allows up to {{ max_concurrent }} devices simultaneously</div>
+      <div class="dv-info-item">Daily limit: {{ max_daily }} unique devices per day</div>
+      <div class="dv-info-item">Sessions sync automatically across devices</div>
+      {% else %}
+      <div class="dv-info-item">Your plan allows {{ max_concurrent }} active device at a time</div>
+      <div class="dv-info-item">Daily limit: {{ max_daily }} unique devices per day</div>
+      <div class="dv-info-item">Logging in from a new device will end your previous session</div>
+      <div class="dv-info-item">Upgrade to Multi-Device for simultaneous access across all your devices</div>
+      {% endif %}
     </div>
-
-    <!-- Device Stream -->
-    <div class="device-stream">
-        {% if all_sessions %}
-            {% for session in all_sessions %}
-            <div class="device-card {% if session.device_fingerprint == current_device_fingerprint %}active-device{% endif %}">
-                <div class="device-icon-bubble">
-                    {% if 'Mobile' in session.user_agent or 'Android' in session.user_agent or 'iPhone' in session.user_agent %}
-                        📱
-                    {% else %}
-                        💻
-                    {% endif %}
-                </div>
-                
-                <div class="device-meta">
-                    <div class="device-title">
-                        {% if 'Windows' in session.user_agent %}
-                            Windows PC
-                        {% elif 'Macintosh' in session.user_agent or 'Mac OS' in session.user_agent %}
-                            Mac Computer
-                        {% elif 'Android' in session.user_agent %}
-                            Android Device
-                        {% elif 'iPhone' in session.user_agent or 'iPad' in session.user_agent %}
-                            iOS Device
-                        {% elif 'Linux' in session.user_agent %}
-                            Linux Computer
-                        {% else %}
-                            Unknown Device
-                        {% endif %}
-                    </div>
-                    <div class="device-specs">
-                        <div class="spec-item">
-                            <span>IP:</span>
-                            <span>{{ session.ip_address }}</span>
-                        </div>
-                        <div class="spec-item">
-                            <span>Last Seen:</span>
-                            <span>{{ session.last_seen|timesince }} ago</span>
-                        </div>
-                        <div class="spec-item">
-                            <span>First Used:</span>
-                            <span>{{ session.created_at|date:"M d, Y" }}</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="status-indicator {% if session.is_active and session.last_seen >= active_threshold %}status-online{% else %}status-offline{% endif %}">
-                    <span>●</span>
-                    <span>{% if session.is_active and session.last_seen >= active_threshold %}Online{% else %}Offline{% endif %}</span>
-                </div>
-                
-                {% if session.device_fingerprint == current_device_fingerprint %}
-                <div class="current-tag">This Device</div>
-                {% endif %}
-            </div>
-            {% endfor %}
-        {% else %}
-            <div class="empty-state">
-                <div class="empty-icon">📱</div>
-                <p>No devices found</p>
-            </div>
-        {% endif %}
-    </div>
-
-    <!-- Info Panel -->
-    <div class="info-panel">
-        <h3>ℹ️ Device Limits & Information</h3>
-        <ul class="info-list">
-            {% if profile.account_type == 'KE_MULTI_DEVICE' %}
-                <li>Multi-Device Plan: Up to {{ max_concurrent }} devices can be active simultaneously</li>
-                <li>Daily limit: {{ max_daily }} unique devices per day</li>
-                <li>Your devices automatically sync across sessions for seamless access</li>
-            {% else %}
-                <li>Your plan allows {{ max_concurrent }} active device at a time</li>
-                <li>Daily limit: {{ max_daily }} unique devices per day</li>
-                <li>Logging in from a new device will logout the previous session</li>
-                <li>Upgrade to Multi-Device plan for simultaneous access across all your devices</li>
-            {% endif %}
-        </ul>
-    </div>
+  </div>
 </div>
-
 {% endblock %}

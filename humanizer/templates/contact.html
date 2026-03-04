@@ -1,493 +1,181 @@
 {% extends "base.html" %}
 
-{% block title %}Contact - InfiniHumanizer{% endblock %}
+{% block title %}Contact — InfiniHumanizer{% endblock %}
 
 {% block content %}
-
-<!-- Include sidebar styles -->
-{% include 'includes/sidebar_styles.html' %}
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* Top Ribbon */
-.top-ribbon {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 50px;
-    background: linear-gradient(90deg, #1a1a2e 0%, #0f3460 50%, #1a1a2e 100%);
-    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-    box-shadow: 0 2px 20px rgba(0, 212, 255, 0.1);
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', -apple-system, sans-serif !important; background: #0D0D0D !important; color: #EFEFEF !important; min-height: 100vh; }
+main { padding: 0 !important; margin: 0 !important; }
+nav  { display: none !important; }
 
-.ribbon-content {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    color: #fff;
-    font-size: 0.9rem;
+.ct-topbar {
+  position: sticky; top: 0; z-index: 200; height: 56px;
+  display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
+  background: rgba(5,7,15,.92); border-bottom: 1px solid rgba(0,212,255,.1); backdrop-filter: blur(24px);
 }
-
-.ribbon-logo {
-    font-size: 1.2rem;
-    font-weight: 900;
-    background: linear-gradient(135deg, #00D4FF, #00FF88);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+.ct-brand {
+  font-size: 1.05rem; font-weight: 800; letter-spacing: -.3px;
+  background: linear-gradient(135deg,#00D4FF,#0088FF);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
+.ct-back { font-size: .78rem; color: rgba(0,212,255,.7); text-decoration: none; border: 1px solid rgba(0,212,255,.18); border-radius: 7px; padding: 5px 12px; transition: all .15s; }
+.ct-back:hover { color: #00D4FF; border-color: rgba(0,212,255,.4); }
 
-/* Modern Contact Page - Creative Horizontal Layout */
-.contact-wrapper {
-    margin-top: 50px; /* Account for top ribbon */
-    min-height: 100vh;
-    background: linear-gradient(180deg, #0D0D14 0%, #1a1a2e 50%, #0D0D14 100%);
-    padding: 5rem 2rem;
-    position: relative;
+.ct-page { max-width: 1100px; margin: 0 auto; padding: 72px 32px 80px; }
+.ct-eyebrow { font-size: .62rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(0,212,255,.6); margin-bottom: 14px; }
+.ct-hero-title { font-size: clamp(2.2rem,4vw,3.4rem); font-weight: 800; letter-spacing: -1.2px; color: #fff; line-height: 1.1; margin-bottom: 14px; }
+.ct-hero-sub { font-size: .95rem; color: rgba(255,255,255,.35); margin-bottom: 60px; }
+
+.ct-layout { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid rgba(255,255,255,.06); }
+
+/* Form side */
+.ct-form-side {
+  padding: 52px 48px;
+  border-right: 1px solid rgba(255,255,255,.06);
 }
+.ct-section-label { font-size: .62rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(0,212,255,.55); margin-bottom: 28px; }
 
-/* Animated Background Elements */
-.contact-wrapper::before,
-.contact-wrapper::after {
-    content: '';
-    position: absolute;
-    border-radius: 50%;
-    opacity: 0.03;
-    animation: float 20s ease-in-out infinite;
+.ct-form { display: flex; flex-direction: column; gap: 22px; }
+.ct-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+
+.ct-field { display: flex; flex-direction: column; gap: 7px; }
+.ct-field label { font-size: .78rem; font-weight: 600; color: rgba(255,255,255,.4); letter-spacing: .2px; }
+.ct-field input,
+.ct-field textarea {
+  background: transparent;
+  border: none; border-bottom: 1px solid rgba(255,255,255,.1);
+  padding: 10px 0; color: #fff;
+  font-family: 'Inter', sans-serif; font-size: .9rem; font-weight: 400;
+  outline: none; transition: border-color .2s; width: 100%;
 }
+.ct-field input::placeholder,
+.ct-field textarea::placeholder { color: rgba(255,255,255,.2); font-style: italic; }
+.ct-field input:focus,
+.ct-field textarea:focus { border-bottom-color: rgba(0,212,255,.55); }
+.ct-field textarea { resize: vertical; min-height: 130px; }
 
-.contact-wrapper::before {
-    width: 500px;
-    height: 500px;
-    background: #00D4FF;
-    top: 10%;
-    left: -10%;
-    animation-delay: 0s;
+.ct-submit {
+  height: 44px; border: none; border-radius: 7px;
+  background: linear-gradient(135deg,#00C4F0,#0088EE);
+  color: #040912; font-family: 'Inter',sans-serif; font-size: .84rem; font-weight: 700;
+  cursor: pointer; transition: all .18s; align-self: flex-start; padding: 0 32px;
 }
+.ct-submit:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,200,255,.3); }
 
-.contact-wrapper::after {
-    width: 400px;
-    height: 400px;
-    background: #00FF88;
-    bottom: 10%;
-    right: -10%;
-    animation-delay: 3s;
-}
+/* Info side */
+.ct-info-side { padding: 52px 48px; display: flex; flex-direction: column; gap: 0; }
 
-@keyframes float {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(50px, -50px) scale(1.1); }
-    66% { transform: translate(-30px, 30px) scale(0.9); }
-}
+.ct-info-block { padding: 0 0 36px 0; border-bottom: 1px solid rgba(255,255,255,.05); margin-bottom: 36px; }
+.ct-info-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
 
-/* Hero Section */
-.contact-hero {
-    text-align: center;
-    margin-bottom: 5rem;
-    position: relative;
-    z-index: 1;
-}
+.ct-info-label { font-size: .62rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.2); margin-bottom: 8px; }
+.ct-info-title { font-size: .95rem; font-weight: 700; color: rgba(255,255,255,.75); margin-bottom: 8px; letter-spacing: -.1px; }
+.ct-info-body { font-size: .83rem; line-height: 1.7; color: rgba(255,255,255,.35); }
+.ct-info-highlight { color: rgba(0,212,255,.7); font-weight: 600; display: block; margin-top: 6px; }
 
-.contact-hero h1 {
-    font-size: 4rem;
-    font-weight: 900;
-    margin-bottom: 1rem;
-    background: linear-gradient(135deg, #00D4FF, #00FF88);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
+/* Stats row */
+.ct-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-top: 1px solid rgba(255,255,255,.05); margin-top: auto; }
+.ct-stat { padding: 28px 24px; border-right: 1px solid rgba(255,255,255,.05); }
+.ct-stat:last-child { border-right: none; }
+.ct-stat-val { font-size: 2rem; font-weight: 800; color: #00D4FF; letter-spacing: -1px; }
+.ct-stat-lbl { font-size: .65rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,.22); margin-top: 4px; }
 
-.contact-hero p {
-    font-size: 1.3rem;
-    color: rgba(255, 255, 255, 0.6);
-    font-weight: 300;
-}
+{% if messages %}
+.ct-messages { margin-bottom: 32px; }
+.ct-msg { padding: 11px 16px; border-left: 2px solid rgba(0,212,255,.5); font-size: .84rem; color: rgba(255,255,255,.6); margin-bottom: 8px; }
+.ct-msg.success { border-left-color: rgba(0,220,100,.5); }
+.ct-msg.error { border-left-color: rgba(255,60,45,.5); }
+{% endif %}
 
-/* Horizontal Split Layout */
-.contact-grid {
-    max-width: 1400px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    position: relative;
-    z-index: 1;
-}
-
-/* Vertical Divider */
-.contact-grid::before {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 5%;
-    bottom: 5%;
-    width: 1px;
-    background: linear-gradient(
-        to bottom,
-        transparent,
-        rgba(0, 212, 255, 0.5) 20%,
-        rgba(0, 212, 255, 0.8) 50%,
-        rgba(0, 212, 255, 0.5) 80%,
-        transparent
-    );
-    transform: translateX(-50%);
-}
-
-/* Left Section - Form */
-.contact-form-section {
-    padding-right: 2rem;
-}
-
-.section-label {
-    font-size: 0.9rem;
-    color: #00D4FF;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    margin-bottom: 1rem;
-    font-weight: 600;
-}
-
-.section-title {
-    font-size: 2.5rem;
-    color: #fff;
-    font-weight: 800;
-    margin-bottom: 2rem;
-    line-height: 1.2;
-}
-
-.contact-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-}
-
-.form-field {
-    position: relative;
-}
-
-.form-field label {
-    display: block;
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-    transition: color 0.3s ease;
-}
-
-.form-field input,
-.form-field textarea {
-    width: 100%;
-    padding: 1rem 1.2rem;
-    background: rgba(20, 20, 25, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    color: #fff;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    font-family: inherit;
-}
-
-.form-field input:focus,
-.form-field textarea:focus {
-    outline: none;
-    border-color: #00D4FF;
-    background: rgba(20, 20, 25, 0.8);
-    box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
-}
-
-.form-field input:focus + label,
-.form-field textarea:focus + label {
-    color: #00D4FF;
-}
-
-.form-field textarea {
-    resize: vertical;
-    min-height: 150px;
-}
-
-.submit-btn {
-    padding: 1.2rem 3rem;
-    background: linear-gradient(135deg, #00D4FF, #0088cc);
-    border: none;
-    border-radius: 12px;
-    color: #fff;
-    font-size: 1.1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-}
-
-.submit-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
-}
-
-.submit-btn:active {
-    transform: translateY(0);
-}
-
-/* Right Section - Info */
-.contact-info-section {
-    padding-left: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 3rem;
-}
-
-.info-block {
-    position: relative;
-}
-
-.info-block::before {
-    content: '';
-    position: absolute;
-    left: -2rem;
-    top: 0;
-    width: 3px;
-    height: 100%;
-    background: linear-gradient(to bottom, #00D4FF, #00FF88);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.info-block:hover::before {
-    opacity: 1;
-}
-
-.info-icon {
-    width: 60px;
-    height: 60px;
-    background: rgba(0, 212, 255, 0.1);
-    border: 2px solid rgba(0, 212, 255, 0.3);
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-    transition: all 0.3s ease;
-}
-
-.info-block:hover .info-icon {
-    background: rgba(0, 212, 255, 0.2);
-    border-color: rgba(0, 212, 255, 0.6);
-    transform: rotate(10deg) scale(1.1);
-}
-
-.info-title {
-    font-size: 1.4rem;
-    color: #fff;
-    font-weight: 700;
-    margin-bottom: 0.8rem;
-}
-
-.info-content {
-    color: rgba(255, 255, 255, 0.7);
-    line-height: 1.8;
-    font-size: 1.05rem;
-}
-
-.info-highlight {
-    display: inline-block;
-    color: #00D4FF;
-    font-weight: 600;
-    margin-top: 0.5rem;
-}
-
-/* Quick Stats */
-.quick-stats {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    margin-top: 2rem;
-}
-
-.stat-item {
-    padding: 1.5rem;
-    background: rgba(20, 20, 25, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
-    text-align: center;
-    transition: all 0.3s ease;
-}
-
-.stat-item:hover {
-    border-color: rgba(0, 212, 255, 0.4);
-    transform: translateY(-3px);
-}
-
-.stat-value {
-    font-size: 2rem;
-    font-weight: 900;
-    color: #00D4FF;
-    display: block;
-    margin-bottom: 0.3rem;
-}
-
-.stat-label {
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.6);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
-    .contact-grid {
-        grid-template-columns: 1fr;
-        gap: 5rem;
-    }
-    
-    .contact-grid::before {
-        display: none;
-    }
-    
-    .contact-form-section,
-    .contact-info-section {
-        padding: 0;
-    }
-    
-    .info-block::before {
-        left: 0;
-        width: 100%;
-        height: 3px;
-        top: -1rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .contact-hero h1 {
-        font-size: 2.5rem;
-    }
-    
-    .form-row {
-        grid-template-columns: 1fr;
-    }
-    
-    .quick-stats {
-        grid-template-columns: 1fr;
-    }
+@media (max-width: 860px) {
+  .ct-layout { grid-template-columns: 1fr; }
+  .ct-form-side { border-right: none; border-bottom: 1px solid rgba(255,255,255,.06); padding: 40px 28px; }
+  .ct-info-side { padding: 40px 28px; }
+  .ct-row { grid-template-columns: 1fr; }
+  .ct-topbar,.ct-page { padding-left: 20px; padding-right: 20px; }
+  .ct-page { padding-top: 44px; }
 }
 </style>
 
-<!-- Top Ribbon -->
-<div class="top-ribbon">
-    <div class="ribbon-content">
-        <span class="ribbon-logo">InfiniHumanizer</span>
-        <span>|</span>
-        <span>✨ Transform AI to Human Instantly</span>
-    </div>
+<div class="ct-topbar">
+  <span class="ct-brand">InfiniHumanizer</span>
+  <a href="{% url 'humanizer' %}" class="ct-back">← Humanizer</a>
 </div>
 
-<!-- Floating Sidebar -->
-{% include 'includes/sidebar.html' %}
+<div class="ct-page">
+  <div class="ct-eyebrow">Support &amp; Contact</div>
+  <h1 class="ct-hero-title">Get in touch</h1>
+  <p class="ct-hero-sub">Questions, billing, or feedback — we respond within 24 hours.</p>
 
-<div class="contact-wrapper">
-    <!-- Hero -->
-    <div class="contact-hero">
-        <h1>Get In Touch</h1>
-        <p>Have questions? We're here to help you humanize better</p>
+  {% if messages %}
+  <div class="ct-messages">
+    {% for message in messages %}
+    <div class="ct-msg {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="ct-layout">
+    <div class="ct-form-side">
+      <div class="ct-section-label">Send a message</div>
+      <form method="post" class="ct-form">
+        {% csrf_token %}
+        <div class="ct-row">
+          <div class="ct-field">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Your name" required>
+          </div>
+          <div class="ct-field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" required>
+          </div>
+        </div>
+        <div class="ct-field">
+          <label for="subject">Subject</label>
+          <input type="text" id="subject" name="subject" placeholder="How can we help?" required>
+        </div>
+        <div class="ct-field">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" placeholder="Tell us what's on your mind…" required></textarea>
+        </div>
+        <button type="submit" class="ct-submit">Send Message</button>
+      </form>
     </div>
 
-    <!-- Horizontal Split Layout -->
-    <div class="contact-grid">
-        
-        <!-- Left: Form -->
-        <div class="contact-form-section">
-            <div class="section-label">Send us a message</div>
-            <h2 class="section-title">Let's start a conversation</h2>
-            
-            <form method="post" class="contact-form">
-                {% csrf_token %}
-                
-                <div class="form-row">
-                    <div class="form-field">
-                        <label for="name">Your Name</label>
-                        <input type="text" id="name" name="name" placeholder="John Doe" required>
-                    </div>
-                    
-                    <div class="form-field">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" placeholder="john@example.com" required>
-                    </div>
-                </div>
-                
-                <div class="form-field">
-                    <label for="subject">Subject</label>
-                    <input type="text" id="subject" name="subject" placeholder="How can we help you?" required>
-                </div>
-                
-                <div class="form-field">
-                    <label for="message">Your Message</label>
-                    <textarea id="message" name="message" placeholder="Tell us what's on your mind..." required></textarea>
-                </div>
-                
-                <button type="submit" class="submit-btn">
-                    <span>📧</span>
-                    <span>Send Message</span>
-                </button>
-            </form>
+    <div class="ct-info-side">
+      <div class="ct-info-block">
+        <div class="ct-info-label">Email</div>
+        <div class="ct-info-title">Direct support</div>
+        <div class="ct-info-body">
+          Reach our team for any account, technical, or billing matter.
+          <span class="ct-info-highlight">support@infinihumanizer.com</span>
         </div>
+      </div>
+      <div class="ct-info-block">
+        <div class="ct-info-label">Response time</div>
+        <div class="ct-info-title">Usually under 12 hours</div>
+        <div class="ct-info-body">We reply to every message on business days. Urgent billing issues are prioritised and handled first.</div>
+      </div>
+      <div class="ct-info-block">
+        <div class="ct-info-label">We help with</div>
+        <div class="ct-info-title">Full support scope</div>
+        <div class="ct-info-body">Technical issues · Account access · Billing & refunds · Feature requests · Bug reports · Partnership inquiries</div>
+      </div>
 
-        <!-- Right: Info -->
-        <div class="contact-info-section">
-            
-            <div class="info-block">
-                <div class="info-icon">📧</div>
-                <h3 class="info-title">Email Us</h3>
-                <div class="info-content">
-                    Get in touch with our support team for any inquiries, technical issues, or feedback.
-                    <span class="info-highlight">support@infinihumanizer.com</span>
-                </div>
-            </div>
-
-            <div class="info-block">
-                <div class="info-icon">⚡</div>
-                <h3 class="info-title">Fast Response</h3>
-                <div class="info-content">
-                    We pride ourselves on quick turnaround times. Expect a response within 24 hours on business days.
-                    <span class="info-highlight">Usually under 12 hours</span>
-                </div>
-            </div>
-
-            <div class="info-block">
-                <div class="info-icon">💬</div>
-                <h3 class="info-title">What We Help With</h3>
-                <div class="info-content">
-                    Technical support • Account issues • Billing questions • Feature requests • Bug reports • Partnership inquiries
-                </div>
-            </div>
-
-            <div class="quick-stats">
-                <div class="stat-item">
-                    <span class="stat-value">&lt;24h</span>
-                    <span class="stat-label">Response Time</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">98%</span>
-                    <span class="stat-label">Satisfaction</span>
-                </div>
-            </div>
-
+      <div class="ct-stats" style="border-top:1px solid rgba(255,255,255,.05);margin-top:auto;padding-top:0">
+        <div class="ct-stat" style="padding-top:32px">
+          <div class="ct-stat-val">&lt;24h</div>
+          <div class="ct-stat-lbl">Response Time</div>
         </div>
-
+        <div class="ct-stat" style="padding-top:32px">
+          <div class="ct-stat-val">98%</div>
+          <div class="ct-stat-lbl">Satisfaction Rate</div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
-
 {% endblock %}

@@ -12,791 +12,762 @@
 <style>
 /* ─── Reset ─── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body {
-    height: 100%;
-    overflow: hidden;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #0D0D0D;
-    color: #EFEFEF;
+html {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #0D0D0D;
+  color: #EFEFEF;
+  scroll-behavior: smooth;
 }
+body { min-height: 100vh; overflow-x: hidden; }
 
 /* ─── Background ─── */
-.bg-gradient {
-    position: fixed; inset: 0; z-index: 0;
-    background: linear-gradient(135deg, #0a0a0f 0%, #0d1117 40%, #080d14 100%);
-}
-.binary-bg {
-    position: fixed; inset: 0; z-index: 1;
-    opacity: 0.15; pointer-events: none; overflow: hidden;
-}
+.bg-gradient { position: fixed; inset: 0; z-index: 0; background: linear-gradient(135deg,#0a0a0f 0%,#0d1117 40%,#080d14 100%); }
+.binary-bg   { position: fixed; inset: 0; z-index: 1; opacity: .15; pointer-events: none; overflow: hidden; }
 .bin-col {
-    position: absolute;
-    font-family: 'Courier New', monospace;
-    font-size: 13px; font-weight: 700;
-    color: #00FF41;
-    text-shadow: 0 0 10px #00FF41, 0 0 20px rgba(0,255,65,0.6);
-    white-space: pre; line-height: 1.5;
-    animation: binFall linear infinite;
-    pointer-events: none;
+  position: absolute; font-family: 'Courier New', monospace;
+  font-size: 13px; font-weight: 700; color: #00FF41;
+  text-shadow: 0 0 10px #00FF41, 0 0 20px rgba(0,255,65,.6);
+  white-space: pre; line-height: 1.5; animation: binFall linear infinite; pointer-events: none;
 }
-@keyframes binFall {
-    from { transform: translateY(var(--start)); }
-    to   { transform: translateY(calc(var(--start) + 100vh + 100%)); }
-}
-.orb {
-    position: fixed; border-radius: 50%;
-    filter: blur(90px); opacity: 0.35;
-    animation: orbFloat 22s ease-in-out infinite;
-    z-index: 1; pointer-events: none;
-}
-.orb-1 { width: 500px; height: 500px; background: #00B8FF; top: -160px; left: -160px; animation-delay: 0s; }
-.orb-2 { width: 360px; height: 360px; background: #0066FF; bottom: -100px; right: -100px; animation-delay: 8s; }
-.orb-3 { width: 240px; height: 240px; background: #00D4FF; top: 42%; left: 42%; opacity: 0.18; animation-delay: 15s; }
-@keyframes orbFloat {
-    0%,100% { transform: translate(0,0) scale(1); }
-    33%      { transform: translate(70px,-70px) scale(1.07); }
-    66%      { transform: translate(-70px,70px) scale(0.94); }
-}
-/* scanlines */
-body::after {
-    content: ''; position: fixed; inset: 0; z-index: 2; pointer-events: none;
-    background: repeating-linear-gradient(
-        0deg,
-        rgba(0,212,255,0.015) 0px, transparent 1px,
-        transparent 2px, rgba(0,212,255,0.015) 3px
-    );
-}
+@keyframes binFall { from{ transform:translateY(var(--start)); } to{ transform:translateY(calc(var(--start)+100vh+100%)); } }
+.orb { position: fixed; border-radius: 50%; filter: blur(90px); opacity: .35; animation: orbFloat 22s ease-in-out infinite; z-index: 1; pointer-events: none; }
+.orb-1 { width:500px;height:500px;background:#00B8FF;top:-160px;left:-160px;animation-delay:0s; }
+.orb-2 { width:360px;height:360px;background:#0066FF;bottom:-100px;right:-100px;animation-delay:8s; }
+.orb-3 { width:240px;height:240px;background:#00D4FF;top:42%;left:42%;opacity:.18;animation-delay:15s; }
+@keyframes orbFloat { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(70px,-70px) scale(1.07)} 66%{transform:translate(-70px,70px) scale(.94)} }
+body::after { content:''; position:fixed; inset:0; z-index:2; pointer-events:none; background:repeating-linear-gradient(0deg,rgba(0,212,255,.015) 0px,transparent 1px,transparent 2px,rgba(0,212,255,.015) 3px); }
 
-/* ─── App Shell ─── */
+/* ─── App shell (full viewport, editors live here) ─── */
 .app {
-    position: relative; z-index: 10;
-    display: flex; flex-direction: column;
-    height: 100vh;
+  position: relative; z-index: 10;
+  height: 100vh;
+  display: flex; flex-direction: column;
 }
 
 /* ─── Topbar ─── */
 .topbar {
-    flex-shrink: 0;
-    height: 58px;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 20px; gap: 12px;
-    background: rgba(5, 7, 15, 0.85);
-    border-bottom: 1px solid rgba(0, 212, 255, 0.12);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
+  flex-shrink: 0; height: 58px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px; gap: 12px;
+  background: rgba(5,7,15,.88); border-bottom: 1px solid rgba(0,212,255,.12);
+  backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+  position: relative; z-index: 300;
 }
 .topbar-left  { display: flex; align-items: center; gap: 12px; }
 .topbar-right { display: flex; align-items: center; gap: 12px; }
 
 .hamburger {
-    width: 36px; height: 36px; flex-shrink: 0;
-    background: rgba(0,212,255,0.06);
-    border: 1px solid rgba(0,212,255,0.14);
-    border-radius: 9px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: background 0.2s, border-color 0.2s;
+  width: 36px; height: 36px; flex-shrink: 0;
+  background: rgba(0,212,255,.06); border: 1px solid rgba(0,212,255,.14);
+  border-radius: 9px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s, border-color .2s;
 }
-.hamburger:hover { background: rgba(0,212,255,0.13); border-color: rgba(0,212,255,0.3); }
+.hamburger:hover { background: rgba(0,212,255,.13); border-color: rgba(0,212,255,.3); }
 .hamburger svg { width: 17px; height: 17px; stroke: #00D4FF; stroke-width: 2; fill: none; stroke-linecap: round; }
 
 .brand {
-    font-size: 1.08rem; font-weight: 800; letter-spacing: -0.4px;
-    background: linear-gradient(135deg, #00D4FF 0%, #0099FF 50%, #00D4FF 100%);
-    background-size: 200% auto;
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: brandShimmer 4s linear infinite;
-    white-space: nowrap;
+  font-size: 1.08rem; font-weight: 800; letter-spacing: -.4px;
+  background: linear-gradient(135deg,#00D4FF 0%,#0099FF 50%,#00D4FF 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  animation: brandShimmer 4s linear infinite; white-space: nowrap;
 }
-@keyframes brandShimmer {
-    0%   { background-position: 0% center; }
-    100% { background-position: 200% center; }
-}
+@keyframes brandShimmer { 0%{background-position:0% center} 100%{background-position:200% center} }
 
 .balance-pill {
-    background: rgba(0,212,255,0.08);
-    border: 1px solid rgba(0,212,255,0.2);
-    border-radius: 20px; padding: 5px 13px;
-    font-size: 0.73rem; font-weight: 600;
-    color: #00D4FF; letter-spacing: 0.3px; white-space: nowrap;
+  background: rgba(0,212,255,.08); border: 1px solid rgba(0,212,255,.2);
+  border-radius: 20px; padding: 5px 13px;
+  font-size: .73rem; font-weight: 600; color: #00D4FF; letter-spacing: .3px; white-space: nowrap;
 }
-.user-chip {
-    font-size: 0.8rem; color: rgba(255,255,255,0.42);
-    white-space: nowrap;
-}
-.user-chip strong { color: rgba(255,255,255,0.75); font-weight: 600; }
+.user-chip { font-size: .8rem; color: rgba(255,255,255,.42); white-space: nowrap; }
+.user-chip strong { color: rgba(255,255,255,.75); font-weight: 600; }
 
-/* ─── Body row (sidebar + workspace) ─── */
-.body-row {
-    flex: 1; min-height: 0;
-    display: flex; overflow: hidden;
+/* ─── Sidebar hover-zone ─── */
+/* Thin trigger strip + full sidebar live inside .sb-zone.
+   Hovering anywhere in the zone keeps sidebar open.           */
+.sb-zone {
+  position: fixed; top: 58px; left: 0;
+  height: calc(100vh - 58px); z-index: 250;
+  display: flex;
+}
+/* The invisible hover trigger strip */
+.sb-trigger {
+  width: 8px; height: 100%; flex-shrink: 0; cursor: pointer;
 }
 
-/* ─── Sidebar ─── */
 .sidebar {
-    width: 240px; flex-shrink: 0;
-    display: flex; flex-direction: column;
-    background: rgba(0, 0, 0, 0.72);
-    border-right: 1px solid rgba(0,212,255,0.11);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    overflow-y: auto; overflow-x: hidden;
-    padding: 14px 10px;
-    transition: width 0.3s cubic-bezier(0.4,0,0.2,1),
-                padding 0.3s cubic-bezier(0.4,0,0.2,1),
-                opacity 0.2s;
-    scrollbar-width: thin; scrollbar-color: rgba(0,212,255,0.1) transparent;
+  width: 236px; flex-shrink: 0;
+  display: flex; flex-direction: column;
+  background: rgba(4,6,14,.96);
+  border-right: 1px solid rgba(0,212,255,.11);
+  backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
+  padding: 16px 10px;
+  transform: translateX(calc(-236px - 8px));
+  transition: transform .26s cubic-bezier(.4,0,.2,1);
+  overflow: hidden; /* no scroll - compact by design */
 }
-.sidebar.closed { width: 0; padding-left: 0; padding-right: 0; opacity: 0; overflow: hidden; }
+/* Show sidebar when hovering the zone OR when pinned */
+.sb-zone:hover .sidebar,
+.sidebar.pinned {
+  transform: translateX(0);
+}
 
 .sb-label {
-    font-size: 0.6rem; font-weight: 700; letter-spacing: 1.3px;
-    text-transform: uppercase; color: rgba(255,255,255,0.2);
-    padding: 4px 6px 2px; margin-top: 10px;
-    white-space: nowrap;
+  font-size: .6rem; font-weight: 700; letter-spacing: 1.3px;
+  text-transform: uppercase; color: rgba(255,255,255,.2);
+  padding: 4px 6px 2px; margin-top: 10px; white-space: nowrap;
 }
 .sb-label:first-child { margin-top: 0; }
 
 .sb-item {
-    display: flex; align-items: center; gap: 9px;
-    padding: 8px 10px; border-radius: 9px;
-    color: rgba(255,255,255,0.48); text-decoration: none;
-    font-size: 0.845rem; font-weight: 500;
-    transition: all 0.15s ease; white-space: nowrap;
-    border: 1px solid transparent;
-    background: transparent; width: 100%; cursor: pointer; text-align: left;
+  display: flex; align-items: center; gap: 9px;
+  padding: 7px 10px; border-radius: 9px;
+  color: rgba(255,255,255,.48); text-decoration: none;
+  font-size: .84rem; font-weight: 500;
+  transition: all .15s ease; white-space: nowrap;
+  border: 1px solid transparent;
+  background: transparent; width: 100%; cursor: pointer; text-align: left;
 }
 .sb-item svg { width: 15px; height: 15px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-.sb-item:hover { background: rgba(0,212,255,0.07); color: #ddd; }
-.sb-item.is-active { background: rgba(0,212,255,0.1); color: #00D4FF; border-color: rgba(0,212,255,0.2); }
-.sb-item.is-danger { color: rgba(255,80,65,0.6); }
-.sb-item.is-danger:hover { background: rgba(255,50,40,0.08); color: #ff5041; }
+.sb-item:hover { background: rgba(0,212,255,.07); color: #ddd; }
+.sb-item.is-active { background: rgba(0,212,255,.1); color: #00D4FF; border-color: rgba(0,212,255,.2); }
+.sb-item.is-danger { color: rgba(255,80,65,.6); }
+.sb-item.is-danger:hover { background: rgba(255,50,40,.08); color: #ff5041; }
 
-.sb-rule { height: 1px; background: rgba(0,212,255,0.07); margin: 8px 0; }
+.sb-rule { height: 1px; background: rgba(0,212,255,.07); margin: 8px 0; }
 
 .sb-field-label {
-    font-size: 0.65rem; font-weight: 600; letter-spacing: 0.5px;
-    text-transform: uppercase; color: rgba(255,255,255,0.25);
-    display: block; margin-bottom: 5px; padding: 0 2px;
+  font-size: .65rem; font-weight: 600; letter-spacing: .5px;
+  text-transform: uppercase; color: rgba(255,255,255,.25);
+  display: block; margin-bottom: 5px; padding: 0 2px;
 }
 .sb-select {
-    width: 100%;
-    background: rgba(0,0,0,0.5);
-    border: 1px solid rgba(0,212,255,0.14);
-    border-radius: 8px; color: #ddd;
-    padding: 7px 28px 7px 10px;
-    font-size: 0.82rem; font-family: 'Inter', sans-serif; font-weight: 500;
-    cursor: pointer; outline: none; appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='rgba(0,212,255,0.4)' stroke-width='2.5' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-    background-repeat: no-repeat; background-position: right 8px center;
-    transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+  background: rgba(0,0,0,.5); border: 1px solid rgba(0,212,255,.14);
+  border-radius: 8px; color: #ddd; padding: 7px 28px 7px 10px;
+  font-size: .82rem; font-family: 'Inter',sans-serif; font-weight: 500;
+  cursor: pointer; outline: none; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='rgba(0,212,255,0.4)' stroke-width='2.5' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 8px center;
+  transition: border-color .15s, box-shadow .15s;
 }
-.sb-select:hover { border-color: rgba(0,212,255,0.28); }
-.sb-select:focus { border-color: rgba(0,212,255,0.5); box-shadow: 0 0 0 3px rgba(0,212,255,0.08); }
+.sb-select:hover { border-color: rgba(0,212,255,.28); }
+.sb-select:focus { border-color: rgba(0,212,255,.5); box-shadow: 0 0 0 3px rgba(0,212,255,.08); }
 .sb-select option { background: #0a0f1e; }
 
-.sb-card {
-    background: rgba(0,212,255,0.03); border: 1px solid rgba(0,212,255,0.09);
-    border-radius: 9px; padding: 10px;
-    font-size: 0.74rem; color: rgba(255,255,255,0.36); line-height: 1.65;
+.sb-tip {
+  font-size: .72rem; color: rgba(255,255,255,.28); line-height: 1.6;
+  padding: 6px 4px;
 }
-.sb-card strong { color: rgba(0,212,255,0.7); }
-.sb-card .v { color: #00D4FF; font-weight: 700; }
+.sb-tip strong { color: rgba(0,212,255,.65); }
 
 .sb-spacer { flex: 1; }
 
+/* ─── Body row holding workspace ─── */
+.body-row { flex: 1; min-height: 0; display: flex; overflow: hidden; }
+
 /* ─── Workspace ─── */
 .workspace {
-    flex: 1; min-width: 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    overflow: hidden;
+  flex: 1; min-width: 0;
+  display: grid; grid-template-columns: 1fr 1fr;
+  overflow: hidden;
 }
 
-/* ─── Editor panel ─── */
 .panel {
-    display: flex; flex-direction: column;
-    min-height: 0; overflow: hidden;
-    background: rgba(0, 0, 0, 0.6);
-    border-right: 1px solid rgba(0,212,255,0.09);
-    position: relative;
+  display: flex; flex-direction: column; min-height: 0; overflow: hidden;
+  background: rgba(0,0,0,.6); border-right: 1px solid rgba(0,212,255,.09);
+  position: relative;
 }
 .panel:last-child { border-right: none; }
-/* glowing top accent line */
 .panel::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 1px; z-index: 1;
-    background: linear-gradient(90deg, transparent 0%, rgba(0,212,255,0.3) 50%, transparent 100%);
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; z-index: 1;
+  background: linear-gradient(90deg,transparent 0%,rgba(0,212,255,.3) 50%,transparent 100%);
 }
 
 .panel-header {
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 16px; gap: 8px;
-    background: rgba(0,0,0,0.4);
-    border-bottom: 1px solid rgba(0,212,255,0.07);
-    position: relative; z-index: 2;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px; gap: 8px;
+  background: rgba(0,0,0,.4); border-bottom: 1px solid rgba(0,212,255,.07);
+  position: relative; z-index: 2;
 }
 .ph-left  { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
-.ph-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.ph-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
 .panel-title {
-    font-size: 0.63rem; font-weight: 700; letter-spacing: 1.1px;
-    text-transform: uppercase; color: rgba(255,255,255,0.28);
+  font-size: .63rem; font-weight: 700; letter-spacing: 1.1px;
+  text-transform: uppercase; color: rgba(255,255,255,.28);
 }
-
 .w-pill {
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 20px; padding: 3px 9px;
-    font-size: 0.69rem; font-weight: 600; color: rgba(255,255,255,0.35);
-    font-variant-numeric: tabular-nums; transition: all 0.18s;
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07);
+  border-radius: 20px; padding: 3px 9px;
+  font-size: .69rem; font-weight: 600; color: rgba(255,255,255,.35);
+  font-variant-numeric: tabular-nums; transition: all .18s;
 }
-.w-pill .n { color: rgba(0,212,255,0.82); }
-.w-pill.over { border-color: rgba(255,60,45,0.38); }
+.w-pill .n { color: rgba(0,212,255,.82); }
+.w-pill.over { border-color: rgba(255,60,45,.38); }
 .w-pill.over .n { color: #ff5040; }
-
 .over-badge {
-    background: rgba(255,55,45,0.1); border: 1px solid rgba(255,55,45,0.28);
-    border-radius: 20px; padding: 3px 9px;
-    font-size: 0.65rem; font-weight: 600; color: #ff6050;
-    opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  background: rgba(255,55,45,.1); border: 1px solid rgba(255,55,45,.28);
+  border-radius: 20px; padding: 3px 9px;
+  font-size: .65rem; font-weight: 600; color: #ff6050;
+  opacity: 0; pointer-events: none; transition: opacity .2s;
 }
 .over-badge.show { opacity: 1; }
 
-/* icon buttons */
+/* icon buttons — bigger */
 .icon-btn {
-    width: 30px; height: 30px; flex-shrink: 0;
-    background: rgba(0,212,255,0.05); border: 1px solid rgba(0,212,255,0.14);
-    border-radius: 7px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.16s ease;
+  width: 38px; height: 38px; flex-shrink: 0;
+  background: rgba(0,212,255,.05); border: 1px solid rgba(0,212,255,.15);
+  border-radius: 9px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .16s ease;
 }
-.icon-btn svg { width: 13px; height: 13px; stroke: rgba(0,212,255,0.72); stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-.icon-btn:hover { background: rgba(0,212,255,0.11); border-color: rgba(0,212,255,0.3); transform: translateY(-1px); }
+.icon-btn svg { width: 16px; height: 16px; stroke: rgba(0,212,255,.78); stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.icon-btn:hover { background: rgba(0,212,255,.12); border-color: rgba(0,212,255,.32); transform: translateY(-1px); }
 .icon-btn.copied svg { stroke: #00e87a; }
-.icon-btn.copied { background: rgba(0,230,120,0.07); border-color: rgba(0,230,120,0.28); }
-
-/* score rings */
-.scores { display: flex; align-items: center; gap: 8px; }
-.score { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-.ring-wrap { position: relative; width: 32px; height: 32px; }
-.ring-wrap svg { transform: rotate(-90deg); }
-.r-bg   { fill: none; stroke: rgba(0,212,255,0.1); stroke-width: 2.5; }
-.r-fill {
-    fill: none; stroke: #00D4FF; stroke-width: 2.5; stroke-linecap: round;
-    transition: stroke-dashoffset 0.65s cubic-bezier(0.16,1,0.3,1);
-}
-.r-val {
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
-    font-size: 0.42rem; font-weight: 800; color: #00D4FF; white-space: nowrap; letter-spacing: -0.3px;
-}
-.score-name { font-size: 0.52rem; color: rgba(255,255,255,0.24); font-weight: 500; }
+.icon-btn.copied { background: rgba(0,230,120,.07); border-color: rgba(0,230,120,.28); }
 
 /* ─── Textarea ─── */
 .editor {
-    flex: 1; min-height: 0;
-    background: transparent; border: none; outline: none; resize: none;
-    color: #D5D5E2; font-size: 0.93rem; line-height: 1.85;
-    font-family: 'Inter', sans-serif; font-weight: 400;
-    padding: 20px 20px;
-    scrollbar-width: thin; scrollbar-color: rgba(0,212,255,0.1) transparent;
-    position: relative; z-index: 2;
-    transition: background 0.2s;
+  flex: 1; min-height: 0;
+  background: transparent; border: none; outline: none; resize: none;
+  color: #D5D5E2; font-size: .93rem; line-height: 1.85;
+  font-family: 'Inter', sans-serif; font-weight: 400;
+  padding: 20px; position: relative; z-index: 2;
+  scrollbar-width: thin; scrollbar-color: rgba(0,212,255,.1) transparent;
+  transition: background .2s;
 }
-.editor:focus { background: rgba(0,212,255,0.01); }
-.editor::placeholder { color: rgba(255,255,255,0.12); font-style: italic; font-weight: 300; line-height: 1.6; }
-.editor.over-limit { background: rgba(255,0,0,0.02); }
+.editor:focus { background: rgba(0,212,255,.01); }
+.editor::placeholder { color: rgba(255,255,255,.12); font-style: italic; font-weight: 300; line-height: 1.6; }
+.editor.over-limit { background: rgba(255,0,0,.02); }
 
-/* ─── Action bar (Humanize button) ─── */
+/* ─── Action bar ─── */
 .action-bar {
-    flex-shrink: 0;
-    padding: 12px 16px;
-    background: rgba(0,0,0,0.5);
-    border-top: 1px solid rgba(0,212,255,0.07);
-    position: relative; z-index: 2;
+  flex-shrink: 0; padding: 12px 16px;
+  background: rgba(0,0,0,.5); border-top: 1px solid rgba(0,212,255,.07);
+  position: relative; z-index: 2;
 }
 .humanize-btn {
-    width: 100%; height: 46px;
-    background: linear-gradient(135deg, #00C4F0, #0088EE, #00B8FF);
-    background-size: 200% 200%;
-    border: none; border-radius: 11px;
-    color: #040912; font-family: 'Inter', sans-serif;
-    font-size: 0.88rem; font-weight: 700; letter-spacing: 0.3px;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    transition: transform 0.22s ease, box-shadow 0.22s ease, background-position 0.4s ease;
-    position: relative; overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,200,255,0.2);
+  width: 100%; height: 46px;
+  background: linear-gradient(135deg,#00C4F0,#0088EE,#00B8FF); background-size: 200% 200%;
+  border: none; border-radius: 11px;
+  color: #040912; font-family: 'Inter',sans-serif;
+  font-size: .88rem; font-weight: 700; letter-spacing: .3px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: transform .22s ease, box-shadow .22s ease, background-position .4s ease;
+  position: relative; overflow: hidden; box-shadow: 0 4px 20px rgba(0,200,255,.2);
 }
-/* ripple */
 .humanize-btn::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%);
-    transform: translateX(-100%);
-    transition: transform 0.5s ease;
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg,transparent 0%,rgba(255,255,255,.18) 50%,transparent 100%);
+  transform: translateX(-100%); transition: transform .5s ease;
 }
 .humanize-btn:hover:not(:disabled)::before { transform: translateX(100%); }
-.humanize-btn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 28px rgba(0,200,255,0.38);
-    background-position: 100% 100%;
-}
+.humanize-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,200,255,.38); background-position: 100% 100%; }
 .humanize-btn:active:not(:disabled) { transform: translateY(0); }
-.humanize-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+.humanize-btn:disabled { opacity: .38; cursor: not-allowed; }
 .humanize-btn svg { width: 16px; height: 16px; stroke: #040912; stroke-width: 2.2; fill: none; stroke-linecap: round; flex-shrink: 0; position: relative; z-index: 1; }
 .humanize-btn .btn-txt { position: relative; z-index: 1; }
 
-/* loading dots */
 .dots { display: inline-flex; gap: 4px; align-items: center; }
 .dots span { width: 6px; height: 6px; background: #040912; border-radius: 50%; animation: dotPulse 1s ease-in-out infinite; }
-.dots span:nth-child(2) { animation-delay: 0.15s; }
-.dots span:nth-child(3) { animation-delay: 0.3s; }
-@keyframes dotPulse {
-    0%,60%,100% { transform: translateY(0); opacity: 0.4; }
-    30%          { transform: translateY(-5px); opacity: 1; }
+.dots span:nth-child(2) { animation-delay: .15s; }
+.dots span:nth-child(3) { animation-delay: .3s; }
+@keyframes dotPulse { 0%,60%,100%{transform:translateY(0);opacity:.4} 30%{transform:translateY(-5px);opacity:1} }
+
+/* ─── Info section (below editors) ─── */
+.info-section {
+  position: relative; z-index: 10;
+  background: #0D0D0D;
+  border-top: 1px solid rgba(0,212,255,.08);
 }
+
+.info-ticker {
+  background: rgba(0,212,255,.04);
+  border-bottom: 1px solid rgba(0,212,255,.06);
+  padding: 10px 40px;
+  font-size: .7rem; font-weight: 600; letter-spacing: 1.4px;
+  text-transform: uppercase; color: rgba(0,212,255,.45);
+  display: flex; gap: 60px;
+}
+.info-ticker span::before { content: '— '; }
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-bottom: 1px solid rgba(255,255,255,.05);
+}
+.info-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+
+.info-cell {
+  padding: 44px 40px;
+  border-right: 1px solid rgba(255,255,255,.05);
+}
+.info-cell:last-child { border-right: none; }
+
+.cell-num {
+  font-size: 2.8rem; font-weight: 800; letter-spacing: -1.5px;
+  background: linear-gradient(135deg,#00D4FF,#0088FF);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  line-height: 1; margin-bottom: 6px;
+}
+.cell-label {
+  font-size: .65rem; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: rgba(255,255,255,.22);
+  margin-bottom: 12px;
+}
+.cell-title {
+  font-size: 1rem; font-weight: 700; color: rgba(255,255,255,.8);
+  margin-bottom: 8px; letter-spacing: -.2px;
+}
+.cell-body {
+  font-size: .84rem; line-height: 1.72; color: rgba(255,255,255,.36); font-weight: 400;
+}
+
+.info-steps {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid rgba(255,255,255,.05);
+}
+.step-cell {
+  padding: 36px 32px;
+  border-right: 1px solid rgba(255,255,255,.05);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.step-cell:last-child { border-right: none; }
+.step-n {
+  font-size: .6rem; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: rgba(0,212,255,.4);
+}
+.step-title { font-size: .93rem; font-weight: 600; color: rgba(255,255,255,.75); letter-spacing: -.1px; }
+.step-body  { font-size: .8rem; line-height: 1.65; color: rgba(255,255,255,.3); }
+
+.info-disclaimer {
+  padding: 36px 40px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+}
+.disc-block { padding-right: 48px; }
+.disc-block:last-child { padding-right: 0; padding-left: 48px; border-left: 1px solid rgba(255,255,255,.05); }
+.disc-title {
+  font-size: .6rem; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase;
+  color: rgba(255,255,255,.2); margin-bottom: 10px;
+}
+.disc-body { font-size: .8rem; line-height: 1.75; color: rgba(255,255,255,.28); }
+.disc-body a { color: rgba(0,212,255,.55); text-decoration: none; }
+
+.info-footer {
+  padding: 20px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: .72rem; color: rgba(255,255,255,.18);
+}
+.info-footer a { color: rgba(0,212,255,.4); text-decoration: none; }
 
 /* ─── Toast ─── */
 .toast {
-    position: fixed; bottom: 20px; right: 20px; z-index: 9999;
-    background: rgba(5,7,15,0.97);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 11px; padding: 8px 14px;
-    font-size: 0.78rem; font-weight: 500; color: #eee;
-    display: flex; align-items: center; gap: 7px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.7);
-    backdrop-filter: blur(18px); max-width: 280px;
-    animation: toastSlideIn 0.25s cubic-bezier(0.4,0,0.2,1);
+  position: fixed; bottom: 20px; right: 20px; z-index: 9999;
+  background: rgba(5,7,15,.97); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 11px; padding: 8px 14px;
+  font-size: .78rem; font-weight: 500; color: #eee;
+  display: flex; align-items: center; gap: 7px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.7);
+  backdrop-filter: blur(18px); max-width: 280px;
+  animation: toastSlideIn .25s cubic-bezier(.4,0,.2,1);
 }
-.toast.ok  { border-color: rgba(0,220,100,0.38); }
-.toast.err { border-color: rgba(255,60,45,0.38); }
-@keyframes toastSlideIn  { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-@keyframes toastSlideOut { to   { opacity:0; transform:translateY(8px); } }
+.toast.ok  { border-color: rgba(0,220,100,.38); }
+.toast.err { border-color: rgba(255,60,45,.38); }
+@keyframes toastSlideIn  { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+@keyframes toastSlideOut { to{opacity:0;transform:translateY(8px)} }
 
-/* ─── Scrollbars ─── */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.1); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(0,212,255,0.22); }
+::-webkit-scrollbar-thumb { background: rgba(0,212,255,.1); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,212,255,.22); }
 </style>
 </head>
 <body>
 
-<!-- Background layers -->
 <div class="bg-gradient"></div>
 <div class="binary-bg" id="binBg"></div>
 <div class="orb orb-1"></div>
 <div class="orb orb-2"></div>
 <div class="orb orb-3"></div>
 
-<!-- ─── App shell ─── -->
+<!-- ─── Hover sidebar zone ─── -->
+<div class="sb-zone" id="sbZone">
+  <div class="sb-trigger" id="sbTrigger"></div>
+  <nav class="sidebar" id="sidebar">
+    <div class="sb-label">Menu</div>
+    <a href="{% url 'humanizer' %}" class="sb-item is-active">
+      <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Humanizer
+    </a>
+    <a href="{% url 'pricing' %}" class="sb-item">
+      <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Pricing
+    </a>
+    <a href="{% url 'devices' %}" class="sb-item">
+      <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1" fill="rgba(130,130,130,.7)"/></svg>Devices
+    </a>
+    <a href="{% url 'settings' %}" class="sb-item">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Settings
+    </a>
+    <a href="{% url 'about' %}" class="sb-item">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>About
+    </a>
+    <a href="{% url 'contact' %}" class="sb-item">
+      <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Contact
+    </a>
+
+    <div class="sb-rule"></div>
+    <div class="sb-label">Settings</div>
+
+    <div style="padding:0 2px;margin-bottom:10px">
+      <span class="sb-field-label">Writing Mode</span>
+      <select id="modeSelect" class="sb-select">
+        <option value="recommended" selected>Recommended</option>
+        <option value="readability">Readability</option>
+        <option value="formal">Formal</option>
+        <option value="conversational">Conversational</option>
+        <option value="informal">Informal</option>
+        <option value="academic">Academic</option>
+      </select>
+    </div>
+    <div style="padding:0 2px;margin-bottom:10px">
+      <span class="sb-field-label">Model</span>
+      <select id="modelSelect" class="sb-select">
+        <option value="original" selected>Original — Stable</option>
+      </select>
+    </div>
+
+    {% if user.is_authenticated and user.profile.is_kenya_plan %}
+    <div class="sb-rule"></div>
+    <div class="sb-label">Devices</div>
+    <div style="padding:4px 6px">
+      <div style="font-size:.74rem;color:rgba(255,255,255,.32);line-height:1.7">
+        Active: <span style="color:#00D4FF;font-weight:700">{{ user.profile.current_active_devices }}/{{ user.profile.max_concurrent_devices }}</span>
+        {% if user.profile.account_type != 'KE_MULTI_DEVICE' %}
+        · Switches today: <span style="color:#00D4FF;font-weight:700">{{ user.profile.daily_device_switches }}/3</span>
+        {% endif %}
+        {% if user.profile.plan_expires_at %}
+        <br><span style="font-size:.68rem;color:rgba(255,255,255,.2)">Expires {{ user.profile.plan_expires_at|date:"M d, Y" }}</span>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="sb-rule"></div>
+    <div class="sb-tip"><strong>Tip —</strong> Recommended gives the most natural results. Paste long documents in sections.</div>
+
+    <div class="sb-spacer"></div>
+    <div class="sb-rule"></div>
+    <a href="{% url 'account_logout' %}" class="sb-item is-danger">
+      <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout
+    </a>
+  </nav>
+</div>
+
+<!-- ─── Main app (viewport-height editor area) ─── -->
 <div class="app">
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+        <svg viewBox="0 0 24 24">
+          <line x1="3" y1="6"  x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="16" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+      <span class="brand">InfiniHumanizer</span>
+    </div>
+    <div class="topbar-right">
+      <div class="balance-pill" id="balChip">{{ word_balance }} words</div>
+      <div class="user-chip"><strong>{{ user.username }}</strong></div>
+    </div>
+  </header>
 
-    <!-- TOPBAR -->
-    <header class="topbar">
-        <div class="topbar-left">
-            <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">
-                <svg viewBox="0 0 24 24">
-                    <line x1="3" y1="6"  x2="21" y2="6"/>
-                    <line x1="3" y1="12" x2="16" y2="12"/>
-                    <line x1="3" y1="18" x2="21" y2="18"/>
-                </svg>
+  <div class="body-row">
+    <div class="workspace">
+
+      <!-- INPUT panel -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="ph-left">
+            <span class="panel-title">Input</span>
+            <div class="w-pill" id="iPill">
+              <span class="n" id="inputCount">0</span>&thinsp;/&thinsp;{{ word_balance }}
+            </div>
+            <span class="over-badge" id="overBadge"></span>
+          </div>
+        </div>
+        <textarea id="inputText" class="editor" placeholder="Paste your AI-generated text here…" spellcheck="true"></textarea>
+        <div class="action-bar">
+          <button class="humanize-btn" id="humanizeBtn">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            <span class="btn-txt" id="btnLabel">Humanize</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- OUTPUT panel -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="ph-left">
+            <span class="panel-title">Output</span>
+            <div class="w-pill"><span class="n" id="outputCount">0</span>&thinsp;words</div>
+          </div>
+          <div class="ph-right">
+            <button class="icon-btn" id="copyBtn" title="Copy output">
+              <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
             </button>
-            <span class="brand">InfiniHumanizer</span>
+            <button class="icon-btn" id="pdfBtn" title="Export PDF">
+              <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </button>
+          </div>
         </div>
-        <div class="topbar-right">
-            <div class="balance-pill" id="balChip">{{ word_balance }} words</div>
-            <div class="user-chip"><strong>{{ user.username }}</strong></div>
-        </div>
-    </header>
+        <textarea id="outputText" class="editor" placeholder="Humanized text will appear here…" readonly></textarea>
+      </div>
 
-    <!-- BODY ROW: sidebar + workspace -->
-    <div class="body-row">
+    </div>
+  </div>
+</div>
 
-        <!-- SIDEBAR -->
-        <nav class="sidebar" id="sidebar">
+<!-- ─── Info section (scrolls below) ─── -->
+<div class="info-section">
 
-            <div class="sb-label">Menu</div>
-            <a href="{% url 'humanizer' %}" class="sb-item is-active">
-                <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                Humanizer
-            </a>
-            <a href="{% url 'pricing' %}" class="sb-item">
-                <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-                Pricing
-            </a>
-            <a href="{% url 'devices' %}" class="sb-item">
-                <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1" fill="rgba(130,130,130,0.7)"/></svg>
-                Devices
-            </a>
-            <a href="{% url 'settings' %}" class="sb-item">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-                Settings
-            </a>
-            <a href="{% url 'about' %}" class="sb-item">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                About
-            </a>
-            <a href="{% url 'contact' %}" class="sb-item">
-                <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                Contact
-            </a>
+  <div class="info-ticker">
+    <span>Academic writing optimised</span>
+    <span>Citations preserved automatically</span>
+    <span>Six writing modes</span>
+    <span>Private & secure</span>
+  </div>
 
-            <div class="sb-rule"></div>
-            <div class="sb-label">Settings</div>
+  <!-- Stats row -->
+  <div class="info-grid">
+    <div class="info-cell">
+      <div class="cell-num">6</div>
+      <div class="cell-label">Writing Modes</div>
+      <div class="cell-body">From casual Conversational to structured Academic — choose a register that fits your document before you humanize.</div>
+    </div>
+    <div class="info-cell">
+      <div class="cell-num">100%</div>
+      <div class="cell-label">Citation Preservation</div>
+      <div class="cell-body">Every in-text citation, footnote, and reference entry is kept character-for-character identical. Nothing gets lost or reformatted.</div>
+    </div>
+    <div class="info-cell">
+      <div class="cell-num">~3s</div>
+      <div class="cell-label">Avg. Response Time</div>
+      <div class="cell-body">Shorter documents typically complete in under three seconds. Longer pieces are chunked automatically for best output quality.</div>
+    </div>
+  </div>
 
-            <div style="padding: 0 2px; margin-bottom: 10px;">
-                <span class="sb-field-label">Writing Mode</span>
-                <select id="modeSelect" class="sb-select">
-                    <option value="recommended" selected>Recommended</option>
-                    <option value="readability">Readability</option>
-                    <option value="formal">Formal</option>
-                    <option value="conversational">Conversational</option>
-                    <option value="informal">Informal</option>
-                    <option value="academic">Academic</option>
-                </select>
-            </div>
-            <div style="padding: 0 2px;">
-                <span class="sb-field-label">Model</span>
-                <select id="modelSelect" class="sb-select">
-                    <option value="original" selected>Original — Stable</option>
-                </select>
-            </div>
+  <!-- How to use -->
+  <div class="info-steps">
+    <div class="step-cell">
+      <span class="step-n">Step 01</span>
+      <div class="step-title">Pick your mode</div>
+      <div class="step-body">Open the sidebar and choose a writing mode. <em>Recommended</em> works for most academic documents. <em>Formal</em> suits legal or business prose.</div>
+    </div>
+    <div class="step-cell">
+      <span class="step-n">Step 02</span>
+      <div class="step-title">Paste your text</div>
+      <div class="step-body">Paste your AI-generated content into the left panel. The word counter updates live. Stay within your plan's limit shown in the topbar.</div>
+    </div>
+    <div class="step-cell">
+      <span class="step-n">Step 03</span>
+      <div class="step-title">Click Humanize</div>
+      <div class="step-body">Hit the Humanize button. Your text streams into the right panel word by word as it's processed. No refresh needed.</div>
+    </div>
+    <div class="step-cell">
+      <span class="step-n">Step 04</span>
+      <div class="step-title">Copy or export</div>
+      <div class="step-body">Use the Copy button to grab the output instantly, or export a clean A4 PDF stamped with a unique document ID.</div>
+    </div>
+  </div>
 
-            {% if user.is_authenticated and user.profile.is_kenya_plan %}
-            <div class="sb-rule"></div>
-            <div class="sb-label">Devices</div>
-            <div class="sb-card">
-                <div>Active: <span class="v">{{ user.profile.current_active_devices }}/{{ user.profile.max_concurrent_devices }}</span></div>
-                {% if user.profile.account_type != 'KE_MULTI_DEVICE' %}
-                <div>Switches today: <span class="v">{{ user.profile.daily_device_switches }}/3</span></div>
-                {% endif %}
-                {% if user.profile.plan_expires_at %}
-                <div style="margin-top: 4px; font-size: 0.68rem; color: rgba(255,255,255,0.25);">
-                    Expires {{ user.profile.plan_expires_at|date:"M d, Y" }}
-                </div>
-                {% endif %}
-            </div>
-            {% endif %}
+  <!-- Modes explained -->
+  <div class="info-grid">
+    <div class="info-cell">
+      <div class="cell-label">Mode</div>
+      <div class="cell-title">Recommended</div>
+      <div class="cell-body">A balanced blend of natural sentence variation, academic vocabulary, and authentic student voice. Best default for essays, reports, and assignments.</div>
+    </div>
+    <div class="info-cell">
+      <div class="cell-label">Mode</div>
+      <div class="cell-title">Formal</div>
+      <div class="cell-body">Elevated register appropriate for professional reports, legal summaries, and business documents. Maintains structure while sounding human.</div>
+    </div>
+    <div class="info-cell">
+      <div class="cell-label">Mode</div>
+      <div class="cell-title">Academic</div>
+      <div class="cell-body">Scholarly tone with critical voice. Ideal for dissertations, journal submissions, and research papers where high academic register is expected.</div>
+    </div>
+  </div>
 
-            <div class="sb-rule"></div>
-            <div class="sb-card">
-                <strong>Tip:</strong> Use Recommended mode for the most natural humanization. Split long documents into sections.
-            </div>
+  <div class="info-grid">
+    <div class="info-cell">
+      <div class="cell-label">Mode</div>
+      <div class="cell-title">Conversational</div>
+      <div class="cell-body">Relaxed, flowing prose with natural contractions and rhythm. Great for blogs, reflective pieces, and less formal coursework.</div>
+    </div>
+    <div class="info-cell">
+      <div class="cell-label">Mode</div>
+      <div class="cell-title">Informal</div>
+      <div class="cell-body">Casual, approachable writing that reads like a confident student talking through their ideas. Suitable for personal statements and informal assignments.</div>
+    </div>
+    <div class="info-cell">
+      <div class="cell-label">Mode</div>
+      <div class="cell-title">Readability</div>
+      <div class="cell-body">Shorter sentences, clearer paragraph breaks, and simpler vocabulary — without dumbing down the ideas. Improves accessibility and clarity.</div>
+    </div>
+  </div>
 
-            <div class="sb-spacer"></div>
+  <!-- Disclaimer -->
+  <div class="info-disclaimer">
+    <div class="disc-block">
+      <div class="disc-title">Ethical use</div>
+      <div class="disc-body">InfiniHumanizer is designed to help writers improve and naturalise their own drafts — not to bypass academic integrity policies. Always review the output yourself and ensure it reflects your genuine ideas before submission. Using this tool to circumvent your institution's rules is your responsibility as the author.</div>
+    </div>
+    <div class="disc-block">
+      <div class="disc-title">What we don't store</div>
+      <div class="disc-body">Text pasted into the editor is sent directly to the model for processing and is not logged or stored on our servers. Your documents remain private. Word-balance data is stored only to enforce your plan limit. For details, see our <a href="{% url 'contact' %}">Privacy Policy</a>.</div>
+    </div>
+  </div>
 
-            <div class="sb-rule"></div>
-            <a href="{% url 'account_logout' %}" class="sb-item is-danger">
-                <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                Logout
-            </a>
-        </nav>
+  <div class="info-footer">
+    <span>© {{ request.user.date_joined.year|default:"2024" }} InfiniHumanizer. All rights reserved.</span>
+    <span><a href="{% url 'contact' %}">Contact</a> · <a href="{% url 'pricing' %}">Pricing</a> · <a href="{% url 'about' %}">About</a></span>
+  </div>
 
-        <!-- WORKSPACE: two editor panels -->
-        <div class="workspace">
-
-            <!-- INPUT panel -->
-            <div class="panel">
-                <div class="panel-header">
-                    <div class="ph-left">
-                        <span class="panel-title">Input</span>
-                        <div class="w-pill" id="iPill">
-                            <span class="n" id="inputCount">0</span>&thinsp;/&thinsp;{{ word_balance }}
-                        </div>
-                        <span class="over-badge" id="overBadge"></span>
-                    </div>
-                </div>
-                <textarea
-                    id="inputText"
-                    class="editor"
-                    placeholder="Paste your AI-generated text here…"
-                    spellcheck="true"
-                ></textarea>
-                <div class="action-bar">
-                    <button class="humanize-btn" id="humanizeBtn">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                            <path d="M2 17l10 5 10-5"/>
-                            <path d="M2 12l10 5 10-5"/>
-                        </svg>
-                        <span class="btn-txt" id="btnLabel">Humanize</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- OUTPUT panel -->
-            <div class="panel">
-                <div class="panel-header">
-                    <div class="ph-left">
-                        <span class="panel-title">Output</span>
-                        <div class="w-pill"><span class="n" id="outputCount">0</span>&thinsp;words</div>
-                    </div>
-                    <div class="ph-right">
-                        <div class="scores">
-                            <div class="score">
-                                <div class="ring-wrap">
-                                    <svg width="32" height="32">
-                                        <circle class="r-bg"   cx="16" cy="16" r="11"/>
-                                        <circle class="r-fill" id="humanRing" cx="16" cy="16" r="11"
-                                                stroke-dasharray="69.1" stroke-dashoffset="69.1"/>
-                                    </svg>
-                                    <span class="r-val" id="humanVal">0%</span>
-                                </div>
-                                <span class="score-name">Human</span>
-                            </div>
-                            <div class="score">
-                                <div class="ring-wrap">
-                                    <svg width="32" height="32">
-                                        <circle class="r-bg"   cx="16" cy="16" r="11"/>
-                                        <circle class="r-fill" id="readRing" cx="16" cy="16" r="11"
-                                                stroke-dasharray="69.1" stroke-dashoffset="69.1"/>
-                                    </svg>
-                                    <span class="r-val" id="readVal">0%</span>
-                                </div>
-                                <span class="score-name">Read</span>
-                            </div>
-                        </div>
-                        <button class="icon-btn" id="copyBtn" title="Copy">
-                            <svg viewBox="0 0 24 24">
-                                <rect x="9" y="9" width="13" height="13" rx="2"/>
-                                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
-                            </svg>
-                        </button>
-                        <button class="icon-btn" id="pdfBtn" title="Export PDF">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-                                <polyline points="14 2 14 8 20 8"/>
-                                <line x1="16" y1="13" x2="8" y2="13"/>
-                                <line x1="16" y1="17" x2="8" y2="17"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                <textarea
-                    id="outputText"
-                    class="editor"
-                    placeholder="Humanized text will appear here…"
-                    readonly
-                ></textarea>
-            </div>
-
-        </div><!-- /workspace -->
-    </div><!-- /body-row -->
-</div><!-- /app -->
+</div><!-- /info-section -->
 
 <script>
-/* ── Matrix binary rain ── */
-(function() {
-    const bg = document.getElementById('binBg');
-    const cols = Math.floor(window.innerWidth / 30);
-    for (let i = 0; i < cols; i++) {
-        const el = document.createElement('div');
-        el.className = 'bin-col';
-        let txt = '';
-        const len = Math.floor(Math.random() * 32) + 20;
-        for (let j = 0; j < len; j++) {
-            txt += Math.random() > 0.5 ? '1' : '0';
-            if ((j + 1) % 8 === 0) txt += '\n';
-            else if ((j + 1) % 4 === 0) txt += ' ';
-        }
-        el.textContent = txt;
-        el.style.left = `${(i / cols) * 100}%`;
-        const dur = 9 + Math.random() * 8;
-        el.style.animationDuration = dur + 's';
-        const startOffset = -(Math.random() * 100);
-        el.style.setProperty('--start', startOffset + 'vh');
-        el.style.animationDelay = '0s';
-        bg.appendChild(el);
-    }
+/* binary rain */
+(function(){
+  const bg = document.getElementById('binBg');
+  const cols = Math.floor(window.innerWidth/30);
+  for(let i=0;i<cols;i++){
+    const el=document.createElement('div'); el.className='bin-col';
+    let txt=''; const len=Math.floor(Math.random()*32)+20;
+    for(let j=0;j<len;j++){ txt+=Math.random()>.5?'1':'0'; if((j+1)%8===0)txt+='\n'; else if((j+1)%4===0)txt+=' '; }
+    el.textContent=txt;
+    el.style.left=`${(i/cols)*100}%`;
+    el.style.animationDuration=(9+Math.random()*8)+'s';
+    const s=-(Math.random()*100); el.style.setProperty('--start',s+'vh');
+    bg.appendChild(el);
+  }
 })();
 
-/* ── Mouse parallax on orbs ── */
-document.addEventListener('mousemove', function(e) {
-    const mx = (e.clientX / window.innerWidth  - 0.5);
-    const my = (e.clientY / window.innerHeight - 0.5);
-    document.querySelectorAll('.orb').forEach((o, i) => {
-        const s = (i + 1) * 16;
-        o.style.transform = `translate(${mx*s}px, ${my*s}px)`;
+/* parallax */
+document.addEventListener('mousemove',function(e){
+  const mx=e.clientX/window.innerWidth-.5, my=e.clientY/window.innerHeight-.5;
+  document.querySelectorAll('.orb').forEach((o,i)=>{ const s=(i+1)*16; o.style.transform=`translate(${mx*s}px,${my*s}px)`; });
+});
+
+/* sidebar toggle (pin/unpin) */
+let sbPinned=false;
+function toggleSidebar(){
+  sbPinned=!sbPinned;
+  document.getElementById('sidebar').classList.toggle('pinned',sbPinned);
+}
+
+/* csrf */
+function getCsrf(){ const m=document.cookie.match(/csrftoken=([^;]+)/); return m?decodeURIComponent(m[1]):''; }
+
+/* toast */
+function toast(msg,type){
+  document.querySelectorAll('.toast').forEach(t=>t.remove());
+  const el=document.createElement('div');
+  el.className='toast '+(type==='error'?'err':'ok');
+  el.innerHTML=`<span style="font-size:.9rem">${type==='error'?'✕':'✓'}</span><span>${msg}</span>`;
+  document.body.appendChild(el);
+  setTimeout(()=>{ el.style.animation='toastSlideOut .25s ease forwards'; setTimeout(()=>el.remove(),250); },3000);
+}
+
+/* word count */
+const MAX={{ word_balance|default:0 }};
+let overFired=false;
+function wordCount(s){ const t=s.trim(); return t?t.split(/\s+/).length:0; }
+
+function syncCount(inputId,countId){
+  const n=wordCount(document.getElementById(inputId).value);
+  document.getElementById(countId).textContent=n;
+  if(inputId==='inputText'){
+    const pill=document.getElementById('iPill');
+    const badge=document.getElementById('overBadge');
+    const ta=document.getElementById('inputText');
+    const btn=document.getElementById('humanizeBtn');
+    const over=MAX>0&&n>MAX;
+    pill.classList.toggle('over',over);
+    ta.classList.toggle('over-limit',over);
+    btn.disabled=over;
+    if(over){ badge.textContent=`+${n-MAX} over`; badge.classList.add('show'); if(!overFired){toast(`Word limit is ${MAX} — trim your input.`,'error');overFired=true;} }
+    else { badge.classList.remove('show'); overFired=false; }
+  }
+  return n;
+}
+document.getElementById('inputText').addEventListener('input',()=>syncCount('inputText','inputCount'));
+document.getElementById('inputText').addEventListener('paste',function(){ this.style.boxShadow='inset 0 0 0 1px rgba(0,212,255,.3)'; setTimeout(()=>this.style.boxShadow='',400); });
+
+/* stream */
+function streamText(ta,text){
+  const chunks=text.split(/(\s+)/); let i=0,built=''; ta.value='';
+  const iv=setInterval(()=>{ if(i>=chunks.length){clearInterval(iv);syncCount('outputText','outputCount');return;} built+=chunks[i++]; ta.value=built; ta.scrollTop=ta.scrollHeight; },11);
+}
+
+/* humanize */
+document.getElementById('humanizeBtn').addEventListener('click',async function(){
+  const txt=document.getElementById('inputText').value.trim();
+  const mode=document.getElementById('modeSelect').value;
+  const model=document.getElementById('modelSelect').value;
+  if(!txt){toast('Paste some text first.','error');return;}
+  if(MAX>0&&wordCount(txt)>MAX){toast(`Exceeds ${MAX}-word limit.`,'error');return;}
+  this.disabled=true;
+  document.getElementById('btnLabel').innerHTML='<div class="dots"><span></span><span></span><span></span></div>';
+  document.getElementById('outputText').value='';
+  document.getElementById('outputCount').textContent='0';
+  try{
+    const res=await fetch('/humanizer/humanize/',{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded','X-CSRFToken':getCsrf()},
+      body:`text=${encodeURIComponent(txt)}&engine=openai&mode=${encodeURIComponent(mode)}&model=${encodeURIComponent(model)}`
     });
+    if(!res.ok){const d=await res.json().catch(()=>({}));throw new Error(d.error||`HTTP ${res.status}`);}
+    const data=await res.json();
+    streamText(document.getElementById('outputText'),data.output_text||'');
+    const used=wordCount(txt);
+    document.getElementById('balChip').textContent=Math.max(0,MAX-used)+' words';
+    toast('Done!','success');
+  }catch(err){ toast(err.message||'Something went wrong.','error'); }
+  finally{ this.disabled=false; document.getElementById('btnLabel').textContent='Humanize'; }
 });
 
-/* ── Sidebar ── */
-let sbOpen = true;
-function toggleSidebar() {
-    sbOpen = !sbOpen;
-    document.getElementById('sidebar').classList.toggle('closed', !sbOpen);
-}
-
-/* ── CSRF ── */
-function getCsrf() {
-    const m = document.cookie.match(/csrftoken=([^;]+)/);
-    return m ? decodeURIComponent(m[1]) : '';
-}
-
-/* ── Toast ── */
-function toast(msg, type) {
-    document.querySelectorAll('.toast').forEach(t => t.remove());
-    const el = document.createElement('div');
-    el.className = 'toast ' + (type === 'error' ? 'err' : 'ok');
-    el.innerHTML = `<span style="font-size:.9rem">${type==='error'?'✕':'✓'}</span><span>${msg}</span>`;
-    document.body.appendChild(el);
-    setTimeout(() => {
-        el.style.animation = 'toastSlideOut .25s ease forwards';
-        setTimeout(() => el.remove(), 250);
-    }, 3000);
-}
-
-/* ── Word counter ── */
-const MAX = {{ word_balance|default:0 }};
-let overFired = false;
-
-function wordCount(str) {
-    const t = str.trim();
-    return t ? t.split(/\s+/).length : 0;
-}
-
-function syncCount(inputId, countId) {
-    const n = wordCount(document.getElementById(inputId).value);
-    document.getElementById(countId).textContent = n;
-
-    if (inputId === 'inputText') {
-        const pill  = document.getElementById('iPill');
-        const badge = document.getElementById('overBadge');
-        const ta    = document.getElementById('inputText');
-        const btn   = document.getElementById('humanizeBtn');
-        const over  = MAX > 0 && n > MAX;
-
-        pill.classList.toggle('over', over);
-        ta.classList.toggle('over-limit', over);
-        btn.disabled = over;
-
-        if (over) {
-            badge.textContent = `+${n - MAX} over`;
-            badge.classList.add('show');
-            if (!overFired) { toast(`Word limit is ${MAX} — trim your input.`, 'error'); overFired = true; }
-        } else {
-            badge.classList.remove('show');
-            overFired = false;
-        }
-    }
-    return n;
-}
-
-document.getElementById('inputText').addEventListener('input', () => syncCount('inputText', 'inputCount'));
-
-/* paste highlight */
-document.getElementById('inputText').addEventListener('paste', function() {
-    this.style.boxShadow = 'inset 0 0 0 1px rgba(0,212,255,0.3)';
-    setTimeout(() => this.style.boxShadow = '', 400);
+/* copy */
+document.getElementById('copyBtn').addEventListener('click',async function(){
+  const t=document.getElementById('outputText').value;
+  if(!t){toast('Nothing to copy.','error');return;}
+  try{ await navigator.clipboard.writeText(t); this.classList.add('copied'); toast('Copied!','success'); setTimeout(()=>this.classList.remove('copied'),1800); }
+  catch{ toast('Copy failed.','error'); }
 });
 
-/* ── Score ring ── */
-function setRing(ringId, valId, pct) {
-    const C = 69.1; // 2π × 11
-    document.getElementById(ringId).style.strokeDashoffset = C - (pct / 100) * C;
-    document.getElementById(valId).textContent = Math.round(pct) + '%';
-}
-
-/* ── Stream output ── */
-function streamText(ta, text) {
-    const chunks = text.split(/(\s+)/);
-    let i = 0, built = '';
-    ta.value = '';
-    const iv = setInterval(() => {
-        if (i >= chunks.length) { clearInterval(iv); syncCount('outputText', 'outputCount'); return; }
-        built += chunks[i++];
-        ta.value = built;
-        ta.scrollTop = ta.scrollHeight;
-    }, 11);
-}
-
-/* ── Humanize ── */
-document.getElementById('humanizeBtn').addEventListener('click', async function() {
-    const txt   = document.getElementById('inputText').value.trim();
-    const mode  = document.getElementById('modeSelect').value;
-    const model = document.getElementById('modelSelect').value;
-
-    if (!txt) { toast('Paste some text first.', 'error'); return; }
-    if (MAX > 0 && wordCount(txt) > MAX) { toast(`Exceeds ${MAX}-word limit.`, 'error'); return; }
-
-    this.disabled = true;
-    document.getElementById('btnLabel').innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
-
-    const outTa = document.getElementById('outputText');
-    outTa.value = '';
-    setRing('humanRing', 'humanVal', 0);
-    setRing('readRing',  'readVal',  0);
-    document.getElementById('outputCount').textContent = '0';
-
-    try {
-        const res = await fetch('/humanizer/humanize/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': getCsrf() },
-            body: `text=${encodeURIComponent(txt)}&engine=openai&mode=${encodeURIComponent(mode)}&model=${encodeURIComponent(model)}`
-        });
-
-        if (!res.ok) {
-            const d = await res.json().catch(() => ({}));
-            throw new Error(d.error || `HTTP ${res.status}`);
-        }
-
-        const data = await res.json();
-        streamText(outTa, data.output_text || '');
-
-        if (data.human_score       !== undefined) setRing('humanRing', 'humanVal', data.human_score);
-        if (data.readability_score !== undefined) setRing('readRing',  'readVal',  data.readability_score);
-
-        // update balance chip
-        const used = wordCount(txt);
-        document.getElementById('balChip').textContent = Math.max(0, MAX - used) + ' words';
-
-        toast('Done!', 'success');
-    } catch(err) {
-        toast(err.message || 'Something went wrong.', 'error');
-    } finally {
-        this.disabled = false;
-        document.getElementById('btnLabel').textContent = 'Humanize';
-    }
-});
-
-/* ── Copy ── */
-document.getElementById('copyBtn').addEventListener('click', async function() {
-    const t = document.getElementById('outputText').value;
-    if (!t) { toast('Nothing to copy.', 'error'); return; }
-    try {
-        await navigator.clipboard.writeText(t);
-        this.classList.add('copied');
-        toast('Copied!', 'success');
-        setTimeout(() => this.classList.remove('copied'), 1800);
-    } catch { toast('Copy failed.', 'error'); }
-});
-
-/* ── PDF ── */
-document.getElementById('pdfBtn').addEventListener('click', function() {
-    const t = document.getElementById('outputText').value;
-    if (!t) { toast('No output to export.', 'error'); return; }
-    try {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ unit: 'mm', format: 'a4' });
-        const id = 'IH-' + Math.random().toString(36).slice(2,8).toUpperCase();
-        const m = 18, pw = 210, lh = 7;
-
-        doc.setFont('helvetica','bold'); doc.setFontSize(14); doc.setTextColor(0,180,220);
-        doc.text('InfiniHumanizer — Output', m, 18);
-        doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(120,120,130);
-        doc.text(`ID: ${id}  |  ${new Date().toLocaleString()}`, m, 25);
-        doc.setDrawColor(0,180,220); doc.setLineWidth(0.4); doc.line(m, 28, pw-m, 28);
-        doc.setFontSize(10.5); doc.setTextColor(40,40,40);
-        let y = 36;
-        doc.splitTextToSize(t, pw - m*2).forEach(line => {
-            if (y > 278) { doc.addPage(); y = 18; }
-            doc.text(line, m, y); y += lh;
-        });
-        doc.save(`InfiniHumanizer_${id}.pdf`);
-        toast('PDF saved.', 'success');
-    } catch { toast('PDF export failed.', 'error'); }
+/* pdf */
+document.getElementById('pdfBtn').addEventListener('click',function(){
+  const t=document.getElementById('outputText').value;
+  if(!t){toast('No output to export.','error');return;}
+  try{
+    const{jsPDF}=window.jspdf; const doc=new jsPDF({unit:'mm',format:'a4'});
+    const id='IH-'+Math.random().toString(36).slice(2,8).toUpperCase();
+    const m=18,pw=210,lh=7;
+    doc.setFont('helvetica','bold');doc.setFontSize(14);doc.setTextColor(0,180,220);
+    doc.text('InfiniHumanizer — Output',m,18);
+    doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(120,120,130);
+    doc.text(`ID: ${id}  |  ${new Date().toLocaleString()}`,m,25);
+    doc.setDrawColor(0,180,220);doc.setLineWidth(.4);doc.line(m,28,pw-m,28);
+    doc.setFontSize(10.5);doc.setTextColor(40,40,40);
+    let y=36;
+    doc.splitTextToSize(t,pw-m*2).forEach(line=>{if(y>278){doc.addPage();y=18;}doc.text(line,m,y);y+=lh;});
+    doc.save(`InfiniHumanizer_${id}.pdf`);
+    toast('PDF saved.','success');
+  }catch{ toast('PDF export failed.','error'); }
 });
 </script>
 </body>
