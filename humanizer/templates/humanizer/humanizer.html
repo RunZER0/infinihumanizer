@@ -1,1848 +1,761 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Humanizer - InfiniHumanizer{% endblock %}
+{% block title %}Humanizer — InfiniHumanizer{% endblock %}
 
 {% csrf_token %}
 
 {% block extra_head %}
-<!-- jsPDF Library for PDF Generation -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
 <style>
-    /* Import modern fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    
-    /* Reset base.html styles */
-    body {
-        background: #0D0D0D !important;
-        margin: 0;
-        padding: 0;
-        font-family: 'Aptos', 'Segoe UI', sans-serif;
-    }
-    
-    main {
-        padding: 0 !important;
-        margin: 0 !important;
-    }
-    
-    /* Hide base navigation */
-    nav {
-        display: none !important;
-    }
-    
-    /* Modern Top Ribbon */
-    .top-ribbon {
-        background: linear-gradient(135deg, 
-            rgba(10, 15, 25, 0.85) 0%, 
-            rgba(15, 20, 35, 0.8) 50%,
-            rgba(10, 15, 25, 0.85) 100%);
-        border-bottom: none;
-        padding: 1rem 2rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        backdrop-filter: blur(20px);
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    }
-    
-    .ribbon-left {
-        display: flex;
-        align-items: center;
-        gap: 1.5rem;
-    }
-    
-    .sidebar-toggle {
-        background: transparent;
-        border: none;
-        color: #00D4FF;
-        font-size: 1.5rem;
-        cursor: pointer;
-        padding: 0.5rem;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        transform: rotate(0deg);
-    }
-    
-    .sidebar-toggle:hover {
-        background: rgba(0, 212, 255, 0.1);
-    }
-    
-    .sidebar-toggle.collapsed {
-        transform: rotate(180deg);
-    }
-    
-    .app-title {
-        font-size: 1.3rem;
-        font-weight: 600;
-        color: #F8F9FA;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-family: 'Inter', sans-serif;
-    }
-    
-    .ribbon-right {
-        display: flex;
-        gap: 1rem;
-        align-items: center;
-    }
-    
-    .user-info {
-        color: rgba(248, 249, 250, 0.7);
-        font-size: 0.95rem;
-        font-family: 'Inter', sans-serif;
-    }
-    
-    .user-info strong {
-        color: #00D4FF;
-        font-weight: 500;
-    }
-    
-    /* Main Layout */
-    .humanizer-layout {
-        display: flex;
-        height: calc(100vh - 80px);
-        overflow: hidden;
-    }
-    
-    /* Hover trigger zone - visible area at left edge to trigger sidebar */
-    .sidebar-hover-zone {
-        position: fixed;
-        left: 0;
-        top: 60px;
-        width: 20px;
-        height: calc(100vh - 60px);
-        z-index: 49;
-        background: transparent;
-    }
+/* ── Reset ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #0A0A0F;
+    color: #F0F0F0;
+    height: 100vh;
+    overflow: hidden;
+}
+main { padding: 0 !important; margin: 0 !important; }
+nav  { display: none !important; }
 
-    /* Collapsible Left Sidebar - Auto-hide and show on hover */
-    .sidebar {
-        width: 280px;
-        background: rgba(0, 0, 0, 0.6);
-        border-right: 1px solid rgba(0, 212, 255, 0.2);
-        padding: 1.5rem;
-        overflow-y: auto;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        position: fixed;
-        left: 0;
-        top: 60px;
-        height: calc(100vh - 60px);
-        transform: translateX(-100%);
-        z-index: 50;
-    }
+/* ── Orbs ────────────────────────────────────────────────── */
+.orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+    z-index: 0;
+}
+.orb1 { width:520px;height:520px;background:rgba(0,180,255,0.12);top:-180px;left:-180px; }
+.orb2 { width:380px;height:380px;background:rgba(0,60,220,0.11);bottom:-100px;right:-100px; }
+.orb3 { width:260px;height:260px;background:rgba(0,200,255,0.05);top:40%;left:38%; }
 
-    /* Show sidebar on hover of trigger zone OR sidebar itself */
-    .sidebar-hover-zone:hover ~ .sidebar,
-    .sidebar:hover {
-        transform: translateX(0);
-    }
-    
-    /* Custom scrollbar for sidebar - blending cyberpunk style */
-    .sidebar::-webkit-scrollbar {
-        width: 6px;
-    }
-    
-    .sidebar::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    
-    .sidebar::-webkit-scrollbar-thumb {
-        background: linear-gradient(180deg, 
-            rgba(0, 212, 255, 0.1), 
-            rgba(0, 212, 255, 0.3), 
-            rgba(0, 212, 255, 0.1));
-        border-radius: 3px;
-        transition: background 0.3s ease;
-    }
-    
-    .sidebar::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(180deg, 
-            rgba(0, 212, 255, 0.3), 
-            rgba(0, 212, 255, 0.5), 
-            rgba(0, 212, 255, 0.3));
-    }
-    
-    /* Firefox scrollbar */
-    .sidebar {
-        scrollbar-width: thin;
-        scrollbar-color: rgba(0, 212, 255, 0.2) transparent;
-    }
-    
-    .sidebar-section {
-        margin-bottom: 1.5rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 1px solid rgba(0, 212, 255, 0.1);
-    }
-    
-    .sidebar-section:last-child {
-        border-bottom: none;
-    }
-    
-    .sidebar-title {
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.5);
-        letter-spacing: 1px;
-        margin-bottom: 1rem;
-        font-weight: 600;
-    }
-    
-    /* Navigation Links */
-    .nav-link {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.875rem 1rem;
-        color: rgba(255, 255, 255, 0.7);
-        text-decoration: none;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        margin-bottom: 0.5rem;
-        font-size: 0.95rem;
-    }
-    
-    .nav-link:hover {
-        background: rgba(0, 212, 255, 0.1);
-        color: #00D4FF;
-        transform: translateX(4px);
-    }
-    
-    .nav-link.logout {
-        color: rgba(255, 59, 48, 0.8);
-    }
-    
-    .nav-link.logout:hover {
-        background: rgba(255, 59, 48, 0.1);
-        color: #FF3B30;
-    }
-    
-    /* Model Cards - Sleek Minimal */
-    .model-card {
-        background: rgba(26, 26, 26, 0.3);
-        border: 1px solid rgba(0, 212, 255, 0.1);
-        border-radius: 10px;
-        padding: 0.875rem 1rem;
-        margin-bottom: 0.625rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        position: relative;
-    }
-    
-    .model-card:hover {
-        background: rgba(0, 212, 255, 0.05);
-        border-color: rgba(0, 212, 255, 0.25);
-    }
-    
-    .model-card.selected {
-        background: rgba(0, 212, 255, 0.08);
-        border-color: #00D4FF;
-    }
-    
-    .model-card input[type="radio"] {
-        display: none;
-    }
-    
-    .model-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    
-    .model-left {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-    }
-    
-    .model-icon {
-        font-size: 1.3rem;
-        filter: grayscale(0.4) brightness(0.75) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
-        transition: all 0.3s ease;
-        opacity: 0.85;
-    }
-    
-    .model-card:hover .model-icon {
-        filter: grayscale(0.2) brightness(0.9) drop-shadow(0 0 10px rgba(0, 212, 255, 0.3));
-        opacity: 1;
-        transform: scale(1.08);
-    }
-    
-    .model-card.selected .model-icon {
-        filter: grayscale(0) brightness(1) drop-shadow(0 0 12px rgba(0, 212, 255, 0.5));
-        opacity: 1;
-    }
-    
-    .model-name {
-        font-size: 1rem;
-        font-weight: 600;
-        color: #FFF;
-    }
-    
-    .model-badge {
-        background: rgba(0, 212, 255, 0.15);
-        color: #00D4FF;
-        font-size: 0.7rem;
-        font-weight: 600;
-        padding: 0.2rem 0.6rem;
-        border-radius: 8px;
-        text-transform: uppercase;
-    }
-    
-    .model-description {
-        margin-top: 0.6rem;
-        font-size: 0.75rem;
-        color: rgba(255, 255, 255, 0.6);
-        line-height: 1.4;
-    }
-    
-    /* Nuclear Card Styling */
-    .nuclear-card {
-        border: 1px solid rgba(255, 69, 0, 0.3);
-    }
-    
-    .nuclear-card:hover {
-        background: rgba(255, 69, 0, 0.08);
-        border-color: rgba(255, 69, 0, 0.5);
-    }
-    
-    .nuclear-card.selected {
-        background: rgba(255, 69, 0, 0.12);
-        border-color: #FF4500;
-        box-shadow: 0 0 20px rgba(255, 69, 0, 0.3);
-    }
-    
-    .nuclear-badge {
-        background: rgba(255, 69, 0, 0.2);
-        color: #FF4500;
-        animation: nuclear-pulse 2s ease-in-out infinite;
-    }
-    
-    @keyframes nuclear-pulse {
-        0%, 100% {
-            opacity: 1;
-            text-shadow: 0 0 5px rgba(255, 69, 0, 0.5);
-        }
-        50% {
-            opacity: 0.7;
-            text-shadow: 0 0 10px rgba(255, 69, 0, 0.8);
-        }
-    }
-    
-    /* Main Content Area */
-    .content-area {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        background: linear-gradient(135deg, 
-            rgba(0, 0, 0, 0.95) 0%, 
-            rgba(13, 13, 26, 0.92) 25%,
-            rgba(0, 20, 40, 0.90) 50%,
-            rgba(13, 13, 26, 0.92) 75%,
-            rgba(0, 0, 0, 0.95) 100%);
-    }
-    
-    /* Work Window */
-    .work-window {
-        flex: 1;
-        padding: 3rem 2rem;
-        overflow-y: auto;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 3rem;
-        align-items: start;
-        max-height: calc(100vh - 80px);
-    }
-    
-    .error-alert {
-        grid-column: 1 / -1;
-    }
-    
-    .input-container, .output-container {
-        background: transparent;
-        border: none;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        height: calc(100vh - 180px);
-        max-height: calc(100vh - 180px);
-        transition: all 0.3s ease;
-        position: relative;
-    }
-    
-    .input-container::before, .output-container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: radial-gradient(circle at top left, rgba(0, 212, 255, 0.02), transparent 70%);
-        pointer-events: none;
-        border-radius: 20px;
-        z-index: 0;
-    }
-    
-    .input-container.over-limit {
-        filter: drop-shadow(0 0 30px rgba(255, 59, 48, 0.3));
-    }
-    
-    .container-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-        padding: 0.75rem 1rem;
-        min-height: 48px;
-        max-height: 48px;
-        flex-shrink: 0;
-        flex-wrap: nowrap;
-        overflow: hidden;
-        background: linear-gradient(135deg, rgba(15, 25, 40, 0.6), rgba(10, 20, 35, 0.5));
-        border-radius: 12px;
-        border: 1px solid rgba(0, 212, 255, 0.15);
-        backdrop-filter: blur(15px);
-        position: relative;
-        z-index: 1;
-    }
-    
-    .header-left {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        flex-wrap: nowrap;
-        min-width: 0;
-        flex: 1;
-    }
-    
-    .header-right {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        flex-shrink: 0;
-    }
-    
-    .container-label {
-        font-size: 1rem;
-        font-weight: 600;
-        color: #00D4FF;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    /* Word Counter in Header */
-    .word-counter {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.85rem;
-        color: rgba(255, 255, 255, 0.5);
-        padding: 0.3rem 0.7rem;
-        background: rgba(0, 0, 0, 0.3);
-        border-radius: 6px;
-    }
-    
-    .word-count {
-        color: #00D4FF;
-        font-weight: 600;
-    }
-    
-    .word-count.over-limit {
-        color: #FF3B30;
-    }
-    
-    .word-limit-warning {
-        font-size: 0.75rem;
-        color: #FF3B30;
-        margin-left: 0.5rem;
-        font-weight: 500;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-    
-    .word-limit-warning.visible {
-        opacity: 1;
-    }
-    
-    /* Mode Selector */
-    .mode-selector {
-        display: flex;
-        align-items: center;
-        margin-left: 1rem;
-    }
-    
-    .mode-selector label {
-        font-size: 0.85rem;
-        color: rgba(255, 255, 255, 0.7);
-    }
-    
-    .mode-dropdown {
-        background: linear-gradient(135deg, rgba(15, 25, 40, 0.7), rgba(10, 20, 35, 0.6));
-        border: 1px solid rgba(0, 212, 255, 0.2);
-        border-radius: 12px;
-        color: #F8F9FA;
-        padding: 0.9rem 1.2rem;
-        font-size: 1rem;
-        font-weight: 500;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        cursor: pointer;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        backdrop-filter: blur(30px);
-        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 20px rgba(0, 0, 0, 0.15);
-    }
-    
-    .mode-dropdown:hover {
-        background: linear-gradient(135deg, rgba(20, 35, 55, 0.8), rgba(15, 30, 45, 0.7));
-        border-color: rgba(0, 212, 255, 0.4);
-        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 30px rgba(0, 212, 255, 0.15);
-        transform: translateY(-2px);
-    }
-    
-    .mode-dropdown:focus {
-        outline: none;
-        border-color: rgba(0, 212, 255, 0.5);
-        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.15), inset 0 1px 2px rgba(0, 0, 0, 0.3);
-        background: linear-gradient(135deg, rgba(20, 35, 55, 0.85), rgba(15, 30, 45, 0.75));
-    }
-    
-    .mode-dropdown option {
-        background: rgba(15, 25, 40, 0.98);
-        color: #F8F9FA;
-        padding: 0.75rem;
-        backdrop-filter: blur(10px);
-    }
-    
-    .text-box {
-        flex: 1;
-        background: linear-gradient(135deg, 
-            rgba(10, 15, 25, 0.85) 0%, 
-            rgba(15, 20, 35, 0.8) 50%,
-            rgba(10, 15, 25, 0.85) 100%);
-        border: 1px solid rgba(0, 212, 255, 0.12);
-        border-radius: 16px;
-        padding: 1.75rem;
-        color: #F8F9FA;
-        font-size: 1.1rem;
-        line-height: 1.85;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-        font-weight: 400;
-        resize: none;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        backdrop-filter: blur(20px);
-        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 20px rgba(0, 0, 0, 0.2);
-        position: relative;
-        z-index: 1;
-    }
-    
-    .text-box.over-limit {
-        border-color: rgba(255, 59, 48, 0.4) !important;
-        box-shadow: 0 0 40px rgba(255, 59, 48, 0.2), inset 0 1px 2px rgba(0, 0, 0, 0.3) !important;
-        background: linear-gradient(135deg, 
-            rgba(40, 15, 20, 0.85) 0%, 
-            rgba(35, 20, 25, 0.8) 50%,
-            rgba(40, 15, 20, 0.85) 100%);
-    }
-    
-    .text-box:focus {
-        outline: none;
-        border-color: rgba(0, 212, 255, 0.4);
-        background: linear-gradient(135deg, 
-            rgba(15, 25, 40, 0.9) 0%, 
-            rgba(20, 30, 45, 0.85) 50%,
-            rgba(15, 25, 40, 0.9) 100%);
-        box-shadow: 0 0 50px rgba(0, 212, 255, 0.15), inset 0 1px 2px rgba(0, 0, 0, 0.3);
-    }
-    
-    .text-box::placeholder {
-        color: rgba(248, 249, 250, 0.3);
-        font-style: italic;
-        font-weight: 300;
-    }
-    
-    .action-bar {
-        display: flex;
-        gap: 0.75rem;
-        margin-top: 0.75rem;
-        padding: 0 0.25rem;
-    }
-    
-    .btn {
-        padding: 0.5rem 1.2rem;
-        border-radius: 6px;
-        border: none;
-        font-weight: 600;
-        font-size: 0.95rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        justify-content: center;
-        line-height: 1;
-        height: 2.5rem;
-        max-height: 2.5rem;
-        width: 100%;
-    }
-    
-    /* Loading Dots Animation */
-    .loading-dots {
-        display: inline-flex;
-        gap: 0.4rem;
-    }
-    
-    .loading-dots span {
-        width: 8px;
-        height: 8px;
-        background: rgba(255, 255, 255, 0.8);
-        border-radius: 50%;
-        animation: wave 1.2s ease-in-out infinite;
-    }
-    
-    .loading-dots span:nth-child(1) {
-        animation-delay: 0s;
-    }
-    
-    .loading-dots span:nth-child(2) {
-        animation-delay: 0.2s;
-    }
-    
-    .loading-dots span:nth-child(3) {
-        animation-delay: 0.4s;
-    }
-    
-    @keyframes wave {
-        0%, 60%, 100% {
-            transform: translateY(0);
-            opacity: 0.5;
-        }
-        30% {
-            transform: translateY(-10px);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slideIn {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slideOut {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-    }
-    
-    .btn-primary {
-        background: linear-gradient(135deg, #00D4FF, #0099FF);
-        color: #0D0D0D;
-        flex: 1;
-    }
-    
-    .btn-primary:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 30px rgba(0, 212, 255, 0.4);
-    }
-    
-    .btn-primary:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
-    
-    /* Loading state - removed spinner circle to avoid overcrowding the dots */
-    .btn-primary.loading {
-        position: relative;
-    }
-    
-    .btn-secondary {
-        background: rgba(0, 212, 255, 0.15);
-        color: #00D4FF;
-        border: 1px solid #00D4FF;
-    }
-    
-    .btn-secondary:hover {
-        background: rgba(0, 212, 255, 0.25);
-        transform: translateY(-2px);
-    }
-    
-    /* Release Notes Section */
-    .release-notes {
-        background: rgba(0, 0, 0, 0.5);
-        border-top: 1px solid rgba(0, 212, 255, 0.2);
-        padding: 2rem;
-        max-height: 300px;
-        overflow-y: auto;
-    }
-    
-    .notes-header {
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: #00D4FF;
-        margin-bottom: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .note-item {
-        background: rgba(26, 26, 26, 0.4);
-        border-left: 2px solid rgba(0, 212, 255, 0.3);
-        border-radius: 8px;
-        padding: 0.875rem 1rem;
-        margin-bottom: 0.75rem;
-    }
-    
-    .note-version {
-        color: #00D4FF;
-        font-weight: 700;
-        font-size: 0.95rem;
-        margin-bottom: 0.5rem;
-    }
-    
-    .note-text {
-        color: rgba(255, 255, 255, 0.7);
-        font-size: 0.9rem;
-        line-height: 1.6;
-    }
-    
-    /* Error Message */
-    .error-alert {
-        background: rgba(255, 59, 48, 0.1);
-        border: 1px solid rgba(255, 59, 48, 0.4);
-        border-radius: 12px;
-        padding: 1rem 1.5rem;
-        color: #FF3B30;
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-    }
-    
-    /* Processing Overlay */
-    .processing-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.95);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-    }
-    
-    .processing-spinner {
-        width: 60px;
-        height: 60px;
-        border: 4px solid rgba(0, 212, 255, 0.2);
-        border-top-color: #00D4FF;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-    
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-    
-    .processing-text {
-        color: #00D4FF;
-        font-size: 1.3rem;
-        font-weight: 600;
-        margin-top: 1.5rem;
-    }
-    
-    /* Toast Notifications - Modern Grey-Black (Compact) */
-    .toast {
-        position: fixed;
-        bottom: 1.5rem;
-        right: 1.5rem;
-        background: linear-gradient(135deg, rgba(26, 26, 26, 0.98), rgba(18, 18, 18, 0.98));
-        border: 1px solid rgba(255, 255, 255, 0.7);
-        border-radius: 8px;
-        padding: 0.6rem 1rem;
-        color: #FFF;
-        font-size: 0.85rem;
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-        z-index: 10000;
-        animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s;
-        pointer-events: none;
-        backdrop-filter: blur(10px);
-        max-width: 300px;
-    }
-    
-    @keyframes slideIn {
-        from {
-            transform: translateX(400px);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes fadeOut {
-        to {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-    }
-    
-    .toast-icon {
-        font-size: 1.1rem;
-    }
-    
-    .toast-success {
-        border-color: rgba(0, 255, 136, 0.7);
-    }
-    
-    .toast-error {
-        border-color: rgba(255, 59, 48, 0.7);
-    }
-    
-    /* Scroll Animations */
-    .scroll-fade-in {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    
-    .scroll-fade-in.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    
-    .parallax-slow {
-        transition: transform 0.3s ease-out;
-    }
-    
-    /* Copy Button in Header */
-    .copy-btn, .pdf-btn {
-        background: rgba(0, 212, 255, 0.1);
-        border: 1px solid rgba(0, 212, 255, 0.3);
-        color: #00D4FF;
-        padding: 0.4rem 0.8rem;
-        border-radius: 6px;
-        font-size: 0.85rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-    }
-    
-    .copy-btn:hover, .pdf-btn:hover {
-        background: rgba(0, 212, 255, 0.2);
-        transform: translateY(-1px);
-    }
-    
-    .copy-btn.copied {
-        background: rgba(0, 255, 136, 0.15);
-        border-color: rgba(0, 255, 136, 0.4);
-        color: #00FF88;
-    }
-    
-    /* Circular Readability Indicators in Header */
-    .readability-circles {
-        display: flex;
-        gap: 1rem;
-        align-items: center;
-    }
-    
-    .circle-stat {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.25rem;
-        min-width: 32px;
-        flex-shrink: 0;
-    }
-    
-    .circle-progress {
-        position: relative;
-        width: 32px;
-        height: 32px;
-        min-width: 32px;
-        min-height: 32px;
-        flex-shrink: 0;
-    }
-    
-    .circle-progress svg {
-        transform: rotate(-90deg);
-    }
-    
-    .circle-bg {
-        fill: none;
-        stroke: rgba(0, 212, 255, 0.15);
-        stroke-width: 2.5;
-    }
-    
-    .circle-fill {
-        fill: none;
-        stroke: #00D4FF;
-        stroke-width: 2.5;
-        stroke-linecap: round;
-        transition: stroke-dashoffset 0.6s ease;
-    }
-    
-    .circle-text {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 0.6rem;
-        font-weight: 700;
-        color: #00D4FF;
-        white-space: nowrap;
-    }
-    
-    .circle-label {
-        font-size: 0.65rem;
-        color: rgba(255, 255, 255, 0.5);
-        font-weight: 500;
-        line-height: 1;
-        white-space: nowrap;
-    }
+/* Scanlines */
+body::after {
+    content:'';
+    position:fixed;inset:0;pointer-events:none;z-index:1;
+    background:repeating-linear-gradient(
+        0deg,
+        rgba(0,212,255,0.013) 0px, transparent 1px,
+        transparent 3px, rgba(0,212,255,0.013) 4px
+    );
+}
+
+/* ── Topbar ──────────────────────────────────────────────── */
+.topbar {
+    position:fixed;top:0;left:0;right:0;height:54px;
+    background:rgba(6,7,14,0.92);
+    border-bottom:1px solid rgba(0,212,255,0.09);
+    backdrop-filter:blur(24px);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 1.5rem;z-index:200;
+}
+.topbar-l { display:flex;align-items:center;gap:.9rem; }
+.menu-btn {
+    width:34px;height:34px;background:transparent;
+    border:1px solid rgba(0,212,255,0.12);border-radius:8px;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:all .2s ease;
+}
+.menu-btn:hover { background:rgba(0,212,255,0.07);border-color:rgba(0,212,255,0.3); }
+.menu-btn svg { width:16px;height:16px;stroke:#00D4FF;stroke-width:2;fill:none;stroke-linecap:round; }
+.logo { font-size:1.05rem;font-weight:700;letter-spacing:-.3px;color:#fff; }
+.logo span { color:#00D4FF; }
+.topbar-r { display:flex;align-items:center;gap:.9rem; }
+.bal-chip {
+    background:rgba(0,212,255,0.07);border:1px solid rgba(0,212,255,0.18);
+    border-radius:20px;padding:.24rem .8rem;
+    font-size:.75rem;font-weight:600;color:#00D4FF;letter-spacing:.4px;
+}
+.utag { font-size:.8rem;font-weight:500;color:rgba(255,255,255,0.48); }
+.utag strong { color:rgba(255,255,255,0.82);font-weight:600; }
+
+/* ── Shell ───────────────────────────────────────────────── */
+.shell {
+    display:flex;
+    height:calc(100vh - 54px);
+    margin-top:54px;
+    position:relative;z-index:2;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────── */
+.sidebar {
+    width:248px;min-width:248px;
+    background:rgba(5,6,12,0.9);
+    border-right:1px solid rgba(0,212,255,0.08);
+    backdrop-filter:blur(20px);
+    display:flex;flex-direction:column;
+    overflow-y:auto;overflow-x:hidden;
+    padding:1.25rem .875rem;
+    transition:width .32s cubic-bezier(.4,0,.2,1),
+               min-width .32s cubic-bezier(.4,0,.2,1),
+               opacity .2s ease, padding .32s ease;
+    scrollbar-width:thin;scrollbar-color:rgba(0,212,255,0.1) transparent;
+}
+.sidebar.closed { width:0;min-width:0;opacity:0;padding:0;overflow:hidden; }
+
+.sb-lbl {
+    font-size:.65rem;font-weight:700;letter-spacing:1.1px;
+    color:rgba(255,255,255,.24);text-transform:uppercase;
+    padding:.4rem .4rem .2rem;margin-top:.7rem;
+}
+.sb-lbl:first-child { margin-top:0; }
+
+.sb-a {
+    display:flex;align-items:center;gap:.65rem;
+    padding:.6rem .7rem;border-radius:9px;
+    color:rgba(255,255,255,.54);text-decoration:none;
+    font-size:.855rem;font-weight:500;
+    transition:all .18s ease;
+    border:none;background:transparent;width:100%;text-align:left;cursor:pointer;
+}
+.sb-a svg { width:15px;height:15px;stroke:currentColor;stroke-width:2;fill:none;
+             stroke-linecap:round;stroke-linejoin:round;flex-shrink:0; }
+.sb-a:hover { background:rgba(0,212,255,.07);color:#e0e0e0; }
+.sb-a.on    { background:rgba(0,212,255,.1);color:#00D4FF; }
+.sb-a.out   { color:rgba(255,80,60,.65); }
+.sb-a.out:hover { background:rgba(255,55,45,.08);color:#FF5040; }
+
+.sb-hr { height:1px;background:rgba(0,212,255,.07);margin:.65rem 0; }
+
+.sb-clbl {
+    font-size:.68rem;font-weight:600;color:rgba(255,255,255,.28);
+    letter-spacing:.5px;text-transform:uppercase;
+    display:block;margin-bottom:.35rem;padding:0 .2rem;
+}
+.sb-sel {
+    width:100%;background:rgba(0,0,0,.45);
+    border:1px solid rgba(0,212,255,.13);border-radius:9px;
+    color:#EEE;padding:.5rem .7rem;
+    font-size:.82rem;font-family:'Inter',sans-serif;font-weight:500;
+    cursor:pointer;outline:none;
+    transition:border-color .18s,box-shadow .18s;
+    appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='rgba(0,212,255,0.45)' stroke-width='2.5' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right .6rem center;padding-right:1.8rem;
+}
+.sb-sel:hover { border-color:rgba(0,212,255,.28); }
+.sb-sel:focus { border-color:rgba(0,212,255,.48);box-shadow:0 0 0 3px rgba(0,212,255,.09); }
+.sb-sel option { background:#0A0F1E;color:#EEE; }
+
+.sb-tip {
+    background:rgba(0,212,255,.035);border:1px solid rgba(0,212,255,.09);
+    border-radius:9px;padding:.7rem;
+    font-size:.76rem;color:rgba(255,255,255,.44);line-height:1.6;margin-top:.25rem;
+}
+.sb-tip strong { color:rgba(0,212,255,.75); }
+
+.sb-dev {
+    background:rgba(0,212,255,.03);border:1px solid rgba(0,212,255,.1);
+    border-radius:9px;padding:.7rem;
+    font-size:.76rem;color:rgba(255,255,255,.5);line-height:1.75;
+}
+.sb-dev .v { color:#00D4FF;font-weight:700; }
+
+.sb-spacer { flex:1; }
+
+/* ── Workspace ───────────────────────────────────────────── */
+.workspace {
+    flex:1;
+    display:grid;grid-template-columns:1fr 1fr;
+    overflow:hidden;
+}
+
+/* ── Panel ───────────────────────────────────────────────── */
+.panel {
+    display:flex;flex-direction:column;
+    background:rgba(4,5,10,.6);
+    border-right:1px solid rgba(0,212,255,.06);
+    overflow:hidden;
+}
+.panel:last-child { border-right:none; }
+
+.p-hd {
+    display:flex;align-items:center;justify-content:space-between;
+    padding:.65rem 1.2rem;
+    border-bottom:1px solid rgba(0,212,255,.06);
+    background:rgba(4,5,10,.72);flex-shrink:0;gap:.6rem;
+}
+.p-hd-l { display:flex;align-items:center;gap:.6rem;min-width:0; }
+.p-hd-r { display:flex;align-items:center;gap:.5rem;flex-shrink:0; }
+
+.p-tag {
+    font-size:.67rem;font-weight:700;letter-spacing:.9px;
+    text-transform:uppercase;color:rgba(255,255,255,.27);
+}
+
+.wpill {
+    background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);
+    border-radius:20px;padding:.18rem .55rem;
+    font-size:.7rem;font-weight:600;color:rgba(255,255,255,.34);
+    font-variant-numeric:tabular-nums;transition:color .2s,border-color .2s;
+}
+.wpill .n { color:rgba(0,212,255,.75); }
+.wpill.over { border-color:rgba(255,55,45,.38); }
+.wpill.over .n { color:#FF5040; }
+
+.lbadge {
+    background:rgba(255,55,45,.1);border:1px solid rgba(255,55,45,.28);
+    border-radius:20px;padding:.18rem .55rem;
+    font-size:.66rem;font-weight:600;color:#FF6050;
+    opacity:0;pointer-events:none;transition:opacity .22s;
+}
+.lbadge.show { opacity:1; }
+
+/* Icon buttons */
+.ibtn {
+    width:28px;height:28px;
+    background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.13);
+    border-radius:7px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:all .18s ease;
+}
+.ibtn svg { width:13px;height:13px;stroke:rgba(0,212,255,.7);stroke-width:1.8;
+             fill:none;stroke-linecap:round;stroke-linejoin:round; }
+.ibtn:hover { background:rgba(0,212,255,.11);border-color:rgba(0,212,255,.32);transform:translateY(-1px); }
+.ibtn.ok svg { stroke:#00E87A; }
+.ibtn.ok { background:rgba(0,230,120,.08);border-color:rgba(0,230,120,.28); }
+
+/* Circle stats */
+.stats { display:flex;align-items:center;gap:.45rem; }
+.stp { display:flex;flex-direction:column;align-items:center;gap:.12rem; }
+.cwrap { position:relative;width:28px;height:28px; }
+.cwrap svg { transform:rotate(-90deg); }
+.cbg  { fill:none;stroke:rgba(0,212,255,.09);stroke-width:2.5; }
+.cfil {
+    fill:none;stroke:#00D4FF;stroke-width:2.5;stroke-linecap:round;
+    transition:stroke-dashoffset .55s ease;
+}
+.ctxt {
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    font-size:.45rem;font-weight:700;color:#00D4FF;white-space:nowrap;
+}
+.slbl { font-size:.55rem;color:rgba(255,255,255,.27);font-weight:500; }
+
+/* ── Textarea ────────────────────────────────────────────── */
+.pta {
+    flex:1;background:transparent;border:none;outline:none;resize:none;
+    color:#DDDDE8;font-size:.945rem;line-height:1.88;
+    font-family:'Inter',sans-serif;font-weight:400;
+    padding:1.4rem 1.4rem;
+    transition:background .25s ease;
+    scrollbar-width:thin;scrollbar-color:rgba(0,212,255,.1) transparent;
+}
+.pta:focus { background:rgba(0,212,255,.012); }
+.pta::placeholder { color:rgba(255,255,255,.15);font-style:italic;font-weight:300; }
+.pta.over { background:rgba(255,30,30,.025); }
+
+/* ── Humanize bar ────────────────────────────────────────── */
+.hbar {
+    flex-shrink:0;
+    padding:.7rem 1.2rem;
+    border-top:1px solid rgba(0,212,255,.06);
+    background:rgba(4,5,10,.8);
+}
+.hbtn {
+    width:100%;height:44px;
+    background:linear-gradient(135deg,#C96F00,#F59E0B,#FBBF24);
+    background-size:200% 200%;background-position:0% 0%;
+    border:none;border-radius:10px;
+    color:#0A0A0F;font-family:'Inter',sans-serif;
+    font-size:.875rem;font-weight:700;letter-spacing:.3px;
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:.55rem;
+    transition:transform .25s ease,box-shadow .25s ease,background-position .4s ease;
+    overflow:hidden;position:relative;
+}
+.hbtn::after {
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.18) 50%,transparent 100%);
+    transform:translateX(-100%);transition:transform .5s ease;
+}
+.hbtn:hover:not(:disabled)::after  { transform:translateX(100%); }
+.hbtn:hover:not(:disabled) {
+    transform:translateY(-2px);
+    box-shadow:0 8px 28px rgba(245,158,11,.32);
+    background-position:100% 100%;
+}
+.hbtn:active:not(:disabled) { transform:translateY(0); }
+.hbtn:disabled { opacity:.44;cursor:not-allowed; }
+.hbtn svg { width:16px;height:16px;stroke:#0A0A0F;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round; }
+
+/* Loading dots */
+.dots { display:inline-flex;gap:.32rem;align-items:center; }
+.dots span {
+    width:6px;height:6px;background:#0A0A0F;border-radius:50%;
+    animation:dd 1.1s ease-in-out infinite;
+}
+.dots span:nth-child(2){animation-delay:.17s;}
+.dots span:nth-child(3){animation-delay:.34s;}
+@keyframes dd { 0%,60%,100%{transform:translateY(0);opacity:.45;} 30%{transform:translateY(-6px);opacity:1;} }
+
+/* ── Toast ───────────────────────────────────────────────── */
+.toast {
+    position:fixed;bottom:1.4rem;right:1.4rem;
+    background:rgba(10,11,18,.97);border:1px solid rgba(255,255,255,.1);
+    border-radius:10px;padding:.5rem .9rem;
+    font-size:.78rem;font-weight:500;color:#EEE;
+    display:flex;align-items:center;gap:.45rem;
+    box-shadow:0 8px 28px rgba(0,0,0,.65);
+    z-index:9999;backdrop-filter:blur(16px);max-width:280px;
+    animation:tin .28s cubic-bezier(.4,0,.2,1);
+}
+.ts { border-color:rgba(0,210,100,.38); }
+.te { border-color:rgba(255,55,45,.38); }
+@keyframes tin  { from{transform:translateY(10px);opacity:0;} to{transform:translateY(0);opacity:1;} }
+@keyframes tout { to{transform:translateY(10px);opacity:0;} }
+
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:rgba(0,212,255,.1);border-radius:2px; }
+::-webkit-scrollbar-thumb:hover { background:rgba(0,212,255,.22); }
 </style>
 
-<!-- Modern Top Ribbon -->
-<div class="top-ribbon">
-    <div class="ribbon-left">
-        <button class="sidebar-toggle collapsed" id="sidebarToggle" onclick="toggleSidebar()">☰</button>
-        <div class="app-title">
-            <span>🤖</span>
-            <span>InfiniAI Humanizer</span>
-        </div>
+<!-- atmosphere -->
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+    <div class="topbar-l">
+        <button class="menu-btn" onclick="toggleSidebar()" title="Toggle sidebar">
+            <svg viewBox="0 0 24 24">
+                <line x1="3" y1="6"  x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="16" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+        </button>
+        <div class="logo">Infini<span>Humanizer</span></div>
     </div>
-    <div class="ribbon-right">
-        <div class="user-info">
-            <strong>{{ user.username }}</strong>
-        </div>
-    </div>
-</div>
-
-<!-- Main Layout -->
-<div class="humanizer-layout">
-    <!-- Include Sidebar -->
-    {% include 'includes/sidebar.html' %}
-
-    <!-- Work Area -->
-    <div class="content-area">
-        <div class="work-window">
-            <!-- Input Container -->
-            <div class="input-container">
-                <div class="container-header">
-                    <div class="header-left">
-                        <div class="container-label">
-                            <span>📝</span>
-                            <span>Original Text</span>
-                        </div>
-                        <div class="word-counter">
-                            <span>Words:</span>
-                            <span class="word-count" id="inputWordCount">0</span>
-                            <span>/</span>
-                            <span>{{ word_balance }}</span>
-                        </div>
-                        <span class="word-limit-warning" id="wordLimitWarning"></span>
-                    </div>
-                </div>
-                <textarea 
-                    id="inputText" 
-                    class="text-box" 
-                    placeholder="Paste your text here (up to {{ word_balance }} words)"
-                ></textarea>
-                <button id="humanizeBtn" class="btn btn-primary">
-                    <span id="btnText">🤖 Humanize Text</span>
-                </button>
-            </div>
-
-            <!-- Output Container -->
-            <div class="output-container">
-                <div class="container-header">
-                    <div class="header-left">
-                        <div class="container-label">
-                            <span>✨</span>
-                            <span>Humanized Text</span>
-                        </div>
-                        <div class="word-counter">
-                            <span>Words:</span>
-                            <span class="word-count" id="outputWordCount">0</span>
-                        </div>
-                    </div>
-                    <div class="header-right">
-                        <!-- Stats Indicators -->
-                        <div class="circle-stat" style="margin-right: 1rem;">
-                            <div class="circle-progress">
-                                <svg width="32" height="32">
-                                    <circle class="circle-bg" cx="16" cy="16" r="14"></circle>
-                                    <circle class="circle-fill" id="humanCircle" cx="16" cy="16" r="14" 
-                                            stroke-dasharray="87.96" stroke-dashoffset="87.96"></circle>
-                                </svg>
-                                <span class="circle-text" id="humanScore" style="font-size: 0.7rem;">0%</span>
-                            </div>
-                            <span class="circle-label" style="font-size: 0.75rem;">Human</span>
-                        </div>
-                        <div class="circle-stat" style="margin-right: 1rem;">
-                            <div class="circle-progress">
-                                <svg width="32" height="32">
-                                    <circle class="circle-bg" cx="16" cy="16" r="14"></circle>
-                                    <circle class="circle-fill" id="readCircle" cx="16" cy="16" r="14" 
-                                            stroke-dasharray="87.96" stroke-dashoffset="87.96"></circle>
-                                </svg>
-                                <span class="circle-text" id="readScore" style="font-size: 0.7rem;">0%</span>
-                            </div>
-                            <span class="circle-label" style="font-size: 0.75rem;">Readable</span>
-                        </div>
-                        <button id="copyBtn" class="copy-btn" title="Copy to clipboard">
-                            📋 Copy
-                        </button>
-                        <button id="pdfBtn" class="pdf-btn" title="Download as PDF">
-                            📄 PDF
-                        </button>
-                    </div>
-                </div>
-                <textarea 
-                    id="outputText" 
-                    class="text-box" 
-                    placeholder="Your humanized text will appear here..."
-                ></textarea>
-            </div>
-        </div>
+    <div class="topbar-r">
+        <div class="bal-chip">{{ word_balance }} words</div>
+        <div class="utag"><strong>{{ user.username }}</strong></div>
     </div>
 </div>
 
-<!-- Control Panel - Mode & Model Selection -->
-<div style="text-align: center; padding: 2.5rem 2rem; background: linear-gradient(135deg, rgba(10, 15, 25, 0.5) 0%, rgba(15, 20, 35, 0.4) 50%, rgba(10, 15, 25, 0.5) 100%); backdrop-filter: blur(20px);">
-    <div style="max-width: 800px; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 3rem;">
-        <!-- Mode Selector -->
-        <div style="display: flex; flex-direction: column; gap: 0.75rem; min-width: 300px;">
-            <label for="modeSelect" style="font-weight: 600; font-size: 0.95rem; color: rgba(0, 212, 255, 0.95); text-transform: uppercase; letter-spacing: 1.2px; text-shadow: 0 0 10px rgba(0, 212, 255, 0.3); font-family: 'Inter', sans-serif;">
-                🎯 Humanization Mode
-            </label>
-            <select id="modeSelect" class="mode-dropdown">
-                <option value="recommended" selected>⭐ Recommended</option>
-                <option value="readability">📖 Readability</option>
+<!-- SHELL -->
+<div class="shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sb">
+
+        <div class="sb-lbl">Navigate</div>
+
+        <a href="{% url 'humanizer' %}" class="sb-a on">
+            <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Humanizer
+        </a>
+        <a href="{% url 'pricing' %}" class="sb-a">
+            <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            Pricing
+        </a>
+        <a href="{% url 'devices' %}" class="sb-a">
+            <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1" fill="rgba(136,136,136,0.8)"/></svg>
+            Devices
+        </a>
+        <a href="{% url 'settings' %}" class="sb-a">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+            Settings
+        </a>
+        <a href="{% url 'about' %}" class="sb-a">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            About
+        </a>
+        <a href="{% url 'contact' %}" class="sb-a">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Contact
+        </a>
+
+        <div class="sb-hr"></div>
+
+        <div class="sb-lbl">Options</div>
+
+        <div style="padding:0 .1rem;">
+            <span class="sb-clbl">Mode</span>
+            <select id="modeSelect" class="sb-sel">
+                <option value="recommended" selected>Recommended</option>
+                <option value="readability">Readability</option>
                 <option value="formal">Formal</option>
                 <option value="conversational">Conversational</option>
                 <option value="informal">Informal</option>
                 <option value="academic">Academic</option>
             </select>
         </div>
-        
-        <!-- Model Selector -->
-        <div style="display: flex; flex-direction: column; gap: 0.75rem; min-width: 300px;">
-            <label for="modelSelect" style="font-weight: 600; font-size: 0.95rem; color: rgba(0, 212, 255, 0.95); text-transform: uppercase; letter-spacing: 1.2px; text-shadow: 0 0 10px rgba(0, 212, 255, 0.3); font-family: 'Inter', sans-serif;">
-                🤖 AI Model
-            </label>
-            <select id="modelSelect" class="mode-dropdown">
+
+        <div style="padding:0 .1rem;margin-top:.65rem;">
+            <span class="sb-clbl">Model</span>
+            <select id="modelSelect" class="sb-sel">
                 <option value="original" selected>Original</option>
             </select>
         </div>
-    </div>
-</div>
 
-<!-- Smooth Separator -->
-<div style="height: 1px; background: linear-gradient(to right, transparent, rgba(0, 212, 255, 0.2), transparent); margin: 0;"></div>
-
-<!-- Services Section - Seamless Flow -->
-<section style="padding: 0; max-width: 100%; margin: 0;">
-    
-    <!-- Plagiarism Checker Section - FIRST -->
-    <div class="scroll-fade-in" style="padding: 5rem 2rem; background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(13, 13, 20, 0.6) 100%); position: relative;">
-        <div class="parallax-slow" style="position: absolute; top: 15%; right: 8%; width: 250px; height: 250px; background: url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=500') center/cover; opacity: 0.05; border-radius: 50%; filter: blur(4px);"></div>
-        
-        <div style="max-width: 900px; margin: 0 auto; text-align: center; position: relative; z-index: 1;">
-            <h2 style="color: #00D4FF; font-size: 2.8rem; margin-bottom: 1.5rem; font-weight: 800; text-shadow: 0 0 30px rgba(0, 212, 255, 0.5);">
-                📝 Plagiarism Checker
-            </h2>
-            <div style="width: 120px; height: 3px; background: linear-gradient(90deg, transparent, #00D4FF, transparent); margin: 0 auto 2rem;"></div>
-            
-            <p style="color: rgba(255, 255, 255, 0.9); line-height: 2; font-size: 1.2rem; margin-bottom: 2rem;">
-                Need to verify your content's originality? Our plagiarism detection service ensures your work is unique and properly cited.
-            </p>
-            <div style="padding: 1.5rem; margin: 0 auto; max-width: 500px;">
-                <p style="color: rgba(255, 255, 255, 0.8); font-size: 1rem; margin-bottom: 1rem;">
-                    <strong style="color: #00D4FF; font-size: 1.1rem;">Contact us for plagiarism checking:</strong>
-                </p>
-                <a href="mailto:valdaceai@gmail.com" style="color: rgba(255, 255, 255, 0.9); text-decoration: none; font-weight: 700; font-size: 1.3rem; display: inline-flex; align-items: center; gap: 0.8rem; transition: all 0.3s ease; padding: 0.8rem 1.5rem; background: linear-gradient(135deg, rgba(40, 40, 40, 0.9), rgba(26, 26, 26, 0.9)); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);">
-                    <span style="font-size: 1.8rem;">📧</span>
-                    <span>valdaceai@gmail.com</span>
-                </a>
+        {% if user.is_authenticated and user.profile.is_kenya_plan %}
+        <div class="sb-hr"></div>
+        <div class="sb-lbl">Devices</div>
+        <div class="sb-dev">
+            <div>Active: <span class="v">{{ user.profile.current_active_devices }}/{{ user.profile.max_concurrent_devices }}</span></div>
+            {% if user.profile.account_type != 'KE_MULTI_DEVICE' %}
+            <div>Today: <span class="v">{{ user.profile.daily_device_switches }}/3</span></div>
+            {% endif %}
+            {% if user.profile.plan_expires_at %}
+            <div style="margin-top:.3rem;font-size:.7rem;color:rgba(255,255,255,.35);">
+                Expires {{ user.profile.plan_expires_at|date:"M d, Y" }}
             </div>
+            {% endif %}
         </div>
-    </div>
+        {% endif %}
 
-    <!-- Subtle Divider -->
-    <div style="height: 80px; background: linear-gradient(180deg, rgba(13, 13, 20, 0.6) 0%, rgba(0, 0, 0, 0.9) 100%);"></div>
+        <div class="sb-hr"></div>
+        <div class="sb-tip">
+            <strong>Tip:</strong> Recommended mode gives the most natural output.
+            For long documents, process in sections for best results.
+        </div>
 
-    <!-- Legal AI Tech Section - SECOND -->
-    <div class="scroll-fade-in" style="padding: 5rem 2rem; background: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, rgba(13, 13, 20, 0.8) 50%, rgba(0, 0, 0, 0.95) 100%), url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200') center/cover; background-attachment: fixed; position: relative; min-height: 500px;">
-        <div class="parallax-slow" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at center, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.95));"></div>
-        <div style="max-width: 900px; margin: 0 auto; text-align: center; position: relative; z-index: 1;">
-            <div style="display: inline-block; background: linear-gradient(45deg, #FFB800, #FFA500); color: #000; padding: 0.7rem 2rem; border-radius: 30px; font-weight: 900; font-size: 1.1rem; margin-bottom: 2rem; box-shadow: 0 0 40px rgba(255, 184, 0, 0.6); animation: pulse 2s infinite;">
-                ⚡ COMING SOON
-            </div>
-            <h2 style="color: #FFB800; font-size: 3rem; margin-bottom: 1.5rem; font-weight: 900; text-shadow: 0 0 35px rgba(255, 184, 0, 0.5);">
-                ⚖️ Legal AI Technology
-            </h2>
-            <p style="color: rgba(255, 255, 255, 0.9); line-height: 2; font-size: 1.2rem; margin-bottom: 3rem;">
-                Revolutionary AI-powered legal document analysis and generation. Transform complex legal work with intelligent automation that understands context, precedent, and compliance.
-            </p>
-            <div style="display: grid; gap: 1.2rem; max-width: 650px; margin: 0 auto;">
-                <div style="padding: 1.2rem 1.8rem; text-align: left;">
-                    <strong style="color: #FFB800; font-size: 1.1rem; display: block; margin-bottom: 0.5rem;">✓ Contract Analysis & Review</strong>
-                    <p style="color: rgba(255, 255, 255, 0.7); font-size: 1rem; line-height: 1.6;">Automated contract review with risk assessment</p>
-                </div>
-                <div style="padding: 1.2rem 1.8rem; text-align: left;">
-                    <strong style="color: #FFB800; font-size: 1.1rem; display: block; margin-bottom: 0.5rem;">✓ Legal Document Generation</strong>
-                    <p style="color: rgba(255, 255, 255, 0.7); font-size: 1rem; line-height: 1.6;">AI-powered drafting of legal documents and briefs</p>
-                </div>
-                <div style="padding: 1.2rem 1.8rem; text-align: left;">
-                    <strong style="color: #FFB800; font-size: 1.1rem; display: block; margin-bottom: 0.5rem;">✓ Case Law Research Assistant</strong>
-                    <p style="color: rgba(255, 255, 255, 0.7); font-size: 1rem; line-height: 1.6;">Intelligent case law search with precedent analysis</p>
+        <div class="sb-spacer"></div>
+
+        <a href="{% url 'account_logout' %}" class="sb-a out" style="margin-top:.5rem;">
+            <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Logout
+        </a>
+
+    </aside>
+
+    <!-- WORKSPACE -->
+    <div class="workspace">
+
+        <!-- INPUT PANEL -->
+        <div class="panel">
+            <div class="p-hd">
+                <div class="p-hd-l">
+                    <span class="p-tag">Input</span>
+                    <div class="wpill" id="iPill">
+                        <span class="n" id="inputWordCount">0</span>&thinsp;/&thinsp;{{ word_balance }}
+                    </div>
+                    <span class="lbadge" id="lbadge"></span>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Subtle Divider -->
-    <div style="height: 80px; background: linear-gradient(180deg, rgba(0, 0, 0, 0.95) 0%, rgba(13, 13, 20, 0.7) 100%);"></div>
-
-    <!-- Contact Us Section - THIRD -->
-    <div class="scroll-fade-in" style="padding: 5rem 2rem; background: linear-gradient(180deg, rgba(13, 13, 20, 0.7) 0%, rgba(0, 0, 0, 0.85) 100%);">
-        <div style="max-width: 900px; margin: 0 auto; text-align: center;">
-            <h2 style="color: #00D4FF; font-size: 2.8rem; margin-bottom: 1.5rem; font-weight: 800; text-shadow: 0 0 30px rgba(0, 212, 255, 0.5);">
-                📧 Contact Us
-            </h2>
-            <div style="width: 120px; height: 3px; background: linear-gradient(90deg, transparent, #00D4FF, transparent); margin: 0 auto 2.5rem;"></div>
-            
-            <p style="color: rgba(255, 255, 255, 0.85); font-size: 1.15rem; line-height: 1.9; margin-bottom: 2.5rem; max-width: 700px; margin-left: auto; margin-right: auto;">
-                Have questions, feedback, or need assistance? We're here to help! Reach out to us for any inquiries about our services, technical support, or partnership opportunities.
-            </p>
-            
-            <a href="mailto:valdaceai@gmail.com" style="display: inline-flex; align-items: center; gap: 1rem; background: linear-gradient(135deg, rgba(45, 45, 45, 0.95), rgba(30, 30, 30, 0.95)); color: #FFF; text-decoration: none; padding: 1.2rem 2.5rem; border-radius: 12px; font-weight: 800; font-size: 1.2rem; transition: all 0.3s ease; box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5); margin-bottom: 3rem; border: 2px solid rgba(255, 255, 255, 0.15);">
-                <span style="font-size: 1.8rem;">📧</span>
-                <span>valdaceai@gmail.com</span>
-            </a>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; max-width: 600px; margin: 0 auto; padding-top: 2rem; border-top: 1px solid rgba(0, 212, 255, 0.15);">
-                <div>
-                    <div style="color: #00D4FF; font-weight: 700; margin-bottom: 0.6rem; font-size: 1.05rem;">⏱️ Response Time</div>
-                    <div style="color: rgba(255, 255, 255, 0.75); font-size: 1rem;">Within 24 hours</div>
-                </div>
-                <div>
-                    <div style="color: #00D4FF; font-weight: 700; margin-bottom: 0.6rem; font-size: 1.05rem;">📅 Support</div>
-                    <div style="color: rgba(255, 255, 255, 0.75); font-size: 1rem;">7 Days a Week</div>
-                </div>
+            <textarea
+                id="inputText"
+                class="pta"
+                placeholder="Paste your AI-generated text here…"
+            ></textarea>
+            <div class="hbar">
+                <button class="hbtn" id="humanizeBtn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                    <span id="btnText">Humanize</span>
+                </button>
             </div>
         </div>
-    </div>
 
-    <!-- Subtle Divider -->
-    <div style="height: 80px; background: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(13, 13, 20, 0.6) 100%);"></div>
-
-    <!-- About InfiniHumanizer Section - LAST -->
-    <div class="scroll-fade-in" style="padding: 5rem 2rem; background: linear-gradient(180deg, rgba(13, 13, 20, 0.6) 0%, rgba(0, 0, 0, 0.95) 100%); position: relative;">
-        <div class="parallax-slow" style="position: absolute; top: 10%; left: 8%; width: 280px; height: 280px; background: url('https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600') center/cover; opacity: 0.06; border-radius: 50%; filter: blur(3px);"></div>
-        
-        <div style="max-width: 1000px; margin: 0 auto; text-align: center; position: relative; z-index: 1;">
-            <h2 style="color: #00D4FF; font-size: 2.8rem; margin-bottom: 1.5rem; font-weight: 800; text-shadow: 0 0 30px rgba(0, 212, 255, 0.5);">
-                ℹ️ About InfiniHumanizer
-            </h2>
-            <div style="width: 120px; height: 3px; background: linear-gradient(90deg, transparent, #00D4FF, transparent); margin: 0 auto 2.5rem;"></div>
-            
-            <p style="color: rgba(255, 255, 255, 0.9); line-height: 2; font-size: 1.2rem; margin-bottom: 1.8rem;">
-                InfiniHumanizer uses advanced technology to transform robotic text into natural, authentic human writing.
-            </p>
-            <p style="color: rgba(255, 255, 255, 0.75); line-height: 1.9; font-size: 1.1rem; max-width: 800px; margin: 0 auto;">
-                Our sophisticated humanization algorithms deliver authentic results that maintain quality and readability while ensuring your content sounds naturally human.
-            </p>
+        <!-- OUTPUT PANEL -->
+        <div class="panel">
+            <div class="p-hd">
+                <div class="p-hd-l">
+                    <span class="p-tag">Output</span>
+                    <div class="wpill">
+                        <span class="n" id="outputWordCount">0</span>&thinsp;words
+                    </div>
+                </div>
+                <div class="p-hd-r">
+                    <div class="stats">
+                        <div class="stp">
+                            <div class="cwrap">
+                                <svg width="28" height="28">
+                                    <circle class="cbg" cx="14" cy="14" r="11"/>
+                                    <circle class="cfil" id="humanCircle" cx="14" cy="14" r="11"
+                                            stroke-dasharray="69.1" stroke-dashoffset="69.1"/>
+                                </svg>
+                                <span class="ctxt" id="humanScore">0%</span>
+                            </div>
+                            <span class="slbl">Human</span>
+                        </div>
+                        <div class="stp">
+                            <div class="cwrap">
+                                <svg width="28" height="28">
+                                    <circle class="cbg" cx="14" cy="14" r="11"/>
+                                    <circle class="cfil" id="readCircle" cx="14" cy="14" r="11"
+                                            stroke-dasharray="69.1" stroke-dashoffset="69.1"/>
+                                </svg>
+                                <span class="ctxt" id="readScore">0%</span>
+                            </div>
+                            <span class="slbl">Read</span>
+                        </div>
+                    </div>
+                    <button class="ibtn" id="copyBtn" title="Copy output">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="9" y="9" width="13" height="13" rx="2"/>
+                            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+                        </svg>
+                    </button>
+                    <button class="ibtn" id="pdfBtn" title="Export PDF">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <textarea
+                id="outputText"
+                class="pta"
+                placeholder="Humanized text will appear here…"
+                readonly
+            ></textarea>
         </div>
-    </div>
-</section>
 
-<!-- Scroll to Top Button -->
-<button id="scrollTopBtn" style="position: fixed; bottom: 2rem; right: 2rem; width: 50px; height: 50px; background: linear-gradient(45deg, #00D4FF, #00BFFF); border: none; border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 20px rgba(0, 212, 255, 0.6); transition: all 0.3s ease; z-index: 1000;">
-    <span style="transform: rotate(-90deg); display: inline-block;">➜</span>
-</button>
-
-<style>
-/* Glitch Animation */
-.glitch-version {
-    animation: glitch 3s infinite;
-}
-
-@keyframes glitch {
-    0%, 90%, 100% {
-        transform: translate(0);
-        text-shadow: 
-            2px 2px 0 rgba(255, 0, 255, 0.7),
-            -2px -2px 0 rgba(0, 255, 255, 0.7);
-    }
-    92% {
-        transform: translate(-2px, 2px);
-        text-shadow: 
-            4px 0 0 rgba(255, 0, 255, 0.7),
-            -4px 0 0 rgba(0, 255, 255, 0.7);
-    }
-    94% {
-        transform: translate(2px, -2px);
-        text-shadow: 
-            -4px 0 0 rgba(255, 0, 255, 0.7),
-            4px 0 0 rgba(0, 255, 255, 0.7);
-    }
-    96% {
-        transform: translate(-2px, -2px);
-        text-shadow: 
-            2px 4px 0 rgba(255, 0, 255, 0.7),
-            -2px -4px 0 rgba(0, 255, 255, 0.7);
-    }
-}
-
-/* Horizontal Glitch Spikes */
-.glitch-version::before,
-.glitch-version::after {
-    content: 'VERSION 4.5';
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.glitch-version::before {
-    animation: glitch-spike 2.5s infinite;
-    color: rgba(255, 0, 255, 0.8);
-    z-index: -1;
-}
-
-.glitch-version::after {
-    animation: glitch-spike 2.5s infinite reverse;
-    color: rgba(0, 255, 255, 0.8);
-    z-index: -2;
-}
-
-@keyframes glitch-spike {
-    0%, 95%, 100% {
-        clip-path: inset(0 0 0 0);
-        transform: translate(0);
-    }
-    96% {
-        clip-path: inset(20% 0 40% 0);
-        transform: translate(-10px, 0);
-    }
-    97% {
-        clip-path: inset(60% 0 20% 0);
-        transform: translate(10px, 0);
-    }
-    98% {
-        clip-path: inset(40% 0 30% 0);
-        transform: translate(-8px, 0);
-    }
-}
-
-/* Scroll Top Button Hover */
-#scrollTopBtn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 30px rgba(0, 212, 255, 0.8);
-}
-
-/* Section Hover Effects */
-a[href^="mailto"]:hover {
-    transform: translateX(5px);
-    text-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
-}
-</style>
+    </div><!-- /workspace -->
+</div><!-- /shell -->
 
 <script>
-// Get CSRF token from cookie
+/* ── Helpers ───────────────────────────────────────────── */
 function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
+    let v = null;
+    if (document.cookie) {
+        document.cookie.split(';').forEach(c => {
+            c = c.trim();
+            if (c.startsWith(name + '='))
+                v = decodeURIComponent(c.slice(name.length + 1));
+        });
     }
-    return cookieValue;
+    return v;
 }
+const csrf = getCookie('csrftoken');
 
-const csrftoken = getCookie('csrftoken');
-
-// Toast notification function
-function showToast(message, type = 'success') {
-    // Remove any existing toasts
-    const existingToasts = document.querySelectorAll('.toast');
-    existingToasts.forEach(toast => toast.remove());
-    
-    // Create toast element
-    const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
-    toast.style.cssText = `
-        position: fixed;
-        bottom: 1rem;
-        right: 1rem;
-        z-index: 10000;
-        min-width: 200px;
-        max-width: 280px;
-        padding: 0.5rem 0.75rem;
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.8rem;
-        animation: slideIn 0.3s ease;
-    `;
-    
-    // Icon based on type
-    const icon = type === 'success' ? '✓' : type === 'error' ? '⚠' : 'ℹ';
-    
-    toast.innerHTML = `
-        <span style="font-size: 0.9rem; flex-shrink: 0;">${icon}</span>
-        <span style="flex: 1; color: rgba(255, 255, 255, 0.95); font-size: 0.8rem;">${message}</span>
-    `;
-    
-    // Add to page
-    document.body.appendChild(toast);
-    
-    // Auto-remove after 3 seconds
+function toast(msg, type = 'success') {
+    document.querySelectorAll('.toast').forEach(t => t.remove());
+    const el = document.createElement('div');
+    el.className = 'toast ' + (type === 'success' ? 'ts' : 'te');
+    el.innerHTML = `<span style="flex-shrink:0;font-size:.85rem;">${type==='success'?'✓':'✕'}</span><span>${msg}</span>`;
+    document.body.appendChild(el);
     setTimeout(() => {
-        toast.style.animation = 'slideOut 0.3s ease';
-        setTimeout(() => toast.remove(), 300);
+        el.style.animation = 'tout .28s ease forwards';
+        setTimeout(() => el.remove(), 280);
     }, 3000);
 }
 
-// Word count function
-// Maximum INPUT word limit (output has no limit)
-// Use the user's actual word balance from their profile instead of hardcoded limit
-const MAX_WORD_LIMIT = {{ word_balance|default:0 }};
-let typingTimeout = null;
-let hasShownToast = false;
+/* ── Word count ────────────────────────────────────────── */
+const MAX = {{ word_balance|default:0 }};
+let toastFired = false;
 
-function countWords(text) {
-    const trimmed = text.trim();
-    return trimmed ? trimmed.split(/\s+/).length : 0;
+function words(text) {
+    const t = text.trim();
+    return t ? t.split(/\s+/).length : 0;
 }
 
-function typeWarningMessage(element, message, speed = 30) {
-    element.textContent = '';
-    element.classList.add('visible');
-    let index = 0;
-    
-    function typeNextChar() {
-        if (index < message.length) {
-            element.textContent += message[index];
-            index++;
-            setTimeout(typeNextChar, speed);
-        }
-    }
-    
-    typeNextChar();
-}
+function syncCount(taId, cntId) {
+    const n = words(document.getElementById(taId).value);
+    document.getElementById(cntId).textContent = n;
 
-function updateWordCount(textareaId, counterId) {
-    const text = document.getElementById(textareaId).value;
-    const wordCount = countWords(text);
-    const counterElement = document.getElementById(counterId);
-    const inputTextarea = document.getElementById('inputText');
-    const inputContainer = document.querySelector('.input-container');
-    const humanizeBtn = document.getElementById('humanizeBtn');
-    const warningElement = document.getElementById('wordLimitWarning');
-    
-    counterElement.textContent = wordCount;
-    
-    // Check if INPUT is over limit (output has no word limit)
-    if (wordCount > MAX_WORD_LIMIT) {
-        // Add over-limit styling
-        counterElement.classList.add('over-limit');
-        inputTextarea.classList.add('over-limit');
-        inputContainer.classList.add('over-limit');
-        humanizeBtn.disabled = true;
-        humanizeBtn.style.opacity = '0.5';
-        humanizeBtn.style.cursor = 'not-allowed';
-        
-        // Clear any existing typing timeout
-        if (typingTimeout) {
-            clearTimeout(typingTimeout);
-        }
-        
-        const excessWords = wordCount - MAX_WORD_LIMIT;
-        const warningMessage = `⚠️ ${excessWords} word${excessWords > 1 ? 's' : ''} over limit!`;
-        
-        // Show warning message with typing effect (only on first appearance)
-        if (!warningElement.classList.contains('visible')) {
-            typeWarningMessage(warningElement, warningMessage);
+    if (taId === 'inputText') {
+        const pill  = document.getElementById('iPill');
+        const badge = document.getElementById('lbadge');
+        const ta    = document.getElementById('inputText');
+        const btn   = document.getElementById('humanizeBtn');
+
+        if (n > MAX) {
+            pill.classList.add('over');
+            ta.classList.add('over');
+            btn.disabled = true;
+            badge.textContent = `+${n - MAX} over`;
+            badge.classList.add('show');
+            if (!toastFired) {
+                toast(`${MAX}-word limit — trim the input.`, 'error');
+                toastFired = true;
+            }
         } else {
-            // Update the count without re-typing
-            warningElement.textContent = warningMessage;
+            pill.classList.remove('over');
+            ta.classList.remove('over');
+            btn.disabled = false;
+            badge.classList.remove('show');
+            toastFired = false;
         }
-        
-        // Show toast notification (only once per session of being over limit)
-        if (!hasShownToast) {
-            showToast(`Maximum ${MAX_WORD_LIMIT} words allowed for INPUT. Please reduce your input text. (Output can be any length)`, 'error');
-            hasShownToast = true;
-        }
-    } else {
-        // Remove over-limit styling
-        counterElement.classList.remove('over-limit');
-        inputTextarea.classList.remove('over-limit');
-        inputContainer.classList.remove('over-limit');
-        humanizeBtn.disabled = false;
-        humanizeBtn.style.opacity = '1';
-        humanizeBtn.style.cursor = 'pointer';
-        
-        // Hide warning message
-        warningElement.classList.remove('visible');
-        warningElement.textContent = '';
-        
-        // Reset toast flag when back under limit
-        hasShownToast = false;
     }
-    
-    return wordCount;
+    return n;
 }
 
-// Update input word count on input
-document.getElementById('inputText').addEventListener('input', function() {
-    updateWordCount('inputText', 'inputWordCount');
+document.getElementById('inputText').addEventListener('input', () =>
+    syncCount('inputText', 'inputWordCount')
+);
+
+/* Paste flash */
+document.getElementById('inputText').addEventListener('paste', function () {
+    this.style.transition = 'box-shadow .08s ease';
+    this.style.boxShadow  = 'inset 0 0 0 1px rgba(0,212,255,0.35)';
+    setTimeout(() => { this.style.boxShadow = ''; this.style.transition = ''; }, 420);
 });
 
-// Sidebar hover - no need for manual toggle anymore, but keep for mobile fallback
+/* ── Sidebar ───────────────────────────────────────────── */
+let sbOpen = true;
 function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const toggle = document.getElementById('sidebarToggle');
-    sidebar.classList.toggle('collapsed');
-    toggle.classList.toggle('collapsed');
+    sbOpen = !sbOpen;
+    document.getElementById('sb').classList.toggle('closed', !sbOpen);
 }
 
-// Humanize button
-document.getElementById('humanizeBtn').addEventListener('click', async function() {
-    const inputText = document.getElementById('inputText').value.trim();
-    const selectedEngine = 'openai';  // Internal engine selection
-    const selectedMode = document.getElementById('modeSelect').value;
-    const selectedModel = document.getElementById('modelSelect').value;
-    
-    if (!inputText) {
-        showToast('Please enter some text to humanize', 'error');
-        return;
-    }
-    
-    // Check word count limit - use consistent word counting logic
-    // NOTE: This 3000-word limit applies ONLY to input, not output
-    const wordCount = countWords(inputText);
-    if (wordCount > MAX_WORD_LIMIT) {
-        showToast(`Input text exceeds ${MAX_WORD_LIMIT} word limit. Please reduce your input text. (Output can be any length)`, 'error');
-        return;
-    }
-    
-    const btn = this;
+/* ── Word stream ───────────────────────────────────────── */
+function stream(ta, text) {
+    const chunks = text.split(/(\s+)/);
+    let i = 0, built = '';
+    ta.value = '';
+    const iv = setInterval(() => {
+        if (i >= chunks.length) {
+            clearInterval(iv);
+            syncCount('outputText', 'outputWordCount');
+            return;
+        }
+        built += chunks[i++];
+        ta.value = built;
+        ta.scrollTop = ta.scrollHeight;
+    }, 12);
+}
+
+/* ── Humanize ──────────────────────────────────────────── */
+document.getElementById('humanizeBtn').addEventListener('click', async function () {
+    const txt   = document.getElementById('inputText').value.trim();
+    const mode  = document.getElementById('modeSelect').value;
+    const model = document.getElementById('modelSelect').value;
+
+    if (!txt)             { toast('Enter some text first.', 'error'); return; }
+    if (words(txt) > MAX) { toast(`Exceeds ${MAX}-word limit.`, 'error'); return; }
+
+    const btn     = this;
     const btnText = document.getElementById('btnText');
-    const outputTextarea = document.getElementById('outputText');
-    
-    // Disable button and show loading dots
-    btn.disabled = true;
-    btn.classList.add('loading');
-    btnText.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
-    outputTextarea.value = 'Processing your text...';
-    
+    btn.disabled  = true;
+    btnText.innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
+
+    const outTa = document.getElementById('outputText');
+    outTa.value = '';
+
     try {
-        const response = await fetch('/humanizer/humanize/', {
+        const resp = await fetch('/humanizer/humanize/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'X-CSRFToken': csrftoken
+                'X-CSRFToken': csrf
             },
-            body: `text=${encodeURIComponent(inputText)}&engine=${encodeURIComponent(selectedEngine)}&mode=${encodeURIComponent(selectedMode)}&model=${encodeURIComponent(selectedModel)}`
+            body: `text=${encodeURIComponent(txt)}&engine=openai&mode=${encodeURIComponent(mode)}&model=${encodeURIComponent(model)}`
         });
-        
-        if (!response.ok) {
-            const data = await response.json().catch(() => ({ error: `Server error: ${response.status}` }));
-            throw new Error(data.error || `HTTP ${response.status}`);
+
+        if (!resp.ok) {
+            const d = await resp.json().catch(() => ({ error: `Server error ${resp.status}` }));
+            throw new Error(d.error || `HTTP ${resp.status}`);
         }
-        
-        const data = await response.json();
-        
-        outputTextarea.value = data.output_text || '';
-        updateWordCount('outputText', 'outputWordCount');
-        
-        // Update stats if available
-        if (data.human_score !== undefined && data.read_score !== undefined) {
-            updateCircleStat('humanCircle', 'humanScore', data.human_score);
-            updateCircleStat('readCircle', 'readScore', data.read_score);
-        }
-        
-    } catch (error) {
-        console.error('Humanization error:', error);
-        const errorMsg = error.message || 'Connection failed';
-        outputTextarea.value = `Error: ${errorMsg}`;
-        showToast(errorMsg, 'error');
+
+        const data   = await resp.json();
+        const output = data.output_text || '';
+        stream(outTa, output);
+
+        if (data.human_score !== undefined) circle('humanCircle', 'humanScore', data.human_score);
+        if (data.read_score  !== undefined) circle('readCircle',  'readScore',  data.read_score);
+
+    } catch (e) {
+        outTa.value = `Error: ${e.message}`;
+        toast(e.message, 'error');
     } finally {
-        // Re-enable button
-        btn.disabled = false;
-        btn.classList.remove('loading');
-        btnText.innerHTML = '🤖 Humanize Text';
+        btn.disabled  = false;
+        btnText.innerHTML = 'Humanize';
     }
 });
 
-// Update circle stat
-function updateCircleStat(circleId, textId, percentage) {
-    const circle = document.getElementById(circleId);
-    const text = document.getElementById(textId);
-    const circumference = 87.96; // 2 * PI * 14
-    const offset = circumference - (percentage / 100) * circumference;
-    
-    circle.style.strokeDashoffset = offset;
-    text.textContent = `${Math.round(percentage)}%`;
+/* ── Circle stats ──────────────────────────────────────── */
+function circle(cid, tid, pct) {
+    const C = 69.1; // 2π × 11
+    document.getElementById(cid).style.strokeDashoffset = C - (pct / 100) * C;
+    document.getElementById(tid).textContent = Math.round(pct) + '%';
 }
 
-// Copy button
-document.getElementById('copyBtn').addEventListener('click', async function() {
-        const outputText = document.getElementById('outputText').value;
-        if (!outputText) {
-            showToast('Nothing to copy', 'error');
-            return;
-        }    try {
-        await navigator.clipboard.writeText(outputText);
-        this.textContent = '✅ Copied!';
-        this.classList.add('copied');
-        setTimeout(() => {
-            this.textContent = '📋 Copy';
-            this.classList.remove('copied');
-        }, 2000);
-    } catch (error) {
-        showToast('Failed to copy to clipboard', 'error');
+/* ── Copy ──────────────────────────────────────────────── */
+document.getElementById('copyBtn').addEventListener('click', async function () {
+    const txt = document.getElementById('outputText').value;
+    if (!txt) { toast('Nothing to copy.', 'error'); return; }
+    try {
+        await navigator.clipboard.writeText(txt);
+        this.classList.add('ok');
+        setTimeout(() => this.classList.remove('ok'), 2000);
+        toast('Copied to clipboard.');
+    } catch {
+        toast('Copy failed.', 'error');
     }
 });
 
-// PDF button
-document.getElementById('pdfBtn').addEventListener('click', function() {
+/* ── PDF ───────────────────────────────────────────────── */
+document.getElementById('pdfBtn').addEventListener('click', function () {
     try {
-        const outputText = document.getElementById('outputText').value;
-        if (!outputText) {
-            showToast('Nothing to export', 'error');
-            return;
-        }
-        
+        const out = document.getElementById('outputText').value;
+        if (!out) { toast('Nothing to export.', 'error'); return; }
+
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        
-        // Get selected model and mode
-        const selectedMode = document.getElementById('modeSelect').value || 'Recommended';
-        const selectedModel = document.getElementById('modelSelect').value || 'Premium';
-        const engineName = `InfiniHumanizer (${selectedModel.charAt(0).toUpperCase() + selectedModel.slice(1)})`;
-        
-        // Generate 6-character alphanumeric ID
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let docId = '';
-        for (let i = 0; i < 6; i++) {
-            docId += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        const fullDocId = `IH-${docId}`;
-        
-        // Get current date
+
+        const mode  = document.getElementById('modeSelect').value  || 'Recommended';
+        const model = document.getElementById('modelSelect').value || 'Original';
+        const eng   = `InfiniHumanizer (${model.charAt(0).toUpperCase() + model.slice(1)})`;
+
+        const ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let id = '';
+        for (let i = 0; i < 6; i++) id += ch[Math.floor(Math.random() * ch.length)];
+        const did = `IH-${id}`;
+
         const now = new Date();
-        const formattedDate = now.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
+        const fd  = now.toLocaleDateString('en-US', {
+            year: 'numeric', month: 'long', day: 'numeric',
+            hour: '2-digit', minute: '2-digit'
         });
-        
-        // Page setup
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const pageHeight = doc.internal.pageSize.getHeight();
-        const margins = { top: 60, bottom: 35, left: 20, right: 20 };
-        const maxLineWidth = pageWidth - margins.left - margins.right;
-        const lineHeight = 6;
-        
-        // Brand header with Neural-X v3.0 (on first page only)
-        doc.setFontSize(20);
-        doc.setFont(undefined, 'bold');
-        doc.setTextColor(0, 212, 255); // Cyan color
-        doc.text('Neural-X v3.0', margins.left, 20);
-        
-        // Model, date, and doc ID info
-        doc.setFontSize(10);
-        doc.setFont(undefined, 'normal');
-        doc.setTextColor(100, 100, 100);
-        doc.text(`Model: ${engineName} | Doc ID: ${fullDocId}`, margins.left, 30);
-        doc.text(`Generated: ${formattedDate}`, margins.left, 36);
-        
-        // Divider line
-        doc.setDrawColor(0, 212, 255);
-        doc.setLineWidth(0.5);
-        doc.line(margins.left, 40, pageWidth - margins.right, 40);
-        
-        // Content title
-        doc.setFontSize(14);
-        doc.setFont(undefined, 'bold');
-        doc.setTextColor(0, 0, 0);
-        doc.text('Humanized Content', margins.left, 50);
-        
-        // Main content with proper pagination
-        doc.setFontSize(11);
-        doc.setFont(undefined, 'normal');
-        doc.setTextColor(0, 0, 0);
-        
-        // Split text into lines that fit the page width
-        const lines = doc.splitTextToSize(outputText, maxLineWidth);
-        
-        let cursorY = margins.top;
-        let currentPage = 1;
-        
-        lines.forEach((line, index) => {
-            // Check if we need a new page (leaving room for footer)
-            if (cursorY + lineHeight > pageHeight - margins.bottom) {
-                doc.addPage();
-                currentPage++;
-                cursorY = 25; // Top margin for continuation pages
-            }
-            
-            // Add the line
-            doc.text(line, margins.left, cursorY);
-            cursorY += lineHeight;
+
+        const pw = doc.internal.pageSize.getWidth();
+        const ph = doc.internal.pageSize.getHeight();
+        const m  = { t: 58, b: 33, l: 20, r: 20 };
+
+        doc.setFontSize(18); doc.setFont(undefined, 'bold'); doc.setTextColor(0, 180, 220);
+        doc.text('InfiniHumanizer', m.l, 20);
+
+        doc.setFontSize(9); doc.setFont(undefined, 'normal'); doc.setTextColor(110, 110, 110);
+        doc.text(`Model: ${eng} | Doc: ${did}`, m.l, 29);
+        doc.text(`Generated: ${fd}`, m.l, 35);
+
+        doc.setDrawColor(0, 180, 220); doc.setLineWidth(.4);
+        doc.line(m.l, 40, pw - m.r, 40);
+
+        doc.setFontSize(13); doc.setFont(undefined, 'bold'); doc.setTextColor(0, 0, 0);
+        doc.text('Humanized Content', m.l, 50);
+
+        doc.setFontSize(11); doc.setFont(undefined, 'normal'); doc.setTextColor(20, 20, 20);
+        const lines = doc.splitTextToSize(out, pw - m.l - m.r);
+        let y = m.t;
+        lines.forEach(ln => {
+            if (y + 6 > ph - m.b) { doc.addPage(); y = 24; }
+            doc.text(ln, m.l, y); y += 6;
         });
-        
-        // Add footer with doc ID to all pages
-        const pageCount = doc.internal.getNumberOfPages();
-        for (let i = 1; i <= pageCount; i++) {
-            doc.setPage(i);
-            doc.setFontSize(8);
-            doc.setTextColor(150, 150, 150);
-            
-            // Footer with doc ID
-            const footerLeft = `Doc ID: ${fullDocId}`;
-            const footerCenter = `InfiniHumanizer - Neural-X v3.0`;
-            const footerRight = `Page ${i} of ${pageCount}`;
-            
-            doc.text(footerLeft, margins.left, pageHeight - 10);
-            doc.text(footerCenter, pageWidth / 2, pageHeight - 10, { align: 'center' });
-            doc.text(footerRight, pageWidth - margins.right, pageHeight - 10, { align: 'right' });
+
+        const pc = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= pc; i++) {
+            doc.setPage(i); doc.setFontSize(8); doc.setTextColor(148, 148, 148);
+            doc.text(`Doc: ${did}`, m.l, ph - 9);
+            doc.text('InfiniHumanizer', pw / 2, ph - 9, { align: 'center' });
+            doc.text(`${i}/${pc}`, pw - m.r, ph - 9, { align: 'right' });
         }
-        
-        // Save with model name and doc ID
-        const timestamp = now.toISOString().split('T')[0];
-        doc.save(`${fullDocId}-${timestamp}.pdf`);
-        showToast(`PDF downloaded: ${fullDocId}`, 'success');
-    } catch (error) {
-        console.error('PDF generation error:', error);
-        showToast('Failed to generate PDF', 'error');
+
+        doc.save(`${did}-${now.toISOString().split('T')[0]}.pdf`);
+        toast(`PDF saved — ${did}`);
+
+    } catch {
+        toast('PDF export failed.', 'error');
     }
-});
-
-// Scroll to Top Button Functionality
-const scrollTopBtn = document.getElementById('scrollTopBtn');
-
-// Show/hide button based on scroll position
-window.addEventListener('scroll', function() {
-    if (window.pageYOffset > 300) {
-        scrollTopBtn.style.display = 'flex';
-    } else {
-        scrollTopBtn.style.display = 'none';
-    }
-    
-    // Parallax effect for background elements
-    const scrollY = window.pageYOffset;
-    document.querySelectorAll('.parallax-slow').forEach(el => {
-        el.style.transform = `translateY(${scrollY * 0.15}px)`;
-    });
-});
-
-// Intersection Observer for scroll fade-in animations
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const scrollObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-        }
-    });
-}, observerOptions);
-
-// Apply fade-in animation to sections
-document.querySelectorAll('.scroll-fade-in').forEach(el => {
-    scrollObserver.observe(el);
-});
-
-// Smooth scroll to top when clicked
-scrollTopBtn.addEventListener('click', function() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
 });
 </script>
-
-<!-- Features & Testimonials - Seamless Design -->
-<section style="padding: 3rem 2rem 4rem; background: linear-gradient(180deg, rgba(13, 13, 20, 0.5) 0%, rgba(0, 0, 0, 0.7) 100%); max-width: 100%; margin: 0;">
-    
-    <!-- Features Section -->
-    <div style="max-width: 1200px; margin: 0 auto 4rem;">
-        <div style="text-align: center; margin-bottom: 3rem;">
-            <div style="display: inline-block; color: rgba(0, 212, 255, 0.8); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.1rem; margin-bottom: 0.5rem;">
-                POWERFUL FEATURES
-            </div>
-            <h2 style="color: #00D4FF; font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);">
-                Why Choose InfiniHumanizer
-            </h2>
-            <div style="width: 80px; height: 2px; background: linear-gradient(90deg, transparent, #00D4FF, transparent); margin: 1rem auto;"></div>
-        </div>
-        
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2.5rem;">
-            <div style="padding: 0 1rem; text-align: center;">
-                <div style="font-size: 2.5rem; margin-bottom: 1rem; filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.3));">✍️</div>
-                <h3 style="color: #00D4FF; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.8rem;">Natural Cadence</h3>
-                <p style="color: rgba(255, 255, 255, 0.7); line-height: 1.8; font-size: 0.95rem;">Your words flow like a real student — no rigid AI rhythm. Advanced algorithms ensure natural pacing and rhythm in every sentence.</p>
-            </div>
-            <div style="padding: 0 1rem; text-align: center;">
-                <div style="font-size: 2.5rem; margin-bottom: 1rem; filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.3));">🔁</div>
-                <h3 style="color: #00D4FF; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.8rem;">Structured Variance</h3>
-                <p style="color: rgba(255, 255, 255, 0.7); line-height: 1.8; font-size: 0.95rem;">Paragraphs are well balanced for human clarity. Intelligent variation in sentence length and structure keeps readers engaged.</p>
-            </div>
-            <div style="padding: 0 1rem; text-align: center;">
-                <div style="font-size: 2.5rem; margin-bottom: 1rem; filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.3));">📚</div>
-                <h3 style="color: #00D4FF; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.8rem;">Academic Realism</h3>
-                <p style="color: rgba(255, 255, 255, 0.7); line-height: 1.8; font-size: 0.95rem;">The tone mimics thoughtful effort, not perfect computation. Maintains academic integrity while sounding authentically human.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Smooth Separator -->
-    <div style="max-width: 600px; margin: 3rem auto; height: 1px; background: linear-gradient(to right, transparent, rgba(0, 212, 255, 0.15), transparent);"></div>
-
-    <!-- Testimonials Section -->
-    <div style="max-width: 1000px; margin: 0 auto;">
-        <div style="text-align: center; margin-bottom: 2.5rem;">
-            <div style="display: inline-block; color: rgba(0, 212, 255, 0.8); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.1rem; margin-bottom: 0.5rem;">
-                USER FEEDBACK
-            </div>
-            <h2 style="color: #00D4FF; font-size: 2rem; font-weight: 800; text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);">
-                What Our Users Say
-            </h2>
-        </div>
-        
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2.5rem; padding: 0 1rem;">
-            <div style="text-align: center; padding: 1.5rem 0;">
-                <div style="color: rgba(0, 212, 255, 0.4); font-size: 3rem; line-height: 1; margin-bottom: 0.5rem;">"</div>
-                <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.8; font-size: 1rem; font-style: italic; margin-bottom: 1.2rem;">
-                    This actually sounds like I wrote it after a long study night. The naturalness is incredible!
-                </p>
-                <div style="color: #00D4FF; font-weight: 700; font-size: 0.95rem;">— Joseph</div>
-            </div>
-            <div style="text-align: center; padding: 1.5rem 0;">
-                <div style="color: rgba(0, 212, 255, 0.4); font-size: 3rem; line-height: 1; margin-bottom: 0.5rem;">"</div>
-                <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.8; font-size: 1rem; font-style: italic; margin-bottom: 1.2rem;">
-                    Passed the AI check with flying colors. And my professor said it felt authentic and well-written.
-                </p>
-                <div style="color: #00D4FF; font-weight: 700; font-size: 0.95rem;">— Kate</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Smooth Separator -->
-    <div style="max-width: 600px; margin: 4rem auto 3rem; height: 1px; background: linear-gradient(to right, transparent, rgba(0, 212, 255, 0.15), transparent);"></div>
-
-    <!-- Changelog Section - Seamless -->
-    <div style="max-width: 900px; margin: 0 auto; padding: 0 1rem;">
-        <div style="text-align: center; margin-bottom: 2.5rem;">
-            <div style="display: inline-block; color: rgba(0, 212, 255, 0.8); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.1rem; margin-bottom: 0.5rem;">
-                LATEST UPDATES
-            </div>
-            <h2 style="color: #00D4FF; font-size: 2rem; font-weight: 800; text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);">
-                📋 Changelog
-            </h2>
-        </div>
-        
-        <div style="max-width: 750px; margin: 0 auto;">
-            <!-- Version 4.5 -->
-            <div style="margin-bottom: 2.5rem; padding-left: 2rem; border-left: 2px solid rgba(0, 212, 255, 0.4); position: relative;">
-                <div style="position: absolute; left: -5px; top: 0; width: 8px; height: 8px; background: #00D4FF; border-radius: 50%; box-shadow: 0 0 10px rgba(0, 212, 255, 0.6);"></div>
-                <div style="color: #00D4FF; font-weight: 700; margin-bottom: 0.8rem; font-size: 1.05rem;">
-                    ✨ Version 4.5 - Advanced Features
-                </div>
-                <ul style="color: rgba(255, 255, 255, 0.75); line-height: 1.9; list-style: none; padding-left: 0; font-size: 0.95rem;">
-                    <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
-                        <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.6);">•</span>
-                        Enhanced humanization algorithms
-                    </li>
-                    <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
-                        <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.6);">•</span>
-                        Improved detection bypass capabilities
-                    </li>
-                    <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
-                        <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.6);">•</span>
-                        Multiple writing modes added
-                    </li>
-                    <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
-                        <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.6);">•</span>
-                        Natural error injection system
-                    </li>
-                    <li style="padding-left: 1.2rem; position: relative;">
-                        <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.6);">•</span>
-                        Dynamic text variation
-                    </li>
-                </ul>
-            </div>
-            
-            <!-- Version 4.0 -->
-            <div style="padding-left: 2rem; border-left: 2px solid rgba(0, 212, 255, 0.2); position: relative;">
-                <div style="position: absolute; left: -5px; top: 0; width: 8px; height: 8px; background: rgba(0, 212, 255, 0.5); border-radius: 50%;"></div>
-                <div style="color: rgba(0, 212, 255, 0.8); font-weight: 700; margin-bottom: 0.8rem; font-size: 1.05rem;">
-                    🔧 Version 4.0 - Core Improvements
-                </div>
-                <ul style="color: rgba(255, 255, 255, 0.65); line-height: 1.9; list-style: none; padding-left: 0; font-size: 0.95rem;">
-                    <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
-                        <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.4);">•</span>
-                        Sentence reorganization algorithms
-                    </li>
-                    <li style="margin-bottom: 0.5rem; padding-left: 1.2rem; position: relative;">
-                        <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.4);">•</span>
-                        Advanced vocabulary integration
-                    </li>
-                    <li style="padding-left: 1.2rem; position: relative;">
-                        <span style="position: absolute; left: 0; color: rgba(0, 212, 255, 0.4);">•</span>
-                        Improved readability scores
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Smooth Separator -->
-<div style="height: 1px; background: linear-gradient(to right, transparent, rgba(0, 212, 255, 0.15), transparent); margin: 0;"></div>
 
 {% endblock %}
 
