@@ -8,317 +8,397 @@
 {% block extra_head %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
 <style>
-/* ── Reset ───────────────────────────────────────────────── */
+/* ── Core Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #0A0A0F;
-    color: #F0F0F0;
+    font-family: 'Inter', 'Segoe UI', -apple-system, sans-serif;
+    background: #0D0D0D;
+    color: #F0F0F5;
     height: 100vh;
     overflow: hidden;
 }
 main { padding: 0 !important; margin: 0 !important; }
-nav  { display: none !important; }
+nav, footer { display: none !important; }
 
-/* ── Orbs ────────────────────────────────────────────────── */
-.orb {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(100px);
-    pointer-events: none;
-    z-index: 0;
+/* ── Background layers ── */
+.gradient-bg {
+    position: fixed; inset: 0; z-index: 0;
+    background: linear-gradient(45deg, #0D0D0D, #111520, #0D0D0D, #0F1218);
+    background-size: 400% 400%;
+    animation: gradientShift 18s ease infinite;
 }
-.orb1 { width:520px;height:520px;background:rgba(0,180,255,0.12);top:-180px;left:-180px; }
-.orb2 { width:380px;height:380px;background:rgba(0,60,220,0.11);bottom:-100px;right:-100px; }
-.orb3 { width:260px;height:260px;background:rgba(0,200,255,0.05);top:40%;left:38%; }
+@keyframes gradientShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
 
-/* Scanlines */
+.binary-background {
+    position: fixed; inset: 0; z-index: 1;
+    opacity: 0.18; overflow: hidden; pointer-events: none;
+}
+.binary-column {
+    position: absolute;
+    font-family: 'Courier New', monospace;
+    font-size: 14px; font-weight: 700;
+    color: #00FF41; opacity: 0.55;
+    text-shadow: 0 0 12px #00FF41, 0 0 24px rgba(0,255,65,0.7);
+    white-space: pre; line-height: 1.5;
+    animation: matrixFall linear infinite;
+    pointer-events: none;
+}
+@keyframes matrixFall {
+    0%   { transform: translateY(-100%); }
+    100% { transform: translateY(calc(100vh + 100%)); }
+}
+
+/* ── Orbs ── */
+.orb {
+    position: fixed; border-radius: 50%;
+    filter: blur(80px); opacity: 0.45;
+    animation: floatOrb 20s infinite ease-in-out;
+    z-index: 1; pointer-events: none;
+}
+.orb1 { width: 480px; height: 480px; background: #00D4FF; top: -140px; left: -140px; animation-delay: 0s; }
+.orb2 { width: 340px; height: 340px; background: #0066FF; bottom: -80px; right: -80px; animation-delay: 7s; }
+.orb3 { width: 260px; height: 260px; background: #00D4FF; top: 45%; left: 40%; animation-delay: 13s; opacity: 0.2; }
+@keyframes floatOrb {
+    0%,100% { transform: translate(0,0) scale(1); }
+    33%      { transform: translate(80px,-80px) scale(1.08); }
+    66%      { transform: translate(-80px, 80px) scale(0.93); }
+}
+
+/* ── Scanlines ── */
 body::after {
-    content:'';
-    position:fixed;inset:0;pointer-events:none;z-index:1;
-    background:repeating-linear-gradient(
+    content: ''; position: fixed; inset: 0; z-index: 2; pointer-events: none;
+    background: repeating-linear-gradient(
         0deg,
-        rgba(0,212,255,0.013) 0px, transparent 1px,
-        transparent 3px, rgba(0,212,255,0.013) 4px
+        rgba(0,212,255,0.018) 0px, transparent 1px,
+        transparent 2px, rgba(0,212,255,0.018) 3px
     );
 }
 
-/* ── Topbar ──────────────────────────────────────────────── */
+/* ── Topbar ── */
 .topbar {
-    position:fixed;top:0;left:0;right:0;height:54px;
-    background:rgba(6,7,14,0.92);
-    border-bottom:1px solid rgba(0,212,255,0.09);
-    backdrop-filter:blur(24px);
-    display:flex;align-items:center;justify-content:space-between;
-    padding:0 1.5rem;z-index:200;
+    position: fixed; top: 0; left: 0; right: 0; height: 56px; z-index: 300;
+    background: rgba(6, 8, 16, 0.88);
+    border-bottom: 1px solid rgba(0, 212, 255, 0.14);
+    backdrop-filter: blur(28px);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 1.5rem; gap: 1rem;
 }
-.topbar-l { display:flex;align-items:center;gap:.9rem; }
+.topbar-l { display: flex; align-items: center; gap: 1rem; }
+.topbar-r { display: flex; align-items: center; gap: 1rem; }
+
 .menu-btn {
-    width:34px;height:34px;background:transparent;
-    border:1px solid rgba(0,212,255,0.12);border-radius:8px;
-    cursor:pointer;display:flex;align-items:center;justify-content:center;
-    transition:all .2s ease;
+    width: 36px; height: 36px;
+    background: rgba(0,212,255,0.06);
+    border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 9px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s ease;
 }
-.menu-btn:hover { background:rgba(0,212,255,0.07);border-color:rgba(0,212,255,0.3); }
-.menu-btn svg { width:16px;height:16px;stroke:#00D4FF;stroke-width:2;fill:none;stroke-linecap:round; }
-.logo { font-size:1.05rem;font-weight:700;letter-spacing:-.3px;color:#fff; }
-.logo span { color:#00D4FF; }
-.topbar-r { display:flex;align-items:center;gap:.9rem; }
+.menu-btn:hover { background: rgba(0,212,255,0.12); border-color: rgba(0,212,255,0.35); }
+.menu-btn svg { width: 16px; height: 16px; stroke: #00D4FF; stroke-width: 2; fill: none; stroke-linecap: round; }
+
+.topbar-logo {
+    font-size: 1.1rem; font-weight: 800; letter-spacing: -0.4px;
+    background: linear-gradient(135deg, #00D4FF, #0099FF, #00D4FF);
+    background-size: 200% 200%;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: logoGrad 4s ease infinite;
+}
+@keyframes logoGrad {
+    0%,100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+}
+
 .bal-chip {
-    background:rgba(0,212,255,0.07);border:1px solid rgba(0,212,255,0.18);
-    border-radius:20px;padding:.24rem .8rem;
-    font-size:.75rem;font-weight:600;color:#00D4FF;letter-spacing:.4px;
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.22);
+    border-radius: 20px; padding: 0.28rem 0.85rem;
+    font-size: 0.73rem; font-weight: 600; color: #00D4FF; letter-spacing: 0.5px;
 }
-.utag { font-size:.8rem;font-weight:500;color:rgba(255,255,255,0.48); }
-.utag strong { color:rgba(255,255,255,0.82);font-weight:600; }
+.utag {
+    font-size: 0.8rem; font-weight: 500; color: rgba(255,255,255,0.45);
+}
+.utag strong { color: rgba(255,255,255,0.78); font-weight: 600; }
 
-/* ── Shell ───────────────────────────────────────────────── */
+/* ── Shell ── */
 .shell {
-    display:flex;
-    height:calc(100vh - 54px);
-    margin-top:54px;
-    position:relative;z-index:2;
+    position: fixed; top: 56px; left: 0; right: 0; bottom: 0; z-index: 10;
+    display: flex; overflow: hidden;
 }
 
-/* ── Sidebar ─────────────────────────────────────────────── */
+/* ── Sidebar ── */
 .sidebar {
-    width:248px;min-width:248px;
-    background:rgba(5,6,12,0.9);
-    border-right:1px solid rgba(0,212,255,0.08);
-    backdrop-filter:blur(20px);
-    display:flex;flex-direction:column;
-    overflow-y:auto;overflow-x:hidden;
-    padding:1.25rem .875rem;
-    transition:width .32s cubic-bezier(.4,0,.2,1),
-               min-width .32s cubic-bezier(.4,0,.2,1),
-               opacity .2s ease, padding .32s ease;
-    scrollbar-width:thin;scrollbar-color:rgba(0,212,255,0.1) transparent;
+    width: 252px; min-width: 252px;
+    background: rgba(0, 0, 0, 0.75);
+    border-right: 1px solid rgba(0,212,255,0.14);
+    backdrop-filter: blur(24px);
+    display: flex; flex-direction: column;
+    overflow-y: auto; overflow-x: hidden;
+    padding: 1.2rem 0.9rem;
+    transition: width 0.3s cubic-bezier(0.4,0,0.2,1),
+                min-width 0.3s cubic-bezier(0.4,0,0.2,1),
+                opacity 0.22s ease,
+                padding 0.3s ease;
+    scrollbar-width: thin; scrollbar-color: rgba(0,212,255,0.12) transparent;
+    box-shadow: inset -1px 0 0 rgba(0,212,255,0.05);
 }
-.sidebar.closed { width:0;min-width:0;opacity:0;padding:0;overflow:hidden; }
+.sidebar.closed { width: 0; min-width: 0; opacity: 0; padding: 0; overflow: hidden; }
 
-.sb-lbl {
-    font-size:.65rem;font-weight:700;letter-spacing:1.1px;
-    color:rgba(255,255,255,.24);text-transform:uppercase;
-    padding:.4rem .4rem .2rem;margin-top:.7rem;
+.sb-section-lbl {
+    font-size: 0.62rem; font-weight: 700; letter-spacing: 1.2px;
+    color: rgba(255,255,255,0.22); text-transform: uppercase;
+    padding: 0.35rem 0.45rem 0.2rem; margin-top: 0.6rem;
 }
-.sb-lbl:first-child { margin-top:0; }
+.sb-section-lbl:first-child { margin-top: 0; }
 
-.sb-a {
-    display:flex;align-items:center;gap:.65rem;
-    padding:.6rem .7rem;border-radius:9px;
-    color:rgba(255,255,255,.54);text-decoration:none;
-    font-size:.855rem;font-weight:500;
-    transition:all .18s ease;
-    border:none;background:transparent;width:100%;text-align:left;cursor:pointer;
+.sb-link {
+    display: flex; align-items: center; gap: 0.65rem;
+    padding: 0.58rem 0.72rem; border-radius: 10px;
+    color: rgba(255,255,255,0.5); text-decoration: none;
+    font-size: 0.845rem; font-weight: 500;
+    transition: all 0.18s ease;
+    border: none; background: transparent; width: 100%; text-align: left; cursor: pointer;
 }
-.sb-a svg { width:15px;height:15px;stroke:currentColor;stroke-width:2;fill:none;
-             stroke-linecap:round;stroke-linejoin:round;flex-shrink:0; }
-.sb-a:hover { background:rgba(0,212,255,.07);color:#e0e0e0; }
-.sb-a.on    { background:rgba(0,212,255,.1);color:#00D4FF; }
-.sb-a.out   { color:rgba(255,80,60,.65); }
-.sb-a.out:hover { background:rgba(255,55,45,.08);color:#FF5040; }
+.sb-link svg { width: 15px; height: 15px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.sb-link:hover { background: rgba(0,212,255,0.07); color: #e2e2e2; }
+.sb-link.active { background: rgba(0,212,255,0.12); color: #00D4FF; border: 1px solid rgba(0,212,255,0.18); }
+.sb-link.logout-link { color: rgba(255,75,65,0.65); }
+.sb-link.logout-link:hover { background: rgba(255,55,45,0.08); color: #FF5040; }
 
-.sb-hr { height:1px;background:rgba(0,212,255,.07);margin:.65rem 0; }
+.sb-divider { height: 1px; background: rgba(0,212,255,0.08); margin: 0.6rem 0; }
 
-.sb-clbl {
-    font-size:.68rem;font-weight:600;color:rgba(255,255,255,.28);
-    letter-spacing:.5px;text-transform:uppercase;
-    display:block;margin-bottom:.35rem;padding:0 .2rem;
+.sb-ctrl-lbl {
+    font-size: 0.67rem; font-weight: 600; color: rgba(255,255,255,0.28);
+    letter-spacing: 0.5px; text-transform: uppercase;
+    display: block; margin-bottom: 0.32rem; padding: 0 0.18rem;
 }
-.sb-sel {
-    width:100%;background:rgba(0,0,0,.45);
-    border:1px solid rgba(0,212,255,.13);border-radius:9px;
-    color:#EEE;padding:.5rem .7rem;
-    font-size:.82rem;font-family:'Inter',sans-serif;font-weight:500;
-    cursor:pointer;outline:none;
-    transition:border-color .18s,box-shadow .18s;
-    appearance:none;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='rgba(0,212,255,0.45)' stroke-width='2.5' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-    background-repeat:no-repeat;background-position:right .6rem center;padding-right:1.8rem;
+.sb-select {
+    width: 100%; background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(0,212,255,0.15); border-radius: 9px;
+    color: #E8E8E8; padding: 0.5rem 1.85rem 0.5rem 0.7rem;
+    font-size: 0.82rem; font-family: 'Inter', sans-serif; font-weight: 500;
+    cursor: pointer; outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='rgba(0,212,255,0.45)' stroke-width='2.5' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 0.6rem center;
 }
-.sb-sel:hover { border-color:rgba(0,212,255,.28); }
-.sb-sel:focus { border-color:rgba(0,212,255,.48);box-shadow:0 0 0 3px rgba(0,212,255,.09); }
-.sb-sel option { background:#0A0F1E;color:#EEE; }
+.sb-select:hover  { border-color: rgba(0,212,255,0.3); }
+.sb-select:focus  { border-color: rgba(0,212,255,0.52); box-shadow: 0 0 0 3px rgba(0,212,255,0.09); }
+.sb-select option { background: #0A0F1E; color: #EEE; }
+
+.sb-device-card {
+    background: rgba(0,212,255,0.04); border: 1px solid rgba(0,212,255,0.12);
+    border-radius: 10px; padding: 0.72rem;
+    font-size: 0.76rem; color: rgba(255,255,255,0.5); line-height: 1.75;
+}
+.sb-device-card .val { color: #00D4FF; font-weight: 700; }
 
 .sb-tip {
-    background:rgba(0,212,255,.035);border:1px solid rgba(0,212,255,.09);
-    border-radius:9px;padding:.7rem;
-    font-size:.76rem;color:rgba(255,255,255,.44);line-height:1.6;margin-top:.25rem;
+    background: rgba(0,212,255,0.03); border: 1px solid rgba(0,212,255,0.09);
+    border-radius: 10px; padding: 0.72rem;
+    font-size: 0.75rem; color: rgba(255,255,255,0.38); line-height: 1.65;
 }
-.sb-tip strong { color:rgba(0,212,255,.75); }
+.sb-tip strong { color: rgba(0,212,255,0.72); }
 
-.sb-dev {
-    background:rgba(0,212,255,.03);border:1px solid rgba(0,212,255,.1);
-    border-radius:9px;padding:.7rem;
-    font-size:.76rem;color:rgba(255,255,255,.5);line-height:1.75;
-}
-.sb-dev .v { color:#00D4FF;font-weight:700; }
+.sb-spacer { flex: 1; }
 
-.sb-spacer { flex:1; }
-
-/* ── Workspace ───────────────────────────────────────────── */
+/* ── Workspace ── */
 .workspace {
-    flex:1;
-    display:grid;grid-template-columns:1fr 1fr;
-    overflow:hidden;
+    flex: 1; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden;
+    gap: 0;
 }
 
-/* ── Panel ───────────────────────────────────────────────── */
-.panel {
-    display:flex;flex-direction:column;
-    background:rgba(4,5,10,.6);
-    border-right:1px solid rgba(0,212,255,.06);
-    overflow:hidden;
+/* ── Glass Panel ── */
+.glass-panel {
+    display: flex; flex-direction: column;
+    background: rgba(0, 0, 0, 0.68);
+    border-right: 1px solid rgba(0,212,255,0.1);
+    backdrop-filter: blur(20px);
+    overflow: hidden;
+    position: relative;
 }
-.panel:last-child { border-right:none; }
+.glass-panel:last-child { border-right: none; }
 
-.p-hd {
-    display:flex;align-items:center;justify-content:space-between;
-    padding:.65rem 1.2rem;
-    border-bottom:1px solid rgba(0,212,255,.06);
-    background:rgba(4,5,10,.72);flex-shrink:0;gap:.6rem;
-}
-.p-hd-l { display:flex;align-items:center;gap:.6rem;min-width:0; }
-.p-hd-r { display:flex;align-items:center;gap:.5rem;flex-shrink:0; }
-
-.p-tag {
-    font-size:.67rem;font-weight:700;letter-spacing:.9px;
-    text-transform:uppercase;color:rgba(255,255,255,.27);
+/* subtle top glow line on each panel */
+.glass-panel::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,212,255,0.35), transparent);
+    z-index: 1;
 }
 
-.wpill {
-    background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);
-    border-radius:20px;padding:.18rem .55rem;
-    font-size:.7rem;font-weight:600;color:rgba(255,255,255,.34);
-    font-variant-numeric:tabular-nums;transition:color .2s,border-color .2s;
+/* ── Panel Header ── */
+.panel-hd {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.7rem 1.25rem;
+    border-bottom: 1px solid rgba(0,212,255,0.08);
+    background: rgba(0,0,0,0.48);
+    flex-shrink: 0; gap: 0.6rem;
+    position: relative; z-index: 2;
 }
-.wpill .n { color:rgba(0,212,255,.75); }
-.wpill.over { border-color:rgba(255,55,45,.38); }
-.wpill.over .n { color:#FF5040; }
+.panel-hd-l { display: flex; align-items: center; gap: 0.6rem; min-width: 0; }
+.panel-hd-r { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
 
-.lbadge {
-    background:rgba(255,55,45,.1);border:1px solid rgba(255,55,45,.28);
-    border-radius:20px;padding:.18rem .55rem;
-    font-size:.66rem;font-weight:600;color:#FF6050;
-    opacity:0;pointer-events:none;transition:opacity .22s;
+.panel-tag {
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 1.1px;
+    text-transform: uppercase; color: rgba(255,255,255,0.3);
 }
-.lbadge.show { opacity:1; }
 
-/* Icon buttons */
-.ibtn {
-    width:28px;height:28px;
-    background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.13);
-    border-radius:7px;cursor:pointer;
-    display:flex;align-items:center;justify-content:center;
-    transition:all .18s ease;
+/* word count pill */
+.word-pill {
+    background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 20px; padding: 0.2rem 0.58rem;
+    font-size: 0.7rem; font-weight: 600; color: rgba(255,255,255,0.36);
+    font-variant-numeric: tabular-nums; transition: all 0.2s;
 }
-.ibtn svg { width:13px;height:13px;stroke:rgba(0,212,255,.7);stroke-width:1.8;
-             fill:none;stroke-linecap:round;stroke-linejoin:round; }
-.ibtn:hover { background:rgba(0,212,255,.11);border-color:rgba(0,212,255,.32);transform:translateY(-1px); }
-.ibtn.ok svg { stroke:#00E87A; }
-.ibtn.ok { background:rgba(0,230,120,.08);border-color:rgba(0,230,120,.28); }
+.word-pill .count { color: rgba(0,212,255,0.8); }
+.word-pill.over-limit { border-color: rgba(255,55,45,0.4); }
+.word-pill.over-limit .count { color: #FF5040; }
 
-/* Circle stats */
-.stats { display:flex;align-items:center;gap:.45rem; }
-.stp { display:flex;flex-direction:column;align-items:center;gap:.12rem; }
-.cwrap { position:relative;width:28px;height:28px; }
-.cwrap svg { transform:rotate(-90deg); }
-.cbg  { fill:none;stroke:rgba(0,212,255,.09);stroke-width:2.5; }
-.cfil {
-    fill:none;stroke:#00D4FF;stroke-width:2.5;stroke-linecap:round;
-    transition:stroke-dashoffset .55s ease;
+/* over-limit badge */
+.limit-badge {
+    background: rgba(255,55,45,0.1); border: 1px solid rgba(255,55,45,0.3);
+    border-radius: 20px; padding: 0.18rem 0.55rem;
+    font-size: 0.66rem; font-weight: 600; color: #FF6050;
+    opacity: 0; pointer-events: none; transition: opacity 0.22s;
 }
-.ctxt {
-    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-    font-size:.45rem;font-weight:700;color:#00D4FF;white-space:nowrap;
-}
-.slbl { font-size:.55rem;color:rgba(255,255,255,.27);font-weight:500; }
+.limit-badge.visible { opacity: 1; }
 
-/* ── Textarea ────────────────────────────────────────────── */
-.pta {
-    flex:1;background:transparent;border:none;outline:none;resize:none;
-    color:#DDDDE8;font-size:.945rem;line-height:1.88;
-    font-family:'Inter',sans-serif;font-weight:400;
-    padding:1.4rem 1.4rem;
-    transition:background .25s ease;
-    scrollbar-width:thin;scrollbar-color:rgba(0,212,255,.1) transparent;
+/* icon action buttons */
+.action-btn {
+    width: 30px; height: 30px;
+    background: rgba(0,212,255,0.06); border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 8px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.18s ease;
 }
-.pta:focus { background:rgba(0,212,255,.012); }
-.pta::placeholder { color:rgba(255,255,255,.15);font-style:italic;font-weight:300; }
-.pta.over { background:rgba(255,30,30,.025); }
+.action-btn svg { width: 13px; height: 13px; stroke: rgba(0,212,255,0.75); stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.action-btn:hover { background: rgba(0,212,255,0.12); border-color: rgba(0,212,255,0.35); transform: translateY(-1px); }
+.action-btn.success svg { stroke: #00E87A; }
+.action-btn.success { background: rgba(0,232,122,0.08); border-color: rgba(0,232,122,0.3); }
 
-/* ── Humanize bar ────────────────────────────────────────── */
-.hbar {
-    flex-shrink:0;
-    padding:.7rem 1.2rem;
-    border-top:1px solid rgba(0,212,255,.06);
-    background:rgba(4,5,10,.8);
+/* score circles */
+.scores-wrap { display: flex; align-items: center; gap: 0.5rem; }
+.score-item { display: flex; flex-direction: column; align-items: center; gap: 0.1rem; }
+.circle-wrap { position: relative; width: 30px; height: 30px; }
+.circle-wrap svg { transform: rotate(-90deg); }
+.c-bg   { fill: none; stroke: rgba(0,212,255,0.1); stroke-width: 2.5; }
+.c-fill {
+    fill: none; stroke: #00D4FF; stroke-width: 2.5; stroke-linecap: round;
+    transition: stroke-dashoffset 0.6s cubic-bezier(0.16,1,0.3,1);
 }
-.hbtn {
-    width:100%;height:44px;
-    background:linear-gradient(135deg,#C96F00,#F59E0B,#FBBF24);
-    background-size:200% 200%;background-position:0% 0%;
-    border:none;border-radius:10px;
-    color:#0A0A0F;font-family:'Inter',sans-serif;
-    font-size:.875rem;font-weight:700;letter-spacing:.3px;
-    cursor:pointer;
-    display:flex;align-items:center;justify-content:center;gap:.55rem;
-    transition:transform .25s ease,box-shadow .25s ease,background-position .4s ease;
-    overflow:hidden;position:relative;
+.c-label {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    font-size: 0.44rem; font-weight: 800; color: #00D4FF; white-space: nowrap;
 }
-.hbtn::after {
-    content:'';position:absolute;inset:0;
-    background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.18) 50%,transparent 100%);
-    transform:translateX(-100%);transition:transform .5s ease;
-}
-.hbtn:hover:not(:disabled)::after  { transform:translateX(100%); }
-.hbtn:hover:not(:disabled) {
-    transform:translateY(-2px);
-    box-shadow:0 8px 28px rgba(245,158,11,.32);
-    background-position:100% 100%;
-}
-.hbtn:active:not(:disabled) { transform:translateY(0); }
-.hbtn:disabled { opacity:.44;cursor:not-allowed; }
-.hbtn svg { width:16px;height:16px;stroke:#0A0A0F;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round; }
+.score-lbl { font-size: 0.54rem; color: rgba(255,255,255,0.26); font-weight: 500; }
 
-/* Loading dots */
-.dots { display:inline-flex;gap:.32rem;align-items:center; }
-.dots span {
-    width:6px;height:6px;background:#0A0A0F;border-radius:50%;
-    animation:dd 1.1s ease-in-out infinite;
+/* ── Textarea ── */
+.editor-ta {
+    flex: 1; background: transparent; border: none; outline: none; resize: none;
+    color: #D8D8E4; font-size: 0.935rem; line-height: 1.9;
+    font-family: 'Inter', sans-serif; font-weight: 400;
+    padding: 1.35rem 1.4rem;
+    transition: background 0.25s;
+    scrollbar-width: thin; scrollbar-color: rgba(0,212,255,0.1) transparent;
+    position: relative; z-index: 2;
 }
-.dots span:nth-child(2){animation-delay:.17s;}
-.dots span:nth-child(3){animation-delay:.34s;}
-@keyframes dd { 0%,60%,100%{transform:translateY(0);opacity:.45;} 30%{transform:translateY(-6px);opacity:1;} }
+.editor-ta:focus { background: rgba(0,212,255,0.013); }
+.editor-ta::placeholder { color: rgba(255,255,255,0.14); font-style: italic; font-weight: 300; }
+.editor-ta.over { background: rgba(255,20,20,0.025); }
 
-/* ── Toast ───────────────────────────────────────────────── */
-.toast {
-    position:fixed;bottom:1.4rem;right:1.4rem;
-    background:rgba(10,11,18,.97);border:1px solid rgba(255,255,255,.1);
-    border-radius:10px;padding:.5rem .9rem;
-    font-size:.78rem;font-weight:500;color:#EEE;
-    display:flex;align-items:center;gap:.45rem;
-    box-shadow:0 8px 28px rgba(0,0,0,.65);
-    z-index:9999;backdrop-filter:blur(16px);max-width:280px;
-    animation:tin .28s cubic-bezier(.4,0,.2,1);
+/* ── Humanize Button bar ── */
+.btn-bar {
+    flex-shrink: 0;
+    padding: 0.75rem 1.25rem;
+    border-top: 1px solid rgba(0,212,255,0.08);
+    background: rgba(0,0,0,0.55);
+    position: relative; z-index: 2;
 }
-.ts { border-color:rgba(0,210,100,.38); }
-.te { border-color:rgba(255,55,45,.38); }
-@keyframes tin  { from{transform:translateY(10px);opacity:0;} to{transform:translateY(0);opacity:1;} }
-@keyframes tout { to{transform:translateY(10px);opacity:0;} }
 
-::-webkit-scrollbar { width:4px; }
-::-webkit-scrollbar-track { background:transparent; }
-::-webkit-scrollbar-thumb { background:rgba(0,212,255,.1);border-radius:2px; }
-::-webkit-scrollbar-thumb:hover { background:rgba(0,212,255,.22); }
+.humanize-btn {
+    width: 100%; height: 46px;
+    background: linear-gradient(135deg, #00D4FF, #0099FF, #00D4FF);
+    background-size: 200% 200%; background-position: 0% 0%;
+    border: none; border-radius: 11px;
+    color: #050810; font-family: 'Inter', sans-serif;
+    font-size: 0.875rem; font-weight: 700; letter-spacing: 0.4px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 0.55rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background-position 0.45s ease;
+    overflow: hidden; position: relative;
+    box-shadow: 0 4px 22px rgba(0,212,255,0.22);
+}
+.humanize-btn::before {
+    content: '';
+    position: absolute; top: 50%; left: 50%;
+    width: 0; height: 0;
+    background: rgba(255,255,255,0.22);
+    border-radius: 50%; transform: translate(-50%,-50%);
+    transition: width 0.55s ease, height 0.55s ease;
+}
+.humanize-btn:hover:not(:disabled)::before { width: 320px; height: 320px; }
+.humanize-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(0,212,255,0.42);
+    background-position: 100% 100%;
+}
+.humanize-btn:active:not(:disabled) { transform: translateY(0); }
+.humanize-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.humanize-btn svg { width: 16px; height: 16px; stroke: #050810; stroke-width: 2.2; fill: none; stroke-linecap: round; stroke-linejoin: round; position: relative; z-index: 1; }
+.humanize-btn span { position: relative; z-index: 1; }
+
+/* loading dots */
+.loading-dots { display: inline-flex; gap: 0.3rem; align-items: center; }
+.loading-dots i {
+    width: 6px; height: 6px; background: #050810; border-radius: 50%;
+    animation: dotBounce 1.1s ease-in-out infinite; display: block;
+}
+.loading-dots i:nth-child(2) { animation-delay: 0.16s; }
+.loading-dots i:nth-child(3) { animation-delay: 0.32s; }
+@keyframes dotBounce {
+    0%,60%,100% { transform: translateY(0); opacity: 0.45; }
+    30%          { transform: translateY(-6px); opacity: 1; }
+}
+
+/* ── Toast ── */
+.toast-msg {
+    position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999;
+    background: rgba(6,8,16,0.97); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 11px; padding: 0.52rem 0.95rem;
+    font-size: 0.78rem; font-weight: 500; color: #EEE;
+    display: flex; align-items: center; gap: 0.45rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+    backdrop-filter: blur(18px); max-width: 290px;
+    animation: toastIn 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+.toast-msg.t-ok  { border-color: rgba(0,210,100,0.4); }
+.toast-msg.t-err { border-color: rgba(255,55,45,0.4); }
+@keyframes toastIn  { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes toastOut { to   { transform: translateY(10px); opacity: 0; } }
+
+/* scrollbars */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.1); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,212,255,0.24); }
 </style>
 
-<!-- atmosphere -->
+<!-- Background layers -->
+<div class="gradient-bg"></div>
+<div class="binary-background" id="binaryBg"></div>
 <div class="orb orb1"></div>
 <div class="orb orb2"></div>
 <div class="orb orb3"></div>
@@ -326,14 +406,14 @@ body::after {
 <!-- TOPBAR -->
 <div class="topbar">
     <div class="topbar-l">
-        <button class="menu-btn" onclick="toggleSidebar()" title="Toggle sidebar">
+        <button class="menu-btn" onclick="toggleSidebar()" title="Toggle menu" aria-label="Toggle menu">
             <svg viewBox="0 0 24 24">
                 <line x1="3" y1="6"  x2="21" y2="6"/>
                 <line x1="3" y1="12" x2="16" y2="12"/>
                 <line x1="3" y1="18" x2="21" y2="18"/>
             </svg>
         </button>
-        <div class="logo">Infini<span>Humanizer</span></div>
+        <div class="topbar-logo">InfiniHumanizer</div>
     </div>
     <div class="topbar-r">
         <div class="bal-chip">{{ word_balance }} words</div>
@@ -341,46 +421,45 @@ body::after {
     </div>
 </div>
 
-<!-- SHELL -->
+<!-- SHELL: sidebar + workspace -->
 <div class="shell">
 
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sb">
 
-        <div class="sb-lbl">Navigate</div>
+        <div class="sb-section-lbl">Navigate</div>
 
-        <a href="{% url 'humanizer' %}" class="sb-a on">
+        <a href="{% url 'humanizer' %}" class="sb-link active">
             <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
             Humanizer
         </a>
-        <a href="{% url 'pricing' %}" class="sb-a">
+        <a href="{% url 'pricing' %}" class="sb-link">
             <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
             Pricing
         </a>
-        <a href="{% url 'devices' %}" class="sb-a">
-            <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1" fill="rgba(136,136,136,0.8)"/></svg>
+        <a href="{% url 'devices' %}" class="sb-link">
+            <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1" fill="rgba(136,136,136,0.7)"/></svg>
             Devices
         </a>
-        <a href="{% url 'settings' %}" class="sb-a">
+        <a href="{% url 'settings' %}" class="sb-link">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
             Settings
         </a>
-        <a href="{% url 'about' %}" class="sb-a">
+        <a href="{% url 'about' %}" class="sb-link">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
             About
         </a>
-        <a href="{% url 'contact' %}" class="sb-a">
+        <a href="{% url 'contact' %}" class="sb-link">
             <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             Contact
         </a>
 
-        <div class="sb-hr"></div>
+        <div class="sb-divider"></div>
+        <div class="sb-section-lbl">Options</div>
 
-        <div class="sb-lbl">Options</div>
-
-        <div style="padding:0 .1rem;">
-            <span class="sb-clbl">Mode</span>
-            <select id="modeSelect" class="sb-sel">
+        <div style="padding: 0 0.1rem;">
+            <span class="sb-ctrl-lbl">Mode</span>
+            <select id="modeSelect" class="sb-select">
                 <option value="recommended" selected>Recommended</option>
                 <option value="readability">Readability</option>
                 <option value="formal">Formal</option>
@@ -390,116 +469,116 @@ body::after {
             </select>
         </div>
 
-        <div style="padding:0 .1rem;margin-top:.65rem;">
-            <span class="sb-clbl">Model</span>
-            <select id="modelSelect" class="sb-sel">
-                <option value="original" selected>Original</option>
+        <div style="padding: 0 0.1rem; margin-top: 0.65rem;">
+            <span class="sb-ctrl-lbl">Model</span>
+            <select id="modelSelect" class="sb-select">
+                <option value="original" selected>Original — Stable</option>
             </select>
         </div>
 
         {% if user.is_authenticated and user.profile.is_kenya_plan %}
-        <div class="sb-hr"></div>
-        <div class="sb-lbl">Devices</div>
-        <div class="sb-dev">
-            <div>Active: <span class="v">{{ user.profile.current_active_devices }}/{{ user.profile.max_concurrent_devices }}</span></div>
+        <div class="sb-divider"></div>
+        <div class="sb-section-lbl">Devices</div>
+        <div class="sb-device-card">
+            <div>Active: <span class="val">{{ user.profile.current_active_devices }}/{{ user.profile.max_concurrent_devices }}</span></div>
             {% if user.profile.account_type != 'KE_MULTI_DEVICE' %}
-            <div>Today: <span class="v">{{ user.profile.daily_device_switches }}/3</span></div>
+            <div>Today: <span class="val">{{ user.profile.daily_device_switches }}/3</span></div>
             {% endif %}
             {% if user.profile.plan_expires_at %}
-            <div style="margin-top:.3rem;font-size:.7rem;color:rgba(255,255,255,.35);">
+            <div style="margin-top: 0.28rem; font-size: 0.68rem; color: rgba(255,255,255,0.3);">
                 Expires {{ user.profile.plan_expires_at|date:"M d, Y" }}
             </div>
             {% endif %}
         </div>
         {% endif %}
 
-        <div class="sb-hr"></div>
+        <div class="sb-divider"></div>
         <div class="sb-tip">
-            <strong>Tip:</strong> Recommended mode gives the most natural output.
-            For long documents, process in sections for best results.
+            <strong>Tip:</strong> Recommended mode yields the most natural results.
+            Break long docs into sections for best output quality.
         </div>
 
         <div class="sb-spacer"></div>
 
-        <a href="{% url 'account_logout' %}" class="sb-a out" style="margin-top:.5rem;">
+        <a href="{% url 'account_logout' %}" class="sb-link logout-link" style="margin-top: 0.5rem;">
             <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
             Logout
         </a>
-
     </aside>
 
     <!-- WORKSPACE -->
     <div class="workspace">
 
         <!-- INPUT PANEL -->
-        <div class="panel">
-            <div class="p-hd">
-                <div class="p-hd-l">
-                    <span class="p-tag">Input</span>
-                    <div class="wpill" id="iPill">
-                        <span class="n" id="inputWordCount">0</span>&thinsp;/&thinsp;{{ word_balance }}
+        <div class="glass-panel">
+            <div class="panel-hd">
+                <div class="panel-hd-l">
+                    <span class="panel-tag">Input</span>
+                    <div class="word-pill" id="iPill">
+                        <span class="count" id="inputWordCount">0</span>&thinsp;/&thinsp;{{ word_balance }}
                     </div>
-                    <span class="lbadge" id="lbadge"></span>
+                    <span class="limit-badge" id="limitBadge"></span>
                 </div>
             </div>
             <textarea
                 id="inputText"
-                class="pta"
+                class="editor-ta"
                 placeholder="Paste your AI-generated text here…"
+                spellcheck="true"
             ></textarea>
-            <div class="hbar">
-                <button class="hbtn" id="humanizeBtn">
+            <div class="btn-bar">
+                <button class="humanize-btn" id="humanizeBtn">
                     <svg viewBox="0 0 24 24">
                         <path d="M12 2L2 7l10 5 10-5-10-5z"/>
                         <path d="M2 17l10 5 10-5"/>
                         <path d="M2 12l10 5 10-5"/>
                     </svg>
-                    <span id="btnText">Humanize</span>
+                    <span id="btnLabel">Humanize</span>
                 </button>
             </div>
         </div>
 
         <!-- OUTPUT PANEL -->
-        <div class="panel">
-            <div class="p-hd">
-                <div class="p-hd-l">
-                    <span class="p-tag">Output</span>
-                    <div class="wpill">
-                        <span class="n" id="outputWordCount">0</span>&thinsp;words
+        <div class="glass-panel">
+            <div class="panel-hd">
+                <div class="panel-hd-l">
+                    <span class="panel-tag">Output</span>
+                    <div class="word-pill">
+                        <span class="count" id="outputWordCount">0</span>&thinsp;words
                     </div>
                 </div>
-                <div class="p-hd-r">
-                    <div class="stats">
-                        <div class="stp">
-                            <div class="cwrap">
-                                <svg width="28" height="28">
-                                    <circle class="cbg" cx="14" cy="14" r="11"/>
-                                    <circle class="cfil" id="humanCircle" cx="14" cy="14" r="11"
+                <div class="panel-hd-r">
+                    <div class="scores-wrap">
+                        <div class="score-item">
+                            <div class="circle-wrap">
+                                <svg width="30" height="30">
+                                    <circle class="c-bg"   cx="15" cy="15" r="11"/>
+                                    <circle class="c-fill" id="humanCircle" cx="15" cy="15" r="11"
                                             stroke-dasharray="69.1" stroke-dashoffset="69.1"/>
                                 </svg>
-                                <span class="ctxt" id="humanScore">0%</span>
+                                <span class="c-label" id="humanScore">0%</span>
                             </div>
-                            <span class="slbl">Human</span>
+                            <span class="score-lbl">Human</span>
                         </div>
-                        <div class="stp">
-                            <div class="cwrap">
-                                <svg width="28" height="28">
-                                    <circle class="cbg" cx="14" cy="14" r="11"/>
-                                    <circle class="cfil" id="readCircle" cx="14" cy="14" r="11"
+                        <div class="score-item">
+                            <div class="circle-wrap">
+                                <svg width="30" height="30">
+                                    <circle class="c-bg"   cx="15" cy="15" r="11"/>
+                                    <circle class="c-fill" id="readCircle" cx="15" cy="15" r="11"
                                             stroke-dasharray="69.1" stroke-dashoffset="69.1"/>
                                 </svg>
-                                <span class="ctxt" id="readScore">0%</span>
+                                <span class="c-label" id="readScore">0%</span>
                             </div>
-                            <span class="slbl">Read</span>
+                            <span class="score-lbl">Read</span>
                         </div>
                     </div>
-                    <button class="ibtn" id="copyBtn" title="Copy output">
+                    <button class="action-btn" id="copyBtn" title="Copy output">
                         <svg viewBox="0 0 24 24">
                             <rect x="9" y="9" width="13" height="13" rx="2"/>
                             <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
                         </svg>
                     </button>
-                    <button class="ibtn" id="pdfBtn" title="Export PDF">
+                    <button class="action-btn" id="pdfBtn" title="Export PDF">
                         <svg viewBox="0 0 24 24">
                             <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
                             <polyline points="14 2 14 8 20 8"/>
@@ -511,7 +590,7 @@ body::after {
             </div>
             <textarea
                 id="outputText"
-                class="pta"
+                class="editor-ta"
                 placeholder="Humanized text will appear here…"
                 readonly
             ></textarea>
@@ -521,130 +600,156 @@ body::after {
 </div><!-- /shell -->
 
 <script>
-/* ── Helpers ───────────────────────────────────────────── */
-function getCookie(name) {
-    let v = null;
-    if (document.cookie) {
-        document.cookie.split(';').forEach(c => {
-            c = c.trim();
-            if (c.startsWith(name + '='))
-                v = decodeURIComponent(c.slice(name.length + 1));
-        });
+/* ─── Matrix Binary Rain ─── */
+(function createBinaryRain() {
+    const container = document.getElementById('binaryBg');
+    const cols = Math.floor(window.innerWidth / 32);
+    for (let i = 0; i < cols; i++) {
+        const col = document.createElement('div');
+        col.className = 'binary-column';
+        let txt = '';
+        const len = Math.floor(Math.random() * 35) + 25;
+        for (let j = 0; j < len; j++) {
+            txt += Math.random() > 0.5 ? '1' : '0';
+            if ((j + 1) % 8 === 0) txt += '\n';
+            else if ((j + 1) % 4 === 0) txt += ' ';
+        }
+        col.textContent = txt;
+        col.style.left = `${i * 32 + Math.random() * 10}px`;
+        col.style.animationDuration = `${Math.random() * 7 + 9}s`;
+        col.style.animationDelay = '0s';
+        const startPct = Math.random() * 100;
+        col.style.top = `${startPct}%`;
+        col.style.transform = `translateY(-${startPct}%)`;
+        container.appendChild(col);
     }
-    return v;
-}
-const csrf = getCookie('csrftoken');
+})();
 
-function toast(msg, type = 'success') {
-    document.querySelectorAll('.toast').forEach(t => t.remove());
+/* ─── Helpers ─── */
+function getCsrf() {
+    const m = document.cookie.match(/csrftoken=([^;]+)/);
+    return m ? decodeURIComponent(m[1]) : '';
+}
+
+function showToast(msg, type) {
+    document.querySelectorAll('.toast-msg').forEach(t => t.remove());
     const el = document.createElement('div');
-    el.className = 'toast ' + (type === 'success' ? 'ts' : 'te');
-    el.innerHTML = `<span style="flex-shrink:0;font-size:.85rem;">${type==='success'?'✓':'✕'}</span><span>${msg}</span>`;
+    el.className = 'toast-msg ' + (type === 'error' ? 't-err' : 't-ok');
+    el.innerHTML = `<span style="font-size:.88rem;flex-shrink:0;">${type==='error'?'✕':'✓'}</span><span>${msg}</span>`;
     document.body.appendChild(el);
     setTimeout(() => {
-        el.style.animation = 'tout .28s ease forwards';
+        el.style.animation = 'toastOut .28s ease forwards';
         setTimeout(() => el.remove(), 280);
-    }, 3000);
+    }, 3200);
 }
 
-/* ── Word count ────────────────────────────────────────── */
-const MAX = {{ word_balance|default:0 }};
-let toastFired = false;
+/* ─── Word counting ─── */
+const MAX_WORDS = {{ word_balance|default:0 }};
+let overLimitToastFired = false;
 
-function words(text) {
+function countWords(text) {
     const t = text.trim();
     return t ? t.split(/\s+/).length : 0;
 }
 
-function syncCount(taId, cntId) {
-    const n = words(document.getElementById(taId).value);
+function syncWordCount(taId, cntId) {
+    const n = countWords(document.getElementById(taId).value);
     document.getElementById(cntId).textContent = n;
 
     if (taId === 'inputText') {
-        const pill  = document.getElementById('iPill');
-        const badge = document.getElementById('lbadge');
-        const ta    = document.getElementById('inputText');
-        const btn   = document.getElementById('humanizeBtn');
+        const pill   = document.getElementById('iPill');
+        const badge  = document.getElementById('limitBadge');
+        const ta     = document.getElementById('inputText');
+        const btn    = document.getElementById('humanizeBtn');
+        const over   = n > MAX_WORDS;
 
-        if (n > MAX) {
-            pill.classList.add('over');
-            ta.classList.add('over');
-            btn.disabled = true;
-            badge.textContent = `+${n - MAX} over`;
-            badge.classList.add('show');
-            if (!toastFired) {
-                toast(`${MAX}-word limit — trim the input.`, 'error');
-                toastFired = true;
+        pill.classList.toggle('over-limit', over);
+        ta.classList.toggle('over', over);
+        btn.disabled = over;
+
+        if (over) {
+            badge.textContent = `+${n - MAX_WORDS} over`;
+            badge.classList.add('visible');
+            if (!overLimitToastFired) {
+                showToast(`${MAX_WORDS}-word limit reached — trim input.`, 'error');
+                overLimitToastFired = true;
             }
         } else {
-            pill.classList.remove('over');
-            ta.classList.remove('over');
-            btn.disabled = false;
-            badge.classList.remove('show');
-            toastFired = false;
+            badge.classList.remove('visible');
+            overLimitToastFired = false;
         }
     }
     return n;
 }
 
-document.getElementById('inputText').addEventListener('input', () =>
-    syncCount('inputText', 'inputWordCount')
-);
+document.getElementById('inputText').addEventListener('input', () => syncWordCount('inputText', 'inputWordCount'));
 
-/* Paste flash */
-document.getElementById('inputText').addEventListener('paste', function () {
+/* paste flash */
+document.getElementById('inputText').addEventListener('paste', function() {
     this.style.transition = 'box-shadow .08s ease';
-    this.style.boxShadow  = 'inset 0 0 0 1px rgba(0,212,255,0.35)';
-    setTimeout(() => { this.style.boxShadow = ''; this.style.transition = ''; }, 420);
+    this.style.boxShadow  = 'inset 0 0 0 1px rgba(0,212,255,0.38)';
+    setTimeout(() => { this.style.boxShadow = ''; this.style.transition = ''; }, 440);
 });
 
-/* ── Sidebar ───────────────────────────────────────────── */
-let sbOpen = true;
+/* ─── Sidebar toggle ─── */
+let sidebarOpen = true;
 function toggleSidebar() {
-    sbOpen = !sbOpen;
-    document.getElementById('sb').classList.toggle('closed', !sbOpen);
+    sidebarOpen = !sidebarOpen;
+    document.getElementById('sb').classList.toggle('closed', !sidebarOpen);
 }
 
-/* ── Word stream ───────────────────────────────────────── */
-function stream(ta, text) {
+/* ─── Word stream output ─── */
+function streamOutput(ta, text) {
     const chunks = text.split(/(\s+)/);
     let i = 0, built = '';
     ta.value = '';
     const iv = setInterval(() => {
         if (i >= chunks.length) {
             clearInterval(iv);
-            syncCount('outputText', 'outputWordCount');
+            syncWordCount('outputText', 'outputWordCount');
             return;
         }
         built += chunks[i++];
         ta.value = built;
         ta.scrollTop = ta.scrollHeight;
-    }, 12);
+    }, 11);
 }
 
-/* ── Humanize ──────────────────────────────────────────── */
-document.getElementById('humanizeBtn').addEventListener('click', async function () {
+/* ─── Score circle ─── */
+function updateCircle(circleId, labelId, pct) {
+    const C = 69.1; // 2π × 11
+    const offset = C - (pct / 100) * C;
+    document.getElementById(circleId).style.strokeDashoffset = offset;
+    document.getElementById(labelId).textContent = Math.round(pct) + '%';
+}
+
+/* ─── Humanize ─── */
+document.getElementById('humanizeBtn').addEventListener('click', async function() {
     const txt   = document.getElementById('inputText').value.trim();
     const mode  = document.getElementById('modeSelect').value;
     const model = document.getElementById('modelSelect').value;
 
-    if (!txt)             { toast('Enter some text first.', 'error'); return; }
-    if (words(txt) > MAX) { toast(`Exceeds ${MAX}-word limit.`, 'error'); return; }
+    if (!txt) { showToast('Enter some text first.', 'error'); return; }
+    if (countWords(txt) > MAX_WORDS) { showToast(`Exceeds ${MAX_WORDS}-word limit.`, 'error'); return; }
 
-    const btn     = this;
-    const btnText = document.getElementById('btnText');
-    btn.disabled  = true;
-    btnText.innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
+    const btn      = this;
+    const btnLabel = document.getElementById('btnLabel');
+    btn.disabled   = true;
+    btnLabel.innerHTML = '<div class="loading-dots"><i></i><i></i><i></i></div>';
 
     const outTa = document.getElementById('outputText');
     outTa.value = '';
+    // reset scores
+    updateCircle('humanCircle', 'humanScore', 0);
+    updateCircle('readCircle',  'readScore',  0);
+    document.getElementById('outputWordCount').textContent = '0';
 
     try {
         const resp = await fetch('/humanizer/humanize/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'X-CSRFToken': csrf
+                'X-CSRFToken': getCsrf()
             },
             body: `text=${encodeURIComponent(txt)}&engine=openai&mode=${encodeURIComponent(mode)}&model=${encodeURIComponent(model)}`
         });
@@ -656,106 +761,91 @@ document.getElementById('humanizeBtn').addEventListener('click', async function 
 
         const data   = await resp.json();
         const output = data.output_text || '';
-        stream(outTa, output);
+        streamOutput(outTa, output);
 
-        if (data.human_score !== undefined) circle('humanCircle', 'humanScore', data.human_score);
-        if (data.read_score  !== undefined) circle('readCircle',  'readScore',  data.read_score);
+        if (data.human_score !== undefined)       updateCircle('humanCircle', 'humanScore', data.human_score);
+        if (data.readability_score !== undefined) updateCircle('readCircle',  'readScore',  data.readability_score);
 
-    } catch (e) {
-        outTa.value = `Error: ${e.message}`;
-        toast(e.message, 'error');
+        // deduct from balance chip
+        const used = countWords(txt);
+        const newBal = Math.max(0, MAX_WORDS - used);
+        document.querySelector('.bal-chip').textContent = newBal + ' words';
+
+        showToast('Humanized successfully.', 'success');
+
+    } catch(err) {
+        showToast(err.message || 'Something went wrong.', 'error');
     } finally {
-        btn.disabled  = false;
-        btnText.innerHTML = 'Humanize';
+        btn.disabled = false;
+        btnLabel.textContent = 'Humanize';
     }
 });
 
-/* ── Circle stats ──────────────────────────────────────── */
-function circle(cid, tid, pct) {
-    const C = 69.1; // 2π × 11
-    document.getElementById(cid).style.strokeDashoffset = C - (pct / 100) * C;
-    document.getElementById(tid).textContent = Math.round(pct) + '%';
-}
-
-/* ── Copy ──────────────────────────────────────────────── */
-document.getElementById('copyBtn').addEventListener('click', async function () {
-    const txt = document.getElementById('outputText').value;
-    if (!txt) { toast('Nothing to copy.', 'error'); return; }
+/* ─── Copy ─── */
+document.getElementById('copyBtn').addEventListener('click', async function() {
+    const text = document.getElementById('outputText').value;
+    if (!text) { showToast('Nothing to copy.', 'error'); return; }
     try {
-        await navigator.clipboard.writeText(txt);
-        this.classList.add('ok');
-        setTimeout(() => this.classList.remove('ok'), 2000);
-        toast('Copied to clipboard.');
-    } catch {
-        toast('Copy failed.', 'error');
+        await navigator.clipboard.writeText(text);
+        this.classList.add('success');
+        showToast('Copied to clipboard.', 'success');
+        setTimeout(() => this.classList.remove('success'), 1800);
+    } catch(e) {
+        showToast('Copy failed.', 'error');
     }
 });
 
-/* ── PDF ───────────────────────────────────────────────── */
-document.getElementById('pdfBtn').addEventListener('click', function () {
+/* ─── PDF export ─── */
+document.getElementById('pdfBtn').addEventListener('click', function() {
+    const text = document.getElementById('outputText').value;
+    if (!text) { showToast('No output to export.', 'error'); return; }
     try {
-        const out = document.getElementById('outputText').value;
-        if (!out) { toast('Nothing to export.', 'error'); return; }
-
         const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
+        const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+        const docId = 'IH-' + Math.random().toString(36).slice(2,8).toUpperCase();
+        const margin = 18, pageW = 210, lineH = 7;
+        const maxW = pageW - margin * 2;
 
-        const mode  = document.getElementById('modeSelect').value  || 'Recommended';
-        const model = document.getElementById('modelSelect').value || 'Original';
-        const eng   = `InfiniHumanizer (${model.charAt(0).toUpperCase() + model.slice(1)})`;
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(14);
+        doc.setTextColor(0, 180, 220);
+        doc.text('InfiniHumanizer — Humanized Output', margin, 18);
 
-        const ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let id = '';
-        for (let i = 0; i < 6; i++) id += ch[Math.floor(Math.random() * ch.length)];
-        const did = `IH-${id}`;
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(8.5);
+        doc.setTextColor(130, 130, 140);
+        doc.text(`Document ID: ${docId}   |   Generated: ${new Date().toLocaleString()}`, margin, 25);
 
-        const now = new Date();
-        const fd  = now.toLocaleDateString('en-US', {
-            year: 'numeric', month: 'long', day: 'numeric',
-            hour: '2-digit', minute: '2-digit'
+        doc.setDrawColor(0, 180, 220);
+        doc.setLineWidth(0.4);
+        doc.line(margin, 28, pageW - margin, 28);
+
+        doc.setFontSize(10.5);
+        doc.setTextColor(40, 40, 40);
+        const lines = doc.splitTextToSize(text, maxW);
+        let y = 36;
+        lines.forEach(line => {
+            if (y > 278) { doc.addPage(); y = 18; }
+            doc.text(line, margin, y);
+            y += lineH;
         });
 
-        const pw = doc.internal.pageSize.getWidth();
-        const ph = doc.internal.pageSize.getHeight();
-        const m  = { t: 58, b: 33, l: 20, r: 20 };
-
-        doc.setFontSize(18); doc.setFont(undefined, 'bold'); doc.setTextColor(0, 180, 220);
-        doc.text('InfiniHumanizer', m.l, 20);
-
-        doc.setFontSize(9); doc.setFont(undefined, 'normal'); doc.setTextColor(110, 110, 110);
-        doc.text(`Model: ${eng} | Doc: ${did}`, m.l, 29);
-        doc.text(`Generated: ${fd}`, m.l, 35);
-
-        doc.setDrawColor(0, 180, 220); doc.setLineWidth(.4);
-        doc.line(m.l, 40, pw - m.r, 40);
-
-        doc.setFontSize(13); doc.setFont(undefined, 'bold'); doc.setTextColor(0, 0, 0);
-        doc.text('Humanized Content', m.l, 50);
-
-        doc.setFontSize(11); doc.setFont(undefined, 'normal'); doc.setTextColor(20, 20, 20);
-        const lines = doc.splitTextToSize(out, pw - m.l - m.r);
-        let y = m.t;
-        lines.forEach(ln => {
-            if (y + 6 > ph - m.b) { doc.addPage(); y = 24; }
-            doc.text(ln, m.l, y); y += 6;
-        });
-
-        const pc = doc.internal.getNumberOfPages();
-        for (let i = 1; i <= pc; i++) {
-            doc.setPage(i); doc.setFontSize(8); doc.setTextColor(148, 148, 148);
-            doc.text(`Doc: ${did}`, m.l, ph - 9);
-            doc.text('InfiniHumanizer', pw / 2, ph - 9, { align: 'center' });
-            doc.text(`${i}/${pc}`, pw - m.r, ph - 9, { align: 'right' });
-        }
-
-        doc.save(`${did}-${now.toISOString().split('T')[0]}.pdf`);
-        toast(`PDF saved — ${did}`);
-
-    } catch {
-        toast('PDF export failed.', 'error');
+        doc.save(`InfiniHumanizer_${docId}.pdf`);
+        showToast('PDF exported.', 'success');
+    } catch(e) {
+        showToast('PDF export failed.', 'error');
     }
+});
+
+/* ─── Subtle mouse parallax on orbs ─── */
+document.addEventListener('mousemove', function(e) {
+    const mx = e.clientX / window.innerWidth - 0.5;
+    const my = e.clientY / window.innerHeight - 0.5;
+    document.querySelectorAll('.orb').forEach((orb, i) => {
+        const s = (i + 1) * 18;
+        orb.style.transform = `translate(${mx*s}px,${my*s}px)`;
+    });
 });
 </script>
-
 {% endblock %}
 
