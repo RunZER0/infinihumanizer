@@ -8,690 +8,795 @@
 <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ── reset ──────────────────────────────────────── */
+/* ─── Reset ─── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 16px; }
-body {
-  font-family: 'Inter', -apple-system, sans-serif;
-  background: #080b12;
-  color: #e8e8f0;
-  min-height: 100vh;
-  overflow-x: hidden;
+html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #0D0D0D;
+    color: #EFEFEF;
 }
 
-/* ── atmosphere ─────────────────────────────────── */
-.bg-orb {
-  position: fixed; border-radius: 50%; pointer-events: none;
-  filter: blur(110px); z-index: 0;
-  animation: orbDrift 24s ease-in-out infinite;
+/* ─── Background ─── */
+.bg-gradient {
+    position: fixed; inset: 0; z-index: 0;
+    background: linear-gradient(135deg, #0a0a0f 0%, #0d1117 40%, #080d14 100%);
 }
-.bg-orb.a { width:560px;height:560px;background:#00aaff;opacity:.18;top:-200px;left:-200px; animation-delay:0s; }
-.bg-orb.b { width:400px;height:400px;background:#0044ff;opacity:.14;bottom:-140px;right:-140px; animation-delay:9s; }
-.bg-orb.c { width:300px;height:300px;background:#00d4ff;opacity:.08;top:38%;left:44%; animation-delay:17s; }
-@keyframes orbDrift {
-  0%,100% { transform:translate(0,0) scale(1); }
-  33%      { transform:translate(60px,-60px) scale(1.06); }
-  66%      { transform:translate(-60px,60px) scale(0.95); }
-}
-
-.bin-bg {
-  position: fixed; inset:0; z-index:0;
-  opacity:.12; pointer-events:none; overflow:hidden;
+.binary-bg {
+    position: fixed; inset: 0; z-index: 1;
+    opacity: 0.15; pointer-events: none; overflow: hidden;
 }
 .bin-col {
-  position:absolute;
-  font-family:'Courier New',monospace;
-  font-size:12px; font-weight:700; color:#00ff41;
-  text-shadow:0 0 8px #00ff41;
-  white-space:pre; line-height:1.4;
-  animation:binFall linear infinite;
+    position: absolute;
+    font-family: 'Courier New', monospace;
+    font-size: 13px; font-weight: 700;
+    color: #00FF41;
+    text-shadow: 0 0 10px #00FF41, 0 0 20px rgba(0,255,65,0.6);
+    white-space: pre; line-height: 1.5;
+    animation: binFall linear infinite;
+    pointer-events: none;
 }
 @keyframes binFall {
-  from { transform:translateY(var(--s)); }
-  to   { transform:translateY(calc(var(--s) + 110vh)); }
+    from { transform: translateY(var(--start)); }
+    to   { transform: translateY(calc(var(--start) + 100vh + 100%)); }
 }
-
+.orb {
+    position: fixed; border-radius: 50%;
+    filter: blur(90px); opacity: 0.35;
+    animation: orbFloat 22s ease-in-out infinite;
+    z-index: 1; pointer-events: none;
+}
+.orb-1 { width: 500px; height: 500px; background: #00B8FF; top: -160px; left: -160px; animation-delay: 0s; }
+.orb-2 { width: 360px; height: 360px; background: #0066FF; bottom: -100px; right: -100px; animation-delay: 8s; }
+.orb-3 { width: 240px; height: 240px; background: #00D4FF; top: 42%; left: 42%; opacity: 0.18; animation-delay: 15s; }
+@keyframes orbFloat {
+    0%,100% { transform: translate(0,0) scale(1); }
+    33%      { transform: translate(70px,-70px) scale(1.07); }
+    66%      { transform: translate(-70px,70px) scale(0.94); }
+}
+/* scanlines */
 body::after {
-  content:''; position:fixed; inset:0; z-index:1; pointer-events:none;
-  background:repeating-linear-gradient(
-    0deg,
-    rgba(0,212,255,.012) 0px, transparent 1px,
-    transparent 2px, rgba(0,212,255,.012) 3px
-  );
+    content: ''; position: fixed; inset: 0; z-index: 2; pointer-events: none;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0,212,255,0.015) 0px, transparent 1px,
+        transparent 2px, rgba(0,212,255,0.015) 3px
+    );
 }
 
-/* ── topbar ─────────────────────────────────────── */
+/* ─── App Shell ─── */
+.app {
+    position: relative; z-index: 10;
+    display: flex; flex-direction: column;
+    height: 100vh;
+}
+
+/* ─── Topbar ─── */
 .topbar {
-  position: fixed; top:0; left:0; right:0; height:60px; z-index:100;
-  display:flex; align-items:center; justify-content:space-between;
-  padding:0 24px; gap:16px;
-  background:rgba(4,6,14,.9);
-  border-bottom:1px solid rgba(0,212,255,.1);
-  backdrop-filter:blur(32px);
+    flex-shrink: 0;
+    height: 58px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 20px; gap: 12px;
+    background: rgba(5, 7, 15, 0.85);
+    border-bottom: 1px solid rgba(0, 212, 255, 0.12);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
 }
-.tb-l { display:flex; align-items:center; gap:14px; }
-.tb-r { display:flex; align-items:center; gap:14px; }
+.topbar-left  { display: flex; align-items: center; gap: 12px; }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
 
-.menu-btn {
-  width:38px; height:38px; flex-shrink:0;
-  background:rgba(0,212,255,.06); border:1px solid rgba(0,212,255,.14);
-  border-radius:10px; cursor:pointer;
-  display:flex; align-items:center; justify-content:center;
-  transition:.18s ease; color:#00d4ff;
+.hamburger {
+    width: 36px; height: 36px; flex-shrink: 0;
+    background: rgba(0,212,255,0.06);
+    border: 1px solid rgba(0,212,255,0.14);
+    border-radius: 9px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
 }
-.menu-btn:hover { background:rgba(0,212,255,.12); border-color:rgba(0,212,255,.3); }
-.menu-btn svg { width:17px;height:17px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round; }
+.hamburger:hover { background: rgba(0,212,255,0.13); border-color: rgba(0,212,255,0.3); }
+.hamburger svg { width: 17px; height: 17px; stroke: #00D4FF; stroke-width: 2; fill: none; stroke-linecap: round; }
 
-.brand-name {
-  font-size:1.1rem; font-weight:800; letter-spacing:-.5px;
-  background:linear-gradient(130deg,#00d4ff 0%,#0088ff 60%,#00d4ff 100%);
-  background-size:200% auto;
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-  animation:brandFlow 5s linear infinite;
+.brand {
+    font-size: 1.08rem; font-weight: 800; letter-spacing: -0.4px;
+    background: linear-gradient(135deg, #00D4FF 0%, #0099FF 50%, #00D4FF 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: brandShimmer 4s linear infinite;
+    white-space: nowrap;
 }
-@keyframes brandFlow {
-  0%   { background-position:0% center; }
-  100% { background-position:200% center; }
+@keyframes brandShimmer {
+    0%   { background-position: 0% center; }
+    100% { background-position: 200% center; }
 }
 
-.user-tag {
-  font-size:.8rem; font-weight:500; color:rgba(255,255,255,.4); white-space:nowrap;
+.balance-pill {
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 20px; padding: 5px 13px;
+    font-size: 0.73rem; font-weight: 600;
+    color: #00D4FF; letter-spacing: 0.3px; white-space: nowrap;
 }
-.user-tag strong { color:rgba(255,255,255,.72); font-weight:600; }
+.user-chip {
+    font-size: 0.8rem; color: rgba(255,255,255,0.42);
+    white-space: nowrap;
+}
+.user-chip strong { color: rgba(255,255,255,0.75); font-weight: 600; }
 
-/* ── sidebar ─────────────────────────────────────── */
+/* ─── Body row (sidebar + workspace) ─── */
+.body-row {
+    flex: 1; min-height: 0;
+    display: flex; overflow: hidden;
+}
+
+/* ─── Sidebar ─── */
 .sidebar {
-  position:fixed; top:60px; left:0; bottom:0; z-index:90;
-  width:260px;
-  background:rgba(4,6,14,.92);
-  border-right:1px solid rgba(0,212,255,.1);
-  backdrop-filter:blur(28px);
-  display:flex; flex-direction:column;
-  overflow-y:auto; overflow-x:hidden;
-  padding:28px 16px 24px;
-  transition:transform .3s cubic-bezier(.4,0,.2,1), opacity .25s;
-  scrollbar-width:thin; scrollbar-color:rgba(0,212,255,.1) transparent;
+    width: 240px; flex-shrink: 0;
+    display: flex; flex-direction: column;
+    background: rgba(0, 0, 0, 0.72);
+    border-right: 1px solid rgba(0,212,255,0.11);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    overflow-y: auto; overflow-x: hidden;
+    padding: 14px 10px;
+    transition: width 0.3s cubic-bezier(0.4,0,0.2,1),
+                padding 0.3s cubic-bezier(0.4,0,0.2,1),
+                opacity 0.2s;
+    scrollbar-width: thin; scrollbar-color: rgba(0,212,255,0.1) transparent;
 }
-.sidebar.hidden { transform:translateX(-100%); opacity:0; }
+.sidebar.closed { width: 0; padding-left: 0; padding-right: 0; opacity: 0; overflow: hidden; }
 
-.sb-section {
-  font-size:.62rem; font-weight:700; letter-spacing:1.4px;
-  text-transform:uppercase; color:rgba(255,255,255,.18);
-  padding:0 8px; margin-bottom:8px; margin-top:28px;
+.sb-label {
+    font-size: 0.6rem; font-weight: 700; letter-spacing: 1.3px;
+    text-transform: uppercase; color: rgba(255,255,255,0.2);
+    padding: 4px 6px 2px; margin-top: 10px;
+    white-space: nowrap;
 }
-.sb-section:first-child { margin-top:0; }
+.sb-label:first-child { margin-top: 0; }
 
-.sb-link {
-  display:flex; align-items:center; gap:11px;
-  padding:10px 12px; border-radius:10px; margin-bottom:2px;
-  color:rgba(255,255,255,.46); text-decoration:none;
-  font-size:.855rem; font-weight:500;
-  border:1px solid transparent;
-  transition:.16s ease; white-space:nowrap;
+.sb-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 8px 10px; border-radius: 9px;
+    color: rgba(255,255,255,0.48); text-decoration: none;
+    font-size: 0.845rem; font-weight: 500;
+    transition: all 0.15s ease; white-space: nowrap;
+    border: 1px solid transparent;
+    background: transparent; width: 100%; cursor: pointer; text-align: left;
 }
-.sb-link svg { width:16px;height:16px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0; }
-.sb-link:hover { background:rgba(0,212,255,.06); color:#d8d8e8; border-color:rgba(0,212,255,.08); }
-.sb-link.active { background:rgba(0,212,255,.1); color:#00d4ff; border-color:rgba(0,212,255,.2); }
-.sb-link.danger  { color:rgba(255,80,65,.55); }
-.sb-link.danger:hover { background:rgba(255,50,40,.07); color:#ff5040; border-color:rgba(255,60,45,.15); }
+.sb-item svg { width: 15px; height: 15px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.sb-item:hover { background: rgba(0,212,255,0.07); color: #ddd; }
+.sb-item.is-active { background: rgba(0,212,255,0.1); color: #00D4FF; border-color: rgba(0,212,255,0.2); }
+.sb-item.is-danger { color: rgba(255,80,65,0.6); }
+.sb-item.is-danger:hover { background: rgba(255,50,40,0.08); color: #ff5041; }
 
-.sb-sep { height:1px; background:rgba(0,212,255,.07); margin:20px 0; }
+.sb-rule { height: 1px; background: rgba(0,212,255,0.07); margin: 8px 0; }
 
-/* select controls in sidebar */
-.sb-field { margin-bottom:16px; }
-.sb-field-name {
-  display:block; margin-bottom:7px; padding:0 4px;
-  font-size:.67rem; font-weight:600; letter-spacing:.6px;
-  text-transform:uppercase; color:rgba(255,255,255,.26);
+.sb-field-label {
+    font-size: 0.65rem; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase; color: rgba(255,255,255,0.25);
+    display: block; margin-bottom: 5px; padding: 0 2px;
 }
-.sb-sel {
-  width:100%; padding:9px 32px 9px 12px;
-  background:rgba(0,0,0,.45); border:1px solid rgba(0,212,255,.14);
-  border-radius:9px; color:#d8d8e8;
-  font-size:.84rem; font-family:'Inter',sans-serif; font-weight:500;
-  cursor:pointer; outline:none; appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(0,212,255,0.45)' stroke-width='2.5' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-  background-repeat:no-repeat; background-position:right 10px center;
-  transition:border-color .16s, box-shadow .16s;
+.sb-select {
+    width: 100%;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(0,212,255,0.14);
+    border-radius: 8px; color: #ddd;
+    padding: 7px 28px 7px 10px;
+    font-size: 0.82rem; font-family: 'Inter', sans-serif; font-weight: 500;
+    cursor: pointer; outline: none; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='rgba(0,212,255,0.4)' stroke-width='2.5' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 8px center;
+    transition: border-color 0.15s, box-shadow 0.15s;
 }
-.sb-sel:hover { border-color:rgba(0,212,255,.3); }
-.sb-sel:focus { border-color:rgba(0,212,255,.5); box-shadow:0 0 0 3px rgba(0,212,255,.08); }
-.sb-sel option { background:#0a0f1e; }
+.sb-select:hover { border-color: rgba(0,212,255,0.28); }
+.sb-select:focus { border-color: rgba(0,212,255,0.5); box-shadow: 0 0 0 3px rgba(0,212,255,0.08); }
+.sb-select option { background: #0a0f1e; }
 
 .sb-card {
-  padding:14px; border-radius:11px;
-  background:rgba(0,212,255,.03); border:1px solid rgba(0,212,255,.09);
-  font-size:.77rem; line-height:1.7; color:rgba(255,255,255,.36);
+    background: rgba(0,212,255,0.03); border: 1px solid rgba(0,212,255,0.09);
+    border-radius: 9px; padding: 10px;
+    font-size: 0.74rem; color: rgba(255,255,255,0.36); line-height: 1.65;
 }
-.sb-card strong { color:rgba(0,212,255,.7); }
-.sb-card .v { color:#00d4ff; font-weight:700; }
+.sb-card strong { color: rgba(0,212,255,0.7); }
+.sb-card .v { color: #00D4FF; font-weight: 700; }
 
-.sb-spacer { flex:1; }
+.sb-spacer { flex: 1; }
 
-/* ── page body ───────────────────────────────────── */
-.page-body {
-  margin-left:260px;
-  margin-top:60px;
-  min-height:calc(100vh - 60px);
-  position:relative; z-index:10;
-  transition:margin-left .3s cubic-bezier(.4,0,.2,1);
-}
-.page-body.expanded { margin-left:0; }
-
-/* ── hero heading ────────────────────────────────── */
-.page-hero {
-  padding:22px 40px 18px;
-  border-bottom:1px solid rgba(0,212,255,.07);
-}
-.page-hero h1 {
-  font-size:1.3rem; font-weight:700; letter-spacing:-.4px;
-  background:linear-gradient(130deg,#ffffff 0%,rgba(0,212,255,.85) 100%);
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-  line-height:1.2;
+/* ─── Workspace ─── */
+.workspace {
+    flex: 1; min-width: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
 }
 
-/* ── editor section ──────────────────────────────── */
-.editor-wrap {
-  padding:36px 40px;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:24px;
+/* ─── Editor panel ─── */
+.panel {
+    display: flex; flex-direction: column;
+    min-height: 0; overflow: hidden;
+    background: rgba(0, 0, 0, 0.6);
+    border-right: 1px solid rgba(0,212,255,0.09);
+    position: relative;
+}
+.panel:last-child { border-right: none; }
+/* glowing top accent line */
+.panel::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px; z-index: 1;
+    background: linear-gradient(90deg, transparent 0%, rgba(0,212,255,0.3) 50%, transparent 100%);
 }
 
-/* ── editor panel ────────────────────────────────── */
-.ed-panel {
-  display:flex; flex-direction:column;
-  background:rgba(0,0,0,.55);
-  border:1px solid rgba(0,212,255,.1);
-  border-radius:16px;
-  overflow:hidden;
-  box-shadow:0 8px 40px rgba(0,0,0,.4), inset 0 1px 0 rgba(0,212,255,.08);
-  transition:border-color .25s;
+.panel-header {
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px; gap: 8px;
+    background: rgba(0,0,0,0.4);
+    border-bottom: 1px solid rgba(0,212,255,0.07);
+    position: relative; z-index: 2;
 }
-.ed-panel:focus-within { border-color:rgba(0,212,255,.22); }
+.ph-left  { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+.ph-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 
-.ed-header {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:14px 20px;
-  background:rgba(0,0,0,.35);
-  border-bottom:1px solid rgba(0,212,255,.07);
-  gap:10px;
-}
-.ed-header-l { display:flex; align-items:center; gap:10px; }
-.ed-header-r { display:flex; align-items:center; gap:8px; }
-
-.ed-label {
-  font-size:.65rem; font-weight:700; letter-spacing:1.2px;
-  text-transform:uppercase; color:rgba(255,255,255,.3);
-}
-.word-badge {
-  padding:3px 10px;
-  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);
-  border-radius:20px; font-size:.68rem; font-weight:600;
-  color:rgba(255,255,255,.32); font-variant-numeric:tabular-nums;
-  transition:.18s;
-}
-.word-badge .n { color:rgba(0,212,255,.78); }
-.word-badge.over { border-color:rgba(255,60,45,.35); }
-.word-badge.over .n { color:#ff5040; }
-.over-tag {
-  padding:3px 10px;
-  background:rgba(255,55,45,.09); border:1px solid rgba(255,55,45,.25);
-  border-radius:20px; font-size:.66rem; font-weight:600; color:#ff6050;
-  opacity:0; pointer-events:none; transition:opacity .2s;
-}
-.over-tag.on { opacity:1; }
-
-.ed-textarea {
-  flex:1; width:100%;
-  background:transparent; border:none; outline:none; resize:none;
-  color:#d0d0df; font-size:.94rem; line-height:1.9;
-  font-family:'Inter',sans-serif; font-weight:400;
-  padding:22px 24px;
-  min-height:400px;
-  scrollbar-width:thin; scrollbar-color:rgba(0,212,255,.09) transparent;
-  transition:background .2s;
-}
-.ed-textarea:focus { background:rgba(0,212,255,.008); }
-.ed-textarea::placeholder { color:rgba(255,255,255,.11); font-style:italic; font-weight:300; }
-.ed-textarea.over { background:rgba(255,0,0,.018); }
-
-.ed-footer {
-  padding:14px 20px;
-  border-top:1px solid rgba(0,212,255,.06);
-  background:rgba(0,0,0,.4);
-  display:flex; align-items:center; justify-content:space-between; gap:12px;
+.panel-title {
+    font-size: 0.63rem; font-weight: 700; letter-spacing: 1.1px;
+    text-transform: uppercase; color: rgba(255,255,255,0.28);
 }
 
-/* humanize button */
-.btn-humanize {
-  flex:1; height:46px;
-  background:linear-gradient(130deg,#00b8f5,#0077ee,#00aaff);
-  background-size:200% 200%; background-position:0% 0%;
-  border:none; border-radius:11px;
-  color:#030a14; font-family:'Inter',sans-serif;
-  font-size:.875rem; font-weight:700; letter-spacing:.3px;
-  cursor:pointer; overflow:hidden; position:relative;
-  display:flex; align-items:center; justify-content:center; gap:8px;
-  box-shadow:0 4px 22px rgba(0,180,255,.2);
-  transition:transform .22s, box-shadow .22s, background-position .4s;
+.w-pill {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 20px; padding: 3px 9px;
+    font-size: 0.69rem; font-weight: 600; color: rgba(255,255,255,0.35);
+    font-variant-numeric: tabular-nums; transition: all 0.18s;
 }
-.btn-humanize::before {
-  content:''; position:absolute; inset:0;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
-  transform:translateX(-100%); transition:transform .5s;
-}
-.btn-humanize:hover:not(:disabled)::before { transform:translateX(100%); }
-.btn-humanize:hover:not(:disabled) {
-  transform:translateY(-2px);
-  box-shadow:0 8px 30px rgba(0,180,255,.38);
-  background-position:100% 100%;
-}
-.btn-humanize:active:not(:disabled) { transform:translateY(0); }
-.btn-humanize:disabled { opacity:.35; cursor:not-allowed; }
-.btn-humanize svg { width:16px;height:16px;stroke:currentColor;stroke-width:2.2;fill:none;stroke-linecap:round;position:relative;z-index:1; }
-.btn-humanize span { position:relative;z-index:1; }
+.w-pill .n { color: rgba(0,212,255,0.82); }
+.w-pill.over { border-color: rgba(255,60,45,0.38); }
+.w-pill.over .n { color: #ff5040; }
 
-/* copy button (output footer) */
-.btn-copy {
-  height:46px; padding:0 20px;
-  background:rgba(0,212,255,.07); border:1px solid rgba(0,212,255,.16);
-  border-radius:11px; color:#00d4ff;
-  font-family:'Inter',sans-serif; font-size:.82rem; font-weight:600;
-  cursor:pointer;
-  display:flex; align-items:center; gap:7px;
-  transition:.18s ease;
+.over-badge {
+    background: rgba(255,55,45,0.1); border: 1px solid rgba(255,55,45,0.28);
+    border-radius: 20px; padding: 3px 9px;
+    font-size: 0.65rem; font-weight: 600; color: #ff6050;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s;
 }
-.btn-copy svg { width:14px;height:14px;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round; }
-.btn-copy:hover { background:rgba(0,212,255,.12); border-color:rgba(0,212,255,.3); transform:translateY(-1px); }
-.btn-copy.ok { background:rgba(0,230,120,.08); border-color:rgba(0,230,120,.28); color:#00e87a; }
+.over-badge.show { opacity: 1; }
 
-.btn-pdf {
-  height:46px; padding:0 16px;
-  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.09);
-  border-radius:11px; color:rgba(255,255,255,.4);
-  font-family:'Inter',sans-serif; font-size:.82rem; font-weight:500;
-  cursor:pointer;
-  display:flex; align-items:center; gap:7px;
-  transition:.18s ease;
+/* icon buttons */
+.icon-btn {
+    width: 30px; height: 30px; flex-shrink: 0;
+    background: rgba(0,212,255,0.05); border: 1px solid rgba(0,212,255,0.14);
+    border-radius: 7px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.16s ease;
 }
-.btn-pdf svg { width:14px;height:14px;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round; }
-.btn-pdf:hover { background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.16); color:rgba(255,255,255,.7); }
+.icon-btn svg { width: 13px; height: 13px; stroke: rgba(0,212,255,0.72); stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.icon-btn:hover { background: rgba(0,212,255,0.11); border-color: rgba(0,212,255,0.3); transform: translateY(-1px); }
+.icon-btn.copied svg { stroke: #00e87a; }
+.icon-btn.copied { background: rgba(0,230,120,0.07); border-color: rgba(0,230,120,0.28); }
+
+/* score rings */
+.scores { display: flex; align-items: center; gap: 8px; }
+.score { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.ring-wrap { position: relative; width: 32px; height: 32px; }
+.ring-wrap svg { transform: rotate(-90deg); }
+.r-bg   { fill: none; stroke: rgba(0,212,255,0.1); stroke-width: 2.5; }
+.r-fill {
+    fill: none; stroke: #00D4FF; stroke-width: 2.5; stroke-linecap: round;
+    transition: stroke-dashoffset 0.65s cubic-bezier(0.16,1,0.3,1);
+}
+.r-val {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    font-size: 0.42rem; font-weight: 800; color: #00D4FF; white-space: nowrap; letter-spacing: -0.3px;
+}
+.score-name { font-size: 0.52rem; color: rgba(255,255,255,0.24); font-weight: 500; }
+
+/* ─── Textarea ─── */
+.editor {
+    flex: 1; min-height: 0;
+    background: transparent; border: none; outline: none; resize: none;
+    color: #D5D5E2; font-size: 0.93rem; line-height: 1.85;
+    font-family: 'Inter', sans-serif; font-weight: 400;
+    padding: 20px 20px;
+    scrollbar-width: thin; scrollbar-color: rgba(0,212,255,0.1) transparent;
+    position: relative; z-index: 2;
+    transition: background 0.2s;
+}
+.editor:focus { background: rgba(0,212,255,0.01); }
+.editor::placeholder { color: rgba(255,255,255,0.12); font-style: italic; font-weight: 300; line-height: 1.6; }
+.editor.over-limit { background: rgba(255,0,0,0.02); }
+
+/* ─── Action bar (Humanize button) ─── */
+.action-bar {
+    flex-shrink: 0;
+    padding: 12px 16px;
+    background: rgba(0,0,0,0.5);
+    border-top: 1px solid rgba(0,212,255,0.07);
+    position: relative; z-index: 2;
+}
+.humanize-btn {
+    width: 100%; height: 46px;
+    background: linear-gradient(135deg, #00C4F0, #0088EE, #00B8FF);
+    background-size: 200% 200%;
+    border: none; border-radius: 11px;
+    color: #040912; font-family: 'Inter', sans-serif;
+    font-size: 0.88rem; font-weight: 700; letter-spacing: 0.3px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, background-position 0.4s ease;
+    position: relative; overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,200,255,0.2);
+}
+/* ripple */
+.humanize-btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%);
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
+}
+.humanize-btn:hover:not(:disabled)::before { transform: translateX(100%); }
+.humanize-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(0,200,255,0.38);
+    background-position: 100% 100%;
+}
+.humanize-btn:active:not(:disabled) { transform: translateY(0); }
+.humanize-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+.humanize-btn svg { width: 16px; height: 16px; stroke: #040912; stroke-width: 2.2; fill: none; stroke-linecap: round; flex-shrink: 0; position: relative; z-index: 1; }
+.humanize-btn .btn-txt { position: relative; z-index: 1; }
 
 /* loading dots */
-.dots { display:inline-flex; gap:4px; align-items:center; }
-.dots i { display:block; width:5px;height:5px;border-radius:50%;background:#030a14; animation:dPulse 1s ease-in-out infinite; }
-.dots i:nth-child(2) { animation-delay:.15s; }
-.dots i:nth-child(3) { animation-delay:.3s; }
-@keyframes dPulse { 0%,60%,100%{transform:translateY(0);opacity:.4} 30%{transform:translateY(-5px);opacity:1} }
-
-/* ── toast ───────────────────────────────────────── */
-.toast {
-  position:fixed; bottom:22px; right:22px; z-index:9999;
-  background:rgba(4,6,14,.97); border:1px solid rgba(255,255,255,.1);
-  border-radius:12px; padding:9px 16px;
-  font-size:.78rem; font-weight:500; color:#eee;
-  display:flex; align-items:center; gap:8px;
-  box-shadow:0 8px 30px rgba(0,0,0,.7);
-  backdrop-filter:blur(20px); max-width:300px;
-  animation:tIn .24s cubic-bezier(.4,0,.2,1);
+.dots { display: inline-flex; gap: 4px; align-items: center; }
+.dots span { width: 6px; height: 6px; background: #040912; border-radius: 50%; animation: dotPulse 1s ease-in-out infinite; }
+.dots span:nth-child(2) { animation-delay: 0.15s; }
+.dots span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes dotPulse {
+    0%,60%,100% { transform: translateY(0); opacity: 0.4; }
+    30%          { transform: translateY(-5px); opacity: 1; }
 }
-.toast.ok  { border-color:rgba(0,220,100,.36); }
-.toast.err { border-color:rgba(255,60,45,.36); }
-@keyframes tIn  { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
-@keyframes tOut { to{opacity:0;transform:translateY(8px)} }
 
-/* ── scrollbars ──────────────────────────────────── */
-::-webkit-scrollbar { width:4px; height:4px; }
-::-webkit-scrollbar-track { background:transparent; }
-::-webkit-scrollbar-thumb { background:rgba(0,212,255,.1); border-radius:2px; }
-::-webkit-scrollbar-thumb:hover { background:rgba(0,212,255,.22); }
+/* ─── Toast ─── */
+.toast {
+    position: fixed; bottom: 20px; right: 20px; z-index: 9999;
+    background: rgba(5,7,15,0.97);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 11px; padding: 8px 14px;
+    font-size: 0.78rem; font-weight: 500; color: #eee;
+    display: flex; align-items: center; gap: 7px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+    backdrop-filter: blur(18px); max-width: 280px;
+    animation: toastSlideIn 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+.toast.ok  { border-color: rgba(0,220,100,0.38); }
+.toast.err { border-color: rgba(255,60,45,0.38); }
+@keyframes toastSlideIn  { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+@keyframes toastSlideOut { to   { opacity:0; transform:translateY(8px); } }
+
+/* ─── Scrollbars ─── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.1); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,212,255,0.22); }
 </style>
 </head>
 <body>
 
-<!-- atmosphere -->
-<div class="bg-orb a"></div>
-<div class="bg-orb b"></div>
-<div class="bg-orb c"></div>
-<div class="bin-bg" id="binBg"></div>
+<!-- Background layers -->
+<div class="bg-gradient"></div>
+<div class="binary-bg" id="binBg"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
 
-<!-- ── topbar ── -->
-<header class="topbar">
-  <div class="tb-l">
-    <button class="menu-btn" id="menuBtn" onclick="toggleSidebar()" aria-label="Menu">
-      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="16" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-    </button>
-    <div class="brand-name">InfiniHumanizer</div>
-  </div>
-  <div class="tb-r">
-    <div class="user-tag"><strong>{{ user.username }}</strong></div>
-  </div>
-</header>
+<!-- ─── App shell ─── -->
+<div class="app">
 
-<!-- ── sidebar ── -->
-<nav class="sidebar" id="sidebar">
-
-  <div class="sb-section">Menu</div>
-  <a href="{% url 'humanizer' %}" class="sb-link active">
-    <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Humanizer
-  </a>
-  <a href="{% url 'pricing' %}" class="sb-link">
-    <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Pricing
-  </a>
-  <a href="{% url 'devices' %}" class="sb-link">
-    <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1" fill="rgba(130,130,130,.7)"/></svg>Devices
-  </a>
-  <a href="{% url 'settings' %}" class="sb-link">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Settings
-  </a>
-  <a href="{% url 'about' %}" class="sb-link">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>About
-  </a>
-  <a href="{% url 'contact' %}" class="sb-link">
-    <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Contact
-  </a>
-
-  <div class="sb-sep"></div>
-
-  <div class="sb-section">Controls</div>
-
-  <div class="sb-field">
-    <span class="sb-field-name">Writing mode</span>
-    <select id="modeSelect" class="sb-sel">
-      <option value="recommended" selected>Recommended</option>
-      <option value="readability">Readability</option>
-      <option value="formal">Formal</option>
-      <option value="conversational">Conversational</option>
-      <option value="informal">Informal</option>
-      <option value="academic">Academic</option>
-    </select>
-  </div>
-
-  <div class="sb-field">
-    <span class="sb-field-name">Model</span>
-    <select id="modelSelect" class="sb-sel">
-      <option value="original" selected>Original — Stable</option>
-    </select>
-  </div>
-
-  {% if user.is_authenticated and user.profile.is_kenya_plan %}
-  <div class="sb-sep"></div>
-  <div class="sb-section">Devices</div>
-  <div class="sb-card">
-    <div>Active: <span class="v">{{ user.profile.current_active_devices }}/{{ user.profile.max_concurrent_devices }}</span></div>
-    {% if user.profile.account_type != 'KE_MULTI_DEVICE' %}
-    <div>Switches today: <span class="v">{{ user.profile.daily_device_switches }}/3</span></div>
-    {% endif %}
-    {% if user.profile.plan_expires_at %}
-    <div style="margin-top:6px;font-size:.69rem;color:rgba(255,255,255,.24);">
-      Expires {{ user.profile.plan_expires_at|date:"M d, Y" }}
-    </div>
-    {% endif %}
-  </div>
-  {% endif %}
-
-  <div class="sb-sep"></div>
-  <div class="sb-card">
-    <strong>Tip</strong> — Recommended mode gives the most natural output.
-    For long documents, paste in sections for best results.
-  </div>
-
-  <div class="sb-spacer"></div>
-  <div class="sb-sep"></div>
-
-  <a href="{% url 'account_logout' %}" class="sb-link danger">
-    <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout
-  </a>
-</nav>
-
-<!-- ── page body ── -->
-<div class="page-body" id="pageBody">
-
-  <!-- hero -->
-  <section class="page-hero">
-    <h1>Humanize your text</h1>
-  </section>
-
-  <!-- editors -->
-  <div class="editor-wrap">
-
-    <!-- input -->
-    <div class="ed-panel">
-      <div class="ed-header">
-        <div class="ed-header-l">
-          <span class="ed-label">Input</span>
-          <span class="word-badge" id="iPill">
-            <span class="n" id="iCount">0</span>&thinsp;words
-          </span>
-          <span class="over-tag" id="overTag"></span>
+    <!-- TOPBAR -->
+    <header class="topbar">
+        <div class="topbar-left">
+            <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+                <svg viewBox="0 0 24 24">
+                    <line x1="3" y1="6"  x2="21" y2="6"/>
+                    <line x1="3" y1="12" x2="16" y2="12"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+            </button>
+            <span class="brand">InfiniHumanizer</span>
         </div>
-      </div>
-      <textarea
-        id="inputText"
-        class="ed-textarea"
-        placeholder="Paste your AI-generated text here…"
-        spellcheck="true"
-      ></textarea>
-      <div class="ed-footer">
-        <button class="btn-humanize" id="humanizeBtn">
-          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-          <span id="btnLabel">Humanize</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- output -->
-    <div class="ed-panel">
-      <div class="ed-header">
-        <div class="ed-header-l">
-          <span class="ed-label">Output</span>
-          <span class="word-badge"><span class="n" id="oCount">0</span>&thinsp;words</span>
+        <div class="topbar-right">
+            <div class="balance-pill" id="balChip">{{ word_balance }} words</div>
+            <div class="user-chip"><strong>{{ user.username }}</strong></div>
         </div>
-      </div>
-      <textarea
-        id="outputText"
-        class="ed-textarea"
-        placeholder="Humanized text will appear here…"
-        readonly
-      ></textarea>
-      <div class="ed-footer">
-        <button class="btn-copy" id="copyBtn">
-          <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-          Copy text
-        </button>
-        <button class="btn-pdf" id="pdfBtn">
-          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          PDF
-        </button>
-      </div>
-    </div>
+    </header>
 
-  </div>
+    <!-- BODY ROW: sidebar + workspace -->
+    <div class="body-row">
 
-  <!-- hidden els for JS compat -->
-  <span id="balDisplay" style="display:none">{{ word_balance }}</span>
-  <span id="sessionCount" style="display:none">0</span>
+        <!-- SIDEBAR -->
+        <nav class="sidebar" id="sidebar">
 
-</div><!-- /page-body -->
+            <div class="sb-label">Menu</div>
+            <a href="{% url 'humanizer' %}" class="sb-item is-active">
+                <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                Humanizer
+            </a>
+            <a href="{% url 'pricing' %}" class="sb-item">
+                <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                Pricing
+            </a>
+            <a href="{% url 'devices' %}" class="sb-item">
+                <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1" fill="rgba(130,130,130,0.7)"/></svg>
+                Devices
+            </a>
+            <a href="{% url 'settings' %}" class="sb-item">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                Settings
+            </a>
+            <a href="{% url 'about' %}" class="sb-item">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                About
+            </a>
+            <a href="{% url 'contact' %}" class="sb-item">
+                <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                Contact
+            </a>
+
+            <div class="sb-rule"></div>
+            <div class="sb-label">Settings</div>
+
+            <div style="padding: 0 2px; margin-bottom: 10px;">
+                <span class="sb-field-label">Writing Mode</span>
+                <select id="modeSelect" class="sb-select">
+                    <option value="recommended" selected>Recommended</option>
+                    <option value="readability">Readability</option>
+                    <option value="formal">Formal</option>
+                    <option value="conversational">Conversational</option>
+                    <option value="informal">Informal</option>
+                    <option value="academic">Academic</option>
+                </select>
+            </div>
+            <div style="padding: 0 2px;">
+                <span class="sb-field-label">Model</span>
+                <select id="modelSelect" class="sb-select">
+                    <option value="original" selected>Original — Stable</option>
+                </select>
+            </div>
+
+            {% if user.is_authenticated and user.profile.is_kenya_plan %}
+            <div class="sb-rule"></div>
+            <div class="sb-label">Devices</div>
+            <div class="sb-card">
+                <div>Active: <span class="v">{{ user.profile.current_active_devices }}/{{ user.profile.max_concurrent_devices }}</span></div>
+                {% if user.profile.account_type != 'KE_MULTI_DEVICE' %}
+                <div>Switches today: <span class="v">{{ user.profile.daily_device_switches }}/3</span></div>
+                {% endif %}
+                {% if user.profile.plan_expires_at %}
+                <div style="margin-top: 4px; font-size: 0.68rem; color: rgba(255,255,255,0.25);">
+                    Expires {{ user.profile.plan_expires_at|date:"M d, Y" }}
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <div class="sb-rule"></div>
+            <div class="sb-card">
+                <strong>Tip:</strong> Use Recommended mode for the most natural humanization. Split long documents into sections.
+            </div>
+
+            <div class="sb-spacer"></div>
+
+            <div class="sb-rule"></div>
+            <a href="{% url 'account_logout' %}" class="sb-item is-danger">
+                <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Logout
+            </a>
+        </nav>
+
+        <!-- WORKSPACE: two editor panels -->
+        <div class="workspace">
+
+            <!-- INPUT panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="ph-left">
+                        <span class="panel-title">Input</span>
+                        <div class="w-pill" id="iPill">
+                            <span class="n" id="inputCount">0</span>&thinsp;/&thinsp;{{ word_balance }}
+                        </div>
+                        <span class="over-badge" id="overBadge"></span>
+                    </div>
+                </div>
+                <textarea
+                    id="inputText"
+                    class="editor"
+                    placeholder="Paste your AI-generated text here…"
+                    spellcheck="true"
+                ></textarea>
+                <div class="action-bar">
+                    <button class="humanize-btn" id="humanizeBtn">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5"/>
+                            <path d="M2 12l10 5 10-5"/>
+                        </svg>
+                        <span class="btn-txt" id="btnLabel">Humanize</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- OUTPUT panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="ph-left">
+                        <span class="panel-title">Output</span>
+                        <div class="w-pill"><span class="n" id="outputCount">0</span>&thinsp;words</div>
+                    </div>
+                    <div class="ph-right">
+                        <div class="scores">
+                            <div class="score">
+                                <div class="ring-wrap">
+                                    <svg width="32" height="32">
+                                        <circle class="r-bg"   cx="16" cy="16" r="11"/>
+                                        <circle class="r-fill" id="humanRing" cx="16" cy="16" r="11"
+                                                stroke-dasharray="69.1" stroke-dashoffset="69.1"/>
+                                    </svg>
+                                    <span class="r-val" id="humanVal">0%</span>
+                                </div>
+                                <span class="score-name">Human</span>
+                            </div>
+                            <div class="score">
+                                <div class="ring-wrap">
+                                    <svg width="32" height="32">
+                                        <circle class="r-bg"   cx="16" cy="16" r="11"/>
+                                        <circle class="r-fill" id="readRing" cx="16" cy="16" r="11"
+                                                stroke-dasharray="69.1" stroke-dashoffset="69.1"/>
+                                    </svg>
+                                    <span class="r-val" id="readVal">0%</span>
+                                </div>
+                                <span class="score-name">Read</span>
+                            </div>
+                        </div>
+                        <button class="icon-btn" id="copyBtn" title="Copy">
+                            <svg viewBox="0 0 24 24">
+                                <rect x="9" y="9" width="13" height="13" rx="2"/>
+                                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+                            </svg>
+                        </button>
+                        <button class="icon-btn" id="pdfBtn" title="Export PDF">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <textarea
+                    id="outputText"
+                    class="editor"
+                    placeholder="Humanized text will appear here…"
+                    readonly
+                ></textarea>
+            </div>
+
+        </div><!-- /workspace -->
+    </div><!-- /body-row -->
+</div><!-- /app -->
 
 <script>
-/* ── binary rain ── */
-(function(){
-  const bg = document.getElementById('binBg');
-  const cols = Math.floor(window.innerWidth / 28);
-  for(let i=0;i<cols;i++){
-    const el = document.createElement('div');
-    el.className = 'bin-col';
-    let t=''; const len=20+Math.floor(Math.random()*25);
-    for(let j=0;j<len;j++){
-      t+=Math.random()>.5?'1':'0';
-      if((j+1)%8===0)t+='\n'; else if((j+1)%4===0)t+=' ';
+/* ── Matrix binary rain ── */
+(function() {
+    const bg = document.getElementById('binBg');
+    const cols = Math.floor(window.innerWidth / 30);
+    for (let i = 0; i < cols; i++) {
+        const el = document.createElement('div');
+        el.className = 'bin-col';
+        let txt = '';
+        const len = Math.floor(Math.random() * 32) + 20;
+        for (let j = 0; j < len; j++) {
+            txt += Math.random() > 0.5 ? '1' : '0';
+            if ((j + 1) % 8 === 0) txt += '\n';
+            else if ((j + 1) % 4 === 0) txt += ' ';
+        }
+        el.textContent = txt;
+        el.style.left = `${(i / cols) * 100}%`;
+        const dur = 9 + Math.random() * 8;
+        el.style.animationDuration = dur + 's';
+        const startOffset = -(Math.random() * 100);
+        el.style.setProperty('--start', startOffset + 'vh');
+        el.style.animationDelay = '0s';
+        bg.appendChild(el);
     }
-    el.textContent=t;
-    el.style.left=`${(i/cols)*100}%`;
-    el.style.animationDuration=`${8+Math.random()*9}s`;
-    const sp=-(Math.random()*80);
-    el.style.setProperty('--s',sp+'vh');
-    bg.appendChild(el);
-  }
 })();
 
-/* ── mouse parallax ── */
-document.addEventListener('mousemove',function(e){
-  const mx=e.clientX/window.innerWidth-.5, my=e.clientY/window.innerHeight-.5;
-  document.querySelectorAll('.bg-orb').forEach((o,i)=>{
-    const s=(i+1)*14;
-    o.style.transform=`translate(${mx*s}px,${my*s}px)`;
-  });
-});
-
-/* ── sidebar ── */
-let sbOpen=true;
-function toggleSidebar(){
-  sbOpen=!sbOpen;
-  document.getElementById('sidebar').classList.toggle('hidden',!sbOpen);
-  document.getElementById('pageBody').classList.toggle('expanded',!sbOpen);
-}
-
-/* ── csrf ── */
-function csrf(){
-  const m=document.cookie.match(/csrftoken=([^;]+)/);
-  return m?decodeURIComponent(m[1]):'';
-}
-
-/* ── toast ── */
-function toast(msg,type){
-  document.querySelectorAll('.toast').forEach(t=>t.remove());
-  const el=document.createElement('div');
-  el.className='toast '+(type==='error'?'err':'ok');
-  el.innerHTML=`<span style="font-size:.9rem">${type==='error'?'✕':'✓'}</span><span>${msg}</span>`;
-  document.body.appendChild(el);
-  setTimeout(()=>{
-    el.style.animation='tOut .24s ease forwards';
-    setTimeout(()=>el.remove(),240);
-  },3000);
-}
-
-/* ── word count ── */
-const MAX={{ word_balance|default:0 }};
-let sessionWords=0, overFired=false;
-
-function wc(s){ const t=s.trim(); return t?t.split(/\s+/).length:0; }
-
-function syncCount(id,cntId){
-  const n=wc(document.getElementById(id).value);
-  document.getElementById(cntId).textContent=n;
-  if(id==='inputText'){
-    const pill=document.getElementById('iPill');
-    const tag=document.getElementById('overTag');
-    const ta=document.getElementById('inputText');
-    const btn=document.getElementById('humanizeBtn');
-    const over=MAX>0&&n>MAX;
-    pill.classList.toggle('over',over);
-    ta.classList.toggle('over',over);
-    btn.disabled=over;
-    if(over){
-      tag.textContent=`+${n-MAX} over limit`;
-      tag.classList.add('on');
-      if(!overFired){toast(`Word limit is ${MAX} — trim your input.`,'error');overFired=true;}
-    } else { tag.classList.remove('on'); overFired=false; }
-  }
-  return n;
-}
-document.getElementById('inputText').addEventListener('input',()=>syncCount('inputText','iCount'));
-document.getElementById('inputText').addEventListener('paste',function(){
-  this.style.boxShadow='inset 0 0 0 1px rgba(0,212,255,.28)';
-  setTimeout(()=>this.style.boxShadow='',420);
-});
-
-/* ── stream output ── */
-function stream(ta,text){
-  const chunks=text.split(/(\s+)/);
-  let i=0,built=''; ta.value='';
-  const iv=setInterval(()=>{
-    if(i>=chunks.length){clearInterval(iv);syncCount('outputText','oCount');return;}
-    built+=chunks[i++]; ta.value=built; ta.scrollTop=ta.scrollHeight;
-  },10);
-}
-
-/* ── humanize ── */
-document.getElementById('humanizeBtn').addEventListener('click',async function(){
-  const txt=document.getElementById('inputText').value.trim();
-  const mode=document.getElementById('modeSelect').value;
-  const model=document.getElementById('modelSelect').value;
-  if(!txt){toast('Paste some text first.','error');return;}
-  if(MAX>0&&wc(txt)>MAX){toast(`Exceeds ${MAX}-word limit.`,'error');return;}
-
-  this.disabled=true;
-  document.getElementById('btnLabel').innerHTML='<div class="dots"><i></i><i></i><i></i></div>';
-  document.getElementById('outputText').value='';
-  document.getElementById('oCount').textContent='0';
-
-  try{
-    const res=await fetch('/humanizer/humanize/',{
-      method:'POST',
-      headers:{'Content-Type':'application/x-www-form-urlencoded','X-CSRFToken':csrf()},
-      body:`text=${encodeURIComponent(txt)}&engine=openai&mode=${encodeURIComponent(mode)}&model=${encodeURIComponent(model)}`
+/* ── Mouse parallax on orbs ── */
+document.addEventListener('mousemove', function(e) {
+    const mx = (e.clientX / window.innerWidth  - 0.5);
+    const my = (e.clientY / window.innerHeight - 0.5);
+    document.querySelectorAll('.orb').forEach((o, i) => {
+        const s = (i + 1) * 16;
+        o.style.transform = `translate(${mx*s}px, ${my*s}px)`;
     });
-    if(!res.ok){
-      const d=await res.json().catch(()=>({}));
-      throw new Error(d.error||`HTTP ${res.status}`);
+});
+
+/* ── Sidebar ── */
+let sbOpen = true;
+function toggleSidebar() {
+    sbOpen = !sbOpen;
+    document.getElementById('sidebar').classList.toggle('closed', !sbOpen);
+}
+
+/* ── CSRF ── */
+function getCsrf() {
+    const m = document.cookie.match(/csrftoken=([^;]+)/);
+    return m ? decodeURIComponent(m[1]) : '';
+}
+
+/* ── Toast ── */
+function toast(msg, type) {
+    document.querySelectorAll('.toast').forEach(t => t.remove());
+    const el = document.createElement('div');
+    el.className = 'toast ' + (type === 'error' ? 'err' : 'ok');
+    el.innerHTML = `<span style="font-size:.9rem">${type==='error'?'✕':'✓'}</span><span>${msg}</span>`;
+    document.body.appendChild(el);
+    setTimeout(() => {
+        el.style.animation = 'toastSlideOut .25s ease forwards';
+        setTimeout(() => el.remove(), 250);
+    }, 3000);
+}
+
+/* ── Word counter ── */
+const MAX = {{ word_balance|default:0 }};
+let overFired = false;
+
+function wordCount(str) {
+    const t = str.trim();
+    return t ? t.split(/\s+/).length : 0;
+}
+
+function syncCount(inputId, countId) {
+    const n = wordCount(document.getElementById(inputId).value);
+    document.getElementById(countId).textContent = n;
+
+    if (inputId === 'inputText') {
+        const pill  = document.getElementById('iPill');
+        const badge = document.getElementById('overBadge');
+        const ta    = document.getElementById('inputText');
+        const btn   = document.getElementById('humanizeBtn');
+        const over  = MAX > 0 && n > MAX;
+
+        pill.classList.toggle('over', over);
+        ta.classList.toggle('over-limit', over);
+        btn.disabled = over;
+
+        if (over) {
+            badge.textContent = `+${n - MAX} over`;
+            badge.classList.add('show');
+            if (!overFired) { toast(`Word limit is ${MAX} — trim your input.`, 'error'); overFired = true; }
+        } else {
+            badge.classList.remove('show');
+            overFired = false;
+        }
     }
-    const data=await res.json();
-    stream(document.getElementById('outputText'),data.output_text||'');
-    const used=wc(txt);
-    sessionWords+=used;
-    document.getElementById('sessionCount').textContent=sessionWords;
-    const newBal=Math.max(0,MAX-used);
-    document.getElementById('balDisplay').textContent=newBal;
-    toast('Done!','success');
-  }catch(err){
-    toast(err.message||'Something went wrong.','error');
-  }finally{
-    this.disabled=false;
-    document.getElementById('btnLabel').textContent='Humanize';
-  }
+    return n;
+}
+
+document.getElementById('inputText').addEventListener('input', () => syncCount('inputText', 'inputCount'));
+
+/* paste highlight */
+document.getElementById('inputText').addEventListener('paste', function() {
+    this.style.boxShadow = 'inset 0 0 0 1px rgba(0,212,255,0.3)';
+    setTimeout(() => this.style.boxShadow = '', 400);
 });
 
-/* ── copy ── */
-document.getElementById('copyBtn').addEventListener('click',async function(){
-  const t=document.getElementById('outputText').value;
-  if(!t){toast('Nothing to copy yet.','error');return;}
-  try{
-    await navigator.clipboard.writeText(t);
-    this.classList.add('ok');
-    this.querySelector('span').textContent='Copied!';
-    toast('Copied to clipboard.','success');
-    setTimeout(()=>{this.classList.remove('ok');this.querySelector('span').textContent='Copy text';},2000);
-  }catch{toast('Copy failed.','error');}
+/* ── Score ring ── */
+function setRing(ringId, valId, pct) {
+    const C = 69.1; // 2π × 11
+    document.getElementById(ringId).style.strokeDashoffset = C - (pct / 100) * C;
+    document.getElementById(valId).textContent = Math.round(pct) + '%';
+}
+
+/* ── Stream output ── */
+function streamText(ta, text) {
+    const chunks = text.split(/(\s+)/);
+    let i = 0, built = '';
+    ta.value = '';
+    const iv = setInterval(() => {
+        if (i >= chunks.length) { clearInterval(iv); syncCount('outputText', 'outputCount'); return; }
+        built += chunks[i++];
+        ta.value = built;
+        ta.scrollTop = ta.scrollHeight;
+    }, 11);
+}
+
+/* ── Humanize ── */
+document.getElementById('humanizeBtn').addEventListener('click', async function() {
+    const txt   = document.getElementById('inputText').value.trim();
+    const mode  = document.getElementById('modeSelect').value;
+    const model = document.getElementById('modelSelect').value;
+
+    if (!txt) { toast('Paste some text first.', 'error'); return; }
+    if (MAX > 0 && wordCount(txt) > MAX) { toast(`Exceeds ${MAX}-word limit.`, 'error'); return; }
+
+    this.disabled = true;
+    document.getElementById('btnLabel').innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
+
+    const outTa = document.getElementById('outputText');
+    outTa.value = '';
+    setRing('humanRing', 'humanVal', 0);
+    setRing('readRing',  'readVal',  0);
+    document.getElementById('outputCount').textContent = '0';
+
+    try {
+        const res = await fetch('/humanizer/humanize/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': getCsrf() },
+            body: `text=${encodeURIComponent(txt)}&engine=openai&mode=${encodeURIComponent(mode)}&model=${encodeURIComponent(model)}`
+        });
+
+        if (!res.ok) {
+            const d = await res.json().catch(() => ({}));
+            throw new Error(d.error || `HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+        streamText(outTa, data.output_text || '');
+
+        if (data.human_score       !== undefined) setRing('humanRing', 'humanVal', data.human_score);
+        if (data.readability_score !== undefined) setRing('readRing',  'readVal',  data.readability_score);
+
+        // update balance chip
+        const used = wordCount(txt);
+        document.getElementById('balChip').textContent = Math.max(0, MAX - used) + ' words';
+
+        toast('Done!', 'success');
+    } catch(err) {
+        toast(err.message || 'Something went wrong.', 'error');
+    } finally {
+        this.disabled = false;
+        document.getElementById('btnLabel').textContent = 'Humanize';
+    }
 });
 
-/* ── pdf ── */
-document.getElementById('pdfBtn').addEventListener('click',function(){
-  const t=document.getElementById('outputText').value;
-  if(!t){toast('No output to export.','error');return;}
-  try{
-    const{jsPDF}=window.jspdf;
-    const doc=new jsPDF({unit:'mm',format:'a4'});
-    const id='IH-'+Math.random().toString(36).slice(2,8).toUpperCase();
-    const m=18,pw=210,lh=7;
-    doc.setFont('helvetica','bold');doc.setFontSize(14);doc.setTextColor(0,180,220);
-    doc.text('InfiniHumanizer — Output',m,18);
-    doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(120,120,130);
-    doc.text(`ID: ${id}  |  ${new Date().toLocaleString()}`,m,25);
-    doc.setDrawColor(0,180,220);doc.setLineWidth(.4);doc.line(m,28,pw-m,28);
-    doc.setFontSize(10.5);doc.setTextColor(40,40,40);
-    let y=36;
-    doc.splitTextToSize(t,pw-m*2).forEach(line=>{
-      if(y>278){doc.addPage();y=18;}
-      doc.text(line,m,y);y+=lh;
-    });
-    doc.save(`InfiniHumanizer_${id}.pdf`);
-    toast('PDF saved.','success');
-  }catch{toast('PDF export failed.','error');}
+/* ── Copy ── */
+document.getElementById('copyBtn').addEventListener('click', async function() {
+    const t = document.getElementById('outputText').value;
+    if (!t) { toast('Nothing to copy.', 'error'); return; }
+    try {
+        await navigator.clipboard.writeText(t);
+        this.classList.add('copied');
+        toast('Copied!', 'success');
+        setTimeout(() => this.classList.remove('copied'), 1800);
+    } catch { toast('Copy failed.', 'error'); }
+});
+
+/* ── PDF ── */
+document.getElementById('pdfBtn').addEventListener('click', function() {
+    const t = document.getElementById('outputText').value;
+    if (!t) { toast('No output to export.', 'error'); return; }
+    try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+        const id = 'IH-' + Math.random().toString(36).slice(2,8).toUpperCase();
+        const m = 18, pw = 210, lh = 7;
+
+        doc.setFont('helvetica','bold'); doc.setFontSize(14); doc.setTextColor(0,180,220);
+        doc.text('InfiniHumanizer — Output', m, 18);
+        doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(120,120,130);
+        doc.text(`ID: ${id}  |  ${new Date().toLocaleString()}`, m, 25);
+        doc.setDrawColor(0,180,220); doc.setLineWidth(0.4); doc.line(m, 28, pw-m, 28);
+        doc.setFontSize(10.5); doc.setTextColor(40,40,40);
+        let y = 36;
+        doc.splitTextToSize(t, pw - m*2).forEach(line => {
+            if (y > 278) { doc.addPage(); y = 18; }
+            doc.text(line, m, y); y += lh;
+        });
+        doc.save(`InfiniHumanizer_${id}.pdf`);
+        toast('PDF saved.', 'success');
+    } catch { toast('PDF export failed.', 'error'); }
 });
 </script>
 </body>
