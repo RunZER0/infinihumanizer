@@ -228,5 +228,20 @@ document.querySelectorAll('.select-btn').forEach(btn => {
     window.location.href = `/humanizer/start-payment/?plan=${this.dataset.plan}&amount=${this.dataset.amount}&currency=${this.dataset.currency}`;
   });
 });
+
+/* ── Page entrance animations ── */
+(function(){
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='none'; io.unobserve(e.target); } });
+  },{threshold:0.06});
+  function stage(sel,delay,y){
+    document.querySelectorAll(sel).forEach((el,i)=>{
+      el.style.cssText+=`opacity:0;transform:translateY(${y||16}px);transition:opacity .55s ease ${(delay+(i*.1)).toFixed(2)}s,transform .55s ease ${(delay+(i*.1)).toFixed(2)}s;`;
+      io.observe(el);
+    });
+  }
+  stage('.px-eyebrow',0,10); stage('.px-hero-title',.08,14); stage('.px-hero-sub',.16,10);
+  stage('.px-plan',.1,22); stage('.px-info',.5,10);
+})();
 </script>
 {% endblock %}

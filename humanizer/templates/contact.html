@@ -179,3 +179,26 @@ nav  { display: none !important; }
   </div>
 </div>
 {% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function(){
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='none'; io.unobserve(e.target); } });
+  },{threshold:0.06});
+  function stage(sel,delay,x,y){
+    document.querySelectorAll(sel).forEach((el,i)=>{
+      const tr=x?`translateX(${x}px)`:`translateY(${y||14}px)`;
+      el.style.cssText+=`opacity:0;transform:${tr};transition:opacity .55s ease ${(delay+i*.1).toFixed(2)}s,transform .55s ease ${(delay+i*.1).toFixed(2)}s;`;
+      io.observe(el);
+    });
+  }
+  stage('.ct-eyebrow,.ct-hero-title,.ct-hero-sub',0,0,12);
+  stage('.ct-form-side',.1,-18,0);
+  stage('.ct-info-side',.2,18,0);
+  stage('.ct-field',.15,0,10);
+  stage('.ct-info-block',.1,0,10);
+  stage('.ct-stat',.3,0,10);
+})();
+</script>
+{% endblock %}

@@ -176,3 +176,24 @@ nav  { display: none !important; }
   </div>
 </div>
 {% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function(){
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='none'; io.unobserve(e.target); } });
+  },{threshold:0.07});
+  function stage(sel,baseDelay,y){
+    document.querySelectorAll(sel).forEach((el,i)=>{
+      el.style.cssText+=`opacity:0;transform:translateY(${y||16}px);transition:opacity .6s ease ${(baseDelay+i*.12).toFixed(2)}s,transform .6s ease ${(baseDelay+i*.12).toFixed(2)}s;`;
+      io.observe(el);
+    });
+  }
+  document.querySelectorAll('.ab-eyebrow,.ab-hero-title,.ab-hero-sub').forEach((el,i)=>{
+    el.style.cssText+=`opacity:0;transform:translateY(12px);transition:opacity .55s ease ${i*.1}s,transform .55s ease ${i*.1}s;`;
+    io.observe(el);
+  });
+  stage('.ab-col',.05,20); stage('.ab-step',0,18); stage('.ab-feature',.05,16); stage('.ab-ver-cell',0,12);
+})();
+</script>
+{% endblock %}

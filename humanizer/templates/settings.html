@@ -143,5 +143,21 @@ function confirmDelete() {
     }
   }
 }
+
+(function(){
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='none'; io.unobserve(e.target); } });
+  },{threshold:0.06});
+  function stage(sel,delay,y){
+    document.querySelectorAll(sel).forEach((el,i)=>{
+      el.style.cssText+=`opacity:0;transform:translateY(${y||14}px);transition:opacity .5s ease ${(delay+i*.09).toFixed(2)}s,transform .5s ease ${(delay+i*.09).toFixed(2)}s;`;
+      io.observe(el);
+    });
+  }
+  stage('.st-eyebrow,.st-hero-title,.st-hero-sub',0,10);
+  stage('.st-acct-cell',.1,12);
+  stage('.st-row',.05,14);
+  stage('.st-danger-zone',.2,10);
+})();
 </script>
 {% endblock %}

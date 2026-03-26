@@ -168,3 +168,21 @@ nav  { display: none !important; }
   </div>
 </div>
 {% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function(){
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='none'; io.unobserve(e.target); } });
+  },{threshold:0.06});
+  function stage(sel,delay,y){
+    document.querySelectorAll(sel).forEach((el,i)=>{
+      el.style.cssText+=`opacity:0;transform:translateY(${y||14}px);transition:opacity .55s ease ${(delay+i*.1).toFixed(2)}s,transform .55s ease ${(delay+i*.1).toFixed(2)}s;`;
+      io.observe(el);
+    });
+  }
+  stage('.dv-eyebrow,.dv-hero-title,.dv-hero-sub',0,10);
+  stage('.dv-stat',.05,18); stage('.dv-row',0,12); stage('.dv-info-item',.1,10);
+})();
+</script>
+{% endblock %}

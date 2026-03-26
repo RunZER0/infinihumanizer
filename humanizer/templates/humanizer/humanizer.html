@@ -38,10 +38,15 @@ body { min-height: 100vh; overflow-x: hidden; }
 body::after { content:''; position:fixed; inset:0; z-index:2; pointer-events:none; background:repeating-linear-gradient(0deg,rgba(0,212,255,.015) 0px,transparent 1px,transparent 2px,rgba(0,212,255,.015) 3px); }
 
 /* ─── App shell (full viewport, editors live here) ─── */
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 .app {
   position: relative; z-index: 10;
   height: 100vh;
   display: flex; flex-direction: column;
+  animation: pageFadeIn .6s cubic-bezier(.4,0,.2,1) both;
 }
 
 /* ─── Topbar ─── */
@@ -84,31 +89,28 @@ body::after { content:''; position:fixed; inset:0; z-index:2; pointer-events:non
 .user-chip strong { color: rgba(255,255,255,.75); font-weight: 600; }
 
 /* ─── Sidebar hover-zone ─── */
-/* Thin trigger strip + full sidebar live inside .sb-zone.
-   Hovering anywhere in the zone keeps sidebar open.           */
+/* 4px edge-only trigger — JS handles hover open/close. */
 .sb-zone {
   position: fixed; top: 58px; left: 0;
-  height: calc(100vh - 58px); z-index: 250;
-  display: flex;
+  height: calc(100vh - 58px); width: 4px; z-index: 250;
+  cursor: pointer;
 }
-/* The invisible hover trigger strip */
-.sb-trigger {
-  width: 8px; height: 100%; flex-shrink: 0; cursor: pointer;
-}
+.sb-trigger { display: none; }
 
 .sidebar {
-  width: 236px; flex-shrink: 0;
+  position: fixed; top: 58px; left: 0;
+  width: 236px; height: calc(100vh - 58px); z-index: 249;
   display: flex; flex-direction: column;
   background: rgba(4,6,14,.96);
   border-right: 1px solid rgba(0,212,255,.11);
   backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
   padding: 16px 10px;
-  transform: translateX(calc(-236px - 8px));
+  transform: translateX(-240px);
   transition: transform .26s cubic-bezier(.4,0,.2,1);
-  overflow: hidden; /* no scroll - compact by design */
+  overflow: hidden;
 }
-/* Show sidebar when hovering the zone OR when pinned */
-.sb-zone:hover .sidebar,
+/* Open states */
+.sidebar.sb-open,
 .sidebar.pinned {
   transform: translateX(0);
 }
@@ -251,24 +253,31 @@ body::after { content:''; position:fixed; inset:0; z-index:2; pointer-events:non
 }
 .humanize-btn {
   width: 100%; height: 46px;
-  background: linear-gradient(135deg,#00C4F0,#0088EE,#00B8FF); background-size: 200% 200%;
-  border: none; border-radius: 11px;
-  color: #040912; font-family: 'Inter',sans-serif;
+  background: rgba(0,212,255,.04);
+  border: 1.5px solid rgba(0,212,255,.45);
+  border-radius: 11px;
+  color: #00D4FF; font-family: 'Inter',sans-serif;
   font-size: .88rem; font-weight: 700; letter-spacing: .3px;
   cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-  transition: transform .22s ease, box-shadow .22s ease, background-position .4s ease;
-  position: relative; overflow: hidden; box-shadow: 0 4px 20px rgba(0,200,255,.2);
+  transition: color .3s ease, border-color .35s ease, box-shadow .3s ease, transform .18s ease;
+  position: relative; overflow: hidden;
+  box-shadow: 0 0 18px rgba(0,212,255,.08), inset 0 0 0 0 transparent;
 }
 .humanize-btn::before {
   content: ''; position: absolute; inset: 0;
-  background: linear-gradient(90deg,transparent 0%,rgba(255,255,255,.18) 50%,transparent 100%);
-  transform: translateX(-100%); transition: transform .5s ease;
+  background: linear-gradient(135deg,#00C4F0 0%,#0088EE 100%);
+  transform-origin: right center;
+  transform: scaleX(0);
+  transition: transform .42s cubic-bezier(.4,0,.2,1);
 }
-.humanize-btn:hover:not(:disabled)::before { transform: translateX(100%); }
-.humanize-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,200,255,.38); background-position: 100% 100%; }
-.humanize-btn:active:not(:disabled) { transform: translateY(0); }
+.humanize-btn:hover:not(:disabled)::before { transform: scaleX(1); }
+.humanize-btn:hover:not(:disabled) {
+  color: #040912; border-color: transparent;
+  box-shadow: 0 6px 28px rgba(0,200,255,.4);
+}
+.humanize-btn:active:not(:disabled) { transform: scale(.98); }
 .humanize-btn:disabled { opacity: .38; cursor: not-allowed; }
-.humanize-btn svg { width: 16px; height: 16px; stroke: #040912; stroke-width: 2.2; fill: none; stroke-linecap: round; flex-shrink: 0; position: relative; z-index: 1; }
+.humanize-btn svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2.2; fill: none; stroke-linecap: round; flex-shrink: 0; position: relative; z-index: 1; transition: stroke .3s ease; }
 .humanize-btn .btn-txt { position: relative; z-index: 1; }
 
 .dots { display: inline-flex; gap: 4px; align-items: center; }
@@ -669,6 +678,16 @@ function toggleSidebar(){
   sbPinned=!sbPinned;
   document.getElementById('sidebar').classList.toggle('pinned',sbPinned);
 }
+/* sidebar 4px edge-hover */
+(function(){
+  const zone=document.getElementById('sbZone');
+  const bar=document.getElementById('sidebar');
+  const isBar=e=>e&&(e===bar||bar.contains(e));
+  const isZone=e=>e&&(e===zone||zone.contains(e));
+  zone.addEventListener('mouseenter',()=>bar.classList.add('sb-open'));
+  zone.addEventListener('mouseleave',e=>{ if(!sbPinned&&!isBar(e.relatedTarget)) bar.classList.remove('sb-open'); });
+  bar.addEventListener('mouseleave', e=>{ if(!sbPinned&&!isZone(e.relatedTarget)) bar.classList.remove('sb-open'); });
+})();
 
 /* csrf */
 function getCsrf(){ const m=document.cookie.match(/csrftoken=([^;]+)/); return m?decodeURIComponent(m[1]):''; }
