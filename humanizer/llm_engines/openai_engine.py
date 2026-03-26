@@ -32,7 +32,7 @@ class TextEngine:
         self.model_key = model if model in AVAILABLE_MODELS else DEFAULT_MODEL
         self.model = get_model_id(self.model_key)
     
-    def humanize(self, text: str, mode: str = None) -> str:
+    def humanize(self, text: str, mode: str = None, temperature: float = None) -> str:
         """
         Humanize text using specified mode with intelligent parallel chunking.
         
@@ -90,8 +90,8 @@ class TextEngine:
                         ]
                         
                         # Add random variation to temperature
-                        base_temp = mode_config["temperature"]
-                        random_variation = random.uniform(-0.05, 0.05)
+                        base_temp = temperature if temperature is not None else mode_config["temperature"]
+                        random_variation = random.uniform(-0.03, 0.03)
                         final_temperature = max(0.1, min(1.0, base_temp + random_variation))
                         
                         # Make the API call
@@ -179,10 +179,9 @@ class TextEngine:
             {"role": "user",   "content": user_prompt}
         ]
         
-        # Add random variation to temperature for uniqueness
-        # Variation of +/- 0.05 to keep it close to the optimized setting
-        base_temp = mode_config["temperature"]
-        random_variation = random.uniform(-0.05, 0.05)
+        # Use provided temperature; add small random jitter for variety
+        base_temp = temperature if temperature is not None else mode_config["temperature"]
+        random_variation = random.uniform(-0.03, 0.03)
         final_temperature = max(0.1, min(1.0, base_temp + random_variation))
         
         try:

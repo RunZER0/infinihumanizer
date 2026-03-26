@@ -156,6 +156,9 @@ body::after { content:''; position:fixed; inset:0; z-index:2; pointer-events:non
 }
 .sb-select:hover { border-color: rgba(0,212,255,.28); }
 .sb-select:focus { border-color: rgba(0,212,255,.5); box-shadow: 0 0 0 3px rgba(0,212,255,.08); }
+/* slider thumb */
+#tempSlider::-webkit-slider-thumb { -webkit-appearance:none; width:14px; height:14px; border-radius:50%; background:#00D4FF; cursor:pointer; box-shadow:0 0 6px rgba(0,212,255,.5); }
+#tempSlider::-moz-range-thumb { width:14px; height:14px; border-radius:50%; background:#00D4FF; cursor:pointer; border:none; box-shadow:0 0 6px rgba(0,212,255,.5); }
 .sb-select option { background: #0a0f1e; }
 
 .sb-tip {
@@ -430,16 +433,17 @@ body::after { content:''; position:fixed; inset:0; z-index:2; pointer-events:non
     <div class="sb-rule"></div>
     <div class="sb-label">Settings</div>
 
-    <div style="padding:0 2px;margin-bottom:10px">
-      <span class="sb-field-label">Writing Mode</span>
-      <select id="modeSelect" class="sb-select">
-        <option value="recommended" selected>Recommended</option>
-        <option value="readability">Readability</option>
-        <option value="formal">Formal</option>
-        <option value="conversational">Conversational</option>
-        <option value="informal">Informal</option>
-        <option value="academic">Academic</option>
-      </select>
+    <div style="padding:0 2px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px">
+        <span class="sb-field-label" style="margin-bottom:0">Temperature</span>
+        <span id="tempVal" style="font-size:.78rem;font-weight:700;color:#00D4FF;letter-spacing:.3px">0.7</span>
+      </div>
+      <input type="range" id="tempSlider" min="0.1" max="1.0" step="0.05" value="0.7" style="
+        width:100%;height:3px;appearance:none;-webkit-appearance:none;
+        background:linear-gradient(to right,#00D4FF 0%,#00D4FF 60%,rgba(0,212,255,.15) 60%,rgba(0,212,255,.15) 100%);
+        border-radius:2px;outline:none;cursor:pointer;margin-bottom:8px;
+      ">
+      <div id="tempTip" style="font-size:.7rem;line-height:1.55;color:rgba(255,255,255,.3);padding:0 1px"></div>
     </div>
     <div style="padding:0 2px;margin-bottom:10px">
       <span class="sb-field-label">Model</span>
@@ -745,7 +749,7 @@ function streamText(ta,text){
 /* humanize */
 document.getElementById('humanizeBtn').addEventListener('click',async function(){
   const txt=document.getElementById('inputText').value.trim();
-  const mode=document.getElementById('modeSelect').value;
+  const temperature=document.getElementById('tempSlider').value;
   const model=document.getElementById('modelSelect').value;
   if(!txt){toast('Paste some text first.','error');return;}
   if(MAX>0&&wordCount(txt)>MAX){toast(`Exceeds ${MAX}-word limit.`,'error');return;}
@@ -757,7 +761,7 @@ document.getElementById('humanizeBtn').addEventListener('click',async function()
     const res=await fetch('/humanizer/humanize/',{
       method:'POST',
       headers:{'Content-Type':'application/x-www-form-urlencoded','X-CSRFToken':getCsrf()},
-      body:`text=${encodeURIComponent(txt)}&engine=openai&mode=${encodeURIComponent(mode)}&model=${encodeURIComponent(model)}`
+      body:`text=${encodeURIComponent(txt)}&engine=openai&temperature=${encodeURIComponent(temperature)}&model=${encodeURIComponent(model)}`
     });
     if(!res.ok){const d=await res.json().catch(()=>({}));throw new Error(d.error||`HTTP ${res.status}`);}
     const data=await res.json();
@@ -768,6 +772,30 @@ document.getElementById('humanizeBtn').addEventListener('click',async function()
   }catch(err){ toast(err.message||'Something went wrong.','error'); }
   finally{ this.disabled=false; document.getElementById('btnLabel').textContent='Humanize'; }
 });
+
+/* temperature slider */
+(function(){
+  const slider=document.getElementById('tempSlider');
+  const valLabel=document.getElementById('tempVal');
+  const tip=document.getElementById('tempTip');
+  const tips=[
+    [0.10,0.29,'Very low — highly deterministic. Output stays close to the input structure; minimal rephrasing.'],
+    [0.30,0.49,'Low — controlled rewriting. Reliable and conservative; good for formal documents.'],
+    [0.50,0.69,'Moderate — balanced humanization. Natural variation while staying faithful to the original.'],
+    [0.70,0.84,'Recommended — confident rewriting. Clear human voice, varied sentence rhythm, good flow.'],
+    [0.85,1.00,'High — expressive and loose. More creative deviation; may rephrase more aggressively.']
+  ];
+  function update(){
+    const v=parseFloat(slider.value);
+    valLabel.textContent=v.toFixed(2);
+    const t=tips.find(([lo,hi])=>v>=lo&&v<=hi);
+    tip.textContent=t?t[2]:'';
+    const pct=((v-0.1)/(1.0-0.1)*100).toFixed(1);
+    slider.style.background=`linear-gradient(to right,#00D4FF 0%,#00D4FF ${pct}%,rgba(0,212,255,.15) ${pct}%,rgba(0,212,255,.15) 100%)`;
+  }
+  slider.addEventListener('input',update);
+  update();
+})();
 
 /* copy */
 document.getElementById('copyBtn').addEventListener('click',async function(){

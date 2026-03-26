@@ -67,17 +67,12 @@ def clean_llm_output(text: str) -> str:
     return cleaned.strip()
 
 
-def humanize_with_text_engine(text: str, mode: str = "recommended", model: str = "premium") -> str:
+def humanize_with_text_engine(text: str, mode: str = "recommended", model: str = "nami", temperature: float = 0.7) -> str:
     """
-    Humanize text using the custom model with specified mode.
-    
-    Args:
-        text: Text to humanize
-        mode: Humanization mode (recommended, readability, formal, conversational, informal, academic)
-        model: Model selection (balanced, premium, experimental)
+    Humanize text using the custom model with specified temperature.
     """
     engine = TextEngine(model=model)
-    result = engine.humanize(text, mode=mode)
+    result = engine.humanize(text, mode=mode, temperature=temperature)
     return clean_llm_output(result)
 
 
@@ -86,13 +81,13 @@ ENGINE_HANDLERS: Dict[str, Callable] = {
 }
 
 
-def humanize_text(text: str, engine: str | None = None, mode: str = "recommended", model: str = "premium") -> str:
+def humanize_text(text: str, engine: str | None = None, mode: str = "recommended", model: str = "nami", temperature: float = 0.7) -> str:
     """Main entry point for text humanization."""
     chosen = (engine or os.environ.get("HUMANIZER_ENGINE") or "openai").lower()
-    return humanize_text_with_engine(text, chosen, mode=mode, model=model)
+    return humanize_text_with_engine(text, chosen, mode=mode, model=model, temperature=temperature)
 
 
-def humanize_text_with_engine(text: str, engine: str, mode: str = "recommended", model: str = "premium") -> str:
+def humanize_text_with_engine(text: str, engine: str, mode: str = "recommended", model: str = "nami", temperature: float = 0.7) -> str:
     """Route to the appropriate processing handler - NO CHUNKING."""
     
     # SAFETY CHECK: Limit total input size
@@ -107,7 +102,7 @@ def humanize_text_with_engine(text: str, engine: str, mode: str = "recommended",
     handler = ENGINE_HANDLERS[engine]
     
     try:
-        humanized_text = handler(text, mode=mode, model=model)
+        humanized_text = handler(text, mode=mode, model=model, temperature=temperature)
         return humanized_text
     except Exception as error:
         raise

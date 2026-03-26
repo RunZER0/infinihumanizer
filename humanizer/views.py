@@ -145,8 +145,13 @@ def humanize_ajax(request):
 
     input_text = request.POST.get("text", "").strip()
     selected_engine = (request.POST.get("engine") or "openai").lower()  # Default to OpenAI (smurk)
-    selected_mode = request.POST.get("mode", "recommended").lower()  # Default to recommended mode
+    selected_mode = "recommended"  # Mode removed — temperature slider used instead
     selected_model = request.POST.get("model", "nami").lower()  # Default to nami (most premium)
+    try:
+        selected_temperature = float(request.POST.get("temperature", 0.7))
+        selected_temperature = max(0.1, min(1.0, selected_temperature))
+    except (ValueError, TypeError):
+        selected_temperature = 0.7
     word_count = len(input_text.split())
     
     # Maximum INPUT word limit to prevent timeouts and enforce UI limit
@@ -162,6 +167,7 @@ def humanize_ajax(request):
             "user_id": request.user.pk,
             "engine": selected_engine,
             "mode": selected_mode,
+                "temperature": selected_temperature,
             "word_count": word_count,
             "word_balance": state["word_balance"],
         },
@@ -189,8 +195,8 @@ def humanize_ajax(request):
 
         # Direct LLM call with mode and model support
         try:
-            logger.info("Humanizing text with mode: %s, model: %s for user %s", selected_mode, selected_model, request.user.pk)
-            output_text = humanize_text_with_engine(input_text, selected_engine, mode=selected_mode, model=selected_model)
+            logger.info("Humanizing text with model: %s, temp: %.2f for user %s", selected_model, selected_temperature, request.user.pk)
+            output_text = humanize_text_with_engine(input_text, selected_engine, mode=selected_mode, model=selected_model, temperature=selected_temperature)
             
             # If output is empty or too short, something went wrong
             if not output_text or len(output_text.strip()) < 10:
