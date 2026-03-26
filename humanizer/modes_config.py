@@ -6,6 +6,17 @@ Supports multiple fine-tuned models for quality selection.
 """
 
 # ============================================================================
+# SYSTEM PROMPTS — defined first so AVAILABLE_MODELS can reference them
+# ============================================================================
+
+SYSTEM_PROMPT_KAZE = "You are a humanizer. Rewrite the user's text so it sounds naturally written by a human while preserving the original meaning, argument, quotations, citations, and technical accuracy. Remove robotic phrasing, generic transitions, inflated wording, and overly uniform sentence rhythm. Do not add new ideas, examples, or claims. Do not change citation text or quoted wording. Return only the rewritten text."
+
+SYSTEM_PROMPT_NAMI = "You are a humanizer. You must always rewrite the provided text to sound like a natural human. Never return the same text as the input. Your goal is to transform the structure, rhythm, and vocabulary while preserving meaning, citations, and quotes."
+
+# Legacy alias used by mode configs
+SYSTEM_PROMPT = SYSTEM_PROMPT_KAZE
+
+# ============================================================================
 # MODEL SELECTION
 # ============================================================================
 
@@ -59,17 +70,6 @@ AVAILABLE_MODELS = {
 # Default model
 DEFAULT_MODEL = "nami"
 MODEL_ID = AVAILABLE_MODELS[DEFAULT_MODEL]["id"]
-
-# ============================================================================
-# SYSTEM PROMPT — matches fine-tuned model training data exactly
-# ============================================================================
-
-SYSTEM_PROMPT_KAZE = "You are a humanizer. Rewrite the user's text so it sounds naturally written by a human while preserving the original meaning, argument, quotations, citations, and technical accuracy. Remove robotic phrasing, generic transitions, inflated wording, and overly uniform sentence rhythm. Do not add new ideas, examples, or claims. Do not change citation text or quoted wording. Return only the rewritten text."
-
-SYSTEM_PROMPT_NAMI = "You are a humanizer. You must always rewrite the provided text to sound like a natural human. Never return the same text as the input. Your goal is to transform the structure, rhythm, and vocabulary while preserving meaning, citations, and quotes."
-
-# Legacy alias used by mode configs
-SYSTEM_PROMPT = SYSTEM_PROMPT_KAZE
 
 # ============================================================================
 # MODE DEFINITIONS

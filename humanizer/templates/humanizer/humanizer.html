@@ -284,10 +284,82 @@ body::after { content:''; position:fixed; inset:0; z-index:2; pointer-events:non
 .humanize-btn .btn-txt { position: relative; z-index: 1; }
 
 .dots { display: inline-flex; gap: 4px; align-items: center; }
-.dots span { width: 6px; height: 6px; background: #040912; border-radius: 50%; animation: dotPulse 1s ease-in-out infinite; }
+.dots span { width: 6px; height: 6px; background: currentColor; border-radius: 50%; animation: dotPulse 1s ease-in-out infinite; }
 .dots span:nth-child(2) { animation-delay: .15s; }
 .dots span:nth-child(3) { animation-delay: .3s; }
 @keyframes dotPulse { 0%,60%,100%{transform:translateY(0);opacity:.4} 30%{transform:translateY(-5px);opacity:1} }
+
+/* ─── Output loading overlay ─── */
+.output-loading {
+  display: none;
+  position: absolute; inset: 0;
+  background: rgba(13,13,13,.92);
+  border-radius: inherit;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  z-index: 10;
+  backdrop-filter: blur(2px);
+}
+.output-loading.active { display: flex; }
+.ol-orb {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  border: 2px solid rgba(0,212,255,.15);
+  border-top-color: #00D4FF;
+  border-right-color: rgba(0,212,255,.5);
+  animation: olSpin 0.9s linear infinite;
+  box-shadow: 0 0 18px rgba(0,212,255,.3), inset 0 0 12px rgba(0,212,255,.08);
+  position: relative;
+}
+.ol-orb::after {
+  content: '';
+  position: absolute; inset: 6px;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  border-top-color: rgba(0,212,255,.4);
+  animation: olSpin 1.4s linear infinite reverse;
+}
+@keyframes olSpin { to { transform: rotate(360deg); } }
+.ol-bars {
+  display: flex; gap: 4px; align-items: flex-end; height: 20px;
+}
+.ol-bars span {
+  width: 3px; border-radius: 3px;
+  background: #00D4FF;
+  animation: olBar 1.1s ease-in-out infinite;
+  opacity: .7;
+}
+.ol-bars span:nth-child(1){height:8px;animation-delay:0s}
+.ol-bars span:nth-child(2){height:14px;animation-delay:.1s}
+.ol-bars span:nth-child(3){height:20px;animation-delay:.2s}
+.ol-bars span:nth-child(4){height:14px;animation-delay:.3s}
+.ol-bars span:nth-child(5){height:8px;animation-delay:.4s}
+.ol-bars span:nth-child(6){height:12px;animation-delay:.5s}
+.ol-bars span:nth-child(7){height:18px;animation-delay:.15s}
+@keyframes olBar {
+  0%,100%{transform:scaleY(.3);opacity:.35}
+  50%{transform:scaleY(1);opacity:1}
+}
+.ol-label {
+  font-size: .7rem; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; color: rgba(0,212,255,.6);
+  animation: olLabelPulse 2s ease-in-out infinite;
+}
+@keyframes olLabelPulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+.ol-scan {
+  position: absolute; left: 0; right: 0; height: 1px;
+  background: linear-gradient(to right, transparent, #00D4FF 30%, rgba(0,212,255,.5) 70%, transparent);
+  animation: olScan 2s ease-in-out infinite;
+  opacity: .5;
+}
+@keyframes olScan {
+  0%{top:20%;opacity:0}
+  10%{opacity:.7}
+  90%{opacity:.7}
+  100%{top:80%;opacity:0}
+}
 
 /* ─── Info section (below editors) ─── */
 .info-section {
@@ -546,7 +618,17 @@ body::after { content:''; position:fixed; inset:0; z-index:2; pointer-events:non
             </button>
           </div>
         </div>
-        <textarea id="outputText" class="editor" placeholder="Humanized text will appear here…" readonly></textarea>
+        <div style="flex:1;min-height:0;position:relative;overflow:hidden">
+          <div class="output-loading" id="outputLoading">
+            <div class="ol-scan"></div>
+            <div class="ol-orb"></div>
+            <div class="ol-bars">
+              <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <div class="ol-label">Processing…</div>
+          </div>
+          <textarea id="outputText" class="editor" placeholder="Humanized text will appear here…" readonly style="position:absolute;inset:0;width:100%;height:100%;flex:unset"></textarea>
+        </div>
       </div>
 
     </div>
@@ -757,6 +839,7 @@ document.getElementById('humanizeBtn').addEventListener('click',async function()
   document.getElementById('btnLabel').innerHTML='<div class="dots"><span></span><span></span><span></span></div>';
   document.getElementById('outputText').value='';
   document.getElementById('outputCount').textContent='0';
+  document.getElementById('outputLoading').classList.add('active');
   try{
     const res=await fetch('/humanizer/humanize/',{
       method:'POST',
@@ -770,7 +853,7 @@ document.getElementById('humanizeBtn').addEventListener('click',async function()
     document.getElementById('balChip').textContent=Math.max(0,MAX-used)+' words';
     toast('Done!','success');
   }catch(err){ toast(err.message||'Something went wrong.','error'); }
-  finally{ this.disabled=false; document.getElementById('btnLabel').textContent='Humanize'; }
+  finally{ this.disabled=false; document.getElementById('btnLabel').textContent='Humanize'; document.getElementById('outputLoading').classList.remove('active'); }
 });
 
 /* temperature slider */
