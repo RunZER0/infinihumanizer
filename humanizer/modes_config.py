@@ -10,35 +10,66 @@ Supports multiple fine-tuned models for quality selection.
 # ============================================================================
 
 AVAILABLE_MODELS = {
-    "swift": {
+    # ── Kaze tier (hope run) ──────────────────────────────
+    "kaze-i": {
         "id": "ft:gpt-4.1-mini-2025-04-14:ynai:hope:DNYCXWru:ckpt-step-412",
-        "name": "Swift",
-        "description": "Early checkpoint — fast, clean humanization",
+        "name": "Kaze-I",
+        "description": "Early checkpoint",
+        "system_prompt": SYSTEM_PROMPT_KAZE,
         "badge": None
     },
-    "balanced": {
-        "id": "ft:gpt-4.1-mini-2025-04-14:ynai:hope:DNYCY1OJ",
-        "name": "Balanced",
-        "description": "Final checkpoint — best overall quality",
-        "badge": "RECOMMENDED"
-    },
-    "deep": {
+    "kaze-ii": {
         "id": "ft:gpt-4.1-mini-2025-04-14:ynai:hope:DNYCYreS:ckpt-step-824",
-        "name": "Deep",
-        "description": "Late checkpoint — maximum naturalness",
+        "name": "Kaze-II",
+        "description": "Late checkpoint",
+        "system_prompt": SYSTEM_PROMPT_KAZE,
         "badge": None
-    }
+    },
+    "kaze": {
+        "id": "ft:gpt-4.1-mini-2025-04-14:ynai:hope:DNYCY1OJ",
+        "name": "Kaze",
+        "description": "Final — best of Kaze tier",
+        "system_prompt": SYSTEM_PROMPT_KAZE,
+        "badge": None
+    },
+    # ── Nami tier — premium (hopetoo run) ────────────────
+    "nami-i": {
+        "id": "ft:gpt-4.1-mini-2025-04-14:ynai:hopetoo:DNkpWxS4:ckpt-step-323",
+        "name": "Nami-I",
+        "description": "Early checkpoint",
+        "system_prompt": SYSTEM_PROMPT_NAMI,
+        "badge": None
+    },
+    "nami-ii": {
+        "id": "ft:gpt-4.1-mini-2025-04-14:ynai:hopetoo:DNkpX8Qp:ckpt-step-646",
+        "name": "Nami-II",
+        "description": "Late checkpoint",
+        "system_prompt": SYSTEM_PROMPT_NAMI,
+        "badge": None
+    },
+    "nami": {
+        "id": "ft:gpt-4.1-mini-2025-04-14:ynai:hopetoo:DNkpXbcO",
+        "name": "Nami",
+        "description": "Final — most premium",
+        "system_prompt": SYSTEM_PROMPT_NAMI,
+        "badge": "PREMIUM"
+    },
 }
 
 # Default model
-DEFAULT_MODEL = "balanced"
+DEFAULT_MODEL = "nami"
 MODEL_ID = AVAILABLE_MODELS[DEFAULT_MODEL]["id"]
 
 # ============================================================================
 # SYSTEM PROMPT — matches fine-tuned model training data exactly
 # ============================================================================
 
-SYSTEM_PROMPT = "You are a humanizer. Rewrite the user's text so it sounds naturally written by a human while preserving the original meaning, argument, quotations, citations, and technical accuracy. Remove robotic phrasing, generic transitions, inflated wording, and overly uniform sentence rhythm. Do not add new ideas, examples, or claims. Do not change citation text or quoted wording. Return only the rewritten text."
+SYSTEM_PROMPT_KAZE = "You are a humanizer. Rewrite the user's text so it sounds naturally written by a human while preserving the original meaning, argument, quotations, citations, and technical accuracy. Remove robotic phrasing, generic transitions, inflated wording, and overly uniform sentence rhythm. Do not add new ideas, examples, or claims. Do not change citation text or quoted wording. Return only the rewritten text."
+
+SYSTEM_PROMPT_NAMI = "You are a humanizer. You must always rewrite the provided text to sound like a natural human. Never return the same text as the input. Your goal is to transform the structure, rhythm, and vocabulary while preserving meaning, citations, and quotes."
+
+# Legacy alias used by mode configs
+SYSTEM_PROMPT = SYSTEM_PROMPT_KAZE
 
 # ============================================================================
 # MODE DEFINITIONS
@@ -179,3 +210,10 @@ def get_model_id(model_key: str = None) -> str:
     if not model_key or model_key not in AVAILABLE_MODELS:
         model_key = DEFAULT_MODEL
     return AVAILABLE_MODELS[model_key]["id"]
+
+
+def get_model_system_prompt(model_key: str = None) -> str:
+    """Get the system prompt for a given model key"""
+    if not model_key or model_key not in AVAILABLE_MODELS:
+        model_key = DEFAULT_MODEL
+    return AVAILABLE_MODELS[model_key]["system_prompt"]

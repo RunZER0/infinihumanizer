@@ -444,9 +444,16 @@ body::after { content:''; position:fixed; inset:0; z-index:2; pointer-events:non
     <div style="padding:0 2px;margin-bottom:10px">
       <span class="sb-field-label">Model</span>
       <select id="modelSelect" class="sb-select">
-        <option value="swift">Swift — Early</option>
-        <option value="balanced" selected>Balanced — Best</option>
-        <option value="deep">Deep — Late</option>
+        <optgroup label="Kaze">
+          <option value="kaze-i">Kaze-I</option>
+          <option value="kaze-ii">Kaze-II</option>
+          <option value="kaze">Kaze — Final</option>
+        </optgroup>
+        <optgroup label="Nami — Premium">
+          <option value="nami-i">Nami-I</option>
+          <option value="nami-ii">Nami-II</option>
+          <option value="nami" selected>Nami — Final</option>
+        </optgroup>
       </select>
     </div>
 

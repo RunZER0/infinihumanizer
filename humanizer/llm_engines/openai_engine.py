@@ -7,7 +7,7 @@ import os
 import random
 import concurrent.futures
 from openai import OpenAI, APITimeoutError
-from ..modes_config import get_mode_config, format_prompt_for_mode, get_system_prompt_for_mode, DEFAULT_MODE, get_model_id
+from ..modes_config import get_mode_config, format_prompt_for_mode, get_system_prompt_for_mode, DEFAULT_MODE, get_model_id, get_model_system_prompt, AVAILABLE_MODELS, DEFAULT_MODEL
 from ..multi_stage_pipeline import multi_stage_humanize_gpt4, chunk_text
 
 
@@ -29,7 +29,8 @@ class TextEngine:
         )
         
         # Use the specified model
-        self.model = get_model_id(model)
+        self.model_key = model if model in AVAILABLE_MODELS else DEFAULT_MODEL
+        self.model = get_model_id(self.model_key)
     
     def humanize(self, text: str, mode: str = None) -> str:
         """
@@ -80,7 +81,7 @@ class TextEngine:
                         
                         # Process this chunk WITHOUT recursion - call the core humanization logic directly
                         mode_config = get_mode_config(mode)
-                        system_prompt = get_system_prompt_for_mode(mode)
+                        system_prompt = get_model_system_prompt(self.model_key)
                         user_prompt = format_prompt_for_mode(mode, chunk)
                         
                         messages = [
@@ -170,7 +171,7 @@ class TextEngine:
         
         # Get mode configuration
         mode_config = get_mode_config(mode)
-        system_prompt = get_system_prompt_for_mode(mode)
+        system_prompt = get_model_system_prompt(self.model_key)
         user_prompt = format_prompt_for_mode(mode, text)
 
         messages = [
