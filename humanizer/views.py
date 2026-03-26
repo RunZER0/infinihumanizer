@@ -146,7 +146,7 @@ def humanize_ajax(request):
     input_text = request.POST.get("text", "").strip()
     selected_engine = (request.POST.get("engine") or "openai").lower()  # Default to OpenAI (smurk)
     selected_mode = request.POST.get("mode", "recommended").lower()  # Default to recommended mode
-    selected_model = request.POST.get("model", "premium").lower()  # Default to premium model
+    selected_model = request.POST.get("model", "balanced").lower()  # Default to balanced model
     word_count = len(input_text.split())
     
     # Maximum INPUT word limit to prevent timeouts and enforce UI limit

@@ -10,35 +10,35 @@ Supports multiple fine-tuned models for quality selection.
 # ============================================================================
 
 AVAILABLE_MODELS = {
-    "original": {
-        "id": "ft:gpt-4.1-mini-2025-04-14:ynai:infinifinal:DFcgTrol",
-        "name": "Original",
-        "badge": "STABLE"
+    "swift": {
+        "id": "ft:gpt-4.1-mini-2025-04-14:ynai:hope:DNYCXWru:ckpt-step-412",
+        "name": "Swift",
+        "description": "Early checkpoint — fast, clean humanization",
+        "badge": None
+    },
+    "balanced": {
+        "id": "ft:gpt-4.1-mini-2025-04-14:ynai:hope:DNYCY1OJ",
+        "name": "Balanced",
+        "description": "Final checkpoint — best overall quality",
+        "badge": "RECOMMENDED"
+    },
+    "deep": {
+        "id": "ft:gpt-4.1-mini-2025-04-14:ynai:hope:DNYCYreS:ckpt-step-824",
+        "name": "Deep",
+        "description": "Late checkpoint — maximum naturalness",
+        "badge": None
     }
 }
 
 # Default model
-DEFAULT_MODEL = "original"
+DEFAULT_MODEL = "balanced"
 MODEL_ID = AVAILABLE_MODELS[DEFAULT_MODEL]["id"]
 
 # ============================================================================
 # SYSTEM PROMPT — matches fine-tuned model training data exactly
 # ============================================================================
 
-SYSTEM_PROMPT = """You are an expert AI text humanizer specialising in academic student writing. Your task: transform AI-generated academic text into natural, authentic human student writing.
-
-STRICT PRESERVATION RULES:
-1. QUOTATIONS — every passage in quotation marks must remain EXACTLY character-for-character identical. Do not alter a single word, comma, or capital letter inside any quoted passage.
-2. CITATIONS — preserve every in-text citation (e.g. Smith, 2021; (Jones et al., 2019)) and the full References / Works Cited / Bibliography section word-for-word.
-3. STRUCTURE — keep every paragraph break and section heading exactly where it appears. Do not merge or split paragraphs.
-
-HUMANISATION GOALS:
-- Vary sentence length naturally (mix short punchy sentences with longer analytical ones).
-- Add a genuine student critical voice: hedging phrases, first-person reflection where appropriate.
-- Eliminate AI-writing tells: break up clusters of "Furthermore / Moreover / Additionally"; replace robotic passive constructions with active voice.
-- Use contractions, colloquial academic phrasing, and slight informality where it would feel natural for a student.
-
-OUTPUT: return only the transformed essay text, paragraph-for-paragraph, with no preamble, no commentary, and no meta-notes."""
+SYSTEM_PROMPT = "You are a humanizer. Rewrite the user's text so it sounds naturally written by a human while preserving the original meaning, argument, quotations, citations, and technical accuracy. Remove robotic phrasing, generic transitions, inflated wording, and overly uniform sentence rhythm. Do not add new ideas, examples, or claims. Do not change citation text or quoted wording. Return only the rewritten text."
 
 # ============================================================================
 # MODE DEFINITIONS
@@ -50,17 +50,7 @@ MODES = {
         "description": "Optimized settings for natural, human-like output",
         "temperature": 0.7,
         "system_prompt": SYSTEM_PROMPT,
-        "prompt": """Transform the following AI-generated academic text into natural human student writing.
-
-RULES:
-- Preserve ALL quoted passages verbatim (character-for-character).
-- Preserve ALL in-text citations and the full reference list exactly.
-- Keep every paragraph break in its original position — do NOT merge paragraphs.
-- Write in a natural student voice: vary sentence length, use some hedging, avoid robotic connectors.
-
-AI-GENERATED TEXT:
-
-{text}""",
+        "prompt": "{text}",
         "badge": "RECOMMENDED",
         "badge_color": "#28a745"
     },
@@ -70,17 +60,7 @@ AI-GENERATED TEXT:
         "description": "Clear and accessible writing style",
         "temperature": 0.65,
         "system_prompt": SYSTEM_PROMPT,
-        "prompt": """Transform the following AI-generated academic text into clear, easy-to-read human student writing.
-
-RULES:
-- Preserve ALL quoted passages verbatim (character-for-character).
-- Preserve ALL in-text citations and the full reference list exactly.
-- Keep every paragraph break in its original position — do NOT merge paragraphs.
-- Prioritise clarity: use shorter sentences, plain vocabulary, and active voice.
-
-AI-GENERATED TEXT:
-
-{text}""",
+        "prompt": "{text}",
         "badge": None,
         "badge_color": None
     },
@@ -90,17 +70,7 @@ AI-GENERATED TEXT:
         "description": "Professional academic tone",
         "temperature": 0.6,
         "system_prompt": SYSTEM_PROMPT,
-        "prompt": """Transform the following AI-generated academic text into formal, scholarly human student writing.
-
-RULES:
-- Preserve ALL quoted passages verbatim (character-for-character).
-- Preserve ALL in-text citations and the full reference list exactly.
-- Keep every paragraph break in its original position — do NOT merge paragraphs.
-- Use sophisticated vocabulary, analytical structures, and appropriate hedging language.
-
-AI-GENERATED TEXT:
-
-{text}""",
+        "prompt": "{text}",
         "badge": None,
         "badge_color": None
     },
@@ -110,17 +80,7 @@ AI-GENERATED TEXT:
         "description": "Natural everyday speaking style",
         "temperature": 0.75,
         "system_prompt": SYSTEM_PROMPT,
-        "prompt": """Transform the following AI-generated academic text into natural, conversational human student writing.
-
-RULES:
-- Preserve ALL quoted passages verbatim (character-for-character).
-- Preserve ALL in-text citations and the full reference list exactly.
-- Keep every paragraph break in its original position — do NOT merge paragraphs.
-- Use natural, flowing language with contractions; write as an engaged student, not a robot.
-
-AI-GENERATED TEXT:
-
-{text}""",
+        "prompt": "{text}",
         "badge": None,
         "badge_color": None
     },
@@ -130,17 +90,7 @@ AI-GENERATED TEXT:
         "description": "Relaxed and approachable tone",
         "temperature": 0.8,
         "system_prompt": SYSTEM_PROMPT,
-        "prompt": """Transform the following AI-generated academic text into relaxed, approachable human student writing.
-
-RULES:
-- Preserve ALL quoted passages verbatim (character-for-character).
-- Preserve ALL in-text citations and the full reference list exactly.
-- Keep every paragraph break in its original position — do NOT merge paragraphs.
-- Use simple, warm language; short punchy sentences; first-person where appropriate.
-
-AI-GENERATED TEXT:
-
-{text}""",
+        "prompt": "{text}",
         "badge": None,
         "badge_color": None
     },
@@ -150,17 +100,7 @@ AI-GENERATED TEXT:
         "description": "Scholarly writing with depth",
         "temperature": 0.65,
         "system_prompt": SYSTEM_PROMPT,
-        "prompt": """Transform the following AI-generated academic text into deep scholarly human student writing.
-
-RULES:
-- Preserve ALL quoted passages verbatim (character-for-character).
-- Preserve ALL in-text citations and the full reference list exactly.
-- Keep every paragraph break in its original position — do NOT merge paragraphs.
-- Use advanced vocabulary, complex analytical structures, and hedging language typical of high-level academic work.
-
-AI-GENERATED TEXT:
-
-{text}""",
+        "prompt": "{text}",
         "badge": None,
         "badge_color": None
     }
