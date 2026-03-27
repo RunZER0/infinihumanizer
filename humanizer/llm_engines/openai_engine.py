@@ -1,323 +1,276 @@
 """
-Text humanization engine with mode support.
-Uses custom-trained model with multiple humanization modes.
+Text humanization engine — paragraph-level processing.
+
+The fine-tuned model was trained on individual paragraphs, so we:
+1. Split input on paragraph boundaries (double-newline / blank line).
+2. Classify each block: heading, list, citation-sentence, reference section,
+   or regular paragraph.
+3. Only regular paragraphs go to the fine-tuned model (one API call each).
+4. Everything else is kept verbatim.
+5. Reassemble in strict original order.
 """
 
 import os
+import re
 import random
 import concurrent.futures
 from openai import OpenAI, APITimeoutError
-from ..modes_config import get_mode_config, format_prompt_for_mode, get_system_prompt_for_mode, DEFAULT_MODE, get_model_id, get_model_system_prompt, AVAILABLE_MODELS, DEFAULT_MODEL
-from ..multi_stage_pipeline import multi_stage_humanize_gpt4, chunk_text
+from ..modes_config import (
+    get_mode_config, format_prompt_for_mode, DEFAULT_MODE,
+    get_model_id, get_model_system_prompt, AVAILABLE_MODELS, DEFAULT_MODEL,
+)
+
+# ── Citation detection ──────────────────────────────────────────────────
+
+_CITE_PAREN = re.compile(
+    r'\('
+    r'(?:[A-Z][a-zA-Z\'\-]+(?:\s(?:and|&|et\s+al\.?)\s+[A-Z][a-zA-Z\'\-]+)?'
+    r'(?:,?\s*(?:"[^"]+"|\'[^\']+\'))?'
+    r'[,\s]*(?:\d[\d\-,\s]*|p+\.\s*\d[\d\-,\s]*)?'
+    r'|"[^"]+"[,\s]*\d*)\)',
+)
+_CITE_BRACKET = re.compile(r'\[\d+(?:[,\-–]\s*\d+)*\]')
+
+_WORKS_CITED_HEADER = re.compile(
+    r'^(Works?\s+Cited|References|Bibliography|Works?\s+Consulted)\s*$',
+    re.IGNORECASE | re.MULTILINE,
+)
+
+# ── Block classification helpers ────────────────────────────────────────
+
+_LIST_BULLET = re.compile(r'^\s*(?:[-•*]|\d+[.)]\s|[a-z][.)]\s|[ivxIVX]+[.)]\s)', re.MULTILINE)
+
+
+def _is_heading(block: str) -> bool:
+    stripped = block.strip()
+    if not stripped:
+        return False
+    lines = stripped.splitlines()
+    if len(lines) > 2:
+        return False
+    words = stripped.split()
+    return len(words) < 15 and not stripped.rstrip().endswith('.')
+
+
+def _is_list(block: str) -> bool:
+    lines = [ln for ln in block.strip().splitlines() if ln.strip()]
+    if len(lines) < 2:
+        return False
+    bullet_count = sum(1 for ln in lines if _LIST_BULLET.match(ln))
+    return bullet_count >= len(lines) * 0.5
+
+
+def _is_reference_section(block: str) -> bool:
+    return bool(_WORKS_CITED_HEADER.match(block.strip()))
+
+
+def _sentence_has_citation(sentence: str) -> bool:
+    return bool(_CITE_PAREN.search(sentence)) or bool(_CITE_BRACKET.search(sentence))
+
+
+def _block_is_all_citations(block: str) -> bool:
+    """True if every sentence in the block contains a citation."""
+    sentences = re.split(r'(?<=[.!?])\s+', block.strip())
+    if not sentences:
+        return False
+    return all(_sentence_has_citation(s) for s in sentences if s.strip())
+
+
+def _split_citation_sentences(block: str):
+    """
+    Split a paragraph into runs of citation-sentences vs plain sentences.
+    Returns list of (text, should_humanize) tuples.
+    """
+    # Split on sentence boundaries while keeping the delimiter
+    parts = re.split(r'(?<=[.!?])\s+', block.strip())
+    if not parts:
+        return [(block, True)]
+
+    runs = []
+    current = []
+    current_is_cite = _sentence_has_citation(parts[0])
+
+    for sentence in parts:
+        has_cite = _sentence_has_citation(sentence)
+        if has_cite == current_is_cite:
+            current.append(sentence)
+        else:
+            runs.append((' '.join(current), not current_is_cite))
+            current = [sentence]
+            current_is_cite = has_cite
+    if current:
+        runs.append((' '.join(current), not current_is_cite))
+
+    return runs
+
+
+# ── Paragraph splitter ──────────────────────────────────────────────────
+
+def _split_paragraphs(text: str) -> list[str]:
+    """
+    Split text on paragraph boundaries (blank lines).
+    Preserves the exact whitespace pattern for faithful reassembly.
+    """
+    blocks = re.split(r'(\n\s*\n)', text)
+    # blocks is alternating [content, separator, content, separator, …]
+    result = []
+    for b in blocks:
+        if b.strip():
+            result.append(b)
+    return result
+
+
+def _paragraph_separators(text: str) -> list[str]:
+    """Return the separators between paragraphs so we can re-stitch exactly."""
+    return re.findall(r'\n\s*\n', text)
 
 
 class TextEngine:
-    """Text humanization engine with custom-trained model and modes."""
-    
-    def __init__(self, model: str = "premium"):
-        """Initialize engine with API key from environment."""
-        api_key = os.environ.get("OPENAI_API_KEY")
+    """Text humanization engine — processes each paragraph individually."""
 
+    def __init__(self, model: str = "premium"):
+        api_key = os.environ.get("OPENAI_API_KEY")
         if not api_key:
             raise RuntimeError("API key not configured")
-        
-        # Use 120s timeout to handle large inputs without worker crashes
-        self.client = OpenAI(
-            api_key=api_key,
-            timeout=120.0,
-            max_retries=2
-        )
-        
-        # Use the specified model
+        self.client = OpenAI(api_key=api_key, timeout=120.0, max_retries=2)
         self.model_key = model if model in AVAILABLE_MODELS else DEFAULT_MODEL
         self.model = get_model_id(self.model_key)
-    
+
+    # ── Single-paragraph API call ───────────────────────────────────────
+
+    def _humanize_paragraph(self, paragraph: str, mode: str, temperature: float) -> str:
+        mode_config = get_mode_config(mode)
+        system_prompt = get_model_system_prompt(self.model_key)
+        user_prompt = format_prompt_for_mode(mode, paragraph)
+
+        base_temp = temperature if temperature is not None else mode_config["temperature"]
+        jitter = random.uniform(-0.03, 0.03)
+        final_temp = max(0.1, min(1.0, base_temp + jitter))
+
+        stream = self.client.chat.completions.create(
+            model=self.model,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user",   "content": user_prompt},
+            ],
+            temperature=final_temp,
+            max_tokens=4000,
+            stream=True,
+        )
+
+        result = ""
+        for chunk in stream:
+            if chunk.choices and chunk.choices[0].delta.content:
+                result += chunk.choices[0].delta.content
+                # Repetition guard
+                sentences = result.split('. ')
+                if len(sentences) > 3:
+                    r = sentences[-3:]
+                    if r[0] == r[1] == r[2]:
+                        break
+
+        if not result.strip():
+            return paragraph  # Fallback — return original
+        return result.strip()
+
+    # ── Main entry point ────────────────────────────────────────────────
+
     def humanize(self, text: str, mode: str = None, temperature: float = None) -> str:
-        """
-        Humanize text using specified mode with intelligent parallel chunking.
-        
-        Supports up to 3000 words with:
-        - Structure preservation (titles, headings, references)
-        - Parallel processing for speed
-        - Order preservation for coherence
-        
-        Args:
-            text: The text to humanize
-            mode: Humanization mode (recommended, readability, formal, conversational, informal, academic)
-            
-        Returns:
-            Humanized text with structure preserved
-        """
-        # Default to recommended mode
         if not mode:
             mode = DEFAULT_MODE
 
-        # --- PARALLEL CHUNKING LOGIC ---
-        # Check word count to decide on chunking
-        word_count = len(text.split())
-        
-        # If text is large (> 500 words), use parallel chunking
-        # This allows processing 3000+ words quickly by running chunks in parallel
-        if word_count > 500:
-            chunks = chunk_text(text)
-            
-            # Only proceed with parallel processing if we actually have multiple chunks
-            if len(chunks) > 1:
-                # Helper function for parallel execution
-                def process_chunk(index_chunk_tuple):
-                    index, chunk = index_chunk_tuple
+        paragraphs = _split_paragraphs(text)
+        separators = _paragraph_separators(text)
+
+        if not paragraphs:
+            return text
+
+        # Classify each paragraph → (index, text, should_humanize)
+        tasks: list[tuple[int, str, bool]] = []
+        in_references = False
+
+        for idx, block in enumerate(paragraphs):
+            stripped = block.strip()
+
+            # Once we hit a Works Cited header, everything after is verbatim
+            if _is_reference_section(stripped):
+                in_references = True
+
+            if in_references:
+                tasks.append((idx, block, False))
+                continue
+
+            if _is_heading(stripped):
+                tasks.append((idx, block, False))
+                continue
+
+            if _is_list(stripped):
+                tasks.append((idx, block, False))
+                continue
+
+            if _block_is_all_citations(stripped):
+                tasks.append((idx, block, False))
+                continue
+
+            # For mixed paragraphs (some sentences have citations, some don't)
+            # split into runs, humanize only the plain runs, then stitch back
+            runs = _split_citation_sentences(stripped)
+            has_mixed = any(not h for _, h in runs) and any(h for _, h in runs)
+
+            if has_mixed:
+                # Mark for special mixed handling
+                tasks.append((idx, block, "mixed"))
+            else:
+                tasks.append((idx, block, True))
+
+        # ── Parallel processing ─────────────────────────────────────────
+        results: dict[int, str] = {}
+
+        def _process(idx: int, block: str):
+            try:
+                return idx, self._humanize_paragraph(block.strip(), mode, temperature)
+            except Exception as exc:
+                raise RuntimeError(f"Paragraph {idx} failed: {exc}") from exc
+
+        def _process_mixed(idx: int, block: str):
+            """Humanize only the non-citation sentences within a paragraph."""
+            runs = _split_citation_sentences(block.strip())
+            out_parts = []
+            for run_text, should_h in runs:
+                if should_h and run_text.strip():
                     try:
-                        # Check if chunk is a title/heading (< 15 words, no period at end)
-                        chunk_words = len(chunk.split())
-                        is_title = chunk_words < 15 and not chunk.rstrip().endswith('.')
-                        
-                        # Check if chunk is references (starts with References, Bibliography, etc.)
-                        is_reference = any(chunk.strip().lower().startswith(kw) for kw in 
-                                         ['references', 'bibliography', 'works cited', 'citations'])
-                        
-                        # Skip processing for titles and references - return as-is
-                        if is_title or is_reference:
-                            return index, chunk
-                        
-                        # Process this chunk WITHOUT recursion - call the core humanization logic directly
-                        mode_config = get_mode_config(mode)
-                        system_prompt = get_model_system_prompt(self.model_key)
-                        user_prompt = format_prompt_for_mode(mode, chunk)
-                        
-                        messages = [
-                            {"role": "system", "content": system_prompt},
-                            {"role": "user",   "content": user_prompt}
-                        ]
-                        
-                        # Add random variation to temperature
-                        base_temp = temperature if temperature is not None else mode_config["temperature"]
-                        random_variation = random.uniform(-0.03, 0.03)
-                        final_temperature = max(0.1, min(1.0, base_temp + random_variation))
-                        
-                        # Make the API call
-                        stream = self.client.chat.completions.create(
-                            model=self.model,
-                            messages=messages,
-                            temperature=final_temperature,
-                            max_tokens=4000,
-                            stream=True
-                        )
-                        
-                        # Collect content with repetition detection
-                        humanized_chunk = ""
-                        last_sentences = []  # Track last few sentences to detect loops
-                        
-                        for chunk_item in stream:
-                            if chunk_item.choices and chunk_item.choices[0].delta.content:
-                                content = chunk_item.choices[0].delta.content
-                                humanized_chunk += content
-                                
-                                # Check for sentence repetition (detect loops)
-                                # Split by sentence endings and check last 3 sentences
-                                sentences = humanized_chunk.split('. ')
-                                if len(sentences) > 3:
-                                    recent = sentences[-3:]
-                                    # If the same sentence appears 3+ times in a row, stop streaming
-                                    if len(recent) >= 3 and recent[-1] == recent[-2] == recent[-3]:
-                                        break
-                        
-                        # Clean up any trailing repetitions before returning
-                        result = humanized_chunk.strip() if humanized_chunk else chunk
-                        
-                        # Post-process: remove repetitive sentences at the end
-                        sentences = result.split('. ')
-                        if len(sentences) > 2:
-                            # Check if last sentence repeats
-                            cleaned = []
-                            prev_sentence = None
-                            repeat_count = 0
-                            
-                            for sentence in sentences:
-                                if sentence.strip() == prev_sentence:
-                                    repeat_count += 1
-                                    # Skip after 2 repetitions
-                                    if repeat_count >= 2:
-                                        continue
-                                else:
-                                    repeat_count = 0
-                                    prev_sentence = sentence.strip()
-                                
-                                cleaned.append(sentence)
-                            
-                            result = '. '.join(cleaned)
-                        
-                        return index, result
-                        
-                    except Exception as chunk_exc:
-                        # Re-raise so the caller knows humanization failed
-                        raise RuntimeError(f"Chunk {index} failed: {chunk_exc}") from chunk_exc
-                
-                results = []
-                # Use ThreadPoolExecutor to run API calls in parallel
-                # 5 workers is a good balance for rate limits vs speed
-                with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
-                    # Pass tuples of (index, chunk) to preserve order
-                    indexed_chunks = list(enumerate(chunks))
-                    futures = [executor.submit(process_chunk, item) for item in indexed_chunks]
-                    for future in concurrent.futures.as_completed(futures):
-                        results.append(future.result())
-                
-                # Sort by index to restore original order (CRITICAL for structure)
-                results.sort(key=lambda x: x[0])
-                
-                # Join with double newlines to preserve paragraph structure
-                return "\n\n".join([r[1] for r in results])
-        # -------------------------------
-        
-        # Get mode configuration
-        mode_config = get_mode_config(mode)
-        system_prompt = get_model_system_prompt(self.model_key)
-        user_prompt = format_prompt_for_mode(mode, text)
+                        out_parts.append(self._humanize_paragraph(run_text, mode, temperature))
+                    except Exception:
+                        out_parts.append(run_text)
+                else:
+                    out_parts.append(run_text)
+            return idx, ' '.join(out_parts)
 
-        messages = [
-            {"role": "system", "content": system_prompt},
-            {"role": "user",   "content": user_prompt}
-        ]
-        
-        # Use provided temperature; add small random jitter for variety
-        base_temp = temperature if temperature is not None else mode_config["temperature"]
-        random_variation = random.uniform(-0.03, 0.03)
-        final_temperature = max(0.1, min(1.0, base_temp + random_variation))
-        
-        try:
-            # Use streaming to avoid ReadTimeoutError on large responses
-            stream = self.client.chat.completions.create(
-                model=self.model,
-                messages=messages,
-                temperature=final_temperature,
-                max_tokens=4000,
-                stream=True
-            )
-            
-            # Collect content from stream chunks with repetition detection
-            humanized_text = ""
-            for chunk in stream:
-                if chunk.choices and chunk.choices[0].delta.content:
-                    content = chunk.choices[0].delta.content
-                    humanized_text += content
-                    
-                    # Check for sentence repetition during streaming
-                    sentences = humanized_text.split('. ')
-                    if len(sentences) > 3:
-                        recent = sentences[-3:]
-                        # If same sentence repeats 3+ times, stop streaming
-                        if len(recent) >= 3 and recent[-1] == recent[-2] == recent[-3]:
-                            break
-            
-            # Post-process: clean up any repetitions that slipped through
-            sentences = humanized_text.split('. ')
-            if len(sentences) > 2:
-                cleaned = []
-                prev_sentence = None
-                repeat_count = 0
-                
-                for sentence in sentences:
-                    sentence = sentence.strip()
-                    if not sentence:
-                        continue
-                        
-                    if sentence == prev_sentence:
-                        repeat_count += 1
-                        # Skip after 2 repetitions
-                        if repeat_count >= 2:
-                            continue
-                    else:
-                        repeat_count = 0
-                        prev_sentence = sentence
-                    
-                    cleaned.append(sentence)
-                
-                humanized_text = '. '.join(cleaned)
-            
-            if not humanized_text:
-                raise RuntimeError("Processing returned empty response")
-            
-            return humanized_text.strip()
-            
-        except APITimeoutError as e:
-            # Specific handling for timeout errors
-            raise RuntimeError(f"Request timed out after 120 seconds. The request took too long - try reducing input size or try again later.") from e
-        except Exception as e:
-            # Handle other errors
-            raise RuntimeError(f"Processing error: {str(e)}") from e
-    
-    def final_review(self, text: str, chunk_count: int) -> str:
-        """
-        Final review pass to fix redundancies and smooth transitions.
-        
-        Args:
-            text: The rejoined text to review
-            chunk_count: Number of chunks that were processed
-            
-        Returns:
-            Reviewed and polished text
-        """
-        review_prompt = f"""You are reviewing text that was processed in {chunk_count} chunks and rejoined. Your ONLY task is to fix any redundancies or awkward transitions at chunk boundaries.
+        to_humanize = [(idx, blk) for idx, blk, flag in tasks if flag is True]
+        to_mixed    = [(idx, blk) for idx, blk, flag in tasks if flag == "mixed"]
+        verbatim    = {idx: blk for idx, blk, flag in tasks if flag is False}
 
-CRITICAL RULES:
-- DO NOT rewrite the content
-- DO NOT change the style or tone
-- ONLY fix obvious redundancies (repeated phrases/sentences)
-- ONLY smooth awkward transitions between sections
-- Make minimal, surgical edits
-- If the text flows well, return it unchanged
+        results.update(verbatim)
 
-Text to review:
+        # Run all API calls in parallel (max 5 workers for rate limits)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as pool:
+            futures = []
+            for idx, blk in to_humanize:
+                futures.append(pool.submit(_process, idx, blk))
+            for idx, blk in to_mixed:
+                futures.append(pool.submit(_process_mixed, idx, blk))
 
-{text}
+            for fut in concurrent.futures.as_completed(futures):
+                idx, humanized = fut.result()
+                results[idx] = humanized
 
-Return the text with only necessary fixes applied:"""
+        # ── Reassemble in original order ────────────────────────────────
+        ordered = [results[i] for i in range(len(paragraphs))]
 
-        try:
-            # Use streaming for final review as well to prevent timeouts
-            stream = self.client.chat.completions.create(
-                model=self.config["model"],
-                messages=[
-                    {"role": "system", "content": "You are a careful text editor who makes only necessary, minimal edits."},
-                    {"role": "user", "content": review_prompt}
-                ],
-                temperature=0.3,  # Lower temperature for consistency
-                top_p=0.8,
-                max_tokens=self.config["max_tokens"],
-                stream=True
-            )
-            
-            # Collect content from stream chunks
-            reviewed_text = ""
-            for chunk in stream:
-                if chunk.choices and chunk.choices[0].delta.content:
-                    reviewed_text += chunk.choices[0].delta.content
-            
-            if not reviewed_text:
-                return text  # Return original if review fails
-            
-            return reviewed_text.strip()
-            
-        except Exception:
-            return text  # Return original on error
+        # Stitch with original separators
+        out = ordered[0]
+        for i, para in enumerate(ordered[1:], start=1):
+            sep = separators[i - 1] if i - 1 < len(separators) else "\n\n"
+            out += sep + para
 
-    
-    def humanize_multi_stage(self, text: str) -> str:
-        """
-        Humanize text using the multi-stage stylistic rewriting pipeline.
-        
-        This method implements a research-based approach that:
-        1. Chunks text by paragraphs (semantic boundaries)
-        2. Applies alternating style prompts (Analytical, Reflective, Direct)
-        3. Merges chunks back together
-        
-        Creates non-stationary entropy to evade AI detection.
-        Designed for 1000-word maximum inputs.
-        
-        Args:
-            text: The text to humanize (max 1000 words)
-            
-        Returns:
-            Humanized text with alternating stylistic signatures
-        """
-        return multi_stage_humanize_gpt4(text, self.client)
+        return out

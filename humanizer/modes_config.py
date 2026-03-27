@@ -36,13 +36,6 @@ AVAILABLE_MODELS = {
         "system_prompt": SYSTEM_PROMPT_KAZE,
         "badge": None
     },
-    "kaze": {
-        "id": "ft:gpt-4.1-mini-2025-04-14:ynai:hope:DNYCY1OJ",
-        "name": "Kaze",
-        "description": "Final — best of Kaze tier",
-        "system_prompt": SYSTEM_PROMPT_KAZE,
-        "badge": None
-    },
     # ── Nami tier — premium (hopetoo run) ────────────────
     "nami-i": {
         "id": "ft:gpt-4.1-mini-2025-04-14:ynai:hopetoo:DNkpWxS4:ckpt-step-323",
