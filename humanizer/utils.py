@@ -7,6 +7,7 @@ import re
 from typing import Callable, Dict
 
 from .llm_engines.openai_engine import TextEngine
+from .citation_guard import restore_citations
 
 # Character limit for safety (increased for 2500 word support)
 MAX_TOTAL_CHARS = 30000
@@ -73,7 +74,9 @@ def humanize_with_text_engine(text: str, mode: str = "recommended", model: str =
     """
     engine = TextEngine(model=model)
     result = engine.humanize(text, mode=mode, temperature=temperature)
-    return clean_llm_output(result)
+    cleaned = clean_llm_output(result)
+    # Restore any citations the model may have dropped
+    return restore_citations(text, cleaned)
 
 
 ENGINE_HANDLERS: Dict[str, Callable] = {
