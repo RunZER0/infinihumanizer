@@ -67,7 +67,7 @@ def clean_llm_output(text: str) -> str:
     return cleaned.strip()
 
 
-def humanize_with_text_engine(text: str, mode: str = "recommended", model: str = "nami", temperature: float = 0.7) -> str:
+def humanize_with_text_engine(text: str, mode: str = "recommended", model: str = "nami-i", temperature: float = 0.7) -> str:
     """
     Humanize text using the custom model with specified temperature.
     """
@@ -81,13 +81,13 @@ ENGINE_HANDLERS: Dict[str, Callable] = {
 }
 
 
-def humanize_text(text: str, engine: str | None = None, mode: str = "recommended", model: str = "nami", temperature: float = 0.7) -> str:
+def humanize_text(text: str, engine: str | None = None, mode: str = "recommended", model: str = "nami-i", temperature: float = 0.7) -> str:
     """Main entry point for text humanization."""
     chosen = (engine or os.environ.get("HUMANIZER_ENGINE") or "openai").lower()
     return humanize_text_with_engine(text, chosen, mode=mode, model=model, temperature=temperature)
 
 
-def humanize_text_with_engine(text: str, engine: str, mode: str = "recommended", model: str = "nami", temperature: float = 0.7) -> str:
+def humanize_text_with_engine(text: str, engine: str, mode: str = "recommended", model: str = "nami-i", temperature: float = 0.7) -> str:
     """Route to the appropriate processing handler - NO CHUNKING."""
     
     # SAFETY CHECK: Limit total input size

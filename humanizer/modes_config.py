@@ -49,26 +49,12 @@ AVAILABLE_MODELS = {
         "name": "Nami-I",
         "description": "Early checkpoint",
         "system_prompt": SYSTEM_PROMPT_NAMI,
-        "badge": None
-    },
-    "nami-ii": {
-        "id": "ft:gpt-4.1-mini-2025-04-14:ynai:hopetoo:DNkpX8Qp:ckpt-step-646",
-        "name": "Nami-II",
-        "description": "Late checkpoint",
-        "system_prompt": SYSTEM_PROMPT_NAMI,
-        "badge": None
-    },
-    "nami": {
-        "id": "ft:gpt-4.1-mini-2025-04-14:ynai:hopetoo:DNkpXbcO",
-        "name": "Nami",
-        "description": "Final — most premium",
-        "system_prompt": SYSTEM_PROMPT_NAMI,
         "badge": "PREMIUM"
     },
 }
 
 # Default model
-DEFAULT_MODEL = "nami"
+DEFAULT_MODEL = "nami-i"
 MODEL_ID = AVAILABLE_MODELS[DEFAULT_MODEL]["id"]
 
 # ============================================================================

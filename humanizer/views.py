@@ -146,7 +146,7 @@ def humanize_ajax(request):
     input_text = request.POST.get("text", "").strip()
     selected_engine = (request.POST.get("engine") or "openai").lower()  # Default to OpenAI (smurk)
     selected_mode = "recommended"  # Mode removed — temperature slider used instead
-    selected_model = request.POST.get("model", "nami").lower()  # Default to nami (most premium)
+    selected_model = request.POST.get("model", "nami-i").lower()
     try:
         selected_temperature = float(request.POST.get("temperature", 0.7))
         selected_temperature = max(0.1, min(1.0, selected_temperature))
