@@ -31,7 +31,7 @@
       <a href="{% url 'platformhub:notes' %}">Notes</a>
       <a href="{% url 'humanizer' %}">Text tool</a>
       <a href="{% url 'platformhub:pricing' %}">Pricing</a>
-      <a href="{% url 'platformhub:consultation' %}">Consultation</a>
+      <a href="{% url 'platformhub:consultation' %}">Talk to us</a>
       {% if user.is_authenticated %}<a href="{% url 'platformhub:quickpay' %}">QuickPay</a><a href="{% url 'platformhub:workspace' %}">Workspace</a>{% endif %}
     </nav>
     <div class="nav-actions">
@@ -67,7 +67,7 @@
         <li><a href="{% url 'platformhub:about' %}">About</a></li>
         <li><a href="{% url 'platformhub:notes' %}">Notes</a></li>
         <li><a href="{% url 'platformhub:pricing' %}">Pricing</a></li>
-        <li><a href="{% url 'platformhub:consultation' %}">Consultation</a></li>
+        <li><a href="{% url 'platformhub:consultation' %}">Talk to us</a></li>
         <li><a href="mailto:support@infinihumanizer.com">Contact</a></li>
       </ul>
     </div>
