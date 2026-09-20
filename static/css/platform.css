@@ -337,3 +337,96 @@ a{color:inherit}button,input,textarea,select{font:inherit}:focus-visible{outline
   .payment-row>div:last-child{text-align:left}
   .quickpay-history-row{grid-template-columns:1fr}
 }
+
+
+/* Home word story */
+.hero-word-story{
+  max-width:none;
+  width:min(100%,9.5ch);
+  margin:18px 0 30px;
+  font-size:clamp(4rem,8.5vw,8.7rem);
+  line-height:.82;
+  letter-spacing:-.07em;
+  text-wrap:balance;
+}
+.hero-story-line,.hero-story-answer{display:block}
+.hero-story-prefix{display:block}
+.hero-story-slot{
+  display:block;
+  position:relative;
+  width:max-content;
+  min-height:.88em;
+  color:var(--text-primary);
+  transform-origin:left center;
+}
+.hero-story-slot:after{
+  content:"";
+  position:absolute;
+  left:.03em;
+  right:.01em;
+  bottom:-.035em;
+  height:.035em;
+  background:var(--action-primary);
+  transform:scaleX(.08);
+  transform-origin:left;
+  opacity:.9;
+  animation:story-underline 7.6s var(--ease-out) infinite;
+}
+.hero-story-answer{
+  margin-top:.13em;
+  max-width:8.3ch;
+  position:relative;
+}
+.hero-story-answer:after{
+  content:"";
+  position:absolute;
+  width:.12em;
+  height:.12em;
+  border-radius:50%;
+  background:var(--action-primary);
+  right:-.02em;
+  bottom:.08em;
+  opacity:.85;
+  animation:story-dot 3.8s ease-in-out infinite;
+}
+.story-glyph{
+  display:inline-block;
+  will-change:transform,opacity,filter;
+  animation:story-glyph-in .56s var(--ease-out) both;
+  animation-delay:calc(var(--glyph-order,0) * 34ms);
+}
+.story-glyph-space{width:.24em}
+.story-glyph-punct{color:var(--action-primary)}
+.hero-story-slot.is-changing{
+  animation:story-word-out .22s cubic-bezier(.7,0,.84,0) both;
+}
+@keyframes story-glyph-in{
+  from{opacity:0;transform:translateY(.34em) rotate(2.5deg);filter:blur(8px)}
+  55%{filter:blur(0)}
+  to{opacity:1;transform:none;filter:blur(0)}
+}
+@keyframes story-word-out{
+  to{opacity:0;transform:translateY(-.18em);filter:blur(7px)}
+}
+@keyframes story-underline{
+  0%,7%{transform:scaleX(.08);opacity:.35}
+  18%,72%{transform:scaleX(1);opacity:.92}
+  84%,100%{transform:scaleX(.08);opacity:.35}
+}
+@keyframes story-dot{
+  0%,100%{transform:scale(.7);opacity:.45}
+  50%{transform:scale(1.25);opacity:1}
+}
+.hero-copy .lede{max-width:610px}
+
+@media(max-width:980px){
+  .hero-word-story{width:min(100%,10ch);font-size:clamp(4rem,13vw,7.7rem)}
+  .hero-story-answer{max-width:8.6ch}
+}
+@media(max-width:640px){
+  .hero-word-story{font-size:clamp(3.5rem,18vw,5.7rem);line-height:.84;letter-spacing:-.065em}
+  .hero-story-answer{max-width:8.8ch}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero-story-slot:after,.hero-story-answer:after,.story-glyph,.hero-story-slot.is-changing{animation:none!important}
+}
