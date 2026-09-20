@@ -1,7 +1,7 @@
 {% load static %}
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Create account — InfiniAI</title><link rel="stylesheet" href="{% static 'css/platform.css' %}"></head>
 <body><main class="auth-page">
-<section class="auth-story"><div><div class="eyebrow" style="color:#e46b5d">InfiniAI</div><h1 class="display" style="font-size:clamp(3.5rem,7vw,7rem);max-width:8ch">Create your InfiniAI account.</h1><p>Use the text tools and keep project work attached to your account.</p></div><div class="micro" style="color:#9f9b93">LANGUAGE · RESEARCH · PRODUCT · AI</div></section>
+<section class="auth-story"><div><div class="eyebrow" style="color:#e46b5d">InfiniAI</div><h1 class="display" style="font-size:clamp(3.5rem,7vw,7rem);max-width:8ch">Create your InfiniAI account.</h1><p>Use the text tools and keep project work attached to your account.</p></div></section>
 <section class="auth-panel"><div class="auth-box"><div class="eyebrow">Account</div><h1>Create account</h1>
 {% if form.errors %}<div class="notice">{% for field in form %}{% for error in field.errors %}<div>{{ field.label }}: {{ error }}</div>{% endfor %}{% endfor %}{% for error in form.non_field_errors %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
 <form method="post" action="{% url 'account_signup' %}" class="form-stack">{% csrf_token %}
