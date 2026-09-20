@@ -112,6 +112,7 @@ def humanizer_view(request):
         "humanizer/humanizer.html",
         {
             "word_balance": state["word_balance"],
+            "engine_configured": bool(getattr(settings, "OPENAI_API_KEY", "")),
         },
     )
 
