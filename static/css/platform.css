@@ -603,3 +603,24 @@ a.partner-logo:hover{opacity:1;transform:translateY(-2px)}
   .brand-marquee-track{animation:none}
   .brand-marquee-group[aria-hidden="true"]{display:none}
 }
+
+.partner-valdace img{
+  width:auto;
+  max-width:138px;
+  max-height:34px;
+  object-fit:contain;
+}
+.partner-valdace-fallback{
+  display:none;
+  font-size:1.24rem;
+  font-weight:760;
+  letter-spacing:-.035em;
+}
+.partner-valdace img[src=""],
+.partner-valdace img:not([src]){
+  display:none;
+}
+.partner-valdace img[src=""] + .partner-valdace-fallback,
+.partner-valdace img:not([src]) + .partner-valdace-fallback{
+  display:inline;
+}
