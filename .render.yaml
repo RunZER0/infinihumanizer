@@ -1,16 +1,20 @@
-﻿services:
+services:
   - type: web
-    name: infinihumanizer
+    name: infiniai
     env: python
     plan: free
     buildCommand: |
       pip install -r requirements.txt
       python manage.py collectstatic --noinput
-    startCommand: gunicorn core.wsgi:application
+    startCommand: ./start.sh
     envVars:
       - key: DJANGO_SECRET_KEY
-        value: from-dashboard
-      - key: DEBUG
-        value: False
+        sync: false
+      - key: DATABASE_URL
+        sync: false
       - key: OPENAI_API_KEY
-        value: from-dashboard
+        sync: false
+      - key: DEBUG
+        value: "False"
+      - key: OFFLINE_MODE
+        value: "False"
