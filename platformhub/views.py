@@ -13,7 +13,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
-from .catalog import PACKAGES, PRICE_BANDS, SERVICE_FAMILIES, SERVICE_INDEX, estimate_request, service_by_code
+from .catalog import PACKAGES, PRICE_BANDS, RETAINERS, SERVICE_FAMILIES, SERVICE_INDEX, commercial_terms, estimate_request, service_by_code
 from .models import AssuranceJob, Consultation, Invoice, PaymentRecord, Quote, ServiceRequest
 
 logger = logging.getLogger(__name__)
@@ -44,6 +44,7 @@ def pricing(request):
     return render(request, "platformhub/pricing.html", {
         "packages": PACKAGES,
         "price_bands": PRICE_BANDS,
+        "retainers": RETAINERS,
     })
 
 
@@ -176,7 +177,7 @@ def project_detail(request, request_id):
         return redirect("platformhub:workspace")
     return render(request, "platformhub/project_detail.html", {
         "item": item,
-        "quotes": item.quotes.all().order_by("-created_at"),
+        "quotes": item.quotes.exclude(status="draft").order_by("-created_at"),
         "invoices": item.invoices.all().order_by("-created_at"),
         "deliverables": item.deliverables.all().order_by("-updated_at"),
     })
@@ -188,10 +189,15 @@ def quote_detail(request, quote_id):
     quote = get_object_or_404(Quote.objects.select_related("request"), id=quote_id)
     if not _can_view_request(request, quote.request):
         return redirect("platformhub:workspace")
+    if quote.status == "draft" and not request.user.is_staff:
+        messages.info(request, "This quote is still being prepared.")
+        return redirect("platformhub:project_detail", request_id=quote.request_id)
+
+    terms = commercial_terms(quote.total, quote.request.service_code)
 
     if request.method == "POST":
         action = request.POST.get("action")
-        if action == "accept" and quote.status in {"sent", "draft"}:
+        if action == "accept" and quote.status == "sent":
             quote.status = "accepted"
             quote.save(update_fields=["status"])
             invoice = quote.invoices.first()
@@ -202,20 +208,20 @@ def quote_detail(request, quote_id):
                     user=request.user,
                     email=quote.request.email,
                     currency=quote.currency,
-                    amount_due=quote.total,
-                    description=f"{quote.request.title} — accepted quote {quote.number}",
+                    amount_due=terms["due_now"],
+                    description=f'{terms["label"]} — {quote.request.title} — accepted quote {quote.number}',
                 )
             quote.request.status = "quoted"
             quote.request.save(update_fields=["status", "updated_at"])
             messages.success(request, "Quote accepted. The invoice is ready.")
             return redirect(f"{reverse('platformhub:checkout')}?invoice={invoice.id}")
-        if action == "decline" and quote.status in {"sent", "draft"}:
+        if action == "decline" and quote.status == "sent":
             quote.status = "declined"
             quote.save(update_fields=["status"])
             messages.info(request, "Quote declined. The request remains available for re-scoping.")
             return redirect("platformhub:project_detail", request_id=quote.request_id)
 
-    return render(request, "platformhub/quote_detail.html", {"quote": quote})
+    return render(request, "platformhub/quote_detail.html", {"quote": quote, "terms": terms})
 
 
 @login_required
