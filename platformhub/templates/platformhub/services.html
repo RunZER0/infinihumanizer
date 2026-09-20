@@ -1,0 +1,31 @@
+
+{% extends "base.html" %}
+{% block title %}Services — InfiniAI{% endblock %}
+{% block content %}
+<div class="page-shell">
+  <div class="eyebrow">Capabilities</div>
+  <h1 class="h1">One operating system for knowledge work.</h1>
+  <p class="lede">The categories describe how the work is done, not rigid boxes. Research may feed a deck, an originality review may sit inside a report project, and a communication engagement may end in an AI system.</p>
+</div>
+{% for slug,family in families.items %}
+<section class="section">
+  <div class="shell">
+    <div class="section-head">
+      <div><div class="eyebrow">{{ family.kicker }}</div><div class="micro" style="margin-top:10px">0{{ forloop.counter }}</div></div>
+      <div><h2 class="h2">{{ family.name }}</h2><p class="lede">{{ family.description }}</p></div>
+    </div>
+    <div class="service-rows">
+      {% for service in family.services %}
+      <div class="service-row">
+        <strong>{{ service.name }}</strong>
+        <p>{{ service.summary }}</p>
+        <span class="price">From USD {{ service.from_usd }} · {{ service.billing }}</span>
+        <span class="actions"><a class="btn btn-link" href="{% url 'platformhub:request_service_code' service.code %}">Start →</a></span>
+      </div>
+      {% endfor %}
+    </div>
+    <div style="margin-top:26px"><a class="btn" href="{% url 'platformhub:service_detail' slug %}">How this work is scoped</a></div>
+  </div>
+</section>
+{% endfor %}
+{% endblock %}
