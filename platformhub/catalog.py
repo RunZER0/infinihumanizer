@@ -25,7 +25,7 @@ SERVICE_FAMILIES = {
     },
     "studio": {
         "name": "Research & Production",
-        "kicker": "Hand us the work",
+        "kicker": "Research and writing",
         "headline": "Research it properly. Write it clearly.",
         "description": "Research, analysis, reports, decks and technical writing with a clear point and a real voice.",
         "services": [
@@ -39,7 +39,7 @@ SERVICE_FAMILIES = {
     },
     "communication": {
         "name": "Communication & Experience",
-        "kicker": "Make the product communicate",
+        "kicker": "Website and product language",
         "headline": "Make every screen say the right thing.",
         "description": "Website copy, product language and UX writing that sound like the product, not a template.",
         "services": [
@@ -50,8 +50,8 @@ SERVICE_FAMILIES = {
     },
     "systems": {
         "name": "AI & Data Systems",
-        "kicker": "Build the capability",
-        "headline": "Train the system on your standard, not the internet’s average.",
+        "kicker": "AI and data systems",
+        "headline": "Train the system to meet your standards.",
         "description": "Datasets, fine-tuning, evaluation and deployment for teams that care how the output reads.",
         "services": [
             {"code": "systems-discovery", "name": "AI systems discovery", "summary": "We review the problem, data and practical ways to build it.", "from_usd": 500, "billing": "project"},
