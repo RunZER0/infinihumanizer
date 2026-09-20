@@ -16,12 +16,7 @@ except ImportError:
     send_email_confirmation = None
 
 from .forms import SignUpForm
-from .models import Profile, WhatsAppVerification
-from .whatsapp_verification import (
-    generate_verification_code,
-    encode_to_morse,
-    generate_whatsapp_qr
-)
+from .models import Profile
 
 
 logger = logging.getLogger(__name__)
@@ -40,10 +35,10 @@ class VerifiedEmailLoginView(LoginView):
             login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
             return super().form_valid(form)
 
-        # In production, enforce verification
+        verification_required = getattr(settings, "ACCOUNT_EMAIL_VERIFICATION", "none") == "mandatory"
         verified = EmailAddress.objects.filter(user=user, verified=True).exists()
 
-        if not verified:
+        if verification_required and not verified:
             self.request.session['resend_email'] = user.email
             messages.error(
                 self.request,
@@ -64,92 +59,39 @@ class VerifiedEmailLoginView(LoginView):
 
 
 def signup_view(request):
+    if request.user.is_authenticated:
+        return redirect("platformhub:workspace")
+
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.is_active = False  # User needs WhatsApp verification
-            user.save()
-            
-            # Create profile for new user
+            user = form.save()
+            user.is_active = True
+            user.save(update_fields=["is_active"])
             Profile.objects.get_or_create(user=user)
-            
-            # Generate verification code and morse encoding
-            numeric_code = generate_verification_code()
-            encoded_code = encode_to_morse(numeric_code)
-            
-            # Store verification data
-            WhatsAppVerification.objects.create(
+
+            verification_required = getattr(settings, "ACCOUNT_EMAIL_VERIFICATION", "none") == "mandatory"
+            email_address, _ = EmailAddress.objects.update_or_create(
                 user=user,
-                encoded_code=encoded_code,
-                numeric_code=numeric_code
+                email=user.email,
+                defaults={"primary": True, "verified": not verification_required},
             )
-            
-            # Generate QR code
-            qr_code_base64 = generate_whatsapp_qr(user.email, encoded_code)
-            
-            # Show QR code page
-            return render(request, "account/whatsapp_verify.html", {
-                "email": user.email,
-                "qr_code": qr_code_base64,
-                "encoded_code": encoded_code
-            })
-        else:
-            # Form is invalid - log errors for debugging
-            logger.error("Signup form validation failed: %s", form.errors)
-            messages.error(request, "Please correct the errors below.")
+
+            if verification_required:
+                if send_email_confirmation:
+                    send_email_confirmation(request, user, email=user.email)
+                    messages.success(request, "Check your email to verify the account, then sign in.")
+                else:
+                    messages.error(request, "Email verification is temporarily unavailable.")
+                return redirect("account_login")
+
+            login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+            return redirect("platformhub:workspace")
+        messages.error(request, "Please correct the fields below.")
     else:
         form = SignUpForm()
+
     return render(request, "account/signup.html", {"form": form})
-
-
-
-def verify_whatsapp_code(request):
-    """
-    Endpoint for verifying the 6-digit numeric code sent via WhatsApp.
-    """
-    if request.method == "POST":
-        email = request.POST.get("email")
-        code = request.POST.get("code")
-        
-        try:
-            from django.contrib.auth.models import User
-            user = User.objects.get(email=email)
-            verification = WhatsAppVerification.objects.get(user=user)
-            
-            if verification.is_verified:
-                messages.info(request, "This account is already verified.")
-                return redirect("account_login")
-            
-            # Check if submitted code matches
-            if code == verification.numeric_code:
-                # Activate user
-                user.is_active = True
-                user.save()
-                
-                # Mark as verified
-                verification.is_verified = True
-                from django.utils import timezone
-                verification.verified_at = timezone.now()
-                verification.save()
-                
-                # Create verified EmailAddress record for allauth
-                EmailAddress.objects.get_or_create(
-                    user=user,
-                    email=user.email,
-                    defaults={'verified': True, 'primary': True}
-                )
-                
-                messages.success(request, "✅ Your account has been verified! You can now log in.")
-                return redirect("account_login")
-            else:
-                messages.error(request, "❌ Invalid verification code. Please try again.")
-        
-        except (User.DoesNotExist, WhatsAppVerification.DoesNotExist):
-            messages.error(request, "❌ Email not found or verification pending.")
-    
-    return render(request, "account/verify_code.html")
-
 
 
 def resend_verification(request):
