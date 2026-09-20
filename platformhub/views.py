@@ -167,9 +167,11 @@ def consultation(request):
     consultation_id = request.session.get("consultation_id")
     if consultation_id:
         recent_consultation = Consultation.objects.filter(id=consultation_id).first()
+    consultation_paid = bool(recent_consultation and recent_consultation.payments.filter(status="success").exists())
     return render(request, "platformhub/consultation.html", {
         "package": PACKAGES["consultation"],
         "recent_consultation": recent_consultation,
+        "consultation_paid": consultation_paid,
     })
 
 
