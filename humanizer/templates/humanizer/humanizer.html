@@ -20,7 +20,7 @@
         <div>
           <span class="micro">Balance: <strong id="word-balance">{{ word_balance }}</strong> words</span>
         </div>
-        <button class="btn btn-primary" id="humanize-button" type="submit">Refine text</button>
+        {% if engine_configured %}<button class="btn btn-primary" id="humanize-button" type="submit">Refine text</button>{% else %}<button class="btn" id="humanize-button" type="button" disabled>Model connection required</button>{% endif %}
       </div>
     </form>
     <div style="border-top:1px solid var(--line-subtle);padding-top:18px;margin-top:26px">
@@ -43,7 +43,7 @@
         <button class="btn btn-ink" type="button" id="download-output">Download .txt</button>
       </div>
     </div>
-    <div id="tool-status" class="micro" aria-live="polite"></div>
+    <div id="tool-status" class="micro" aria-live="polite">{% if not engine_configured %}The interface is live. The model credential still needs to be copied into this deployment before processing can run.{% endif %}</div>
   </div>
 </section>
 {% endblock %}
@@ -61,6 +61,7 @@
   function words(value){ return (value.trim().match(/\S+/g) || []).length; }
   input.addEventListener("input", function(){ count.textContent = words(input.value) + " words"; });
 
+  if (!form || !button || button.disabled) return;
   form.addEventListener("submit", async function(event){
     event.preventDefault();
     if (!input.value.trim()) { status.textContent = "Add text before refining."; return; }
