@@ -1,0 +1,10 @@
+
+{% extends "base.html" %}
+{% block title %}Quote {{ quote.number }} — InfiniAI{% endblock %}
+{% block content %}
+<div class="page-shell"><div class="eyebrow">Quote {{ quote.number }}</div><h1 class="h1">{{ quote.request.title }}</h1><p class="lede">The quote translates the brief into priced workstreams. Accepting it creates the invoice; payment remains a separate step.</p></div>
+<section class="section"><div class="shell form-layout">
+<div><table class="proof-table"><thead><tr><th>Workstream</th><th>Quantity</th><th>Unit price</th></tr></thead><tbody>{% for item in quote.items.all %}<tr><td><strong>{{ item.label }}</strong><br><span style="color:var(--text-muted)">{{ item.description }}</span></td><td>{{ item.quantity }}</td><td>{{ quote.currency }} {{ item.unit_price }}</td></tr>{% empty %}<tr><td colspan="3">The quote total is set, but line items have not been published.</td></tr>{% endfor %}</tbody><tfoot><tr><th>Total</th><th></th><th>{{ quote.currency }} {{ quote.total }}</th></tr></tfoot></table>{% if quote.notes %}<p style="color:var(--text-muted);margin-top:22px">{{ quote.notes }}</p>{% endif %}</div>
+<aside class="summary-rail"><div class="eyebrow">Decision</div><p>Status: <strong>{{ quote.get_status_display }}</strong></p>{% if quote.status == "sent" or quote.status == "draft" %}<form method="post" style="display:grid;gap:10px">{% csrf_token %}<button class="btn btn-primary" type="submit" name="action" value="accept">Accept &amp; continue to invoice</button><button class="btn" type="submit" name="action" value="decline">Decline / re-scope</button></form>{% else %}<a class="btn btn-link" href="{% url 'platformhub:project_detail' quote.request_id %}">Back to project →</a>{% endif %}</aside>
+</div></section>
+{% endblock %}
