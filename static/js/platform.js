@@ -69,6 +69,41 @@ document.addEventListener("DOMContentLoaded", function () {
     item.style.setProperty("--route-order", String(index));
   });
 
+  const wordStory = document.querySelector("[data-word-story]");
+  if (wordStory && !reduced) {
+    const words = (wordStory.dataset.words || "language.").split("|").filter(Boolean);
+    let wordIndex = 0;
+
+    function drawStoryWord(word) {
+      wordStory.replaceChildren();
+      Array.from(word).forEach(function (character, index) {
+        const glyph = document.createElement("span");
+        glyph.className = "story-glyph";
+        if (character === " ") glyph.classList.add("story-glyph-space");
+        if (character === "." || character === "," || character === ";" || character === ":") {
+          glyph.classList.add("story-glyph-punct");
+        }
+        glyph.style.setProperty("--glyph-order", String(index));
+        glyph.textContent = character === " " ? "\u00A0" : character;
+        wordStory.appendChild(glyph);
+      });
+    }
+
+    function nextStoryWord() {
+      wordIndex = (wordIndex + 1) % words.length;
+      wordStory.classList.add("is-changing");
+      window.setTimeout(function () {
+        drawStoryWord(words[wordIndex]);
+        wordStory.classList.remove("is-changing");
+      }, 210);
+      const hold = wordIndex === 0 ? 2700 : wordIndex === words.length - 1 ? 2300 : 1900;
+      window.setTimeout(nextStoryWord, hold);
+    }
+
+    drawStoryWord(words[0]);
+    window.setTimeout(nextStoryWord, 2800);
+  }
+
   document.querySelectorAll("[data-dismiss-message]").forEach(function (el) {
     window.setTimeout(function () {
       el.classList.add("message-leave");
