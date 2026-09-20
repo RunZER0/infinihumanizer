@@ -1,3 +1,4 @@
+import json
 import logging
 import uuid
 from decimal import Decimal, InvalidOperation
@@ -7,17 +8,19 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
-from django.http import JsonResponse
+from django.http import FileResponse, JsonResponse
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from .catalog import PACKAGES, PRICE_BANDS, RETAINERS, SERVICE_FAMILIES, SERVICE_INDEX, commercial_terms, estimate_request, service_by_code
 from .models import AssuranceJob, Consultation, Deliverable, DeliverableFeedback, Invoice, PaymentRecord, Quote, ServiceRequest
 from .legacy_summary import LEGACY_LEDGER_SUMMARY, LEGACY_RECONCILIATION_BANDS
+from .payments import PaystackError, apply_gateway_transaction, ingest_webhook_transaction, initialize_transaction, valid_webhook_signature, verify_transaction
 
 logger = logging.getLogger(__name__)
 
@@ -316,17 +319,89 @@ def assurance_result(request, job_id):
 @login_required
 def workspace(request):
     items = ServiceRequest.objects.filter(user=request.user)
+    invoices = Invoice.objects.filter(user=request.user)
+    payments = PaymentRecord.objects.filter(user=request.user)
     if request.user.email:
         items = ServiceRequest.objects.filter(Q(user=request.user) | Q(email__iexact=request.user.email)).distinct()
-    invoices = Invoice.objects.filter(user=request.user)
-    if request.user.email:
         invoices = Invoice.objects.filter(Q(user=request.user) | Q(email__iexact=request.user.email)).distinct()
+        payments = PaymentRecord.objects.filter(Q(user=request.user) | Q(email__iexact=request.user.email)).distinct()
 
     return render(request, "platformhub/workspace.html", {
         "requests": items[:20],
         "invoices": invoices[:20],
+        "payments": payments[:30],
         "assurance_jobs": AssuranceJob.objects.filter(user=request.user).order_by("-created_at")[:20],
     })
+
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def quickpay(request):
+    if request.method == "POST":
+        purpose = request.POST.get("purpose", "").strip()
+        currency = request.POST.get("currency", "USD").upper()
+        try:
+            amount = Decimal(request.POST.get("amount", "").strip())
+        except (InvalidOperation, AttributeError):
+            amount = Decimal("0")
+
+        if currency not in {"USD", "KES"}:
+            messages.error(request, "Choose USD or KES.")
+        elif amount <= 0:
+            messages.error(request, "Enter an amount greater than zero.")
+        elif len(purpose) < 3:
+            messages.error(request, "Describe what the payment is for.")
+        elif request.POST.get("confirm") != "yes":
+            messages.error(request, "Confirm the payment details before continuing.")
+        else:
+            invoice = Invoice.objects.create(
+                user=request.user,
+                email=request.user.email,
+                currency=currency,
+                amount_due=amount,
+                description=f"QuickPay — {purpose[:220]}",
+            )
+            return redirect(f"{reverse('platformhub:checkout')}?invoice={invoice.id}")
+
+    recent = Invoice.objects.filter(user=request.user, description__startswith="QuickPay —").order_by("-created_at")[:10]
+    return render(request, "platformhub/quickpay.html", {"recent": recent})
+
+
+def payment_config(request):
+    return JsonResponse({
+        "provider": "paystack",
+        "public_key": getattr(settings, "PAYSTACK_PUBLIC_KEY", "") or "",
+        "currencies": ["USD", "KES"],
+        "apple_pay_domain_file": request.build_absolute_uri(reverse("platformhub:apple_pay_domain")),
+    })
+
+
+def apple_pay_domain(request):
+    path = settings.BASE_DIR / "static" / "apple-developer-merchantid-domain-association"
+    if not path.exists():
+        return JsonResponse({"error": "Apple Pay domain file is not configured."}, status=404)
+    return FileResponse(path.open("rb"), content_type="text/plain")
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def paystack_webhook(request):
+    secret = getattr(settings, "PAYSTACK_SECRET_KEY", None)
+    if not secret:
+        return JsonResponse({"error": "Payment provider is not configured."}, status=503)
+    try:
+        if not valid_webhook_signature(request.body, request.headers.get("x-paystack-signature", "")):
+            return JsonResponse({"error": "Invalid signature."}, status=401)
+        event = json.loads(request.body.decode("utf-8"))
+        if event.get("event") in {"charge.success", "charge.failed"}:
+            ingest_webhook_transaction(event.get("data") or {})
+        return JsonResponse({"ok": True})
+    except PaystackError:
+        logger.exception("Paystack webhook processing failed")
+        return JsonResponse({"error": "Webhook processing failed."}, status=502)
+    except Exception:
+        logger.exception("Unexpected Paystack webhook error")
+        return JsonResponse({"error": "Webhook processing failed."}, status=500)
 
 
 def _checkout_context(request):
@@ -417,40 +492,36 @@ def start_checkout(request):
     if not email:
         return JsonResponse({"error": "Email is required."}, status=400)
 
-    secret = getattr(settings, "PAYSTACK_SECRET_KEY", None)
-    if not secret:
+    if not getattr(settings, "PAYSTACK_SECRET_KEY", None):
         return JsonResponse({"error": "Secure checkout is not connected on this deployment yet."}, status=503)
 
     reference = f"INF-{uuid.uuid4().hex[:18].upper()}"
     callback = request.build_absolute_uri(reverse("platformhub:verify_checkout"))
-    minor_units = int((Decimal(amount) * 100).quantize(Decimal("1")))
-
-    payload = {
-        "email": email,
-        "amount": minor_units,
-        "currency": currency,
-        "reference": reference,
-        "callback_url": callback,
-        "metadata": {
-            "label": label,
-            "package_slug": package_slug,
-            "invoice_id": invoice_id,
-            "request_id": str(request_id) if request_id else "",
-            "job_id": job_id,
-            "consultation_id": consultation_id,
-        },
+    metadata = {
+        "label": label,
+        "package_slug": package_slug,
+        "invoice_id": invoice_id,
+        "request_id": str(request_id) if request_id else "",
+        "job_id": job_id,
+        "consultation_id": consultation_id,
     }
-    headers = {"Authorization": f"Bearer {secret}", "Content-Type": "application/json"}
+    if invoice_id and not request_id and label.startswith("QuickPay"):
+        metadata["quickpay"] = True
+        normalized_family = "quickpay"
+        normalized_service_code = "quickpay"
 
     try:
-        response = requests.post("https://api.paystack.co/transaction/initialize", json=payload, headers=headers, timeout=20)
-        data = response.json()
-    except Exception:
-        logger.exception("Paystack initialize failed")
-        return JsonResponse({"error": "Payment initialization failed."}, status=502)
-
-    if not data.get("status"):
-        return JsonResponse({"error": data.get("message", "Payment initialization failed.")}, status=400)
+        gateway = initialize_transaction(
+            email=email,
+            amount=amount,
+            currency=currency,
+            reference=reference,
+            callback_url=callback,
+            metadata=metadata,
+        )
+    except PaystackError as exc:
+        logger.warning("Paystack initialize failed: %s", exc)
+        return JsonResponse({"error": str(exc)}, status=502)
 
     assurance_job = None
     if job_id:
@@ -471,77 +542,37 @@ def start_checkout(request):
         assurance_job=assurance_job,
         user=request.user if request.user.is_authenticated else None,
         reference=reference,
-        source_type="checkout",
+        source_type="quickpay" if metadata.get("quickpay") else "checkout",
         amount=amount,
         currency=currency,
         status="pending",
         email=email,
         normalized_family=normalized_family,
         normalized_service_code=normalized_service_code,
-        metadata=payload["metadata"],
+        metadata=metadata,
     )
-    return JsonResponse({"authorization_url": data["data"]["authorization_url"]})
+    return JsonResponse({"authorization_url": gateway["authorization_url"], "reference": reference})
 
 
 def verify_checkout(request):
-    reference = request.GET.get("reference", "").strip()
+    reference = request.GET.get("reference", "").strip() or request.GET.get("trxref", "").strip()
     if not reference:
-        return redirect("platformhub:pricing")
+        return redirect("platformhub:workspace" if request.user.is_authenticated else "platformhub:pricing")
 
     payment = get_object_or_404(PaymentRecord, reference=reference)
-    secret = getattr(settings, "PAYSTACK_SECRET_KEY", None)
-    if not secret:
-        messages.error(request, "Payment verification is not connected.")
-        return redirect("platformhub:pricing")
-
-    headers = {"Authorization": f"Bearer {secret}"}
     try:
-        response = requests.get(f"https://api.paystack.co/transaction/verify/{reference}", headers=headers, timeout=20)
-        data = response.json()
-    except Exception:
-        logger.exception("Paystack verification failed")
+        tx = verify_transaction(reference)
+        payment = apply_gateway_transaction(payment.id, tx)
+    except PaystackError:
+        logger.exception("Paystack verification failed for %s", reference)
         messages.error(request, "Payment verification failed.")
-        return redirect("platformhub:pricing")
+        return redirect("platformhub:workspace" if request.user.is_authenticated else "platformhub:pricing")
+    except Exception:
+        logger.exception("Unexpected payment verification failure for %s", reference)
+        messages.error(request, "Payment verification failed.")
+        return redirect("platformhub:workspace" if request.user.is_authenticated else "platformhub:pricing")
 
-    tx = data.get("data") or {}
-    if data.get("status") and tx.get("status") == "success":
-        paid_amount = Decimal(str(tx.get("amount", 0))) / Decimal("100")
-        payment.status = "success"
-        payment.amount = paid_amount
-        payment.paid_at = timezone.now()
-        payment.metadata = {**payment.metadata, "gateway": {"channel": tx.get("channel"), "id": tx.get("id")}}
-        payment.save(update_fields=["status", "amount", "paid_at", "metadata"])
-
-        if payment.invoice:
-            invoice = payment.invoice
-            invoice.amount_paid = min(invoice.amount_due, invoice.amount_paid + paid_amount)
-            invoice.save()
-            if invoice.status == "paid" and invoice.request:
-                project = invoice.request
-                project.status = "active"
-                project.save(update_fields=["status", "updated_at"])
-
-        job_id = payment.metadata.get("job_id", "")
-        if payment.assurance_job_id:
-            job = payment.assurance_job
-            job.status = "queued"
-            job.payment_reference = payment.reference
-            job.save(update_fields=["status", "payment_reference", "updated_at"])
-
-        package_slug = payment.metadata.get("package_slug", "")
-        if package_slug and request.user.is_authenticated:
-            try:
-                from accounts.models import Profile
-                profile, _ = Profile.objects.get_or_create(user=request.user)
-                if package_slug == "humanizer-individual":
-                    profile.account_type = "STANDARD"; profile.is_paid = True; profile.word_quota = max(profile.word_quota, 100000)
-                elif package_slug == "humanizer-pro":
-                    profile.account_type = "PRO"; profile.is_paid = True; profile.word_quota = max(profile.word_quota, 250000)
-                elif package_slug == "humanizer-team":
-                    profile.account_type = "ENTERPRISE"; profile.is_paid = True; profile.word_quota = max(profile.word_quota, 600000); profile.max_concurrent_devices = max(profile.max_concurrent_devices, 5)
-                profile.save()
-            except Exception:
-                logger.exception("Could not apply self-service entitlement for %s", package_slug)
+    if payment.status == "success":
         messages.success(request, "Payment confirmed.")
         if payment.assurance_job_id and request.user.is_authenticated:
             return redirect("platformhub:assurance_result", job_id=payment.assurance_job_id)
@@ -553,10 +584,8 @@ def verify_checkout(request):
             return redirect("platformhub:workspace")
         return redirect("platformhub:home")
 
-    payment.status = tx.get("status", "failed") if tx else "failed"
-    payment.save(update_fields=["status"])
     messages.error(request, "Payment was not completed.")
-    return redirect("platformhub:pricing")
+    return redirect("platformhub:workspace" if request.user.is_authenticated else "platformhub:pricing")
 
 
 @staff_member_required
