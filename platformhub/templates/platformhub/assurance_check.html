@@ -1,0 +1,20 @@
+
+{% extends "base.html" %}
+{% block title %}Originality check — InfiniAI{% endblock %}
+{% block content %}
+<div class="page-shell">
+  <div class="eyebrow">Content assurance</div>
+  <h1 class="h1">Check the work before it leaves your hands.</h1>
+  <p class="lede">The quick check is a low-cost review queue, not a claim that authorship can be determined with certainty. It looks for originality concerns and gives a concise report for human review.</p>
+</div>
+<section class="section"><div class="shell form-layout">
+<form method="post" class="form-stack">{% csrf_token %}
+  <div class="field"><label for="title">Document label</label><input id="title" name="title" required placeholder="e.g. Product launch article"></div>
+  <div class="field"><label for="content">Text to check</label><textarea id="content" name="content" required style="min-height:340px" placeholder="Paste the text here…"></textarea><span class="help">Do not paste confidential material unless you are comfortable submitting it for review.</span></div>
+  <div class="field"><label for="instructions">Anything specific to inspect? <span class="help">(optional)</span></label><textarea id="instructions" name="instructions" placeholder="Sources to compare, citation concerns, context…"></textarea></div>
+  <div class="form-note">Next: secure checkout for the USD 2 / KSh 200 quick check. After payment, the job enters the assurance queue and the report appears under this reference.</div>
+  <button class="btn btn-primary" type="submit">Continue to checkout</button>
+</form>
+<aside class="summary-rail"><div class="eyebrow">Quick check</div><dl><dt>USD</dt><dd>2</dd><dt>KES</dt><dd>200</dd><dt>Output</dt><dd>Concise report</dd></dl><p style="color:var(--text-muted)">Need citation, structure, formatting and editorial QA as well? Use the managed Content Assurance service instead.</p><a class="btn btn-link" href="{% url 'platformhub:request_service_code' 'assurance-report' %}">Request full report →</a></aside>
+</div></section>
+{% endblock %}
