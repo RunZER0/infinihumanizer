@@ -1,0 +1,39 @@
+
+{% extends "base.html" %}
+{% block title %}{{ family.name }} — InfiniAI{% endblock %}
+{% block content %}
+<div class="page-shell">
+  <div class="eyebrow">{{ family.kicker }}</div>
+  <h1 class="h1">{{ family.headline }}</h1>
+  <p class="lede">{{ family.description }}</p>
+  <div class="hero-actions">
+    <a class="btn btn-primary" href="{% url 'platformhub:request_service' %}?family={{ family_slug }}">Start a request</a>
+    <a class="btn" href="{% url 'platformhub:pricing' %}">Understand pricing</a>
+  </div>
+</div>
+<section class="section">
+  <div class="shell">
+    <div class="service-rows">
+      {% for service in family.services %}
+      <div class="service-row">
+        <strong>{{ service.name }}</strong>
+        <p>{{ service.summary }}</p>
+        <span class="price">From USD {{ service.from_usd }} · {{ service.billing }}</span>
+        <span class="actions"><a class="btn btn-link" href="{% url 'platformhub:request_service_code' service.code %}">Scope this →</a></span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="shell">
+    <div class="section-head"><div class="eyebrow">What happens next</div><div><h2 class="h2">The price comes after the scope is legible.</h2></div></div>
+    <div class="process">
+      <div class="process-step"><strong>Brief</strong><p>You give us the objective, audience, source material, output and deadline.</p></div>
+      <div class="process-step"><strong>Scope</strong><p>We identify research depth, workstreams, deliverables, review rounds and dependencies.</p></div>
+      <div class="process-step"><strong>Quote</strong><p>The quote reflects the work required instead of forcing the request into a pre-existing payment amount.</p></div>
+      <div class="process-step"><strong>Produce</strong><p>The engagement moves through research, production, QA, client review and final delivery as needed.</p></div>
+    </div>
+  </div>
+</section>
+{% endblock %}
