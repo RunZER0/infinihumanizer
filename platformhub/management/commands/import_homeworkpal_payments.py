@@ -1,5 +1,6 @@
 import json
 import os
+from datetime import timezone as dt_timezone
 from decimal import Decimal
 
 import psycopg2
@@ -48,11 +49,11 @@ def dt(value):
         return None
     if hasattr(value, "tzinfo"):
         if timezone.is_naive(value):
-            return timezone.make_aware(value, timezone.utc)
+            return timezone.make_aware(value, dt_timezone.utc)
         return value
     parsed = parse_datetime(str(value))
     if parsed and timezone.is_naive(parsed):
-        parsed = timezone.make_aware(parsed, timezone.utc)
+        parsed = timezone.make_aware(parsed, dt_timezone.utc)
     return parsed
 
 
