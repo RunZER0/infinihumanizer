@@ -1,34 +1,25 @@
-# Local Testing Guide
+# Local testing
 
-This project supports an OFFLINE_MODE for local testing without external APIs.
+Create a virtual environment, install the current dependencies and provide the environment variables needed for the feature you are testing.
 
-1) Server login
-- To create/reset admin credentials, run:
-  ```bash
-  python manage.py create_new_superuser
-  ```
-  See [SUPERUSER_RECOVERY.md](SUPERUSER_RECOVERY.md) for details.
-- Tester: tester / test1234
+```bash
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
+```
 
-2) Offline mode (default)
-- .env contains OFFLINE_MODE=True and DEBUG=True
-- Humanizer uses a local rewriter, Paystack calls are mocked, emails go to console.
+For the Humanizer, set `OPENAI_API_KEY`. `HUMANIZER_MODEL_ID` is optional.
 
-3) Test with real OpenAI key locally
-- Edit .env:
-  - OFFLINE_MODE=False
-  - OPENAI_API_KEY=sk-...your key...
-    - GEMINI_API_KEY=AIza...your key...
-  - Optionally set:
-      - OPENAI_MODEL=gpt-4.1 (or your preferred model)
-      - GEMINI_MODEL=gemini-2.5-flash (or gemini-2.5-pro)
-    - HUMANIZER_SYSTEM_PROMPT=...override system prompt...
-    - HUMANIZER_USER_PREFIX=...text prefixed to the user message...
-      - HUMANIZER_ENGINE=openai|gemini (default openai if not specified; UI selection overrides on submit)
+The Humanizer does not have an offline rewriting engine. Tests mock the API boundary instead:
 
-4) Switch back to production
-- Turn OFFLINE_MODE off in production and configure DATABASE_URL, SMTP, and Paystack keys.
+```bash
+python manage.py test humanizer
+```
 
-5) Notes
-- Pricing page geolocation fetch may fail if totally offline; it’s not required for humanizer testing.
-- When OFFLINE_MODE=True, Paystack init/verify are simulated and update your profile quotas locally.
+For platform tests:
+
+```bash
+python manage.py test platformhub
+```
+
+When testing production-like database behaviour locally, set `DATABASE_URL` and keep `OFFLINE_MODE=False`.
