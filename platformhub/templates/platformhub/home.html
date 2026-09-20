@@ -5,8 +5,14 @@
 <section class="hero">
   <div class="hero-copy">
     <div class="eyebrow">Language · Research · Product · AI</div>
-    <h1 class="display">Nobody knows language better than we do.</h1>
-    <p class="lede">We handle the research and the writing, then shape the final language for the people who will read it.</p>
+    <h1 class="display hero-word-story" aria-label="We know language. You can hear the difference.">
+      <span class="hero-story-line" aria-hidden="true">
+        <span class="hero-story-prefix">We know</span>
+        <span class="hero-story-slot" data-word-story data-words="language.|rhythm.|voice.|restraint.">language.</span>
+      </span>
+      <span class="hero-story-answer" aria-hidden="true">You can hear the difference.</span>
+    </h1>
+    <p class="lede">Research, writing, product language and AI output shaped for the people who have to read it.</p>
     <div class="hero-actions">
       <a class="btn btn-primary" href="{% url 'platformhub:start' %}">Start a project</a>
       <a class="btn" href="{% url 'humanizer' %}">Improve my text</a>
