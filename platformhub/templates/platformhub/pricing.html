@@ -3,13 +3,12 @@
 {% block content %}
 <div class="page-shell">
   <div class="eyebrow">Pricing</div>
-  <h1 class="h1">Straightforward where it can be. Scoped where it can’t.</h1>
-  <p class="lede">Tools have fixed prices. Project work depends on what you need. Ongoing work is billed monthly.</p>
+  <h1 class="h1">Tools are fixed. Serious work is scoped.</h1>
 </div>
 
 <section class="section">
   <div class="shell">
-    <div class="section-head"><div class="eyebrow">Tools</div><div><h2 class="h2">Fixed-price access.</h2></div></div>
+    <div class="section-head"><div class="eyebrow">Tools</div><div><h2 class="h2">Fixed prices.</h2></div></div>
     <table class="proof-table">
       <thead><tr><th>Product</th><th>USD</th><th>KES</th><th>Billing</th><th></th></tr></thead>
       <tbody>
@@ -27,7 +26,7 @@
 
 <section class="section">
   <div class="shell">
-    <div class="section-head"><div class="eyebrow">Projects</div><div><h2 class="h2">A useful range before the quote.</h2><p class="lede">Research depth, production time, revisions and urgency change the final price.</p></div></div>
+    <div class="section-head"><div class="eyebrow">Projects</div><div><h2 class="h2">A range first. A quote when the brief is clear.</h2></div></div>
     <div class="price-bands">
       {% for band in price_bands %}
       <div class="price-band"><strong>{{ band.label }}</strong><span class="range">{{ band.range }}</span><p>{{ band.examples }}</p><p>{{ band.logic }}</p></div>
@@ -38,7 +37,7 @@
 
 <section class="section" id="retainers">
   <div class="shell">
-    <div class="section-head"><div class="eyebrow">Monthly work</div><div><h2 class="h2">For teams that need us regularly.</h2></div></div>
+    <div class="section-head"><div class="eyebrow">Monthly</div><div><h2 class="h2">For teams that need us regularly.</h2></div></div>
     <div class="retainer-ledger">
       {% for retainer in retainers %}
       <article class="retainer-row {% if retainer.usd == 10000 %}retainer-row-featured{% endif %}">
@@ -52,19 +51,7 @@
   </div>
 </section>
 
-<section class="section">
-  <div class="shell">
-    <div class="section-head"><div class="eyebrow">Project payments</div><div><h2 class="h2">Larger work is split into sensible stages.</h2></div></div>
-    <div class="process">
-      <div class="process-step"><strong>Under USD 500</strong><p>Usually paid in full once the scope is accepted.</p></div>
-      <div class="process-step"><strong>USD 500–4,999</strong><p>50% to start, with the balance tied to delivery.</p></div>
-      <div class="process-step"><strong>USD 5,000+</strong><p>30% to start, then agreed milestones.</p></div>
-      <div class="process-step"><strong>Monthly work</strong><p>Billed at the start of the month.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="shell" style="padding:var(--space-section) 24px">
-  <div class="callout"><div><div class="eyebrow" style="color:#e46b5d">Need a quote?</div><h2 class="h2" style="margin-top:14px">Send us the brief.</h2></div><a class="btn btn-primary" href="{% url 'platformhub:start' %}">Start a project</a></div>
+<section class="shell closing-shell">
+  <div class="callout"><div><div class="eyebrow" style="color:#e46b5d">Need a quote?</div><h2 class="h2" style="margin-top:14px">Send the brief.</h2></div><a class="btn btn-primary" href="{% url 'platformhub:start' %}">Start a project</a></div>
 </section>
 {% endblock %}
