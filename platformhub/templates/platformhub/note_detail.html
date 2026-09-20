@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{{ article.title }} — InfiniAI{% endblock %}
+{% block description %}{{ article.dek }}{% endblock %}
+{% block content %}
+<article class="note-article">
+  <header class="page-shell note-article-head">
+    <a class="btn btn-link" href="{% url 'platformhub:notes' %}">← Notes</a>
+    <div class="note-date">{{ article.date|date:"F j, Y" }}</div>
+    <h1 class="h1">{{ article.title }}</h1>
+    <p class="lede">{{ article.dek }}</p>
+  </header>
+
+  <section class="section">
+    <div class="shell note-body">
+      {% for paragraph in article.body %}
+      <p>{{ paragraph }}</p>
+      {% endfor %}
+    </div>
+  </section>
+</article>
+{% endblock %}
