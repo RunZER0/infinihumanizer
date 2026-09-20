@@ -5,8 +5,8 @@
 <section class="tool-shell">
   <div class="tool-pane">
     <div class="eyebrow">Text intelligence</div>
-    <h1 style="font-size:clamp(2rem,4vw,4rem);letter-spacing:-.055em;line-height:.95;margin:14px 0 18px">Keep the meaning. Change how it lands.</h1>
-    <p style="color:var(--text-muted);max-width:620px">Use the humanizer when the substance already exists and the job is voice, cadence and naturalness. For research, review or a finished deliverable, start a managed project instead.</p>
+    <h1 style="font-size:clamp(2rem,4vw,4rem);letter-spacing:-.055em;line-height:.95;margin:14px 0 18px">Rewrite the text without changing what it means.</h1>
+    <p style="color:var(--text-muted);max-width:620px">Use the humanizer when you already have the content and want to improve how it reads. For research or a finished deliverable, start a project.</p>
     <div class="tool-toolbar">
       <span class="micro" id="input-count">0 words</span>
       <label class="micro" for="temperature">Variation <input id="temperature" type="range" min="0.1" max="1" step="0.1" value="0.7" aria-label="Writing variation"></label>
@@ -24,14 +24,14 @@
       </div>
     </form>
     <div style="border-top:1px solid var(--line-subtle);padding-top:18px;margin-top:26px">
-      <span class="micro">THE JOB IS BIGGER THAN A REWRITE?</span>
-      <p style="margin:8px 0 14px;color:var(--text-muted)">Research, source review, decks, reports, formatting and technical production live in the Research &amp; Production studio.</p>
-      <a class="btn btn-link" href="{% url 'platformhub:request_service_code' 'studio-review' %}">Hand us the work →</a>
+      <span class="micro">NEED RESEARCH OR A FINISHED DELIVERABLE?</span>
+      <p style="margin:8px 0 14px;color:var(--text-muted)">The Research &amp; Production studio handles research, source review, reports, decks and technical work.</p>
+      <a class="btn btn-link" href="{% url 'platformhub:request_service_code' 'studio-review' %}">Start a project →</a>
     </div>
   </div>
   <div class="tool-pane">
     <div class="eyebrow">Output</div>
-    <h2 style="font-size:1.5rem;letter-spacing:-.03em;margin:14px 0 18px">A draft you can keep editing.</h2>
+    <h2 style="font-size:1.5rem;letter-spacing:-.03em;margin:14px 0 18px">Your result appears here.</h2>
     <textarea id="output-text" placeholder="Your refined text will appear here." aria-label="Refined output"></textarea>
     <div class="tool-toolbar">
       <div class="meter">
