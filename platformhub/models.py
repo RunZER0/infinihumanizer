@@ -191,3 +191,35 @@ class Deliverable(models.Model):
     notes = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class AssuranceJob(models.Model):
+    STATUS_CHOICES = [
+        ("awaiting_payment", "Awaiting payment"),
+        ("queued", "Queued"),
+        ("reviewing", "Reviewing"),
+        ("ready", "Ready"),
+        ("cancelled", "Cancelled"),
+    ]
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    reference = models.CharField(max_length=32, unique=True, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="assurance_jobs")
+    title = models.CharField(max_length=220)
+    content = models.TextField()
+    instructions = models.TextField(blank=True)
+    level = models.CharField(max_length=30, default="quick")
+    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default="awaiting_payment")
+    originality_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    result_summary = models.TextField(blank=True)
+    result_report = models.TextField(blank=True)
+    payment_reference = models.CharField(max_length=120, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if not self.reference:
+            self.reference = _short("CHK")
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.reference} — {self.title}"
