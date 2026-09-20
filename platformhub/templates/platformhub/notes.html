@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Notes — InfiniAI{% endblock %}
+{% block description %}Essays from InfiniAI on language, interface writing, research, persuasion and product communication.{% endblock %}
+{% block content %}
+<div class="page-shell notes-head">
+  <div class="eyebrow">Notes</div>
+  <h1 class="h1">What we have learned from working with words.</h1>
+  <p class="lede">Language changes when it moves into a product, a report, a phone screen or a sales conversation. These notes are about those changes.</p>
+</div>
+
+<section class="section">
+  <div class="shell notes-index">
+    {% for article in articles %}
+    <article class="note-card">
+      <div class="note-date">{{ article.date|date:"F j, Y" }}</div>
+      <h2><a href="{% url 'platformhub:note_detail' article.slug %}">{{ article.title }}</a></h2>
+      <p>{{ article.dek }}</p>
+      <a class="btn btn-link" href="{% url 'platformhub:note_detail' article.slug %}">Read →</a>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
