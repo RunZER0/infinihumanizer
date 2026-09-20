@@ -1,0 +1,10 @@
+
+{% extends "base.html" %}
+{% block title %}Consultation — InfiniAI{% endblock %}
+{% block content %}
+<div class="page-shell"><div class="eyebrow">Scoping consultation</div><h1 class="h1">Use the hour to make the work legible.</h1><p class="lede">For multi-part projects, unclear requirements, website/product communication work or AI systems decisions. USD 50, credited to a commissioned project within seven days.</p></div>
+<section class="section"><div class="shell form-layout">
+<form method="post" class="form-stack">{% csrf_token %}<div class="form-grid-2"><div class="field"><label>Your name</label><input name="full_name" required value="{{ user.get_full_name }}"></div><div class="field"><label>Email</label><input type="email" name="email" required value="{{ user.email }}"></div></div><div class="field"><label>Company / team <span class="help">(optional)</span></label><input name="company"></div><div class="field"><label>What needs to be resolved in the consultation?</label><textarea name="topic" required></textarea></div><button class="btn btn-primary" type="submit">Continue to USD 50 checkout</button></form>
+<aside class="summary-rail"><dl><dt>Fee</dt><dd>USD {{ package.usd }}</dd><dt>KES reference</dt><dd>KSh {{ package.kes }}</dd><dt>Credit window</dt><dd>7 days</dd></dl></aside>
+</div></section>
+{% endblock %}
