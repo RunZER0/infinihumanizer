@@ -1,0 +1,150 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="InfiniAI researches, writes, reviews and builds language systems for people and organizations that need finished work, not another prompt box.">
+  <title>{% if page == "home" %}InfiniAI — Research, writing and language systems{% elif page == "pricing" %}Pricing — InfiniAI{% elif service %}{{ service.name }} — InfiniAI{% else %}InfiniAI{% endif %}</title>
+  <link rel="stylesheet" href="{% static 'css/infiniai.css' %}">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="{% url 'platform:home' %}" aria-label="InfiniAI home"><span class="brand-mark" aria-hidden="true">∞</span><span>InfiniAI</span></a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+  <nav id="site-nav" class="site-nav" aria-label="Primary">
+    <a href="{% url 'platform:services' %}">Services</a>
+    <a href="{% url 'platform:pricing' %}">Pricing</a>
+    <a href="{% url 'platform:projects' %}">Workspace</a>
+    <a href="{% url 'platform:enterprise' %}">Enterprise</a>
+    <a href="{% url 'platform:consultation' %}">Consultation</a>
+    {% if request.user.is_authenticated %}<a class="nav-account" href="{% url 'humanizer' %}">Text workspace</a>{% else %}<a class="nav-account" href="/accounts/login/">Sign in</a>{% endif %}
+    <a class="button button-dark" href="{% url 'platform:start' %}">Start a project</a>
+  </nav>
+</header>
+{% if messages %}<div class="message-stack" aria-live="polite">{% for message in messages %}<div class="message {{ message.tags }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+<main id="main">
+
+{% if page == "home" %}
+<section class="hero">
+  <div class="eyebrow">RESEARCH · WRITING · COMMUNICATION · AI SYSTEMS</div>
+  <div class="hero-grid">
+    <div>
+      <h1>Bring us the question.<br>Leave with the finished work.</h1>
+      <p class="lede">InfiniAI turns rough ideas, source material and difficult questions into research, writing, review, product language and custom AI systems that are ready to use.</p>
+      <div class="action-row"><a class="button button-signal" href="{% url 'platform:start' %}">Describe what you need</a><a class="text-link" href="{% url 'platform:services' %}">See how the work is handled <span>→</span></a></div>
+    </div>
+    <aside class="hero-proof" aria-label="How an engagement moves">
+      <div class="proof-label">ONE ENGAGEMENT, END TO END</div>
+      <ol class="flow-rail">
+        <li><span>01</span><div><strong>Scope</strong><small>Outcome, audience, evidence, format, deadline.</small></div></li>
+        <li><span>02</span><div><strong>Research</strong><small>Investigate, review, compare and synthesize.</small></div></li>
+        <li><span>03</span><div><strong>Produce</strong><small>Write, structure, design the language and format.</small></div></li>
+        <li><span>04</span><div><strong>Assure</strong><small>Originality, consistency, sources and final QA.</small></div></li>
+        <li><span>05</span><div><strong>Deliver</strong><small>Files, revisions and a visible record of the work.</small></div></li>
+      </ol>
+    </aside>
+  </div>
+</section>
+<section class="band band-ink"><div class="band-statement">Use a tool when you know what to do. Hand us the project when you do not have time to do all of it.</div><a href="{% url 'humanizer' %}" class="band-link">Open Text Intelligence →</a></section>
+<section class="section">
+  <header class="section-head"><div class="section-index">01 / CAPABILITIES</div><h2>Five ways into the same system.</h2><p>Each service starts from a different user need, but research, production, review and delivery share one operating model.</p></header>
+  <div class="service-ledger">
+    {% for item in services %}
+    <a class="service-row" href="{% url 'platform:service_detail' item.slug %}">
+      <span class="service-number">{{ item.index }}</span>
+      <span class="service-main"><strong>{{ item.name }}</strong><small>{{ item.verb }}</small></span>
+      <span class="service-summary">{{ item.summary }}</span>
+      <span class="service-price">{{ item.price_label }}</span><span class="service-arrow" aria-hidden="true">↗</span>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+<section class="section split-section">
+  <div class="section-head sticky-copy"><div class="section-index">02 / WHY THIS MODEL</div><h2>Writing is often the last 20% of the job.</h2><p>The hard part may be finding the evidence, reviewing what already exists, deciding what matters, resolving contradictions, shaping the argument or turning it into something a specific audience can act on.</p></div>
+  <div class="capability-list">
+    <div><span>DISCOVER</span><p>Market, desk, technical, source and review research.</p></div>
+    <div><span>ANALYZE</span><p>Compare evidence, identify patterns and make the reasoning visible.</p></div>
+    <div><span>SYNTHESIZE</span><p>Turn scattered information into a coherent position or recommendation.</p></div>
+    <div><span>CREATE</span><p>Reports, decks, proposals, white papers, documentation and product language.</p></div>
+    <div><span>REVIEW</span><p>Originality, sources, structure, consistency, readability and final QA.</p></div>
+  </div>
+</section>
+<section class="section section-rule">
+  <header class="section-head compact"><div class="section-index">03 / BUYING CLARITY</div><h2>Small jobs stay small. Complex work is scoped before it is priced.</h2></header>
+  <div class="buying-grid">
+    <div><strong>Tools</strong><p>Monthly access for repeatable text work.</p><a href="{% url 'platform:pricing' %}">From $19/month →</a></div>
+    <div><strong>Projects</strong><p>Fixed scope for research, review, production and communication work.</p><a href="{% url 'platform:start' %}">From $75 →</a></div>
+    <div><strong>Retainers</strong><p>Recurring capacity when the work does not end after one deliverable.</p><a href="{% url 'platform:pricing' %}#retainers">$3,000–$10,000+/month →</a></div>
+    <div><strong>Systems</strong><p>Datasets, fine-tuning and deployment priced around technical scope.</p><a href="{% url 'platform:enterprise' %}">Scope a system →</a></div>
+  </div>
+</section>
+<section class="closing-cta"><div><div class="section-index">START WITH THE NEED</div><h2>You do not need to know which service to buy.</h2><p>Describe the outcome, the material you already have and what has to be true when the work is finished. The scope comes next.</p></div><a class="button button-signal" href="{% url 'platform:start' %}">Start with the outcome</a></section>
+
+{% elif page == "services" %}
+<section class="page-intro"><div class="section-index">SERVICES</div><h1>One operating system for language-heavy work.</h1><p class="lede">Improve something yourself, ask us to review it, hand us the entire production job, redesign how a product communicates, or build the capability into your own infrastructure.</p></section>
+<section class="section service-detail-list">{% for item in services %}<article class="service-detail-row" id="{{ item.slug }}"><div class="service-number">{{ item.index }}</div><div><h2>{{ item.name }}</h2><p class="service-verb">{{ item.verb }}</p><p>{{ item.best_for }}</p><a class="button button-line" href="{% url 'platform:service_detail' item.slug %}">{{ item.cta }}</a></div><ul class="plain-list">{% for feature in item.features %}<li>{{ feature }}</li>{% endfor %}</ul><div class="service-price-large">{{ item.price_label }}</div></article>{% endfor %}</section>
+
+{% elif page == "service_detail" %}
+<section class="page-intro service-intro"><div class="section-index">{{ service.index }} / {{ service.name|upper }}</div><h1>{{ service.verb }}</h1><p class="lede">{{ service.summary }}</p><div class="action-row"><a class="button button-signal" href="{% url 'platform:start' %}?service={{ service.slug }}">{{ service.cta }}</a><a class="text-link" href="{% url 'platform:pricing' %}">See pricing logic →</a></div></section>
+<section class="section two-column"><div><div class="section-index">BEST FOR</div><h2>{{ service.best_for }}</h2></div><ul class="plain-list large-list">{% for feature in service.features %}<li>{{ feature }}</li>{% endfor %}</ul></section>
+<section class="band band-paper"><div><div class="section-index">OUTCOME</div>{% for outcome in service.outcomes %}<span class="outcome-word">{{ outcome }}</span>{% endfor %}</div><div class="price-block"><small>ENTRY POINT</small><strong>{{ service.price_label }}</strong></div></section>
+<section class="closing-cta"><div><h2>Scope the work before you buy it.</h2><p>The intake separates research depth, complexity and urgency so the price follows the actual job.</p></div><a class="button button-dark" href="{% url 'platform:start' %}?service={{ service.slug }}">Build the scope</a></section>
+
+{% elif page == "pricing" %}
+<section class="page-intro"><div class="section-index">PRICING</div><h1>Pay for the kind of work being done.</h1><p class="lede">Usage, focused review, produced deliverables, retained capacity and custom systems are different commercial relationships. The price changes because the responsibility changes.</p></section>
+<section class="section pricing-section"><header class="section-head"><div class="section-index">01 / SELF-SERVE</div><h2>Text Intelligence</h2><p>For repeatable work you operate yourself.</p></header><div class="price-table">{% for plan in self_serve_plans %}<div class="price-column {% if plan.recommended %}recommended{% endif %}"><div><span>{{ plan.name }}</span>{% if plan.recommended %}<em>Most useful</em>{% endif %}</div><strong>${{ plan.price }}</strong><small>/ {{ plan.period }}</small><p>{{ plan.description }}</p><ul>{% for feature in plan.features %}<li>{{ feature }}</li>{% endfor %}</ul><a href="{% url 'humanizer' %}" class="button button-line">Open workspace</a></div>{% endfor %}</div></section>
+<section class="section pricing-section"><header class="section-head"><div class="section-index">02 / PROJECTS</div><h2>Research & Production</h2><p>For work InfiniAI owns from question to final deliverable.</p></header><div class="ledger-table">{% for offer in studio_offers %}<div><strong>{{ offer.name }}</strong><span>{{ offer.use }}</span><b>{{ offer.price }}</b></div>{% endfor %}</div></section>
+<section class="section pricing-section" id="retainers"><header class="section-head"><div class="section-index">03 / RECURRING CAPACITY</div><h2>Studio retainers</h2><p>The $10,000 tier is an embedded research and production function, not a large word allowance.</p></header><div class="retainer-grid">{% for plan in retainer_plans %}<article class="retainer {% if plan.recommended %}retainer-featured{% endif %}"><div class="retainer-top"><span>{{ plan.name }}</span>{% if plan.recommended %}<em>Embedded</em>{% endif %}</div><strong>${{ plan.price|floatformat:"0" }}<small>/mo</small></strong><p>{{ plan.description }}</p><ul>{% for feature in plan.features %}<li>{{ feature }}</li>{% endfor %}</ul><a class="button {% if plan.recommended %}button-signal{% else %}button-line{% endif %}" href="{% url 'platform:start' %}?service=research-production">Scope this relationship</a></article>{% endfor %}</div></section>
+<section class="section pricing-section"><div class="pricing-split"><div><div class="section-index">04 / COMMUNICATION</div><h2>Website & product language</h2><div class="mini-ledger">{% for offer in communication_offers %}<div><span>{{ offer.name }}</span><b>{{ offer.price }}</b></div>{% endfor %}</div></div><div><div class="section-index">05 / AI SYSTEMS</div><h2>Data, models & deployment</h2><div class="mini-ledger">{% for offer in ai_offers %}<div><span>{{ offer.name }}</span><b>{{ offer.price }}</b></div>{% endfor %}</div></div></div></section>
+<section class="section payment-logic"><header class="section-head compact"><div class="section-index">HOW PAYMENT FOLLOWS SCOPE</div><h2>The invoice explains the engagement.</h2></header><ol class="payment-steps"><li><span>&lt; $500</span><strong>Full payment</strong><p>Focused review, small research jobs and compact production work.</p></li><li><span>$500–$4,999</span><strong>50% deposit</strong><p>Production starts after scope approval; balance is due before final delivery.</p></li><li><span>$5,000+</span><strong>30% mobilisation + milestones</strong><p>Large engagements bill against the agreed work plan.</p></li><li><span>Recurring</span><strong>Monthly retainer</strong><p>Capacity is reserved and billed at the start of the service month.</p></li></ol></section>
+
+{% elif page == "start" %}
+<section class="page-intro intake-intro"><div class="section-index">PROJECT INTAKE</div><h1>Start with what has to be true at the end.</h1><p class="lede">The form separates the outcome, evidence, complexity and time pressure. That produces a useful scope before money enters the conversation.</p></section>
+<section class="section intake-layout"><form method="post" class="intake-form" data-intake>{% csrf_token %}
+<div class="form-block"><div class="form-number">01</div><div class="form-fields"><label>What kind of help is closest?<select name="service" required>{% for item in services %}<option value="{{ item.slug }}" {% if item.slug == initial_service.slug %}selected{% endif %}>{{ item.name }} — {{ item.verb }}</option>{% endfor %}</select></label><label>What outcome do you need?<textarea name="objective" rows="4" required placeholder="Example: We need to decide whether to enter a market and present the recommendation to our board."></textarea></label></div></div>
+<div class="form-block"><div class="form-number">02</div><div class="form-fields two"><label>What should be delivered?<input name="deliverable" required placeholder="Report, deck, website copy, review, dataset…"></label><label>Who will use or read it?<input name="audience" placeholder="Leadership team, customers, investors, internal users…"></label><label class="span-two">What material already exists?<textarea name="source_state" rows="3" placeholder="Links, files, notes, drafts, research, datasets, or nothing yet."></textarea></label></div></div>
+<div class="form-block"><div class="form-number">03</div><div class="form-fields three"><label>Research depth<select name="research_depth"><option value="none">No new research</option><option value="light">Light verification</option><option value="standard" selected>Standard research</option><option value="deep">Deep research</option></select></label><label>Complexity<select name="complexity"><option value="focused">Focused</option><option value="standard" selected>Standard</option><option value="complex">Complex / multi-part</option><option value="enterprise">Enterprise / multi-stakeholder</option></select></label><label>Timing<select name="urgency"><option value="flexible">Flexible</option><option value="standard" selected>Standard</option><option value="priority">Priority</option><option value="urgent">Urgent</option></select></label></div></div>
+<div class="form-block"><div class="form-number">04</div><div class="form-fields two"><label>Target date<input type="date" name="deadline"></label><label>Budget context<input name="budget" placeholder="Optional — range or ceiling"></label><label class="span-two">Where should the scope be sent?<input type="email" name="email" value="{% if request.user.is_authenticated %}{{ request.user.email }}{% endif %}" required placeholder="you@company.com"></label></div></div>
+<button class="button button-signal button-large" type="submit">Build my scope</button></form>
+<aside class="intake-aside"><div class="section-index">WHAT HAPPENS NEXT</div><ol class="numbered-copy"><li><b>Scope</b><span>You see the likely price band and payment structure.</span></li><li><b>Approve</b><span>Small jobs can proceed directly. Larger jobs receive a confirmed quote.</span></li><li><b>Produce</b><span>Research, creation and review move through one project record.</span></li><li><b>Deliver</b><span>Final files, revisions and QA are attached to the engagement.</span></li></ol></aside></section>
+
+{% elif page == "scope" %}
+<section class="page-intro"><div class="section-index">SCOPE / {{ project.id }}</div><h1>{{ project.service_name }}</h1><p class="lede">{{ project.objective }}</p></section>
+<section class="section scope-grid"><div class="scope-sheet"><div><span>DELIVERABLE</span><strong>{{ project.deliverable }}</strong></div><div><span>AUDIENCE</span><strong>{{ project.audience|default:"To be confirmed" }}</strong></div><div><span>RESEARCH</span><strong>{{ project.research_depth|title }}</strong></div><div><span>COMPLEXITY</span><strong>{{ project.complexity|title }}</strong></div><div><span>URGENCY</span><strong>{{ project.urgency|title }}</strong></div><div><span>TARGET</span><strong>{{ project.deadline|default:"To be agreed" }}</strong></div></div><aside class="quote-preview"><div class="section-index">PROVISIONAL RANGE</div><strong>${{ project.estimate_low }}–${{ project.estimate_high }}</strong><p>This is a scope estimate, not a hidden fixed fee. The final quote changes only if the deliverables or responsibility change.</p><div class="payment-rule"><span>{{ project.payment.label }}</span><b>{{ project.payment.percent }}%</b><small>{{ project.payment.explanation }}</small></div><a class="button button-signal button-full" href="{% url 'platform:checkout' project.id %}">Review payment path</a><a class="text-link center-link" href="{% url 'platform:project_detail' project.id %}">Save and view project →</a></aside></section>
+
+{% elif page == "checkout" %}
+<section class="page-intro compact-intro"><div class="section-index">COMMERCIAL STEP / {{ project.id }}</div><h1>{{ project.payment.label }}</h1><p class="lede">{{ project.payment.explanation }}</p></section>
+<section class="section checkout-grid"><div class="invoice-sheet"><div class="invoice-head"><strong>InfiniAI</strong><span>Scope {{ project.id }}</span></div><div class="invoice-row"><span>{{ project.service_name }}</span><b>${{ project.estimate_high }}</b></div><div class="invoice-row muted"><span>Current payment due ({{ project.payment.percent }}%)</span><b>${{ amount_due }}</b></div><div class="invoice-total"><span>DUE NOW</span><strong>${{ amount_due }}</strong></div><small>Quoted in USD. A provider may settle the payment in a locally supported currency. The project record keeps the quoted currency and amount.</small></div><div class="checkout-actions"><form method="post">{% csrf_token %}<input type="hidden" name="action" value="invoice"><button class="button button-dark button-full" type="submit">Request invoice</button></form><form method="post">{% csrf_token %}<input type="hidden" name="action" value="paystack"><button class="button button-signal button-full" type="submit" {% if not paystack_ready %}disabled aria-disabled="true"{% endif %}>Pay online</button></form>{% if not paystack_ready %}<p class="connection-note">Online payment is structurally ready but this deployment has no payment secret connected. Invoice flow remains available.</p>{% endif %}<p class="microcopy">No project is marked paid until the payment provider verifies the transaction.</p></div></section>
+
+{% elif page == "projects" %}
+<section class="page-intro compact-intro"><div class="section-index">WORKSPACE</div><h1>Your current engagements.</h1><p class="lede">This temporary workspace follows projects created in this browser session. Persistent organization workspaces move to Stashi when the database is connected.</p></section>
+<section class="section">{% if projects %}<div class="project-ledger">{% for project in projects %}<a href="{% url 'platform:project_detail' project.id %}"><span>{{ project.id }}</span><strong>{{ project.service_name }}</strong><em>{{ project.status|cut:"_"|title }}</em><b>${{ project.estimate_low }}–${{ project.estimate_high }}</b><i>→</i></a>{% endfor %}</div>{% else %}<div class="empty-state"><div class="section-index">NO ACTIVE PROJECTS</div><h2>Your first scope starts with one outcome.</h2><p>You do not need to choose the perfect service. Describe the job and the intake routes it.</p><a class="button button-signal" href="{% url 'platform:start' %}">Start a project</a></div>{% endif %}</section>
+
+{% elif page == "project_detail" %}
+<section class="page-intro compact-intro"><div class="section-index">PROJECT {{ project.id }}</div><h1>{{ project.service_name }}</h1><p class="lede">{{ project.objective }}</p></section>
+<section class="section project-layout"><div><div class="status-strip"><span>STATUS</span><strong>{{ project.status|cut:"_"|title }}</strong><span>PAYMENT</span><strong>{{ project.payment_status|cut:"_"|title }}</strong></div><ol class="timeline">{% for item in project.timeline %}<li class="{% if item.done %}done{% endif %}"><span></span><strong>{{ item.state }}</strong></li>{% endfor %}</ol></div><aside class="project-summary"><div><span>DELIVERABLE</span><b>{{ project.deliverable }}</b></div><div><span>ESTIMATE</span><b>${{ project.estimate_low }}–${{ project.estimate_high }}</b></div><div><span>PAYMENT STRUCTURE</span><b>{{ project.payment.label }}</b></div><div><span>INVOICE</span><b>{{ project.invoice_status|cut:"_"|title }}</b></div><a class="button button-signal button-full" href="{% url 'platform:checkout' project.id %}">Commercial step</a></aside></section>
+
+{% elif page == "consultation" %}
+<section class="page-intro"><div class="section-index">CONSULTATION / $50</div><h1>Use an hour to decide the right next move.</h1><p class="lede">A 50-minute working session for scoping, communication, research direction or AI/data architecture, followed by written next steps.</p></section>
+<section class="section intake-layout"><form method="post" class="intake-form simple-form">{% csrf_token %}<label>What do you need to decide or improve?<textarea name="question" rows="5" required></textarea></label><label>Company / project context<input name="company"></label><label>Anything we should review beforehand?<textarea name="context" rows="3"></textarea></label><label>Preferred timing<input name="preferred_time" placeholder="Day, timezone or date range"></label><label>Email<input type="email" name="email" value="{% if request.user.is_authenticated %}{{ request.user.email }}{% endif %}" required></label><button class="button button-signal" type="submit">Create consultation scope — $50</button></form><aside class="intake-aside"><div class="section-index">USE IT FOR</div><ul class="plain-list"><li>Project scoping</li><li>Website or product critique</li><li>Research direction</li><li>AI system architecture</li><li>Dataset or fine-tuning planning</li></ul></aside></section>
+
+{% elif page == "originality" %}
+<section class="page-intro"><div class="section-index">CONTENT ASSURANCE</div><h1>A report should tell you what was found, not pretend certainty it cannot prove.</h1><p class="lede">Originality review combines source overlap, structural signals, citation checks, readability and documented findings. It does not claim that an AI detector can establish authorship as fact.</p><div class="action-row"><a class="button button-signal" href="{% url 'platform:start' %}?service=content-assurance">Request a review</a><a class="text-link" href="{% url 'platform:pricing' %}">From $25 →</a></div></section>
+<section class="section two-column"><div><div class="section-index">REPORT STRUCTURE</div><h2>Evidence before labels.</h2></div><ul class="plain-list large-list"><li>Source-overlap findings</li><li>Citation consistency</li><li>Repeated language and structural issues</li><li>Readability and voice consistency</li><li>Risk flags with supporting evidence</li><li>Recommended corrections</li></ul></section>
+
+{% elif page == "enterprise" %}
+<section class="page-intro enterprise-intro"><div class="section-index">ENTERPRISE</div><h1>When the output becomes an operating capability.</h1><p class="lede">InfiniAI can move from producing the work to building the system that produces, reviews or routes it: datasets, custom models, NLP pipelines, hosted inference and embedded language operations.</p><div class="action-row"><a class="button button-signal" href="{% url 'platform:start' %}?service=ai-data-systems">Scope the system</a><a class="text-link" href="{% url 'platform:consultation' %}">Start with a $50 consultation →</a></div></section>
+<section class="section enterprise-flow"><div><span>01</span><strong>Discover</strong><p>Business problem, workflows, data, constraints and success criteria.</p></div><div><span>02</span><strong>Prepare</strong><p>Dataset design, collection, cleaning, annotation and evaluation sets.</p></div><div><span>03</span><strong>Build</strong><p>Model selection, fine-tuning, NLP pipeline or retrieval architecture.</p></div><div><span>04</span><strong>Evaluate</strong><p>Benchmarks, failure analysis, quality thresholds and acceptance criteria.</p></div><div><span>05</span><strong>Operate</strong><p>Deployment, hosting, monitoring, revisions and managed improvement.</p></div></section>
+<section class="band band-ink"><div class="band-statement">Production systems start at $10,000 because the responsibility includes data, evaluation, deployment and operational handoff—not simply model access.</div><a class="band-link" href="{% url 'platform:pricing' %}">See the commercial model →</a></section>
+
+{% elif page == "reconciliation" %}
+<section class="page-intro compact-intro"><div class="section-index">INTERNAL / LEGACY RECONCILIATION</div><h1>Historical payments map into engagement types.</h1><p class="lede">This page does not redefine the business around old transactions. It gives finance an auditable bridge from legacy descriptions and amounts into the new service taxonomy.</p></section>
+<section class="section"><div class="stats-line"><div><span>ROWS</span><b>{{ legacy_summary.rows }}</b></div><div><span>SUCCESS</span><b>{{ legacy_summary.successful }}</b></div><div><span>ABANDONED</span><b>{{ legacy_summary.abandoned }}</b></div><div><span>FAILED</span><b>{{ legacy_summary.failed }}</b></div></div><div class="reconcile-note">Successful ranges observed: {{ legacy_summary.successful_ranges }}. Currencies: {{ legacy_summary.currencies }}.</div><div class="ledger-table">{% for band in legacy_bands %}<div><strong>{{ band.band }}</strong><span>{{ band.maps_to }} · {{ band.usd }} · {{ band.kes }}</span><b>Mapped</b></div>{% endfor %}</div></section>
+{% endif %}
+</main>
+<footer class="site-footer"><div><a class="brand footer-brand" href="{% url 'platform:home' %}"><span class="brand-mark">∞</span><span>InfiniAI</span></a><p>Research, writing, communication and AI systems.</p></div><div class="footer-links"><a href="{% url 'platform:services' %}">Services</a><a href="{% url 'platform:pricing' %}">Pricing</a><a href="{% url 'platform:originality' %}">Originality</a><a href="{% url 'platform:enterprise' %}">Enterprise</a><a href="{% url 'platform:consultation' %}">Consultation</a></div><div class="footer-meta">InfiniAI · Language intelligence and professional knowledge production</div></footer>
+<script src="{% static 'js/infiniai.js' %}"></script>
+</body>
+</html>
