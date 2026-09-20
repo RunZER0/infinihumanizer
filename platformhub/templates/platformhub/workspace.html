@@ -1,20 +1,90 @@
-
 {% extends "base.html" %}
 {% block title %}Workspace — InfiniAI{% endblock %}
 {% block content %}
-<div class="page-shell"><div class="eyebrow">Client workspace</div><h1 class="h1">Your workspace.</h1><p class="lede">Your projects, invoices and reports are kept here.</p></div>
-<section class="section"><div class="shell workspace-grid">
-<div><h2 class="h3" style="margin-bottom:18px">Requests</h2><div class="list-block">{% for item in requests %}<div class="list-item"><strong>{{ item.title }}</strong><small>{{ item.reference }} · {{ item.get_status_display }} · {{ item.created_at|date:"M j, Y" }}</small><div style="margin-top:10px"><a class="btn btn-link" href="{% url 'platformhub:project_detail' item.id %}">Open project →</a></div></div>{% empty %}<div class="list-item"><strong>No projects yet.</strong><small>Start one when you are ready.</small><div style="margin-top:12px"><a class="btn btn-link" href="{% url 'platformhub:start' %}">Start work →</a></div></div>{% endfor %}</div></div>
-<div><h2 class="h3" style="margin-bottom:18px">Invoices</h2><div class="list-block">{% for invoice in invoices %}<div class="list-item"><strong>{{ invoice.number }} · {{ invoice.currency }} {{ invoice.amount_due }}</strong><small>{{ invoice.get_status_display }} · {{ invoice.description }}</small>{% if invoice.status != "paid" %}<div style="margin-top:12px"><a class="btn btn-link" href="{% url 'platformhub:checkout' %}?invoice={{ invoice.id }}">Pay invoice →</a></div>{% endif %}</div>{% empty %}<div class="list-item"><strong>No open invoices.</strong><small>Invoices will appear here.</small></div>{% endfor %}</div></div>
-</div></section>
-<section class="section"><div class="shell">
-  <div class="section-head"><div class="eyebrow">Content assurance</div><div><h2 class="h2">Checks and reports.</h2></div></div>
-  <div class="list-block">
-    {% for job in assurance_jobs %}
-    <div class="list-item"><strong>{{ job.title }}</strong><small>{{ job.reference }} · {{ job.get_status_display }} · {{ job.created_at|date:"M j, Y" }}</small><div style="margin-top:10px"><a class="btn btn-link" href="{% url 'platformhub:assurance_result' job.id %}">Open report →</a></div></div>
-    {% empty %}
-    <div class="list-item"><strong>No assurance jobs yet.</strong><small>Your checks and reports will appear here.</small><div style="margin-top:10px"><a class="btn btn-link" href="{% url 'platformhub:assurance_check' %}">Start a check →</a></div></div>
-    {% endfor %}
+<div class="page-shell workspace-head">
+  <div>
+    <div class="eyebrow">Workspace</div>
+    <h1 class="h1">Your account.</h1>
+    <p class="lede">{{ user.email }}</p>
   </div>
-</div></section>
+  <div class="workspace-actions">
+    <a class="btn btn-primary" href="{% url 'platformhub:quickpay' %}">QuickPay</a>
+    <a class="btn" href="{% url 'platformhub:start' %}">Start a project</a>
+  </div>
+</div>
+
+<section class="section">
+  <div class="shell workspace-grid">
+    <div>
+      <h2 class="h3" style="margin-bottom:18px">Projects</h2>
+      <div class="list-block">
+        {% for item in requests %}
+        <div class="list-item">
+          <strong>{{ item.title }}</strong>
+          <small>{{ item.reference }} · {{ item.get_status_display }} · {{ item.created_at|date:"M j, Y" }}</small>
+          <div style="margin-top:10px"><a class="btn btn-link" href="{% url 'platformhub:project_detail' item.id %}">Open project →</a></div>
+        </div>
+        {% empty %}
+        <div class="list-item"><strong>No projects yet.</strong><small>Start one when you have work to send us.</small></div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div>
+      <h2 class="h3" style="margin-bottom:18px">Invoices</h2>
+      <div class="list-block">
+        {% for invoice in invoices %}
+        <div class="list-item">
+          <strong>{{ invoice.number }} · {{ invoice.currency }} {{ invoice.amount_due }}</strong>
+          <small>{{ invoice.get_status_display }}{% if invoice.description %} · {{ invoice.description }}{% endif %}</small>
+          {% if invoice.status != "paid" %}
+          <div style="margin-top:12px"><a class="btn btn-link" href="{% url 'platformhub:checkout' %}?invoice={{ invoice.id }}">Pay invoice →</a></div>
+          {% endif %}
+        </div>
+        {% empty %}
+        <div class="list-item"><strong>No invoices yet.</strong></div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="shell">
+    <div class="section-head"><div class="eyebrow">Payments</div><div><h2 class="h2">Payment history.</h2></div></div>
+    <div class="payment-ledger">
+      {% for payment in payments %}
+      <div class="payment-row">
+        <div>
+          <strong>{{ payment.currency }} {{ payment.amount }}</strong>
+          <small>{{ payment.paid_at|default:payment.created_at|date:"M j, Y" }}</small>
+        </div>
+        <div>
+          <strong>{{ payment.original_description|default:payment.metadata.label|default:"Payment" }}</strong>
+          <small>{{ payment.reference }}</small>
+        </div>
+        <div>
+          <span class="status {% if payment.status == 'success' %}status-success{% else %}status-pending{% endif %}">{{ payment.get_status_display }}</span>
+          {% if payment.legacy %}<small>Imported</small>{% endif %}
+        </div>
+      </div>
+      {% empty %}
+      <div class="list-item"><strong>No payments yet.</strong></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="shell">
+    <div class="section-head"><div class="eyebrow">Content assurance</div><div><h2 class="h2">Checks and reports.</h2></div></div>
+    <div class="list-block">
+      {% for job in assurance_jobs %}
+      <div class="list-item"><strong>{{ job.title }}</strong><small>{{ job.reference }} · {{ job.get_status_display }} · {{ job.created_at|date:"M j, Y" }}</small><div style="margin-top:10px"><a class="btn btn-link" href="{% url 'platformhub:assurance_result' job.id %}">Open report →</a></div></div>
+      {% empty %}
+      <div class="list-item"><strong>No checks yet.</strong><div style="margin-top:10px"><a class="btn btn-link" href="{% url 'platformhub:assurance_check' %}">Start a check →</a></div></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
 {% endblock %}
