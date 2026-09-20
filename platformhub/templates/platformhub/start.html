@@ -4,12 +4,12 @@
 {% block content %}
 <div class="page-shell">
   <div class="eyebrow">Start</div>
-  <h1 class="h1">What kind of responsibility are you handing over?</h1>
-  <p class="lede">Choose the path that matches the state of the work now. You can change direction inside the brief.</p>
+  <h1 class="h1">What do you need?</h1>
+  <p class="lede">Pick the closest option. We can sort out the details in the brief.</p>
 </div>
 <section class="section"><div class="shell"><div class="choice-grid">
-  <a class="choice" href="{% url 'humanizer' %}"><div><span class="micro">I already have the text</span><strong>Improve it myself.</strong><p>Use text intelligence for immediate rewriting and humanization.</p></div><span>Open the tool →</span></a>
-  <a class="choice" href="{% url 'platformhub:request_service' %}"><div><span class="micro">I need an outcome</span><strong>Start a managed project.</strong><p>Research, review, writing, decks, reports, technical work, website communication or another scoped deliverable.</p></div><span>Open the brief →</span></a>
-  <a class="choice" href="{% url 'platformhub:consultation' %}"><div><span class="micro">The problem is still forming</span><strong>Scope it with us.</strong><p>Use the USD 50 consultation when the work crosses capabilities or needs a decision before production begins.</p></div><span>Book scoping →</span></a>
+  <a class="choice" href="{% url 'humanizer' %}"><div><span class="micro">I HAVE THE TEXT</span><strong>Improve it.</strong><p>Rewrite, refine or humanize it yourself.</p></div><span>Open the tool →</span></a>
+  <a class="choice" href="{% url 'platformhub:request_service' %}"><div><span class="micro">I NEED THE WORK DONE</span><strong>Start a project.</strong><p>Research, writing, review, decks, websites, technical work or AI.</p></div><span>Open the brief →</span></a>
+  <a class="choice" href="{% url 'platformhub:consultation' %}"><div><span class="micro">I'M NOT SURE YET</span><strong>Talk it through.</strong><p>Use a consultation when the project still needs definition.</p></div><span>Book a consultation →</span></a>
 </div></div></section>
 {% endblock %}
