@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 
-from platformhub.legacy_mapping import normalize_legacy_transaction
+from platformhub.legacy_mapping import legacy_amount_band, normalize_legacy_transaction
 from platformhub.models import PaymentRecord
 
 
@@ -68,6 +68,7 @@ class Command(BaseCommand):
                         "plan": row.get("Plan"),
                         "invoice": row.get("Invoice"),
                         "original_client_name": row.get("Client Name"),
+                        "commercial_band": legacy_amount_band(row),
                     },
                 }
                 _, was_created = PaymentRecord.objects.update_or_create(reference=reference, defaults=defaults)
