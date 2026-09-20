@@ -1,0 +1,10 @@
+
+{% extends "base.html" %}
+{% block title %}Workspace — InfiniAI{% endblock %}
+{% block content %}
+<div class="page-shell"><div class="eyebrow">Client workspace</div><h1 class="h1">The work, not just the transaction.</h1><p class="lede">Requests, scope, invoices and delivery status live together so every payment has a reason.</p></div>
+<section class="section"><div class="shell workspace-grid">
+<div><h2 class="h3" style="margin-bottom:18px">Requests</h2><div class="list-block">{% for item in requests %}<div class="list-item"><strong>{{ item.title }}</strong><small>{{ item.reference }} · {{ item.get_status_display }} · {{ item.created_at|date:"M j, Y" }}</small></div>{% empty %}<div class="list-item"><strong>Your first request starts here.</strong><small>Research, production, assurance, communication or AI systems.</small><div style="margin-top:12px"><a class="btn btn-link" href="{% url 'platformhub:start' %}">Start work →</a></div></div>{% endfor %}</div></div>
+<div><h2 class="h3" style="margin-bottom:18px">Invoices</h2><div class="list-block">{% for invoice in invoices %}<div class="list-item"><strong>{{ invoice.number }} · {{ invoice.currency }} {{ invoice.amount_due }}</strong><small>{{ invoice.get_status_display }} · {{ invoice.description }}</small>{% if invoice.status != "paid" %}<div style="margin-top:12px"><a class="btn btn-link" href="{% url 'platformhub:checkout' %}?invoice={{ invoice.id }}">Pay invoice →</a></div>{% endif %}</div>{% empty %}<div class="list-item"><strong>No open invoices.</strong><small>Invoices appear only after work has been scoped.</small></div>{% endfor %}</div></div>
+</div></section>
+{% endblock %}
