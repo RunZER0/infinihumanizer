@@ -5,6 +5,6 @@
 <div class="page-shell"><div class="eyebrow">Request received</div><h1 class="h1">{{ item.reference }}</h1><p class="lede">{{ item.title }}</p></div>
 <section class="section"><div class="shell form-layout">
 <div><table class="proof-table"><tr><th>Service</th><td>{{ item.metadata.service_name }}</td></tr><tr><th>Research</th><td>{{ item.get_research_depth_display }}</td></tr><tr><th>Timing</th><td>{{ item.get_turnaround_display }}</td></tr><tr><th>Estimate</th><td>USD {{ item.estimate_low|floatformat:0 }}–{{ item.estimate_high|floatformat:0 }}</td></tr><tr><th>Status</th><td><span class="status status-pending">{{ item.get_status_display }}</span></td></tr></table><p style="color:var(--text-muted);margin-top:22px">We’ll confirm the final scope before anything is billed.</p></div>
-<aside class="summary-rail"><div class="eyebrow">Need to talk first?</div><p>Book a consultation if the project still needs definition.</p><a class="btn btn-primary" href="{% url 'platformhub:consultation' %}">Book consultation</a>{% if user.is_authenticated %}<a class="btn" style="margin-top:10px" href="{% url 'platformhub:workspace' %}">Open workspace</a>{% endif %}</aside>
+<aside class="summary-rail"><div class="eyebrow">Need to talk first?</div><p>Talk to us if the project still needs definition.</p><a class="btn btn-primary" href="{% url 'platformhub:consultation' %}">Talk to us</a>{% if user.is_authenticated %}<a class="btn" style="margin-top:10px" href="{% url 'platformhub:workspace' %}">Open workspace</a>{% endif %}</aside>
 </div></section>
 {% endblock %}
