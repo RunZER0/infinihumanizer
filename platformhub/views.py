@@ -14,7 +14,7 @@ from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
 from .catalog import PACKAGES, PRICE_BANDS, SERVICE_FAMILIES, SERVICE_INDEX, estimate_request, service_by_code
-from .models import Consultation, Invoice, PaymentRecord, Quote, ServiceRequest
+from .models import AssuranceJob, Consultation, Invoice, PaymentRecord, Quote, ServiceRequest
 
 logger = logging.getLogger(__name__)
 
@@ -219,6 +219,31 @@ def quote_detail(request, quote_id):
 
 
 @login_required
+@require_http_methods(["GET", "POST"])
+def assurance_check(request):
+    if request.method == "POST":
+        title = request.POST.get("title", "").strip()
+        content_text = request.POST.get("content", "").strip()
+        if not title or len(content_text) < 40:
+            messages.error(request, "Add a title and enough text to run a meaningful check.")
+        else:
+            job = AssuranceJob.objects.create(
+                user=request.user,
+                title=title,
+                content=content_text,
+                instructions=request.POST.get("instructions", "").strip(),
+            )
+            return redirect(f"{reverse('platformhub:checkout')}?package=originality-quick&job={job.id}&email={request.user.email}")
+    return render(request, "platformhub/assurance_check.html")
+
+
+@login_required
+def assurance_result(request, job_id):
+    job = get_object_or_404(AssuranceJob, id=job_id, user=request.user)
+    return render(request, "platformhub/assurance_result.html", {"job": job})
+
+
+@login_required
 def workspace(request):
     items = ServiceRequest.objects.filter(user=request.user)
     if request.user.email:
@@ -237,6 +262,7 @@ def _checkout_context(request):
     package_slug = request.GET.get("package", "").strip()
     invoice_id = request.GET.get("invoice", "").strip()
     currency = request.GET.get("currency", "USD").upper()
+    job_id = request.GET.get("job", "").strip()
     if currency not in {"USD", "KES"}:
         currency = "USD"
 
@@ -265,6 +291,7 @@ def _checkout_context(request):
         "currency": currency,
         "email": request.GET.get("email", request.user.email if request.user.is_authenticated else ""),
         "reference_seed": package_slug,
+        "job_id": job_id,
     }
 
 
@@ -280,6 +307,7 @@ def checkout(request):
 def start_checkout(request):
     package_slug = request.POST.get("package_slug", "").strip()
     invoice_id = request.POST.get("invoice_id", "").strip()
+    job_id = request.POST.get("job_id", "").strip()
     currency = request.POST.get("currency", "USD").upper()
     email = request.POST.get("email", "").strip()
 
@@ -319,6 +347,7 @@ def start_checkout(request):
             "package_slug": package_slug,
             "invoice_id": invoice_id,
             "request_id": str(request_id) if request_id else "",
+            "job_id": job_id,
         },
     }
     headers = {"Authorization": f"Bearer {secret}", "Content-Type": "application/json"}
@@ -387,6 +416,16 @@ def verify_checkout(request):
                 project.status = "active"
                 project.save(update_fields=["status", "updated_at"])
 
+        job_id = payment.metadata.get("job_id", "")
+        if job_id:
+            try:
+                job = AssuranceJob.objects.get(id=job_id)
+                job.status = "queued"
+                job.payment_reference = payment.reference
+                job.save(update_fields=["status", "payment_reference", "updated_at"])
+            except AssuranceJob.DoesNotExist:
+                logger.warning("Assurance job missing for payment %s", payment.reference)
+
         package_slug = payment.metadata.get("package_slug", "")
         if package_slug and request.user.is_authenticated:
             try:
@@ -402,6 +441,8 @@ def verify_checkout(request):
             except Exception:
                 logger.exception("Could not apply self-service entitlement for %s", package_slug)
         messages.success(request, "Payment confirmed.")
+        if job_id and request.user.is_authenticated:
+            return redirect("platformhub:assurance_result", job_id=job_id)
         if request.user.is_authenticated:
             return redirect("platformhub:workspace")
         return redirect("platformhub:home")
