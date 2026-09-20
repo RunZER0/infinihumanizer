@@ -31,6 +31,18 @@
 </div></section>
 <section class="section"><div class="shell">
   <div class="section-head"><div class="eyebrow">Delivery</div><div><h2 class="h2">What is being produced.</h2></div></div>
-  <div class="list-block">{% for deliverable in deliverables %}<div class="list-item"><strong>{{ deliverable.title }}</strong><small>{{ deliverable.get_status_display }} · version {{ deliverable.version }}</small>{% if deliverable.external_url %}<div style="margin-top:10px"><a class="btn btn-link" href="{{ deliverable.external_url }}">Open deliverable →</a></div>{% endif %}</div>{% empty %}<div class="list-item"><strong>Deliverables appear when production starts.</strong><small>The workspace stays quiet until there is real work to show.</small></div>{% endfor %}</div>
+  <div class="list-block">
+    {% for deliverable in deliverables %}
+    <div class="list-item deliverable-review">
+      <div class="deliverable-head"><div><strong>{{ deliverable.title }}</strong><small>{{ deliverable.get_status_display }} · version {{ deliverable.version }}</small></div>{% if deliverable.external_url %}<a class="btn btn-link" href="{{ deliverable.external_url }}">Open deliverable →</a>{% endif %}</div>
+      {% if deliverable.feedback.all %}
+      <div class="feedback-log">{% for note in deliverable.feedback.all %}<div><span>{{ note.get_action_display }} · {{ note.created_at|date:"M j, Y H:i" }}</span>{% if note.message %}<p>{{ note.message }}</p>{% endif %}</div>{% endfor %}</div>
+      {% endif %}
+      {% if deliverable.status == "review" or deliverable.status == "in_progress" %}
+      <form method="post" class="review-form">{% csrf_token %}<input type="hidden" name="deliverable_id" value="{{ deliverable.id }}"><div class="field"><label for="feedback-{{ deliverable.id }}">Review note <span class="help">(required for a revision request)</span></label><textarea id="feedback-{{ deliverable.id }}" name="message" rows="3"></textarea></div><div class="review-actions"><button class="btn" type="submit" name="action" value="comment">Add comment</button><button class="btn" type="submit" name="action" value="revision">Request revision</button><button class="btn btn-primary" type="submit" name="action" value="approve">Approve</button></div></form>
+      {% endif %}
+    </div>
+    {% empty %}<div class="list-item"><strong>Deliverables appear when production starts.</strong><small>The workspace stays quiet until there is real work to show.</small></div>{% endfor %}
+  </div>
 </div></section>
 {% endblock %}
