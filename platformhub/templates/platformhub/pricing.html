@@ -34,15 +34,41 @@
     </div>
   </div>
 </section>
+<section class="section" id="retainers">
+  <div class="shell">
+    <div class="section-head"><div class="eyebrow">Recurring capacity</div><div><h2 class="h2">A monthly relationship pays for reserved responsibility.</h2><p class="lede">Retainers are appropriate when research, production and review keep recurring. They are not larger versions of a word bundle.</p></div></div>
+    <div class="retainer-ledger">
+      {% for retainer in retainers %}
+      <article class="retainer-row {% if retainer.usd == 10000 %}retainer-row-featured{% endif %}">
+        <div><span class="micro">{{ retainer.capacity }}</span><h3>{{ retainer.name }}</h3><p>{{ retainer.summary }}</p></div>
+        <strong>USD {{ retainer.usd|floatformat:0 }}<small>/month</small></strong>
+        <ul>{% for item in retainer.includes %}<li>{{ item }}</li>{% endfor %}</ul>
+        <a class="btn {% if retainer.usd == 10000 %}btn-primary{% endif %}" href="{% url 'platformhub:request_service_code' 'studio-retainer' %}">Scope this relationship</a>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
 <section class="section">
   <div class="shell">
-    <div class="section-head"><div class="eyebrow">USD 10,000 / month</div><div><h2 class="h2">The number is explainable when the responsibility is real.</h2><p class="lede">An embedded engagement reserves a multidisciplinary production function, not a bundle of arbitrary credits.</p></div></div>
+    <div class="section-head"><div class="eyebrow">Why USD 10,000 / month can be rational</div><div><h2 class="h2">The number is explainable when the responsibility is real.</h2><p class="lede">An embedded engagement reserves a multidisciplinary production function, not a bundle of arbitrary credits.</p></div></div>
     <div class="process">
       <div class="process-step"><strong>Research capacity</strong><p>Recurring market, product, technical and review research across active workstreams.</p></div>
       <div class="process-step"><strong>Production capacity</strong><p>Reports, decks, briefs, documentation and executive-ready outputs through the month.</p></div>
       <div class="process-step"><strong>Communication</strong><p>Website, product and service language reviewed as part of the same operating relationship.</p></div>
       <div class="process-step"><strong>Assurance</strong><p>Originality, source, editorial and release-readiness checks on delivered work.</p></div>
       <div class="process-step"><strong>AI systems support</strong><p>Evaluation, dataset, automation or model work can be scoped into the retainer rather than opened as unrelated purchases.</p></div>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="shell">
+    <div class="section-head"><div class="eyebrow">Commercial events</div><div><h2 class="h2">A receipt does not have to equal a published package.</h2><p class="lede">A payment can be product access, a one-time service, a deposit, a mobilisation payment, a milestone, a balance, or a monthly retainer. The invoice and project record explain which one it is.</p></div></div>
+    <div class="process">
+      <div class="process-step"><strong>Under USD 500</strong><p>Focused managed work is normally paid in full after the scope is accepted.</p></div>
+      <div class="process-step"><strong>USD 500–4,999</strong><p>A 50% project deposit starts production; the remaining value is invoiced at the agreed final milestone.</p></div>
+      <div class="process-step"><strong>USD 5,000+</strong><p>A 30% mobilisation payment starts the engagement, with the rest billed against named milestones.</p></div>
+      <div class="process-step"><strong>Monthly work</strong><p>Retainers are billed at the start of each service month because capacity is being reserved.</p></div>
     </div>
   </div>
 </section>
