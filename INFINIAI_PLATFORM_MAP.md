@@ -64,7 +64,9 @@ The consultation fee may be credited to a project commissioned within seven days
 - Scoped research / production: USD 75-250
 - Full deliverable: USD 250-750
 - Strategic engagement: USD 750-3,000+
-- Embedded partner: USD 5,000-10,000+ per month
+- Embedded Studio: USD 3,000 per month
+- Continuous Studio: USD 6,000 per month
+- Embedded Partner: USD 10,000 per month and above
 
 Directional ranges are shown before scope. Quotes are authoritative after scope.
 
@@ -76,7 +78,9 @@ Directional ranges are shown before scope. Quotes are authoritative after scope.
 - Hosting/operations: from USD 500 monthly
 - Embedded intelligence partner: from USD 10,000 monthly
 
-The USD 10,000 monthly engagement reserves multidisciplinary capacity across research, production, communication, assurance, and AI systems. It is not a token bundle.
+The USD 10,000 monthly engagement reserves up to four concurrent workstreams and multidisciplinary capacity across research, production, communication, assurance, and scoped AI systems support. It is not a token bundle.
+
+Accepted project quotes create commercial events proportionally: focused work below USD 500 is normally paid in full; USD 500–4,999 starts with a 50% deposit; USD 5,000+ starts with 30% mobilisation and subsequent named milestones; monthly retainers are billed at the start of the service month.
 
 ## Payment model
 
@@ -97,7 +101,9 @@ Every PaymentRecord stores:
 
 ## Historical ledger normalization
 
-Historical records are imported without rewriting the original description. A second normalized classification is added.
+The uploaded ledger contains 169 rows: 68 successful, 77 abandoned and 24 failed. Successful transactions span USD 1–500 and KSh 20–2,000. These historical amounts validate the need for usage payments, focused work, project payments and legacy product access, but they do not determine the current catalog.
+
+Historical records are imported without rewriting the original description. A second normalized classification is added only where the reference or memo supports it. Ambiguous quick-pay transactions stay unclassified for manual review rather than being assigned a service from amount alone.
 
 Examples:
 - originality / Turnitin checks -> Content Assurance
@@ -121,6 +127,9 @@ draft -> open -> part paid -> paid / void
 
 Deliverable states:
 planned -> in progress -> review -> approved -> delivered
+
+Client review actions:
+comment / request revision / approve. A revision request reopens production with the note attached to the deliverable; approval is recorded against the client account.
 
 Assurance states:
 awaiting payment -> queued -> reviewing -> ready
