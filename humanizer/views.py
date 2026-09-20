@@ -327,6 +327,8 @@ def is_african_ip(ip_address):
 
 @login_required
 def pricing_view(request):
+    return redirect('platform:pricing')
+    # Legacy pricing logic retained below for migration history.
     # Detect user location
     client_ip = get_client_ip(request)
     is_africa = is_african_ip(client_ip)
