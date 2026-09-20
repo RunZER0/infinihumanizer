@@ -4,58 +4,59 @@
 {% block content %}
 <section class="hero">
   <div class="hero-copy">
-    <div class="eyebrow">Research · Production · Language · AI</div>
-    <h1 class="display">Make the work hold up.</h1>
-    <p class="lede">Bring us a paragraph, a pile of source material, a website that is not saying the right thing, or an AI system that needs to exist. The engagement scales with the problem.</p>
+    <div class="eyebrow">Research · Writing · Product language · AI</div>
+    <h1 class="display">Bring us the work.<br>We’ll take it from there.</h1>
+    <p class="lede">Tell us what you need. We can research it, write it, review it, improve how it reads on a website or product, or build the system behind it.</p>
     <div class="hero-actions">
-      <a class="btn btn-primary" href="{% url 'platformhub:start' %}">Start with the work</a>
+      <a class="btn btn-primary" href="{% url 'platformhub:start' %}">Start a project</a>
       <a class="btn" href="{% url 'humanizer' %}">Use the text tool</a>
     </div>
   </div>
   <aside class="hero-proof">
-    <div class="micro">HOW PEOPLE ENTER</div>
+    <div class="micro">WHAT DO YOU NEED?</div>
     <ul class="route-list" style="margin-top:18px">
-      <li><a href="{% url 'humanizer' %}"><span class="route-index">01</span><span><span class="route-name">Improve something</span><span class="route-desc">Humanize, rewrite and refine text.</span></span><span class="arrow">↗</span></a></li>
-      <li><a href="{% url 'platformhub:service_detail' 'assurance' %}"><span class="route-index">02</span><span><span class="route-name">Check something</span><span class="route-desc">Originality, source, structure and release-readiness.</span></span><span class="arrow">↗</span></a></li>
-      <li><a href="{% url 'platformhub:service_detail' 'studio' %}"><span class="route-index">03</span><span><span class="route-name">Have something produced</span><span class="route-desc">Research, review, reports, decks and technical work.</span></span><span class="arrow">↗</span></a></li>
-      <li><a href="{% url 'platformhub:service_detail' 'communication' %}"><span class="route-index">04</span><span><span class="route-name">Improve how a product communicates</span><span class="route-desc">Website copy, UX writing, positioning and content systems.</span></span><span class="arrow">↗</span></a></li>
-      <li><a href="{% url 'platformhub:service_detail' 'systems' %}"><span class="route-index">05</span><span><span class="route-name">Build a capability</span><span class="route-desc">Datasets, fine-tuning, NLP, deployment and hosting.</span></span><span class="arrow">↗</span></a></li>
+      <li><a href="{% url 'humanizer' %}"><span class="route-index">01</span><span><span class="route-name">Improve this text</span><span class="route-desc">Rewrite, refine, simplify or change the tone.</span></span><span class="arrow">↗</span></a></li>
+      <li><a href="{% url 'platformhub:service_detail' 'assurance' %}"><span class="route-index">02</span><span><span class="route-name">Review this work</span><span class="route-desc">Check originality, sources, structure and consistency.</span></span><span class="arrow">↗</span></a></li>
+      <li><a href="{% url 'platformhub:service_detail' 'studio' %}"><span class="route-index">03</span><span><span class="route-name">Create this for me</span><span class="route-desc">Research, reports, decks, analysis and technical work.</span></span><span class="arrow">↗</span></a></li>
+      <li><a href="{% url 'platformhub:service_detail' 'communication' %}"><span class="route-index">04</span><span><span class="route-name">Fix how this communicates</span><span class="route-desc">Website copy, product language and UX writing.</span></span><span class="arrow">↗</span></a></li>
+      <li><a href="{% url 'platformhub:service_detail' 'systems' %}"><span class="route-index">05</span><span><span class="route-name">Build an AI system</span><span class="route-desc">Datasets, fine-tuning, evaluation, hosting and NLP.</span></span><span class="arrow">↗</span></a></li>
     </ul>
   </aside>
 </section>
+
 <section class="section">
   <div class="shell">
-    <div class="section-head reveal"><div class="eyebrow">The operating model</div><div><h2 class="h2">Use a tool. Hand us a project. Bring us into the system.</h2><p class="lede">A text rewrite should take minutes. A research program or fine-tuned model should not. The buying motion changes with the responsibility.</p></div></div>
-    <div class="choice-grid reveal">
-      <a class="choice" href="{% url 'humanizer' %}"><div><span class="micro">SELF-SERVE</span><strong>Work directly.</strong><p>For bounded text operations with an immediate result.</p></div><span>Humanize · refine · export →</span></a>
-      <a class="choice" href="{% url 'platformhub:start' %}"><div><span class="micro">MANAGED WORK</span><strong>Give us the outcome.</strong><p>For research, review, writing, decks, reports, technical production and communication work.</p></div><span>Scope · quote · produce · review →</span></a>
-      <a class="choice" href="{% url 'platformhub:service_detail' 'systems' %}"><div><span class="micro">ENTERPRISE</span><strong>Build the capability.</strong><p>For data, models, hosting, retained production and systems that need ongoing ownership.</p></div><span>Discover · build · deploy · operate →</span></a>
+    <div class="section-head"><div class="eyebrow">What we do</div><div><h2 class="h2">From one document to ongoing work.</h2></div></div>
+    <div class="choice-grid">
+      <a class="choice" href="{% url 'platformhub:service_detail' 'studio' %}">
+        <div><span class="micro">RESEARCH &amp; PRODUCTION</span><strong>Need something made?</strong><p>We research, review, write and package the final work.</p></div>
+        <span>See the studio →</span>
+      </a>
+      <a class="choice" href="{% url 'platformhub:service_detail' 'communication' %}">
+        <div><span class="micro">WEBSITES &amp; PRODUCTS</span><strong>Need clearer communication?</strong><p>We work on the words, structure and flow people actually see.</p></div>
+        <span>See communication work →</span>
+      </a>
+      <a class="choice" href="{% url 'platformhub:service_detail' 'systems' %}">
+        <div><span class="micro">AI &amp; DATA</span><strong>Need the capability built?</strong><p>We prepare data, tune models, evaluate them and put them into use.</p></div>
+        <span>See AI systems →</span>
+      </a>
     </div>
   </div>
 </section>
-<section class="section">
+
+<section class="section home-process">
   <div class="shell">
-    <div class="section-head reveal"><div class="eyebrow">Research &amp; production</div><div><h2 class="h2">Writing is only one stage.</h2><p class="lede">The studio can enter before the first source is found or after a draft already exists. Research, review, synthesis, production, formatting and QA are parts of one pipeline.</p></div></div>
-    <div class="process reveal">
-      <div class="process-step"><strong>Discover</strong><p>Define the question, decision, audience and constraints before collecting material.</p></div>
-      <div class="process-step"><strong>Research</strong><p>Gather the right evidence: market, competitor, technical, review, source, product or other desk research.</p></div>
-      <div class="process-step"><strong>Synthesize</strong><p>Reconcile sources, isolate what matters and turn information into a usable line of thought.</p></div>
-      <div class="process-step"><strong>Produce</strong><p>Create the report, deck, briefing, proposal, documentation, analysis or other deliverable.</p></div>
-      <div class="process-step"><strong>Assure</strong><p>Check originality, source integrity, structure, formatting, consistency and release-readiness.</p></div>
+    <div class="section-head"><div class="eyebrow">How it works</div><div><h2 class="h2">You tell us the outcome. We work out the rest with you.</h2></div></div>
+    <div class="process">
+      <div class="process-step"><strong>Brief</strong><p>Tell us what you need, who it is for and what you already have.</p></div>
+      <div class="process-step"><strong>Scope</strong><p>We agree on the work, timing and price before production starts.</p></div>
+      <div class="process-step"><strong>Work</strong><p>Research, writing, review and revisions happen in one project.</p></div>
+      <div class="process-step"><strong>Deliver</strong><p>You receive the finished work and any agreed files, notes or follow-up.</p></div>
     </div>
   </div>
 </section>
-<section class="section">
-  <div class="shell">
-    <div class="section-head reveal"><div class="eyebrow">Pricing logic</div><div><h2 class="h2">Price follows responsibility.</h2><p class="lede">Self-service usage is fixed. Managed work is scoped. Enterprise work reserves capacity. That is why a $2 check and a $10,000 monthly relationship can belong to the same company without pretending they are the same product.</p></div></div>
-    <div class="price-bands reveal">
-      {% for band in price_bands %}
-      <div class="price-band"><strong>{{ band.label }}</strong><span class="range">{{ band.range }}</span><p>{{ band.examples }}</p><p>{{ band.logic }}</p></div>
-      {% endfor %}
-    </div>
-  </div>
-</section>
+
 <section class="shell" style="padding:var(--space-section) 24px">
-  <div class="callout reveal"><div><div class="eyebrow" style="color:#e46b5d">Start from the need</div><h2 class="h2" style="margin-top:14px">Tell us what has to exist when the work is finished.</h2><p>The request flow captures objective, audience, research depth, deliverable and urgency before a project price is attached.</p></div><a class="btn btn-primary" href="{% url 'platformhub:start' %}">Scope the work</a></div>
+  <div class="callout"><div><div class="eyebrow" style="color:#e46b5d">Have something in mind?</div><h2 class="h2" style="margin-top:14px">Tell us what you need.</h2></div><a class="btn btn-primary" href="{% url 'platformhub:start' %}">Start a project</a></div>
 </section>
 {% endblock %}
