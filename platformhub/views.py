@@ -30,6 +30,7 @@ def home(request):
     return render(request, "platformhub/home.html", {
         "families": SERVICE_FAMILIES,
         "price_bands": PRICE_BANDS,
+        "latest_notes": ARTICLES[:3],
     })
 
 
