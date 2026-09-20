@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -166,10 +167,10 @@ def consultation(request):
 def workspace(request):
     items = ServiceRequest.objects.filter(user=request.user)
     if request.user.email:
-        items = ServiceRequest.objects.filter(models.Q(user=request.user) | models.Q(email__iexact=request.user.email)).distinct()
+        items = ServiceRequest.objects.filter(Q(user=request.user) | Q(email__iexact=request.user.email)).distinct()
     invoices = Invoice.objects.filter(user=request.user)
     if request.user.email:
-        invoices = Invoice.objects.filter(models.Q(user=request.user) | models.Q(email__iexact=request.user.email)).distinct()
+        invoices = Invoice.objects.filter(Q(user=request.user) | Q(email__iexact=request.user.email)).distinct()
 
     return render(request, "platformhub/workspace.html", {
         "requests": items[:20],
@@ -287,7 +288,7 @@ def start_checkout(request):
         currency=currency,
         status="pending",
         email=email,
-        normalized_service_code=package_slug if package_slug else "",
+        normalized_service_code=(PACKAGES.get(package_slug) or {}).get("service_code", "") if package_slug else "",
         metadata=payload["metadata"],
     )
     return JsonResponse({"authorization_url": data["data"]["authorization_url"]})
