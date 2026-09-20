@@ -3,7 +3,7 @@
 {% block content %}
 <div class="page-shell">
   <div class="eyebrow">Pricing</div>
-  <h1 class="h1">Tools are fixed. Serious work is scoped.</h1>
+  <h1 class="h1">We publish fixed prices for tools and quote project work after we understand the scope.</h1>
 </div>
 
 <section class="section">
@@ -26,7 +26,7 @@
 
 <section class="section">
   <div class="shell">
-    <div class="section-head"><div class="eyebrow">Projects</div><div><h2 class="h2">A range first. A quote when the brief is clear.</h2></div></div>
+    <div class="section-head"><div class="eyebrow">Projects</div><div><h2 class="h2">Project prices depend on the work involved.</h2></div></div>
     <div class="price-bands">
       {% for band in price_bands %}
       <div class="price-band"><strong>{{ band.label }}</strong><span class="range">{{ band.range }}</span><p>{{ band.examples }}</p><p>{{ band.logic }}</p></div>
@@ -37,7 +37,7 @@
 
 <section class="section" id="retainers">
   <div class="shell">
-    <div class="section-head"><div class="eyebrow">Monthly</div><div><h2 class="h2">For teams that need us regularly.</h2></div></div>
+    <div class="section-head"><div class="eyebrow">Monthly</div><div><h2 class="h2">For teams that need ongoing help.</h2></div></div>
     <div class="retainer-ledger">
       {% for retainer in retainers %}
       <article class="retainer-row {% if retainer.usd == 10000 %}retainer-row-featured{% endif %}">
@@ -52,6 +52,6 @@
 </section>
 
 <section class="shell closing-shell">
-  <div class="callout"><div><div class="eyebrow" style="color:#e46b5d">Need a quote?</div><h2 class="h2" style="margin-top:14px">Send the brief.</h2></div><a class="btn btn-primary" href="{% url 'platformhub:start' %}">Start a project</a></div>
+  <div class="callout"><div><div class="eyebrow" style="color:#e46b5d">Need a quote?</div><h2 class="h2" style="margin-top:14px">Send us the brief.</h2></div><a class="btn btn-primary" href="{% url 'platformhub:start' %}">Start a project</a></div>
 </section>
 {% endblock %}
