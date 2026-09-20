@@ -29,6 +29,22 @@ def home(request):
     })
 
 
+def about(request):
+    return render(request, "platformhub/about.html")
+
+
+def privacy(request):
+    return render(request, "platformhub/privacy.html")
+
+
+def terms(request):
+    return render(request, "platformhub/terms.html")
+
+
+def disclaimer(request):
+    return render(request, "platformhub/disclaimer.html")
+
+
 def services(request):
     return render(request, "platformhub/services.html", {"families": SERVICE_FAMILIES})
 
