@@ -430,3 +430,10 @@ a{color:inherit}button,input,textarea,select{font:inherit}:focus-visible{outline
 @media(prefers-reduced-motion:reduce){
   .hero-story-slot:after,.hero-story-answer:after,.story-glyph,.hero-story-slot.is-changing{animation:none!important}
 }
+
+/* Service pricing disclosure */
+.service-price{align-self:start;font-size:.82rem;color:var(--text-muted)}
+.service-price summary{cursor:pointer;list-style:none;text-decoration:underline;text-underline-offset:4px;font-weight:700}
+.service-price summary::-webkit-details-marker{display:none}
+.service-price[open] span{display:block;margin-top:7px;font:700 .78rem ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--text-primary)}
+.retainer-row-featured{box-shadow:none!important;border-left:0!important}
