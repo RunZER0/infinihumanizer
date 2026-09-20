@@ -8,7 +8,7 @@
   <div class="section-head"><div class="eyebrow">Report</div><div><h2 class="h2">Review complete.</h2>{% if job.originality_score != None %}<p class="lede">Originality indicator: {{ job.originality_score }}%</p>{% endif %}</div></div>
   <div class="list-block"><div class="list-item"><strong>Summary</strong><p>{{ job.result_summary|linebreaksbr }}</p></div><div class="list-item"><strong>Detailed findings</strong><p>{{ job.result_report|linebreaksbr }}</p></div></div>
 {% else %}
-  <div class="callout"><div><div class="eyebrow" style="color:#e46b5d">In the queue</div><h2 class="h2" style="margin-top:14px">The report is not ready yet.</h2><p>Payment confirmation moves the check into review. This page keeps the reference and will show the findings once they are released.</p></div><a class="btn" href="{% url 'platformhub:workspace' %}">Open workspace</a></div>
+  <div class="callout"><div><div class="eyebrow" style="color:#e46b5d">In the queue</div><h2 class="h2" style="margin-top:14px">The review is in progress.</h2><p>The findings will appear here when the report is ready.</p></div><a class="btn" href="{% url 'platformhub:workspace' %}">Open workspace</a></div>
 {% endif %}
 </div></section>
 {% endblock %}
