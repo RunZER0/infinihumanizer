@@ -1,14 +1,13 @@
-
 {% extends "base.html" %}
 {% block title %}Services — InfiniAI{% endblock %}
 {% block content %}
 <div class="page-shell">
   <div class="eyebrow">Services</div>
-  <h1 class="h1">What we do.</h1>
-  <p class="lede">Use a tool, send us a project, or bring us in for ongoing work.</p>
+  <h1 class="h1">Better language, wherever it shows up.</h1>
+  <p class="lede">A paragraph. A report. A website. A product. A model. The standard is the same: clear, specific, useful language.</p>
 </div>
 {% for slug,family in families.items %}
-<section class="section">
+<section class="section service-family">
   <div class="shell">
     <div class="section-head">
       <div><div class="eyebrow">{{ family.kicker }}</div><div class="micro" style="margin-top:10px">0{{ forloop.counter }}</div></div>
@@ -24,7 +23,7 @@
       </div>
       {% endfor %}
     </div>
-    <div style="margin-top:26px"><a class="btn" href="{% url 'platformhub:service_detail' slug %}">Learn more</a></div>
+    <div style="margin-top:26px"><a class="btn" href="{% url 'platformhub:service_detail' slug %}">See this service</a></div>
   </div>
 </section>
 {% endfor %}
