@@ -369,9 +369,8 @@ def pricing_view(request):
     })
 
 
-@login_required
 def about_view(request):
-    return render(request, "about.html")
+    return redirect("platformhub:about")
 
 
 @login_required
