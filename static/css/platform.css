@@ -624,3 +624,18 @@ a.partner-logo:hover{opacity:1;transform:translateY(-2px)}
 .partner-valdace img:not([src]) + .partner-valdace-fallback{
   display:inline;
 }
+
+/* ValdaceAI wordmark needs more visual width than the compact partner marks. */
+.partner-valdace img{
+  max-width:220px!important;
+  max-height:48px!important;
+  width:auto!important;
+  height:auto!important;
+  transform:scale(1.08);
+  transform-origin:center;
+}
+.partner-valdace{min-width:190px}
+@media(max-width:760px){
+  .partner-valdace img{max-width:185px!important;max-height:44px!important}
+  .partner-valdace{min-width:165px}
+}
