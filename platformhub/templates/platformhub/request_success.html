@@ -1,0 +1,10 @@
+
+{% extends "base.html" %}
+{% block title %}Request {{ item.reference }} — InfiniAI{% endblock %}
+{% block content %}
+<div class="page-shell"><div class="eyebrow">Request created</div><h1 class="h1">{{ item.reference }}</h1><p class="lede">{{ item.title }}</p></div>
+<section class="section"><div class="shell form-layout">
+<div><table class="proof-table"><tr><th>Service</th><td>{{ item.metadata.service_name }}</td></tr><tr><th>Research depth</th><td>{{ item.get_research_depth_display }}</td></tr><tr><th>Turnaround</th><td>{{ item.get_turnaround_display }}</td></tr><tr><th>Directional range</th><td>USD {{ item.estimate_low|floatformat:0 }}–{{ item.estimate_high|floatformat:0 }}</td></tr><tr><th>Status</th><td><span class="status status-pending">{{ item.get_status_display }}</span></td></tr></table><p style="color:var(--text-muted);margin-top:22px">The range is not an invoice. It gives a rough scope signal while the actual work is reviewed.</p></div>
+<aside class="summary-rail"><div class="eyebrow">If the scope is complex</div><p>Use a focused consultation to settle the approach before the quote. The USD 50 fee can be credited to a project commissioned within seven days.</p><a class="btn btn-primary" href="{% url 'platformhub:consultation' %}">Book consultation</a>{% if user.is_authenticated %}<a class="btn" style="margin-top:10px" href="{% url 'platformhub:workspace' %}">Open workspace</a>{% endif %}</aside>
+</div></section>
+{% endblock %}
