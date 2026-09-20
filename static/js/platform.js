@@ -28,7 +28,10 @@ document.addEventListener("DOMContentLoaded", function () {
     ".summary-rail > *",
     ".list-item",
     ".callout > *",
-    ".footer-grid > *"
+    ".footer-grid > *",
+    ".about-grid > *",
+    ".about-services > *",
+    ".legal-copy > *"
   ];
 
   const motionItems = [];
