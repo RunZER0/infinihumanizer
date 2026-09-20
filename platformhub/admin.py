@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     Organization, ServiceRequest, Consultation, Quote, QuoteItem,
-    Invoice, PaymentRecord, Deliverable, AssuranceJob,
+    Invoice, PaymentRecord, Deliverable, DeliverableFeedback, AssuranceJob,
 )
 
 
@@ -42,5 +42,6 @@ class PaymentRecordAdmin(admin.ModelAdmin):
 admin.site.register(Organization)
 admin.site.register(Consultation)
 admin.site.register(Deliverable)
+admin.site.register(DeliverableFeedback)
 
 admin.site.register(AssuranceJob)
