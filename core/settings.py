@@ -34,6 +34,7 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 OFFLINE_MODE = os.getenv("OFFLINE_MODE", "False") == "True"
 ALLOWED_HOSTS = [
     'infinihumanizer.onrender.com',
+    '.onrender.com',
     'infiniaihumanizer.live',
     'www.infiniaihumanizer.live',
     '127.0.0.1',
@@ -240,6 +241,7 @@ if socket.gethostname() == 'localhost' or DEBUG or OFFLINE_MODE:
 # CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = [
     'https://infinihumanizer.onrender.com',
+    'https://*.onrender.com',
     'https://infiniaihumanizer.live',
     'https://www.infiniaihumanizer.live',
     'http://localhost:8000',
