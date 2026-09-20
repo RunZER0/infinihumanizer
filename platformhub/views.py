@@ -16,7 +16,7 @@ from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
 from .catalog import PACKAGES, PRICE_BANDS, RETAINERS, SERVICE_FAMILIES, SERVICE_INDEX, commercial_terms, estimate_request, service_by_code
-from .models import AssuranceJob, Consultation, Invoice, PaymentRecord, Quote, ServiceRequest
+from .models import AssuranceJob, Consultation, Deliverable, DeliverableFeedback, Invoice, PaymentRecord, Quote, ServiceRequest
 from .legacy_summary import LEGACY_LEDGER_SUMMARY, LEGACY_RECONCILIATION_BANDS
 
 logger = logging.getLogger(__name__)
@@ -182,15 +182,52 @@ def _can_view_request(request, item):
 
 
 @login_required
+@require_http_methods(["GET", "POST"])
 def project_detail(request, request_id):
     item = get_object_or_404(ServiceRequest, id=request_id)
     if not _can_view_request(request, item):
         return redirect("platformhub:workspace")
+
+    if request.method == "POST":
+        deliverable_id = request.POST.get("deliverable_id", "").strip()
+        action = request.POST.get("action", "").strip()
+        message = request.POST.get("message", "").strip()
+        if action not in {"comment", "approve", "revision"}:
+            messages.error(request, "Choose a valid review action.")
+        else:
+            deliverable = get_object_or_404(Deliverable, id=deliverable_id, request=item)
+            if action == "revision" and not message:
+                messages.error(request, "Describe what needs to change so the revision request is actionable.")
+            else:
+                DeliverableFeedback.objects.create(
+                    deliverable=deliverable,
+                    user=request.user,
+                    action=action,
+                    message=message,
+                )
+                if action == "approve":
+                    deliverable.status = "approved"
+                    deliverable.save(update_fields=["status", "updated_at"])
+                    remaining = item.deliverables.exclude(id=deliverable.id).exclude(status__in=["approved", "delivered"]).exists()
+                    if not remaining:
+                        item.status = "delivered"
+                        item.save(update_fields=["status", "updated_at"])
+                    messages.success(request, "Deliverable approved.")
+                elif action == "revision":
+                    deliverable.status = "in_progress"
+                    deliverable.save(update_fields=["status", "updated_at"])
+                    item.status = "active"
+                    item.save(update_fields=["status", "updated_at"])
+                    messages.info(request, "Revision request recorded and the deliverable is back in production.")
+                else:
+                    messages.success(request, "Comment added to the deliverable.")
+        return redirect("platformhub:project_detail", request_id=item.id)
+
     return render(request, "platformhub/project_detail.html", {
         "item": item,
         "quotes": item.quotes.exclude(status="draft").order_by("-created_at"),
         "invoices": item.invoices.all().order_by("-created_at"),
-        "deliverables": item.deliverables.all().order_by("-updated_at"),
+        "deliverables": item.deliverables.prefetch_related("feedback").all().order_by("-updated_at"),
     })
 
 
