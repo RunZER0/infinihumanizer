@@ -146,6 +146,9 @@ def request_service(request, service_code=None):
         "families": SERVICE_FAMILIES,
         "service_index": SERVICE_INDEX,
         "selected": selected,
+        "selected_code": selected["code"] if selected else "",
+        "initial_name": request.user.get_full_name() if request.user.is_authenticated else "",
+        "initial_email": request.user.email if request.user.is_authenticated else "",
         "values": {},
     })
 
@@ -180,17 +183,13 @@ def consultation(request):
             )
             request.session["consultation_reference"] = item.reference
             request.session["consultation_id"] = str(item.id)
-            return redirect(f"{reverse('platformhub:checkout')}?package=consultation&consultation={item.id}&email={email}")
+            messages.success(request, "Thanks. We have your note and will follow up by email.")
+            return redirect("platformhub:consultation")
 
-    recent_consultation = None
     consultation_id = request.session.get("consultation_id")
-    if consultation_id:
-        recent_consultation = Consultation.objects.filter(id=consultation_id).first()
-    consultation_paid = bool(recent_consultation and recent_consultation.payments.filter(status="success").exists())
+    recent_consultation = Consultation.objects.filter(id=consultation_id).first() if consultation_id else None
     return render(request, "platformhub/consultation.html", {
-        "package": PACKAGES["consultation"],
         "recent_consultation": recent_consultation,
-        "consultation_paid": consultation_paid,
     })
 
 
