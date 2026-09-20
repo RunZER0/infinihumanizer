@@ -31,7 +31,10 @@ document.addEventListener("DOMContentLoaded", function () {
     ".footer-grid > *",
     ".about-grid > *",
     ".about-services > *",
-    ".legal-copy > *"
+    ".legal-copy > *",
+    ".humanizer-intro > *",
+    ".editor-card",
+    ".humanizer-notes > *"
   ];
 
   const motionItems = [];
