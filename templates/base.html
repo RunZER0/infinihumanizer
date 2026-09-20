@@ -1,121 +1,78 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}InfiniHumanizer - AI to Human Text Transformation{% endblock %}</title>
-    
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    
-    <!-- Favicons -->
-    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon-16x16.png' %}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon-32x32.png' %}">
-    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'android-chrome-192x192.png' %}">
-    <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}">
-    <link rel="manifest" href="{% static 'site.webmanifest' %}">
-    
-    <!-- Meta Tags -->
-    <meta name="description" content="Transform AI-generated text into natural, human-sounding content with InfiniHumanizer.">
-    <meta name="keywords" content="AI humanizer, text transformation, AI to human, content humanization">
-    
-    {% block extra_head %}{% endblock %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}InfiniAI — Research, writing and AI systems{% endblock %}</title>
+  <meta name="description" content="{% block description %}Research, production, content assurance, communication design and AI systems for people and organizations that need the work to hold up.{% endblock %}">
+  <link rel="icon" href="{% static 'favicon.ico' %}">
+  <link rel="stylesheet" href="{% static 'css/platform.css' %}">
+  {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <!-- Messages -->
-    {% if messages %}
-    <div class="messages">
-        {% for message in messages %}
-        <div class="message {{ message.tags }}">
-            {{ message }}
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-
-    <!-- Navigation - HIDDEN (using sidebar instead) -->
-    {% if user.is_authenticated %}
-    <nav style="display: none;">
-        <div class="nav-container">
-            <a href="{% url 'humanizer' %}" class="logo">InfiniHumanizer</a>
-            <button class="hamburger" id="hamburger" aria-label="Toggle menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <ul class="nav-menu" id="navMenu">
-                <li><a href="{% url 'humanizer' %}" {% if request.path == '/humanizer/' %}class="active"{% endif %}>🤖 Humanizer</a></li>
-                <li><a href="{% url 'pricing' %}" {% if request.path == '/pricing/' %}class="active"{% endif %}>💎 Pricing</a></li>
-                <li><a href="{% url 'about' %}" {% if request.path == '/about/' %}class="active"{% endif %}>ℹ️ About</a></li>
-                <li><a href="{% url 'contact' %}" {% if request.path == '/contact/' %}class="active"{% endif %}>📧 Contact</a></li>
-                <li><a href="{% url 'settings' %}" {% if request.path == '/settings/' %}class="active"{% endif %}>⚙️ Settings</a></li>
-                <li><a href="{% url 'account_logout' %}">🚪 Logout</a></li>
-            </ul>
-        </div>
+<a class="skip-link" href="#main">Skip to content</a>
+{% if messages %}
+<div class="messages" aria-live="polite">
+  {% for message in messages %}
+  <div class="message {{ message.tags }}" data-dismiss-message>{{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+<header class="site-header">
+  <div class="nav-wrap">
+    <a class="brand" href="{% url 'platformhub:home' %}" aria-label="InfiniAI home">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>InfiniAI</span>
+      <small>Knowledge production</small>
+    </a>
+    <nav class="site-nav" data-nav aria-label="Primary navigation">
+      <a href="{% url 'platformhub:services' %}">Services</a>
+      <a href="{% url 'humanizer' %}">Text tool</a>
+      <a href="{% url 'platformhub:pricing' %}">Pricing</a>
+      <a href="{% url 'platformhub:consultation' %}">Consultation</a>
+      {% if user.is_authenticated %}<a href="{% url 'platformhub:workspace' %}">Workspace</a>{% endif %}
     </nav>
-    {% endif %}
-
-    <!-- Main Content -->
-    <main>
-        {% block content %}{% endblock %}
-    </main>
-
-    <!-- Footer -->
-    <footer style="text-align: center; padding: 2rem; color: var(--text-gray); border-top: 1px solid rgba(0, 212, 255, 0.1); margin-top: 4rem;">
-        <p>&copy; 2025 InfiniHumanizer. All rights reserved.</p>
-        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Powered by AI • Made with 💙</p>
-    </footer>
-
-    <!-- Scripts -->
-    <script>
-        // Hamburger menu toggle
-        document.addEventListener('DOMContentLoaded', function() {
-            const hamburger = document.getElementById('hamburger');
-            const navMenu = document.getElementById('navMenu');
-            
-            if (hamburger && navMenu) {
-                hamburger.addEventListener('click', function() {
-                    hamburger.classList.toggle('active');
-                    navMenu.classList.toggle('active');
-                });
-                
-                // Close menu when clicking a link
-                const navLinks = navMenu.querySelectorAll('a');
-                navLinks.forEach(link => {
-                    link.addEventListener('click', function() {
-                        hamburger.classList.remove('active');
-                        navMenu.classList.remove('active');
-                    });
-                });
-            }
-            
-            // Auto-hide messages after 5 seconds
-            const messages = document.querySelectorAll('.message');
-            messages.forEach(function(message) {
-                setTimeout(function() {
-                    message.style.animation = 'slideOut 0.3s ease';
-                    setTimeout(function() {
-                        message.remove();
-                    }, 300);
-                }, 5000);
-            });
-        });
-
-        // Add slideOut animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideOut {
-                to {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    </script>
-    
-    {% block extra_scripts %}{% endblock %}
+    <div class="nav-actions">
+      {% if user.is_authenticated %}
+      <a class="btn btn-quiet" href="{% url 'account_logout' %}">Sign out</a>
+      {% else %}
+      <a class="btn btn-quiet" href="{% url 'account_login' %}">Sign in</a>
+      {% endif %}
+      <a class="btn btn-primary" href="{% url 'platformhub:start' %}">Start work</a>
+      <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-label="Open navigation">Menu</button>
+    </div>
+  </div>
+</header>
+<main id="main">{% block content %}{% endblock %}</main>
+<footer class="site-footer">
+  <div class="shell footer-grid">
+    <div>
+      <div class="eyebrow" style="color:#e46b5d">InfiniAI</div>
+      <h2 style="font-size:2rem;letter-spacing:-.04em;margin:12px 0 10px">Work that survives scrutiny.</h2>
+      <p style="color:#bbb7ae;max-width:520px">Research, production, content assurance, communication design and AI systems under one operating model.</p>
+    </div>
+    <div>
+      <strong>Work</strong>
+      <ul>
+        <li><a href="{% url 'platformhub:service_detail' 'studio' %}">Research &amp; production</a></li>
+        <li><a href="{% url 'platformhub:service_detail' 'assurance' %}">Content assurance</a></li>
+        <li><a href="{% url 'platformhub:service_detail' 'communication' %}">Communication &amp; experience</a></li>
+        <li><a href="{% url 'platformhub:service_detail' 'systems' %}">AI &amp; data systems</a></li>
+      </ul>
+    </div>
+    <div>
+      <strong>Start</strong>
+      <ul>
+        <li><a href="{% url 'humanizer' %}">Use the text tool</a></li>
+        <li><a href="{% url 'platformhub:start' %}">Start a project</a></li>
+        <li><a href="{% url 'platformhub:consultation' %}">Book a consultation</a></li>
+        <li><a href="{% url 'platformhub:pricing' %}">See pricing logic</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+<script src="{% static 'js/platform.js' %}" defer></script>
+{% block extra_scripts %}{% endblock %}
 </body>
 </html>
