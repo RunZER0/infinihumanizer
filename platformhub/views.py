@@ -6,6 +6,7 @@ import requests
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.http import JsonResponse
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
@@ -15,6 +16,7 @@ from django.views.decorators.http import require_http_methods
 
 from .catalog import PACKAGES, PRICE_BANDS, RETAINERS, SERVICE_FAMILIES, SERVICE_INDEX, commercial_terms, estimate_request, service_by_code
 from .models import AssuranceJob, Consultation, Invoice, PaymentRecord, Quote, ServiceRequest
+from .legacy_summary import LEGACY_LEDGER_SUMMARY, LEGACY_RECONCILIATION_BANDS
 
 logger = logging.getLogger(__name__)
 
@@ -463,6 +465,14 @@ def verify_checkout(request):
     payment.save(update_fields=["status"])
     messages.error(request, "Payment was not completed.")
     return redirect("platformhub:pricing")
+
+
+@staff_member_required
+def reconciliation(request):
+    return render(request, "platformhub/reconciliation.html", {
+        "summary": LEGACY_LEDGER_SUMMARY,
+        "bands": LEGACY_RECONCILIATION_BANDS,
+    })
 
 
 def health(request):
