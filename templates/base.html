@@ -4,8 +4,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>{% block title %}InfiniAI — Research, writing and AI systems{% endblock %}</title>
-  <meta name="description" content="{% block description %}Research, writing, content review, website and product language, and custom AI systems.{% endblock %}">
+  <title>{% block title %}InfiniAI — Language, research and AI systems{% endblock %}</title>
+  <meta name="description" content="{% block description %}Clearer writing, sharper research, better product language and custom AI systems.{% endblock %}">
   <link rel="icon" href="{% static 'favicon.ico' %}">
   <link rel="stylesheet" href="{% static 'css/platform.css' %}">
   {% block extra_head %}{% endblock %}
@@ -24,7 +24,7 @@
     <a class="brand" href="{% url 'platformhub:home' %}" aria-label="InfiniAI home">
       <span class="brand-mark" aria-hidden="true"></span>
       <span>InfiniAI</span>
-      <small>Research · Writing · AI</small>
+      <small>Language · Research · AI</small>
     </a>
     <nav class="site-nav" data-nav aria-label="Primary navigation">
       <a href="{% url 'platformhub:services' %}">Services</a>
@@ -49,15 +49,15 @@
   <div class="shell footer-grid">
     <div>
       <div class="eyebrow" style="color:#e46b5d">InfiniAI</div>
-      <h2 style="font-size:2rem;letter-spacing:-.04em;margin:12px 0 10px">Bring us the work.</h2>
-      <p style="color:#bbb7ae;max-width:520px">Research, writing, websites, product language and AI systems.</p>
+      <h2 style="font-size:2rem;letter-spacing:-.04em;margin:12px 0 10px">Language people remember.</h2>
+      <p style="color:#bbb7ae;max-width:520px">Writing, research, websites, product language and AI systems that do not sound generic.</p>
     </div>
     <div>
       <strong>Work</strong>
       <ul>
         <li><a href="{% url 'platformhub:service_detail' 'studio' %}">Research &amp; production</a></li>
         <li><a href="{% url 'platformhub:service_detail' 'assurance' %}">Content assurance</a></li>
-        <li><a href="{% url 'platformhub:service_detail' 'communication' %}">Communication &amp; experience</a></li>
+        <li><a href="{% url 'platformhub:service_detail' 'communication' %}">Website &amp; product language</a></li>
         <li><a href="{% url 'platformhub:service_detail' 'systems' %}">AI &amp; data systems</a></li>
       </ul>
     </div>
