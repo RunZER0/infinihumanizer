@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import JsonResponse
+from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -159,10 +160,16 @@ def consultation(request):
                 topic=topic,
             )
             request.session["consultation_reference"] = item.reference
-            return redirect(f"{reverse('platformhub:checkout')}?package=consultation&email={email}")
+            request.session["consultation_id"] = str(item.id)
+            return redirect(f"{reverse('platformhub:checkout')}?package=consultation&consultation={item.id}&email={email}")
 
+    recent_consultation = None
+    consultation_id = request.session.get("consultation_id")
+    if consultation_id:
+        recent_consultation = Consultation.objects.filter(id=consultation_id).first()
     return render(request, "platformhub/consultation.html", {
         "package": PACKAGES["consultation"],
+        "recent_consultation": recent_consultation,
     })
 
 
@@ -272,11 +279,16 @@ def _checkout_context(request):
     invoice_id = request.GET.get("invoice", "").strip()
     currency = request.GET.get("currency", "USD").upper()
     job_id = request.GET.get("job", "").strip()
+    consultation_id = request.GET.get("consultation", "").strip()
     if currency not in {"USD", "KES"}:
         currency = "USD"
 
     if invoice_id:
         invoice = get_object_or_404(Invoice, id=invoice_id)
+        if not request.user.is_authenticated:
+            raise PermissionDenied("Sign in to pay this invoice.")
+        if invoice.user_id and invoice.user_id != request.user.id and (not request.user.email or invoice.email.lower() != request.user.email.lower()):
+            raise PermissionDenied("This invoice is not attached to your account.")
         return {
             "kind": "invoice",
             "invoice": invoice,
@@ -301,6 +313,7 @@ def _checkout_context(request):
         "email": request.GET.get("email", request.user.email if request.user.is_authenticated else ""),
         "reference_seed": package_slug,
         "job_id": job_id,
+        "consultation_id": consultation_id,
     }
 
 
@@ -308,6 +321,9 @@ def checkout(request):
     context = _checkout_context(request)
     if not context:
         return redirect("platformhub:pricing")
+    if context.get("kind") == "package" and context.get("package_slug", "").startswith("humanizer-") and not request.user.is_authenticated:
+        login_url = reverse("account_login")
+        return redirect(f"{login_url}?next={request.get_full_path()}")
     context["payments_configured"] = bool(getattr(settings, "PAYSTACK_SECRET_KEY", None))
     return render(request, "platformhub/checkout.html", context)
 
@@ -317,11 +333,16 @@ def start_checkout(request):
     package_slug = request.POST.get("package_slug", "").strip()
     invoice_id = request.POST.get("invoice_id", "").strip()
     job_id = request.POST.get("job_id", "").strip()
+    consultation_id = request.POST.get("consultation_id", "").strip()
     currency = request.POST.get("currency", "USD").upper()
     email = request.POST.get("email", "").strip()
 
     if invoice_id:
         invoice = get_object_or_404(Invoice, id=invoice_id)
+        if not request.user.is_authenticated:
+            return JsonResponse({"error": "Sign in to pay this invoice."}, status=403)
+        if invoice.user_id and invoice.user_id != request.user.id and (not request.user.email or invoice.email.lower() != request.user.email.lower()):
+            return JsonResponse({"error": "This invoice is not attached to your account."}, status=403)
         amount = invoice.amount_due - invoice.amount_paid
         currency = invoice.currency
         label = invoice.description or invoice.number
@@ -361,6 +382,7 @@ def start_checkout(request):
             "invoice_id": invoice_id,
             "request_id": str(request_id) if request_id else "",
             "job_id": job_id,
+            "consultation_id": consultation_id,
         },
     }
     headers = {"Authorization": f"Bearer {secret}", "Content-Type": "application/json"}
@@ -375,9 +397,23 @@ def start_checkout(request):
     if not data.get("status"):
         return JsonResponse({"error": data.get("message", "Payment initialization failed.")}, status=400)
 
+    assurance_job = None
+    if job_id:
+        assurance_job = AssuranceJob.objects.filter(id=job_id).first()
+        if not assurance_job or not request.user.is_authenticated or assurance_job.user_id != request.user.id:
+            return JsonResponse({"error": "This assurance job is not attached to your account."}, status=403)
+
+    consultation = None
+    if consultation_id:
+        consultation = Consultation.objects.filter(id=consultation_id, email__iexact=email).first()
+        if not consultation:
+            return JsonResponse({"error": "This consultation could not be matched to the checkout."}, status=403)
+
     PaymentRecord.objects.create(
         invoice_id=invoice_id or None,
         request_id=request_id,
+        consultation=consultation,
+        assurance_job=assurance_job,
         user=request.user if request.user.is_authenticated else None,
         reference=reference,
         source_type="checkout",
@@ -431,14 +467,11 @@ def verify_checkout(request):
                 project.save(update_fields=["status", "updated_at"])
 
         job_id = payment.metadata.get("job_id", "")
-        if job_id:
-            try:
-                job = AssuranceJob.objects.get(id=job_id)
-                job.status = "queued"
-                job.payment_reference = payment.reference
-                job.save(update_fields=["status", "payment_reference", "updated_at"])
-            except AssuranceJob.DoesNotExist:
-                logger.warning("Assurance job missing for payment %s", payment.reference)
+        if payment.assurance_job_id:
+            job = payment.assurance_job
+            job.status = "queued"
+            job.payment_reference = payment.reference
+            job.save(update_fields=["status", "payment_reference", "updated_at"])
 
         package_slug = payment.metadata.get("package_slug", "")
         if package_slug and request.user.is_authenticated:
@@ -455,8 +488,12 @@ def verify_checkout(request):
             except Exception:
                 logger.exception("Could not apply self-service entitlement for %s", package_slug)
         messages.success(request, "Payment confirmed.")
-        if job_id and request.user.is_authenticated:
-            return redirect("platformhub:assurance_result", job_id=job_id)
+        if payment.assurance_job_id and request.user.is_authenticated:
+            return redirect("platformhub:assurance_result", job_id=payment.assurance_job_id)
+        if payment.consultation_id:
+            request.session["consultation_id"] = str(payment.consultation_id)
+            request.session["consultation_reference"] = payment.consultation.reference
+            return redirect("platformhub:consultation")
         if request.user.is_authenticated:
             return redirect("platformhub:workspace")
         return redirect("platformhub:home")
