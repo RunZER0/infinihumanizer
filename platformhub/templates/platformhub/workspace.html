@@ -2,10 +2,10 @@
 {% extends "base.html" %}
 {% block title %}Workspace — InfiniAI{% endblock %}
 {% block content %}
-<div class="page-shell"><div class="eyebrow">Client workspace</div><h1 class="h1">The work, not just the transaction.</h1><p class="lede">Requests, scope, invoices and delivery status live together so every payment has a reason.</p></div>
+<div class="page-shell"><div class="eyebrow">Client workspace</div><h1 class="h1">Your work.</h1><p class="lede">Projects, invoices and reports in one place.</p></div>
 <section class="section"><div class="shell workspace-grid">
-<div><h2 class="h3" style="margin-bottom:18px">Requests</h2><div class="list-block">{% for item in requests %}<div class="list-item"><strong>{{ item.title }}</strong><small>{{ item.reference }} · {{ item.get_status_display }} · {{ item.created_at|date:"M j, Y" }}</small><div style="margin-top:10px"><a class="btn btn-link" href="{% url 'platformhub:project_detail' item.id %}">Open project →</a></div></div>{% empty %}<div class="list-item"><strong>Your first request starts here.</strong><small>Research, production, assurance, communication or AI systems.</small><div style="margin-top:12px"><a class="btn btn-link" href="{% url 'platformhub:start' %}">Start work →</a></div></div>{% endfor %}</div></div>
-<div><h2 class="h3" style="margin-bottom:18px">Invoices</h2><div class="list-block">{% for invoice in invoices %}<div class="list-item"><strong>{{ invoice.number }} · {{ invoice.currency }} {{ invoice.amount_due }}</strong><small>{{ invoice.get_status_display }} · {{ invoice.description }}</small>{% if invoice.status != "paid" %}<div style="margin-top:12px"><a class="btn btn-link" href="{% url 'platformhub:checkout' %}?invoice={{ invoice.id }}">Pay invoice →</a></div>{% endif %}</div>{% empty %}<div class="list-item"><strong>No open invoices.</strong><small>Invoices appear only after work has been scoped.</small></div>{% endfor %}</div></div>
+<div><h2 class="h3" style="margin-bottom:18px">Requests</h2><div class="list-block">{% for item in requests %}<div class="list-item"><strong>{{ item.title }}</strong><small>{{ item.reference }} · {{ item.get_status_display }} · {{ item.created_at|date:"M j, Y" }}</small><div style="margin-top:10px"><a class="btn btn-link" href="{% url 'platformhub:project_detail' item.id %}">Open project →</a></div></div>{% empty %}<div class="list-item"><strong>No projects yet.</strong><small>Start one when you are ready.</small><div style="margin-top:12px"><a class="btn btn-link" href="{% url 'platformhub:start' %}">Start work →</a></div></div>{% endfor %}</div></div>
+<div><h2 class="h3" style="margin-bottom:18px">Invoices</h2><div class="list-block">{% for invoice in invoices %}<div class="list-item"><strong>{{ invoice.number }} · {{ invoice.currency }} {{ invoice.amount_due }}</strong><small>{{ invoice.get_status_display }} · {{ invoice.description }}</small>{% if invoice.status != "paid" %}<div style="margin-top:12px"><a class="btn btn-link" href="{% url 'platformhub:checkout' %}?invoice={{ invoice.id }}">Pay invoice →</a></div>{% endif %}</div>{% empty %}<div class="list-item"><strong>No open invoices.</strong><small>Invoices will appear here.</small></div>{% endfor %}</div></div>
 </div></section>
 <section class="section"><div class="shell">
   <div class="section-head"><div class="eyebrow">Content assurance</div><div><h2 class="h2">Checks and reports.</h2></div></div>
@@ -13,7 +13,7 @@
     {% for job in assurance_jobs %}
     <div class="list-item"><strong>{{ job.title }}</strong><small>{{ job.reference }} · {{ job.get_status_display }} · {{ job.created_at|date:"M j, Y" }}</small><div style="margin-top:10px"><a class="btn btn-link" href="{% url 'platformhub:assurance_result' job.id %}">Open report →</a></div></div>
     {% empty %}
-    <div class="list-item"><strong>No assurance jobs yet.</strong><small>Originality quick checks and reports appear here.</small><div style="margin-top:10px"><a class="btn btn-link" href="{% url 'platformhub:assurance_check' %}">Start a check →</a></div></div>
+    <div class="list-item"><strong>No assurance jobs yet.</strong><small>Your checks and reports will appear here.</small><div style="margin-top:10px"><a class="btn btn-link" href="{% url 'platformhub:assurance_check' %}">Start a check →</a></div></div>
     {% endfor %}
   </div>
 </div></section>
