@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}QuickPay — InfiniAI{% endblock %}
+{% block description %}Pay an agreed InfiniAI amount from your account.{% endblock %}
+{% block content %}
+<div class="page-shell quickpay-head">
+  <div class="eyebrow">QuickPay</div>
+  <h1 class="h1">Pay an agreed amount.</h1>
+  <p class="lede">Use QuickPay when you already know what the payment covers and the amount due.</p>
+</div>
+
+<section class="section">
+  <div class="shell quickpay-layout">
+    <form method="post" class="quickpay-card form-stack">
+      {% csrf_token %}
+      <div class="field">
+        <label>Account</label>
+        <input value="{{ user.email }}" disabled>
+      </div>
+      <div class="field">
+        <label for="purpose">What is this payment for?</label>
+        <input id="purpose" name="purpose" required maxlength="220" placeholder="e.g. Website copy revision">
+      </div>
+      <div class="quickpay-amount">
+        <div class="field">
+          <label for="currency">Currency</label>
+          <select id="currency" name="currency">
+            <option value="USD">USD</option>
+            <option value="KES">KES</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="amount">Amount</label>
+          <input id="amount" name="amount" type="number" min="0.01" step="0.01" required placeholder="0.00">
+        </div>
+      </div>
+      <label class="quickpay-confirm">
+        <input type="checkbox" name="confirm" value="yes" required>
+        <span>I confirm the description and amount above are correct.</span>
+      </label>
+      <button class="btn btn-primary" type="submit">Continue to payment</button>
+    </form>
+
+    <aside class="quickpay-side">
+      <div class="micro">HOW IT WORKS</div>
+      <p>We create an invoice in your account, then open Paystack for the payment. The result appears in your workspace after verification.</p>
+      <a class="btn btn-link" href="{% url 'platformhub:workspace' %}">Back to workspace →</a>
+    </aside>
+  </div>
+</section>
+
+{% if recent %}
+<section class="section">
+  <div class="shell">
+    <div class="section-head"><div class="eyebrow">Recent QuickPay</div><div><h2 class="h2">Your recent invoices.</h2></div></div>
+    <div class="list-block">
+      {% for invoice in recent %}
+      <div class="list-item quickpay-history-row">
+        <div>
+          <strong>{{ invoice.description|cut:"QuickPay — " }}</strong>
+          <small>{{ invoice.number }} · {{ invoice.created_at|date:"M j, Y" }}</small>
+        </div>
+        <div>
+          <strong>{{ invoice.currency }} {{ invoice.amount_due }}</strong>
+          <small>{{ invoice.get_status_display }}</small>
+        </div>
+        {% if invoice.status != "paid" %}
+        <a class="btn btn-link" href="{% url 'platformhub:checkout' %}?invoice={{ invoice.id }}">Pay →</a>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}
