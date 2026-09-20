@@ -1,11 +1,32 @@
-
 {% extends "base.html" %}
-{% block title %}Consultation — InfiniAI{% endblock %}
+{% block title %}Talk to us — InfiniAI{% endblock %}
+{% block description %}Tell InfiniAI what you are working on and where you are stuck.{% endblock %}
 {% block content %}
-<div class="page-shell"><div class="eyebrow">Consultation</div><h1 class="h1">Talk the project through with us.</h1><p class="lede">A focused session for projects that still need a clear direction. USD 50, credited to a project started within seven days.</p></div>
-{% if recent_consultation %}<section class="section"><div class="shell"><div class="notice"><strong>{{ recent_consultation.reference }}</strong> · {% if consultation_paid %}Payment confirmed. We can schedule the session.{% else %}Your request is saved. Payment is still due.{% endif %}</div></div></section>{% endif %}
-<section class="section"><div class="shell form-layout">
-<form method="post" class="form-stack">{% csrf_token %}<div class="form-grid-2"><div class="field"><label>Your name</label><input name="full_name" required value="{{ user.get_full_name }}"></div><div class="field"><label>Email</label><input type="email" name="email" required value="{{ user.email }}"></div></div><div class="field"><label>Company / team <span class="help">(optional)</span></label><input name="company"></div><div class="field"><label>What do you want to work through?</label><textarea name="topic" required></textarea></div><button class="btn btn-primary" type="submit">Continue to checkout</button></form>
-<aside class="summary-rail"><dl><dt>Fee</dt><dd>USD {{ package.usd }}</dd><dt>KES</dt><dd>KSh {{ package.kes }}</dd><dt>Project credit</dt><dd>7 days</dd></dl></aside>
-</div></section>
+<div class="page-shell">
+  <div class="eyebrow">Talk to us</div>
+  <h1 class="h1">Tell us what you are working on.</h1>
+  <p class="lede">You do not need a finished brief. Send the question, problem or idea as it stands.</p>
+</div>
+
+{% if recent_consultation %}
+<section class="section"><div class="shell"><div class="notice">We received {{ recent_consultation.reference }}. We will follow up at {{ recent_consultation.email }}.</div></div></section>
+{% endif %}
+
+<section class="section">
+  <div class="shell form-layout">
+    <form method="post" class="form-stack">{% csrf_token %}
+      <div class="form-grid-2">
+        <div class="field"><label>Your name</label><input name="full_name" required value="{% if user.is_authenticated %}{{ user.get_full_name }}{% endif %}"></div>
+        <div class="field"><label>Email</label><input type="email" name="email" required value="{% if user.is_authenticated %}{{ user.email }}{% endif %}"></div>
+      </div>
+      <div class="field"><label>Company / team <span class="help">(optional)</span></label><input name="company"></div>
+      <div class="field"><label>What are you trying to work out?</label><textarea name="topic" required></textarea></div>
+      <button class="btn btn-primary" type="submit">Send note</button>
+    </form>
+    <aside class="summary-rail">
+      <div class="eyebrow">What happens next</div>
+      <p>We read the note and reply by email. If the work needs a formal scope, we can build that after the conversation.</p>
+    </aside>
+  </div>
+</section>
 {% endblock %}
