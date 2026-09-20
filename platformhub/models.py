@@ -159,6 +159,8 @@ class PaymentRecord(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     invoice = models.ForeignKey(Invoice, null=True, blank=True, on_delete=models.SET_NULL, related_name="payments")
     request = models.ForeignKey(ServiceRequest, null=True, blank=True, on_delete=models.SET_NULL, related_name="payments")
+    consultation = models.ForeignKey(Consultation, null=True, blank=True, on_delete=models.SET_NULL, related_name="payments")
+    assurance_job = models.ForeignKey("AssuranceJob", null=True, blank=True, on_delete=models.SET_NULL, related_name="payments")
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL)
     provider = models.CharField(max_length=40, default="paystack")
     reference = models.CharField(max_length=120, unique=True)
