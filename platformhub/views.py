@@ -255,6 +255,7 @@ def workspace(request):
     return render(request, "platformhub/workspace.html", {
         "requests": items[:20],
         "invoices": invoices[:20],
+        "assurance_jobs": AssuranceJob.objects.filter(user=request.user).order_by("-created_at")[:20],
     })
 
 
