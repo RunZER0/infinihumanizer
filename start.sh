@@ -5,6 +5,7 @@ export PYTHONUNBUFFERED=1
 echo "Running database migrations..."
 python manage.py migrate --noinput
 python manage.py import_homeworkpal_payments --if-configured
+python manage.py shell -c "from django.conf import settings; from pathlib import Path; print('Payment config: secret=%s public=%s apple_domain=%s' % ('yes' if settings.PAYSTACK_SECRET_KEY else 'no', 'yes' if settings.PAYSTACK_PUBLIC_KEY else 'no', 'yes' if (settings.BASE_DIR / 'static' / 'apple-developer-merchantid-domain-association').exists() else 'no'))"
 
 echo "Starting Gunicorn..."
 exec gunicorn core.wsgi:application   --bind 0.0.0.0:${PORT:-10000}   --workers ${GUNICORN_WORKERS:-2}   --timeout ${GUNICORN_TIMEOUT:-300}   --log-level ${GUNICORN_LOG_LEVEL:-info}   --access-logfile -   --error-logfile -
