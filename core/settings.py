@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     # Your apps
     'accounts',
     'humanizer',
+    'platform.apps.PlatformConfig',
 ]
 
 SITE_ID = 1
@@ -71,7 +72,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Still required
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory' if EMAIL_HOST_PASSWORD else 'none'
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
 
@@ -259,4 +260,5 @@ else:
     EMAIL_HOST = 'smtp-relay.brevo.com'
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
-SITE_NAME = "Infiniai Assistant"
+SITE_NAME = "InfiniAI"
+USD_KES_RATE = float(os.getenv("USD_KES_RATE", "135"))
