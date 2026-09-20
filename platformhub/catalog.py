@@ -34,6 +34,7 @@ SERVICE_FAMILIES = {
             {"code": "studio-deck", "name": "Deck & presentation", "summary": "Research, storyline, slide architecture, writing and production for decision-ready decks.", "from_usd": 150, "billing": "project"},
             {"code": "studio-report", "name": "Report / white paper", "summary": "Research-backed long-form work with source synthesis, structure, editing, formatting and QA.", "from_usd": 250, "billing": "project"},
             {"code": "studio-technical", "name": "Technical production", "summary": "Documentation, quantitative work, spreadsheets, specifications and structured technical deliverables.", "from_usd": 75, "billing": "project"},
+            {"code": "studio-retainer", "name": "Embedded research & production studio", "summary": "Reserved monthly capacity for recurring research, reports, decks, review, documentation and product or website language.", "from_usd": 3000, "billing": "monthly"},
         ],
     },
     "communication": {
@@ -111,6 +112,31 @@ PACKAGES = {
     },
 }
 
+
+RETAINERS = [
+    {
+        "name": "Studio",
+        "usd": Decimal("3000.00"),
+        "capacity": "Two active workstreams",
+        "summary": "Recurring research, writing, review and production for a small team with a predictable monthly queue.",
+        "includes": ["Up to 3 major deliverables", "Weekly production review", "Research + writing + QA", "Priority revision queue"],
+    },
+    {
+        "name": "Continuous Studio",
+        "usd": Decimal("6000.00"),
+        "capacity": "Three active workstreams",
+        "summary": "Continuous research and communication production across several business needs.",
+        "includes": ["Up to 5 major deliverables", "Research + decks + reports", "Website and product language support", "Assurance on delivered work", "Twice-weekly production review"],
+    },
+    {
+        "name": "Embedded Partner",
+        "usd": Decimal("10000.00"),
+        "capacity": "Four active workstreams",
+        "summary": "A multidisciplinary language and research function for organizations with continuous demand and higher coordination needs.",
+        "includes": ["Up to 8 major deliverables", "Continuous research and review", "Reports, decks, documentation and product language", "Assurance on every deliverable", "Weekly strategy session", "Priority turnaround and revisions"],
+    },
+]
+
 PRICE_BANDS = [
     {
         "label": "Quick professional task",
@@ -125,10 +151,10 @@ PRICE_BANDS = [
         "logic": "Research and production are both required, with one main output.",
     },
     {
-        "label": "Full deliverable",
+        "label": "Full deliverable / project milestone",
         "range": "$250–$750",
-        "examples": "Report, white paper, complete presentation, website copy package.",
-        "logic": "Deeper research, editorial QA, formatting and revision cycles.",
+        "examples": "Report, white paper, complete presentation, website copy package, or a deposit/milestone on a larger engagement.",
+        "logic": "Deeper research, editorial QA, formatting and revision cycles; larger scopes may split the total into scheduled commercial events.",
     },
     {
         "label": "Strategic engagement",
@@ -172,3 +198,36 @@ def estimate_request(service_code, research_depth="standard", turnaround="standa
     spread = Decimal("1.35") if base < 500 else Decimal("1.50")
     high = (low * spread).quantize(Decimal("1"))
     return low, high
+
+
+def commercial_terms(total, service_code=""):
+    """Return the payment structure for an accepted quote without redefining the service around payment."""
+    amount = Decimal(str(total or 0))
+    service = SERVICE_INDEX.get(service_code) or {}
+    if service.get("billing") == "monthly":
+        return {
+            "label": "Monthly retainer",
+            "percent": Decimal("100"),
+            "due_now": amount,
+            "description": "Billed at the start of the service month so capacity is reserved before work begins.",
+        }
+    if amount < Decimal("500"):
+        return {
+            "label": "Full payment",
+            "percent": Decimal("100"),
+            "due_now": amount,
+            "description": "Focused engagements are paid in full once the scope is accepted.",
+        }
+    if amount < Decimal("5000"):
+        return {
+            "label": "50% project deposit",
+            "percent": Decimal("50"),
+            "due_now": (amount * Decimal("0.50")).quantize(Decimal("0.01")),
+            "description": "The deposit starts production. The remaining balance is invoiced against delivery or the agreed final milestone.",
+        }
+    return {
+        "label": "30% mobilisation",
+        "percent": Decimal("30"),
+        "due_now": (amount * Decimal("0.30")).quantize(Decimal("0.01")),
+        "description": "Large engagements begin with mobilisation. Remaining value is invoiced against agreed milestones rather than as an unexplained lump sum.",
+    }
