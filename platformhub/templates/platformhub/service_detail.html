@@ -17,7 +17,7 @@
       <div class="service-row">
         <strong>{{ service.name }}</strong>
         <p>{{ service.summary }}</p>
-        <span class="price">From USD {{ service.from_usd }} · {{ service.billing }}</span>
+        <details class="service-price"><summary>Pricing</summary><span>From USD {{ service.from_usd }} · {{ service.billing }}</span></details>
         <span class="actions"><a class="btn btn-link" href="{% url 'platformhub:request_service_code' service.code %}">Start →</a></span>
       </div>
       {% endfor %}
