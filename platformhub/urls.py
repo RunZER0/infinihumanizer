@@ -21,5 +21,6 @@ urlpatterns = [
     path("billing/checkout/", views.checkout, name="checkout"),
     path("billing/start/", views.start_checkout, name="start_checkout"),
     path("billing/verify/", views.verify_checkout, name="verify_checkout"),
+    path("operations/reconciliation/", views.reconciliation, name="reconciliation"),
     path("health/", views.health, name="health"),
 ]
