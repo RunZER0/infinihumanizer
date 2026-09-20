@@ -682,3 +682,54 @@ a.partner-logo:hover{opacity:1;transform:translateY(-2px)}
   background:var(--line-subtle);
 }
 .auth-divider span{white-space:nowrap}
+
+
+/* Compact auth choice */
+.auth-choice-panel[hidden]{display:none!important}
+.auth-choice{margin-top:8px}
+.auth-switch{
+  display:block;
+  width:100%;
+  margin:14px 0 0;
+  padding:7px 8px;
+  border:0;
+  background:transparent;
+  color:var(--text-muted);
+  font-size:.78rem;
+  text-decoration:underline;
+  text-underline-offset:4px;
+  cursor:pointer;
+}
+.auth-switch:hover{color:var(--text-primary)}
+.auth-switch-back{
+  width:auto;
+  margin:0 0 18px;
+  padding:0;
+}
+.auth-email-panel{
+  animation:auth-panel-in .24s var(--ease-out);
+}
+@keyframes auth-panel-in{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:none}
+}
+
+/* Keep the Valdace wordmark legible without increasing the rail height. */
+.partner-valdace{
+  min-width:170px;
+  justify-content:center;
+}
+.partner-valdace img{
+  width:168px!important;
+  max-width:168px!important;
+  height:auto!important;
+  max-height:38px!important;
+  transform:none!important;
+}
+@media(max-width:760px){
+  .partner-valdace{min-width:152px}
+  .partner-valdace img{width:150px!important;max-width:150px!important;max-height:35px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .auth-email-panel{animation:none}
+}
