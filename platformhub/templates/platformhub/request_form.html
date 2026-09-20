@@ -6,9 +6,9 @@
 <section class="section"><div class="shell form-layout">
 <form method="post" class="form-stack">{% csrf_token %}
   <div class="field"><label for="service_code">What is closest?</label><select name="service_code" id="service_code" required><option value="">Choose a service</option>
-  {% for family_slug,family in families.items %}<optgroup label="{{ family.name }}">{% for service in family.services %}<option value="{{ service.code }}" {% if selected.code == service.code or values.service_code == service.code %}selected{% endif %}>{{ service.name }}</option>{% endfor %}</optgroup>{% endfor %}
+  {% for family_slug,family in families.items %}<optgroup label="{{ family.name }}">{% for service in family.services %}<option value="{{ service.code }}" {% if selected_code == service.code or values.service_code == service.code %}selected{% endif %}>{{ service.name }}</option>{% endfor %}</optgroup>{% endfor %}
   </select></div>
-  <div class="form-grid-2"><div class="field"><label for="full_name">Your name</label><input id="full_name" name="full_name" required value="{{ values.full_name|default:user.get_full_name }}"></div><div class="field"><label for="email">Email</label><input id="email" type="email" name="email" required value="{{ values.email|default:user.email }}"></div></div>
+  <div class="form-grid-2"><div class="field"><label for="full_name">Your name</label><input id="full_name" name="full_name" required value="{{ values.full_name|default:initial_name }}"></div><div class="field"><label for="email">Email</label><input id="email" type="email" name="email" required value="{{ values.email|default:initial_email }}"></div></div>
   <div class="field"><label for="company">Company / team <span class="help">(optional)</span></label><input id="company" name="company" value="{{ values.company }}"></div>
   <div class="field"><label for="title">Project name</label><input id="title" name="title" required value="{{ values.title }}" placeholder="e.g. Q4 market-entry report"></div>
   <div class="field"><label for="objective">What do you need this work to achieve?</label><textarea id="objective" name="objective" required>{{ values.objective }}</textarea></div>
