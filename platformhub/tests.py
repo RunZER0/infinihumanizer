@@ -5,9 +5,10 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
-from .catalog import commercial_terms, estimate_request
+from .catalog import SERVICE_INDEX, commercial_terms, estimate_request
 from .legacy_mapping import legacy_amount_band, normalize_legacy_transaction
-from .models import Deliverable, ServiceRequest
+from .knowledge import ARTICLES
+from .models import Consultation, Deliverable, ServiceRequest
 
 
 class CommercialArchitectureTests(TestCase):
@@ -39,9 +40,32 @@ class CommercialArchitectureTests(TestCase):
 
 class PublicJourneyTests(TestCase):
     def test_public_pages_render(self):
-        for name in ["platformhub:home", "platformhub:about", "platformhub:privacy", "platformhub:terms", "platformhub:disclaimer", "platformhub:services", "platformhub:pricing", "platformhub:start", "platformhub:consultation"]:
+        for name in ["platformhub:home", "platformhub:about", "platformhub:privacy", "platformhub:terms", "platformhub:disclaimer", "platformhub:notes", "platformhub:services", "platformhub:pricing", "platformhub:start", "platformhub:consultation"]:
             response = self.client.get(reverse(name))
             self.assertEqual(response.status_code, 200, name)
+
+    def test_every_service_request_page_renders(self):
+        for code in SERVICE_INDEX:
+            response = self.client.get(reverse("platformhub:request_service_code", kwargs={"service_code": code}))
+            self.assertEqual(response.status_code, 200, code)
+
+    def test_knowledge_archive_has_ten_monthly_articles(self):
+        self.assertEqual(len(ARTICLES), 10)
+        months = [(article["date"].year, article["date"].month) for article in ARTICLES]
+        self.assertEqual(len(months), len(set(months)))
+        for article in ARTICLES:
+            response = self.client.get(reverse("platformhub:note_detail", kwargs={"slug": article["slug"]}))
+            self.assertEqual(response.status_code, 200, article["slug"])
+
+    def test_talking_to_us_does_not_create_a_payment(self):
+        response = self.client.post(reverse("platformhub:consultation"), {
+            "full_name": "Potential client",
+            "email": "client@example.com",
+            "topic": "We need help deciding how to structure product language.",
+        })
+        self.assertEqual(response.status_code, 302)
+        item = Consultation.objects.get(email="client@example.com")
+        self.assertEqual(item.payments.count(), 0)
 
     def test_brief_creates_request_not_invoice(self):
         response = self.client.post(reverse("platformhub:request_service"), {
