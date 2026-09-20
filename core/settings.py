@@ -38,6 +38,7 @@ ALLOWED_HOSTS = [
     'www.infiniaihumanizer.live',
     '127.0.0.1',
     'localhost',
+    '.onrender.com',
     '192.168.0.105',
 ]
 
@@ -62,6 +63,7 @@ INSTALLED_APPS = [
     # Your apps
     'accounts',
     'humanizer',
+    'platformhub',
 ]
 
 SITE_ID = 1
@@ -216,7 +218,7 @@ else:
 STATICFILES_DIRS = [ BASE_DIR / 'static' ]
 
 # AUTH REDIRECTS
-LOGIN_REDIRECT_URL = '/humanizer/'
+LOGIN_REDIRECT_URL = '/workspace/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 ACCOUNT_ADAPTER = 'accounts.adapters.CustomAccountAdapter'
 
@@ -239,6 +241,7 @@ if socket.gethostname() == 'localhost' or DEBUG or OFFLINE_MODE:
 # CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = [
     'https://infinihumanizer.onrender.com',
+    'https://*.onrender.com',
     'https://infiniaihumanizer.live',
     'https://www.infiniaihumanizer.live',
     'http://localhost:8000',
@@ -259,4 +262,4 @@ else:
     EMAIL_HOST = 'smtp-relay.brevo.com'
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
-SITE_NAME = "Infiniai Assistant"
+SITE_NAME = "InfiniAI"
