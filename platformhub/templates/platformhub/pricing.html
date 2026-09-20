@@ -17,7 +17,7 @@
         <tr>
           <td><strong>{{ package.name }}</strong><br><span style="color:var(--text-muted)">{{ package.description }}</span></td>
           <td>USD {{ package.usd }}</td><td>KSh {{ package.kes }}</td><td>{{ package.cadence }}</td>
-          <td><a class="btn btn-link" href="{% url 'platformhub:checkout' %}?package={{ slug }}">Buy →</a></td>
+          <td>{% if slug == "originality-quick" %}<a class="btn btn-link" href="{% url 'platformhub:assurance_check' %}">Start check →</a>{% else %}<a class="btn btn-link" href="{% url 'platformhub:checkout' %}?package={{ slug }}">Buy →</a>{% endif %}</td>
         </tr>
       {% endfor %}
       </tbody>
