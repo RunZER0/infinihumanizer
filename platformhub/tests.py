@@ -38,7 +38,7 @@ class CommercialArchitectureTests(TestCase):
 
 class PublicJourneyTests(TestCase):
     def test_public_pages_render(self):
-        for name in ["platformhub:home", "platformhub:services", "platformhub:pricing", "platformhub:start", "platformhub:consultation"]:
+        for name in ["platformhub:home", "platformhub:about", "platformhub:privacy", "platformhub:terms", "platformhub:disclaimer", "platformhub:services", "platformhub:pricing", "platformhub:start", "platformhub:consultation"]:
             response = self.client.get(reverse(name))
             self.assertEqual(response.status_code, 200, name)
 
@@ -92,3 +92,9 @@ class PublicJourneyTests(TestCase):
         self.assertEqual(approval.status_code, 302)
         deliverable.refresh_from_db()
         self.assertEqual(deliverable.status, "approved")
+
+
+    def test_oauth_homepage_has_privacy_link(self):
+        response = self.client.get(reverse("platformhub:about"))
+        self.assertContains(response, reverse("platformhub:privacy"))
+        self.assertContains(response, "Google sign-in")
