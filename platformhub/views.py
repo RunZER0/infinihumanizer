@@ -8,7 +8,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
-from django.http import FileResponse, JsonResponse
+from django.http import FileResponse, Http404, JsonResponse
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
@@ -20,6 +20,7 @@ from django.views.decorators.http import require_http_methods
 from .catalog import PACKAGES, PRICE_BANDS, RETAINERS, SERVICE_FAMILIES, SERVICE_INDEX, commercial_terms, estimate_request, service_by_code
 from .models import AssuranceJob, Consultation, Deliverable, DeliverableFeedback, Invoice, PaymentRecord, Quote, ServiceRequest
 from .legacy_summary import LEGACY_LEDGER_SUMMARY, LEGACY_RECONCILIATION_BANDS
+from .knowledge import ARTICLES, ARTICLE_BY_SLUG
 from .payments import PaystackError, apply_gateway_transaction, ingest_webhook_transaction, initialize_transaction, valid_webhook_signature, verify_transaction
 
 logger = logging.getLogger(__name__)
@@ -46,6 +47,17 @@ def terms(request):
 
 def disclaimer(request):
     return render(request, "platformhub/disclaimer.html")
+
+
+def notes(request):
+    return render(request, "platformhub/notes.html", {"articles": ARTICLES})
+
+
+def note_detail(request, slug):
+    article = ARTICLE_BY_SLUG.get(slug)
+    if not article:
+        raise Http404("Article not found")
+    return render(request, "platformhub/note_detail.html", {"article": article})
 
 
 def services(request):
