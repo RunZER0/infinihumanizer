@@ -301,3 +301,39 @@ a{color:inherit}button,input,textarea,select{font:inherit}:focus-visible{outline
   .has-output{animation:none}
   .editor-card{transition:none}
 }
+
+
+/* Account + QuickPay */
+.workspace-head{display:flex;align-items:flex-end;justify-content:space-between;gap:30px}
+.workspace-actions{display:flex;gap:10px;flex-wrap:wrap;padding-bottom:6px}
+.payment-ledger{display:grid;gap:10px}
+.payment-row{display:grid;grid-template-columns:170px minmax(0,1fr) auto;gap:24px;align-items:center;padding:18px 22px;border-radius:15px;background:rgba(250,248,242,.72)}
+.payment-row strong,.payment-row small{display:block}.payment-row small{margin-top:5px;color:var(--text-muted)}
+.payment-row>div:last-child{text-align:right}
+
+.quickpay-head .h1{max-width:12ch}
+.quickpay-layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(260px,.55fr);gap:clamp(28px,6vw,82px);align-items:start}
+.quickpay-card{background:rgba(250,248,242,.88);border-radius:22px;padding:clamp(24px,4vw,38px);box-shadow:0 18px 55px rgba(23,22,18,.07)}
+.quickpay-amount{display:grid;grid-template-columns:160px 1fr;gap:14px}
+.quickpay-confirm{display:flex;align-items:flex-start;gap:10px;font-size:.85rem;line-height:1.5;color:var(--text-muted)}
+.quickpay-confirm input{margin-top:3px}
+.quickpay-side{position:sticky;top:108px;padding-top:10px}
+.quickpay-side p{color:var(--text-muted);line-height:1.7;margin:12px 0 18px}
+.quickpay-history-row{display:grid;grid-template-columns:minmax(0,1fr) 180px auto;gap:22px;align-items:center}
+.quickpay-history-row>div:nth-child(2){text-align:right}
+
+@media(max-width:800px){
+  .workspace-head{align-items:flex-start;flex-direction:column}
+  .quickpay-layout{grid-template-columns:1fr}
+  .quickpay-side{position:static}
+  .payment-row{grid-template-columns:1fr auto}
+  .payment-row>div:nth-child(2){grid-column:1/-1;grid-row:2}
+  .quickpay-history-row{grid-template-columns:1fr auto}
+  .quickpay-history-row>div:nth-child(2){text-align:left}
+}
+@media(max-width:520px){
+  .quickpay-amount{grid-template-columns:1fr}
+  .payment-row{grid-template-columns:1fr}
+  .payment-row>div:last-child{text-align:left}
+  .quickpay-history-row{grid-template-columns:1fr}
+}
