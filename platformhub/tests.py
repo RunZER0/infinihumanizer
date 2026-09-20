@@ -1,3 +1,4 @@
+from unittest.mock import patch
 from decimal import Decimal
 
 from django.contrib.auth.models import User
@@ -98,3 +99,70 @@ class PublicJourneyTests(TestCase):
         response = self.client.get(reverse("platformhub:about"))
         self.assertContains(response, reverse("platformhub:privacy"))
         self.assertContains(response, "Google sign-in")
+
+
+class QuickPayTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="paying-user",
+            email="payer@example.com",
+            password="strong-password-123",
+        )
+        self.client.force_login(self.user)
+
+    def test_quickpay_requires_account(self):
+        self.client.logout()
+        response = self.client.get(reverse("platformhub:quickpay"))
+        self.assertEqual(response.status_code, 302)
+
+    def test_quickpay_creates_account_invoice(self):
+        response = self.client.post(reverse("platformhub:quickpay"), {
+            "purpose": "Website copy revision",
+            "currency": "USD",
+            "amount": "75.00",
+            "confirm": "yes",
+        })
+        self.assertEqual(response.status_code, 302)
+        invoice = self.user.invoice_set.get()
+        self.assertEqual(invoice.email, self.user.email)
+        self.assertEqual(invoice.amount_due, Decimal("75.00"))
+        self.assertTrue(invoice.description.startswith("QuickPay"))
+
+    def test_workspace_shows_email_matched_legacy_payment(self):
+        from .models import PaymentRecord
+        PaymentRecord.objects.create(
+            reference="HP-LEGACY-1",
+            amount=Decimal("50"),
+            currency="USD",
+            status="success",
+            email=self.user.email,
+            legacy=True,
+            original_description="Legacy payment",
+        )
+        response = self.client.get(reverse("platformhub:workspace"))
+        self.assertContains(response, "HP-LEGACY-1")
+        self.assertContains(response, "Legacy payment")
+
+    @patch("platformhub.views.initialize_transaction")
+    def test_quickpay_checkout_creates_payment_record(self, initialize):
+        initialize.return_value = {
+            "authorization_url": "https://checkout.paystack.test/example",
+            "reference": "INF-TEST",
+        }
+        invoice = self.user.invoice_set.create(
+            email=self.user.email,
+            currency="USD",
+            amount_due=Decimal("40"),
+            description="QuickPay — Copy edit",
+        )
+        with self.settings(PAYSTACK_SECRET_KEY="test-secret"):
+            response = self.client.post(reverse("platformhub:start_checkout"), {
+                "invoice_id": str(invoice.id),
+                "email": self.user.email,
+                "currency": "USD",
+            })
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["authorization_url"], "https://checkout.paystack.test/example")
+        payment = invoice.payments.get()
+        self.assertEqual(payment.source_type, "quickpay")
+        self.assertEqual(payment.normalized_service_code, "quickpay")
