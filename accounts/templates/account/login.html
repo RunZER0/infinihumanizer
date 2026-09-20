@@ -1,10 +1,9 @@
-
 {% load static %}
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sign in — InfiniAI</title><link rel="stylesheet" href="{% static 'css/platform.css' %}"></head>
 <body><main class="auth-page">
-<section class="auth-story"><div><div class="eyebrow" style="color:#e46b5d">InfiniAI</div><h1 class="display" style="font-size:clamp(3.5rem,7vw,7rem);max-width:8ch">Keep the work together.</h1><p>Projects, source material, invoices and delivery status belong to the same relationship.</p></div><div class="micro" style="color:#9f9b93">RESEARCH · PRODUCTION · ASSURANCE · AI SYSTEMS</div></section>
-<section class="auth-panel"><div class="auth-box"><div class="eyebrow">Client access</div><h1>Sign in.</h1>
-{% if form.errors %}<div class="notice">The email or password could not be verified. If the account is new, confirm the email first.</div>{% endif %}
+<section class="auth-story"><div><div class="eyebrow" style="color:#e46b5d">InfiniAI</div><h1 class="display" style="font-size:clamp(3.5rem,7vw,7rem);max-width:8ch">Sign in to your workspace.</h1><p>Manage projects, invoices, files and reports from one account.</p></div><div class="micro" style="color:#9f9b93">LANGUAGE · RESEARCH · PRODUCT · AI</div></section>
+<section class="auth-panel"><div class="auth-box"><div class="eyebrow">Account</div><h1>Sign in</h1>
+{% if form.errors %}<div class="notice">The email or password did not match an account.</div>{% endif %}
 <form method="post" action="{% url 'account_login' %}" class="form-stack">{% csrf_token %}
 <div class="field"><label for="id_login">Email</label><input id="id_login" type="email" name="login" autocomplete="email" required autofocus></div>
 <div class="field"><label for="id_password">Password</label><input id="id_password" type="password" name="password" autocomplete="current-password" required></div>
@@ -12,5 +11,6 @@
 {% if redirect_field_value %}<input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">{% endif %}
 <button class="btn btn-primary" type="submit">Sign in</button></form>
 <div class="auth-links"><a href="{% url 'account_reset_password' %}">Reset password</a><a href="{% url 'account_signup' %}">Create account</a></div>
-<p style="margin-top:30px"><a class="btn btn-link" href="{% url 'platformhub:home' %}">← Back to InfiniAI</a></p>
+<p class="auth-legal"><a href="{% url 'platformhub:about' %}">About</a> · <a href="{% url 'platformhub:privacy' %}">Privacy</a> · <a href="{% url 'platformhub:terms' %}">Terms</a></p>
+<p style="margin-top:20px"><a class="btn btn-link" href="{% url 'platformhub:home' %}">← Back to InfiniAI</a></p>
 </div></section></main></body></html>
