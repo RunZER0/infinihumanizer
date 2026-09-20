@@ -18,8 +18,8 @@ urlpatterns = [
     # ✅ Humanizer app
     path('humanizer/', include('humanizer.urls')),
 
-    # ✅ Root redirect
-    path('', lambda request: redirect('humanizer')),
+    # InfiniAI platform — public business system
+    path('', include('platform.urls')),
 ]
 
 # ✅ Serve static files in development
