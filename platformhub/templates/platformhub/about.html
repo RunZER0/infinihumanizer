@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}About — InfiniAI{% endblock %}
+{% block description %}InfiniAI works on language across writing, research, websites, products and AI systems.{% endblock %}
+{% block content %}
+<div class="page-shell about-hero">
+  <div class="eyebrow">About InfiniAI</div>
+  <h1 class="h1">We care about how language works.</h1>
+  <p class="lede">InfiniAI helps people and teams produce clearer writing, stronger research, better website and product language, and AI systems that follow a defined standard.</p>
+</div>
+
+<section class="section">
+  <div class="shell about-grid">
+    <div class="about-lead">
+      <div class="eyebrow">What we do</div>
+      <h2 class="h2">Language shows up everywhere.</h2>
+    </div>
+    <div class="about-copy">
+      <p>We work on text directly, review finished work, research and produce professional documents, write for websites and products, and build language-focused AI systems.</p>
+      <p>The common thread is simple: the output should be clear, specific and appropriate for the person or organization using it.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="shell">
+    <div class="about-services">
+      <div><span class="micro">TEXT</span><strong>Text Intelligence</strong><p>Rewrite, refine and adapt existing text while preserving its meaning.</p></div>
+      <div><span class="micro">REVIEW</span><strong>Content Assurance</strong><p>Check originality, sources, citations, structure and consistency.</p></div>
+      <div><span class="micro">RESEARCH</span><strong>Research &amp; Production</strong><p>Research, analysis, reports, decks, briefs and technical writing.</p></div>
+      <div><span class="micro">PRODUCT</span><strong>Website &amp; Product Language</strong><p>Website copy, UX writing and product language shaped around the actual user journey.</p></div>
+      <div><span class="micro">AI</span><strong>AI &amp; Data Systems</strong><p>Datasets, fine-tuning, evaluation, deployment and hosted language systems.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section oauth-info">
+  <div class="shell about-grid">
+    <div class="about-lead">
+      <div class="eyebrow">Accounts and Google sign-in</div>
+      <h2 class="h2">Your account keeps your work tied to you.</h2>
+    </div>
+    <div class="about-copy">
+      <p>If you choose to sign in with Google, InfiniAI uses the basic account information Google shares through the requested sign-in permissions to create or access your account and identify your workspace.</p>
+      <p>Google sign-in by itself does not give InfiniAI access to Gmail, Google Drive, Google Calendar or other Google product data.</p>
+      <p>Our <a href="{% url 'platformhub:privacy' %}">Privacy Policy</a> explains how account data is used and stored. You can also read our <a href="{% url 'platformhub:terms' %}">Terms of Service</a> and <a href="{% url 'platformhub:disclaimer' %}">Disclaimer</a>.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}
