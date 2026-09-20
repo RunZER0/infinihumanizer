@@ -163,7 +163,6 @@ else:
     
     # Add connection timeout and retry settings for SSL stability
     db_options['connect_timeout'] = int(os.getenv("DATABASE_CONNECT_TIMEOUT", "10"))
-    db_options['options'] = '-c statement_timeout=60000'  # 60 second query timeout
 
     sslmode = os.getenv("DATABASE_SSLMODE", "require")
     if sslmode:
