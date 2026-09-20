@@ -14,7 +14,7 @@ from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
 from .catalog import PACKAGES, PRICE_BANDS, SERVICE_FAMILIES, SERVICE_INDEX, estimate_request, service_by_code
-from .models import Consultation, Invoice, PaymentRecord, ServiceRequest
+from .models import Consultation, Invoice, PaymentRecord, Quote, ServiceRequest
 
 logger = logging.getLogger(__name__)
 
@@ -161,6 +161,61 @@ def consultation(request):
     return render(request, "platformhub/consultation.html", {
         "package": PACKAGES["consultation"],
     })
+
+
+def _can_view_request(request, item):
+    if request.user.is_authenticated and (item.user_id == request.user.id or (request.user.email and item.email.lower() == request.user.email.lower())):
+        return True
+    return str(item.id) in request.session.get("infini_request_ids", [])
+
+
+@login_required
+def project_detail(request, request_id):
+    item = get_object_or_404(ServiceRequest, id=request_id)
+    if not _can_view_request(request, item):
+        return redirect("platformhub:workspace")
+    return render(request, "platformhub/project_detail.html", {
+        "item": item,
+        "quotes": item.quotes.all().order_by("-created_at"),
+        "invoices": item.invoices.all().order_by("-created_at"),
+        "deliverables": item.deliverables.all().order_by("-updated_at"),
+    })
+
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def quote_detail(request, quote_id):
+    quote = get_object_or_404(Quote.objects.select_related("request"), id=quote_id)
+    if not _can_view_request(request, quote.request):
+        return redirect("platformhub:workspace")
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+        if action == "accept" and quote.status in {"sent", "draft"}:
+            quote.status = "accepted"
+            quote.save(update_fields=["status"])
+            invoice = quote.invoices.first()
+            if not invoice:
+                invoice = Invoice.objects.create(
+                    request=quote.request,
+                    quote=quote,
+                    user=request.user,
+                    email=quote.request.email,
+                    currency=quote.currency,
+                    amount_due=quote.total,
+                    description=f"{quote.request.title} — accepted quote {quote.number}",
+                )
+            quote.request.status = "quoted"
+            quote.request.save(update_fields=["status", "updated_at"])
+            messages.success(request, "Quote accepted. The invoice is ready.")
+            return redirect(f"{reverse('platformhub:checkout')}?invoice={invoice.id}")
+        if action == "decline" and quote.status in {"sent", "draft"}:
+            quote.status = "declined"
+            quote.save(update_fields=["status"])
+            messages.info(request, "Quote declined. The request remains available for re-scoping.")
+            return redirect("platformhub:project_detail", request_id=quote.request_id)
+
+    return render(request, "platformhub/quote_detail.html", {"quote": quote})
 
 
 @login_required
@@ -326,7 +381,26 @@ def verify_checkout(request):
         if payment.invoice:
             invoice = payment.invoice
             invoice.amount_paid = min(invoice.amount_due, invoice.amount_paid + paid_amount)
-            invoice.save(update_fields=["amount_paid", "status"])
+            invoice.save()
+            if invoice.status == "paid" and invoice.request:
+                project = invoice.request
+                project.status = "active"
+                project.save(update_fields=["status", "updated_at"])
+
+        package_slug = payment.metadata.get("package_slug", "")
+        if package_slug and request.user.is_authenticated:
+            try:
+                from accounts.models import Profile
+                profile, _ = Profile.objects.get_or_create(user=request.user)
+                if package_slug == "humanizer-individual":
+                    profile.account_type = "STANDARD"; profile.is_paid = True; profile.word_quota = max(profile.word_quota, 100000)
+                elif package_slug == "humanizer-pro":
+                    profile.account_type = "PRO"; profile.is_paid = True; profile.word_quota = max(profile.word_quota, 250000)
+                elif package_slug == "humanizer-team":
+                    profile.account_type = "ENTERPRISE"; profile.is_paid = True; profile.word_quota = max(profile.word_quota, 600000); profile.max_concurrent_devices = max(profile.max_concurrent_devices, 5)
+                profile.save()
+            except Exception:
+                logger.exception("Could not apply self-service entitlement for %s", package_slug)
         messages.success(request, "Payment confirmed.")
         if request.user.is_authenticated:
             return redirect("platformhub:workspace")
