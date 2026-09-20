@@ -9,11 +9,11 @@
   <div class="hero-actions"><span class="status status-pending">{{ item.get_status_display }}</span></div>
 </div>
 <section class="section"><div class="shell">
-  <div class="section-head"><div class="eyebrow">Scope</div><div><h2 class="h2">What the engagement is responsible for.</h2></div></div>
+  <div class="section-head"><div class="eyebrow">Scope</div><div><h2 class="h2">What we’re doing.</h2></div></div>
   <table class="proof-table">
     <tr><th>Service</th><td>{{ item.metadata.service_name }}</td></tr>
     <tr><th>Audience</th><td>{{ item.audience|default:"Not specified" }}</td></tr>
-    <tr><th>Existing material / scope</th><td>{{ item.scope }}</td></tr>
+    <tr><th>What you gave us</th><td>{{ item.scope }}</td></tr>
     <tr><th>Deliverable</th><td>{{ item.deliverable }}</td></tr>
     <tr><th>Research</th><td>{{ item.get_research_depth_display }}</td></tr>
     <tr><th>Turnaround</th><td>{{ item.get_turnaround_display }}</td></tr>
@@ -22,15 +22,15 @@
 <section class="section"><div class="shell workspace-grid">
   <div><h2 class="h3" style="margin-bottom:18px">Quotes</h2><div class="list-block">
     {% for quote in quotes %}<div class="list-item"><strong>{{ quote.number }} · {{ quote.currency }} {{ quote.total }}</strong><small>{{ quote.get_status_display }}</small><div style="margin-top:10px"><a class="btn btn-link" href="{% url 'platformhub:quote_detail' quote.id %}">Review quote →</a></div></div>
-    {% empty %}<div class="list-item"><strong>Scope review comes first.</strong><small>A quote appears here when the workstreams and deliverables are clear.</small></div>{% endfor %}
+    {% empty %}<div class="list-item"><strong>No quote yet.</strong><small>We’ll add it once the scope is confirmed.</small></div>{% endfor %}
   </div></div>
   <div><h2 class="h3" style="margin-bottom:18px">Invoices</h2><div class="list-block">
     {% for invoice in invoices %}<div class="list-item"><strong>{{ invoice.number }} · {{ invoice.currency }} {{ invoice.amount_due }}</strong><small>{{ invoice.get_status_display }}</small>{% if invoice.status != "paid" %}<div style="margin-top:10px"><a class="btn btn-link" href="{% url 'platformhub:checkout' %}?invoice={{ invoice.id }}">Pay balance →</a></div>{% endif %}</div>
-    {% empty %}<div class="list-item"><strong>No invoice yet.</strong><small>Invoices are created from accepted scope, not from the initial request.</small></div>{% endfor %}
+    {% empty %}<div class="list-item"><strong>No invoice yet.</strong><small>Your invoice will appear here after you accept a quote.</small></div>{% endfor %}
   </div></div>
 </div></section>
 <section class="section"><div class="shell">
-  <div class="section-head"><div class="eyebrow">Delivery</div><div><h2 class="h2">What is being produced.</h2></div></div>
+  <div class="section-head"><div class="eyebrow">Delivery</div><div><h2 class="h2">Deliverables.</h2></div></div>
   <div class="list-block">
     {% for deliverable in deliverables %}
     <div class="list-item deliverable-review">
@@ -42,7 +42,7 @@
       <form method="post" class="review-form">{% csrf_token %}<input type="hidden" name="deliverable_id" value="{{ deliverable.id }}"><div class="field"><label for="feedback-{{ deliverable.id }}">Review note <span class="help">(required for a revision request)</span></label><textarea id="feedback-{{ deliverable.id }}" name="message" rows="3"></textarea></div><div class="review-actions"><button class="btn" type="submit" name="action" value="comment">Add comment</button><button class="btn" type="submit" name="action" value="revision">Request revision</button><button class="btn btn-primary" type="submit" name="action" value="approve">Approve</button></div></form>
       {% endif %}
     </div>
-    {% empty %}<div class="list-item"><strong>Deliverables appear when production starts.</strong><small>The workspace stays quiet until there is real work to show.</small></div>{% endfor %}
+    {% empty %}<div class="list-item"><strong>Nothing here yet.</strong><small>Files will appear when they are ready.</small></div>{% endfor %}
   </div>
 </div></section>
 {% endblock %}
