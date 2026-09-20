@@ -22,7 +22,6 @@ from .whatsapp_verification import (
     encode_to_morse,
     generate_whatsapp_qr
 )
-from humanizer.utils import humanize_text_with_engine
 
 
 logger = logging.getLogger(__name__)
@@ -103,77 +102,6 @@ def signup_view(request):
         form = SignUpForm()
     return render(request, "account/signup.html", {"form": form})
 
-
-@login_required
-def humanizer_view(request):
-    profile, _ = Profile.objects.get_or_create(user=request.user)
-
-    try:
-        word_quota = int(getattr(profile, "word_quota", 0) or 0)
-        words_used = int(getattr(profile, "words_used", 0) or 0)
-    except Exception as exc:  # pragma: no cover - defensive fallback
-        logger.exception("Failed to normalize profile word data: %s", exc)
-        word_quota = 0
-        words_used = 0
-
-    word_balance = max(0, word_quota - words_used)
-    input_text = ''
-    output_text = ''
-    word_count = 0
-    selected_engine = (request.POST.get('engine') or 'claude').lower()
-
-    if request.method == "POST":
-        input_text = request.POST.get("text", "").strip()
-        word_count = len(input_text.split())
-
-        if selected_engine not in ("claude", "openai", "deepseek"):
-            messages.error(request, "Invalid engine selection.")
-        elif not input_text:
-            messages.error(request, "Please provide text to humanize.")
-        else:
-            # Enforce server-side word balance strictly. If the user submitted more
-            # words than their balance, truncate the input to the allowed number
-            # of words and show a warning. This prevents clients from bypassing
-            # any client-side limits or manipulated requests.
-            if word_count > word_balance:
-                if word_balance <= 0:
-                    messages.error(
-                        request,
-                        f"You've exceeded your word balance ({word_balance} words left)."
-                    )
-                    # Do not proceed to humanize when there's no balance left
-                    input_text = ''
-                else:
-                    # Truncate to allowed words and inform the user
-                    words = input_text.split()
-                    truncated = words[:word_balance]
-                    input_text = " ".join(truncated)
-                    word_count = len(truncated)
-                    messages.warning(
-                        request,
-                        f"Input was truncated to {word_count} words due to your word balance."
-                    )
-
-            if input_text:
-                try:
-                    output_text = humanize_text_with_engine(input_text, selected_engine)
-                except Exception as exc:  # pragma: no cover - defensive logging
-                    logger.exception("Humanizer request failed: %s", exc)
-                    messages.error(
-                        request,
-                        "We couldn't humanize your text right now. "
-                        "Please check your API keys and try again.",
-                    )
-
-    context = {
-        "input_text": input_text,
-        "output_text": output_text,
-        "word_count": word_count,
-        "word_balance": word_balance,
-        "selected_engine": selected_engine,
-    }
-
-    return render(request, "humanizer/humanizer.html", context)
 
 
 def verify_whatsapp_code(request):
