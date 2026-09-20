@@ -195,6 +195,23 @@ class Deliverable(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
+class DeliverableFeedback(models.Model):
+    ACTION_CHOICES = [
+        ("comment", "Comment"),
+        ("approve", "Approve"),
+        ("revision", "Request revision"),
+    ]
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    deliverable = models.ForeignKey(Deliverable, on_delete=models.CASCADE, related_name="feedback")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL)
+    action = models.CharField(max_length=20, choices=ACTION_CHOICES, default="comment")
+    message = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["created_at"]
+
+
 class AssuranceJob(models.Model):
     STATUS_CHOICES = [
         ("awaiting_payment", "Awaiting payment"),
