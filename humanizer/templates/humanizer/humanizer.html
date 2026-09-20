@@ -1,98 +1,208 @@
-
 {% extends "base.html" %}
-{% block title %}Text Intelligence — InfiniAI{% endblock %}
+{% block title %}Humanizer — InfiniAI{% endblock %}
+{% block description %}Rewrite existing text in natural, economical prose while preserving its meaning.{% endblock %}
+
 {% block content %}
-<section class="tool-shell">
-  <div class="tool-pane">
-    <div class="eyebrow">Text intelligence</div>
-    <h1 style="font-size:clamp(2rem,4vw,4rem);letter-spacing:-.055em;line-height:.95;margin:14px 0 18px">Rewrite the text without changing what it means.</h1>
-    <p style="color:var(--text-muted);max-width:620px">Use the humanizer when you already have the content and want to improve how it reads. For research or a finished deliverable, start a project.</p>
-    <div class="tool-toolbar">
-      <span class="micro" id="input-count">0 words</span>
-      <label class="micro" for="temperature">Variation <input id="temperature" type="range" min="0.1" max="1" step="0.1" value="0.7" aria-label="Writing variation"></label>
+<section class="humanizer-page">
+  <div class="shell humanizer-intro">
+    <div>
+      <div class="eyebrow">Text Intelligence</div>
+      <h1 class="h1">Rewrite the text in natural prose.</h1>
+      <p class="lede">The humanizer keeps the meaning and removes the patterns that make writing feel generic, padded or mechanical.</p>
     </div>
-    <form id="humanize-form">
-      {% csrf_token %}
-      <textarea id="input-text" name="text" maxlength="18000" placeholder="Paste the text you want to refine…" aria-label="Text to refine"></textarea>
-      <input type="hidden" name="engine" value="openai">
-      <input type="hidden" name="model" value="nami-i">
-      <div class="tool-toolbar">
-        <div>
-          <span class="micro">Balance: <strong id="word-balance">{{ word_balance }}</strong> words</span>
-        </div>
-        {% if engine_configured %}<button class="btn btn-primary" id="humanize-button" type="submit">Refine text</button>{% else %}<button class="btn" id="humanize-button" type="button" disabled>Model connection required</button>{% endif %}
-      </div>
-    </form>
-    <div style="border-top:1px solid var(--line-subtle);padding-top:18px;margin-top:26px">
-      <span class="micro">NEED RESEARCH OR A FINISHED DELIVERABLE?</span>
-      <p style="margin:8px 0 14px;color:var(--text-muted)">The Research &amp; Production studio handles research, source review, reports, decks and technical work.</p>
-      <a class="btn btn-link" href="{% url 'platformhub:request_service_code' 'studio-review' %}">Start a project →</a>
+    <div class="humanizer-account">
+      <span class="micro">WORD BALANCE</span>
+      <strong id="word-balance">{{ balance_label }}</strong>
+      <a href="{% url 'platformhub:pricing' %}">Plans</a>
     </div>
   </div>
-  <div class="tool-pane">
-    <div class="eyebrow">Output</div>
-    <h2 style="font-size:1.5rem;letter-spacing:-.03em;margin:14px 0 18px">Your result appears here.</h2>
-    <textarea id="output-text" placeholder="Your refined text will appear here." aria-label="Refined output"></textarea>
-    <div class="tool-toolbar">
-      <div class="meter">
-        <span id="human-score">Human score —</span>
-        <span id="read-score">Readability —</span>
+
+  <div class="shell humanizer-workspace">
+    <section class="editor-card editor-card-input">
+      <div class="editor-card-head">
+        <div>
+          <span class="micro">SOURCE</span>
+          <h2>Your text</h2>
+        </div>
+        <span class="editor-count" id="input-count">0 words</span>
       </div>
-      <div style="display:flex;gap:8px">
-        <button class="btn" type="button" id="copy-output">Copy</button>
-        <button class="btn btn-ink" type="button" id="download-output">Download .txt</button>
+
+      <form id="humanize-form">
+        {% csrf_token %}
+        <textarea
+          id="input-text"
+          name="text"
+          maxlength="{{ max_chars }}"
+          placeholder="Paste the text you want to rewrite."
+          aria-label="Text to rewrite"
+        ></textarea>
+
+        <div class="rewrite-controls">
+          <label class="variation-control" for="temperature">
+            <span>
+              <strong>Variation</strong>
+              <small>Higher settings allow more changes to sentence structure.</small>
+            </span>
+            <span class="variation-range">
+              <span>Closer</span>
+              <input id="temperature" type="range" min="0.35" max="0.9" step="0.05" value="0.65" aria-label="Rewrite variation">
+              <span>Freer</span>
+            </span>
+          </label>
+
+          {% if engine_configured %}
+          <button class="btn btn-primary rewrite-button" id="humanize-button" type="submit">
+            Rewrite
+          </button>
+          {% else %}
+          <button class="btn rewrite-button" id="humanize-button" type="button" disabled>
+            Service unavailable
+          </button>
+          {% endif %}
+        </div>
+      </form>
+    </section>
+
+    <section class="editor-card editor-card-output">
+      <div class="editor-card-head">
+        <div>
+          <span class="micro">RESULT</span>
+          <h2>Rewritten text</h2>
+        </div>
+        <span class="editor-count" id="output-count">0 words</span>
       </div>
+
+      <div class="output-wrap">
+        <textarea id="output-text" readonly placeholder="Your rewritten text will appear here." aria-label="Rewritten output"></textarea>
+        <div class="output-empty" id="output-empty">
+          <span class="output-mark">Aa</span>
+          <p>The result will appear here.</p>
+        </div>
+      </div>
+
+      <div class="output-actions">
+        <span id="tool-status" class="tool-status" aria-live="polite">
+          {% if not engine_configured %}The humanizer API is not configured on this deployment.{% endif %}
+        </span>
+        <div>
+          <button class="btn btn-quiet" type="button" id="copy-output" disabled>Copy</button>
+          <button class="btn btn-ink" type="button" id="download-output" disabled>Download</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="shell humanizer-notes">
+    <div>
+      <span class="micro">PRESERVES</span>
+      <p>Meaning, facts, quotations, citations and technical detail.</p>
     </div>
-    <div id="tool-status" class="micro" aria-live="polite">{% if not engine_configured %}The interface is live. The model credential still needs to be copied into this deployment before processing can run.{% endif %}</div>
+    <div>
+      <span class="micro">IMPROVES</span>
+      <p>Sentence flow, word choice, repetition and unnecessary padding.</p>
+    </div>
+    <div>
+      <span class="micro">LIMIT</span>
+      <p>Up to {{ max_words|floatformat:0 }} words per rewrite.</p>
+    </div>
   </div>
 </section>
 {% endblock %}
+
 {% block extra_scripts %}
 <script>
-(function(){
-  var form = document.getElementById("humanize-form");
-  var input = document.getElementById("input-text");
-  var output = document.getElementById("output-text");
-  var button = document.getElementById("humanize-button");
-  var status = document.getElementById("tool-status");
-  var count = document.getElementById("input-count");
-  var temp = document.getElementById("temperature");
+(function () {
+  const form = document.getElementById("humanize-form");
+  const input = document.getElementById("input-text");
+  const output = document.getElementById("output-text");
+  const button = document.getElementById("humanize-button");
+  const status = document.getElementById("tool-status");
+  const inputCount = document.getElementById("input-count");
+  const outputCount = document.getElementById("output-count");
+  const temperature = document.getElementById("temperature");
+  const copyButton = document.getElementById("copy-output");
+  const downloadButton = document.getElementById("download-output");
+  const emptyState = document.getElementById("output-empty");
 
-  function words(value){ return (value.trim().match(/\S+/g) || []).length; }
-  input.addEventListener("input", function(){ count.textContent = words(input.value) + " words"; });
+  const wordCount = (value) => (value.trim().match(/\S+/g) || []).length;
 
-  if (!form || !button || button.disabled) return;
-  form.addEventListener("submit", async function(event){
-    event.preventDefault();
-    if (!input.value.trim()) { status.textContent = "Add text before refining."; return; }
-    button.disabled = true; button.textContent = "Working…"; status.textContent = "Refining the language while preserving the underlying meaning.";
-    var body = new FormData(form); body.set("temperature", temp.value);
-    try {
-      var response = await fetch("{% url 'humanize_ajax' %}", {method:"POST",body:body,headers:{"X-CSRFToken":form.querySelector("[name=csrfmiddlewaretoken]").value}});
-      var data = await response.json();
-      if (!response.ok) throw new Error(data.error || "The text could not be processed.");
-      output.value = data.output_text || "";
-      document.getElementById("human-score").textContent = "Human score " + (data.human_score || "—");
-      document.getElementById("read-score").textContent = "Readability " + (data.read_score || "—");
-      if (typeof data.word_balance !== "undefined") document.getElementById("word-balance").textContent = data.word_balance;
-      status.textContent = "Draft ready. Review it before using it.";
-    } catch (error) {
-      status.textContent = error.message;
-    } finally {
-      button.disabled = false; button.textContent = "Refine text";
-    }
+  input.addEventListener("input", function () {
+    inputCount.textContent = wordCount(input.value).toLocaleString() + " words";
   });
 
-  document.getElementById("copy-output").addEventListener("click", async function(){
+  function setResult(value) {
+    output.value = value;
+    const count = wordCount(value);
+    outputCount.textContent = count.toLocaleString() + " words";
+    emptyState.hidden = Boolean(value);
+    copyButton.disabled = !value;
+    downloadButton.disabled = !value;
+    if (value) {
+      output.classList.add("has-output");
+      output.scrollTop = 0;
+    }
+  }
+
+  if (form && button && !button.disabled) {
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      if (!input.value.trim()) {
+        status.textContent = "Paste some text first.";
+        input.focus();
+        return;
+      }
+
+      button.disabled = true;
+      button.classList.add("is-working");
+      button.textContent = "Rewriting…";
+      status.textContent = "Rewriting your text.";
+
+      const body = new FormData(form);
+      body.set("temperature", temperature.value);
+
+      try {
+        const response = await fetch("{% url 'humanize_ajax' %}", {
+          method: "POST",
+          body,
+          headers: {"X-CSRFToken": form.querySelector("[name=csrfmiddlewaretoken]").value}
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "The text could not be rewritten.");
+
+        setResult(data.output_text || "");
+        if (typeof data.word_balance !== "undefined") {
+          document.getElementById("word-balance").textContent =
+            typeof data.word_balance === "number"
+              ? data.word_balance.toLocaleString()
+              : data.word_balance;
+        }
+        status.textContent = "Ready.";
+      } catch (error) {
+        status.textContent = error.message;
+      } finally {
+        button.disabled = false;
+        button.classList.remove("is-working");
+        button.textContent = "Rewrite";
+      }
+    });
+  }
+
+  copyButton.addEventListener("click", async function () {
     if (!output.value) return;
     await navigator.clipboard.writeText(output.value);
-    status.textContent = "Copied.";
+    const previous = copyButton.textContent;
+    copyButton.textContent = "Copied";
+    setTimeout(() => { copyButton.textContent = previous; }, 1200);
   });
-  document.getElementById("download-output").addEventListener("click", function(){
+
+  downloadButton.addEventListener("click", function () {
     if (!output.value) return;
-    var blob = new Blob([output.value], {type:"text/plain;charset=utf-8"});
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement("a"); a.href = url; a.download = "infiniai-refined-text.txt"; a.click();
+    const blob = new Blob([output.value], {type: "text/plain;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "infiniai-rewrite.txt";
+    link.click();
     URL.revokeObjectURL(url);
   });
 })();
