@@ -40,11 +40,11 @@
     <div class="section-head"><div class="eyebrow">Monthly</div><div><h2 class="h2">For teams that need ongoing help.</h2></div></div>
     <div class="retainer-ledger">
       {% for retainer in retainers %}
-      <article class="retainer-row {% if retainer.usd == 10000 %}retainer-row-featured{% endif %}">
+      <article class="retainer-row">
         <div><span class="micro">{{ retainer.capacity }}</span><h3>{{ retainer.name }}</h3><p>{{ retainer.summary }}</p></div>
         <strong>USD {{ retainer.usd|floatformat:0 }}<small>/month</small></strong>
         <ul>{% for item in retainer.includes %}<li>{{ item }}</li>{% endfor %}</ul>
-        <a class="btn {% if retainer.usd == 10000 %}btn-primary{% endif %}" href="{% url 'platformhub:request_service_code' 'studio-retainer' %}">Start a request</a>
+        <a class="btn" href="{% url 'platformhub:request_service_code' 'studio-retainer' %}">Start a request</a>
       </article>
       {% endfor %}
     </div>
