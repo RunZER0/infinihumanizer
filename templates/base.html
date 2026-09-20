@@ -28,6 +28,7 @@
     </a>
     <nav class="site-nav" data-nav aria-label="Primary navigation">
       <a href="{% url 'platformhub:services' %}">Services</a>
+      <a href="{% url 'platformhub:about' %}">About</a>
       <a href="{% url 'humanizer' %}">Text tool</a>
       <a href="{% url 'platformhub:pricing' %}">Pricing</a>
       <a href="{% url 'platformhub:consultation' %}">Consultation</a>
@@ -49,8 +50,7 @@
   <div class="shell footer-grid">
     <div>
       <div class="eyebrow" style="color:#e46b5d">InfiniAI</div>
-      <h2 style="font-size:2rem;letter-spacing:-.04em;margin:12px 0 10px">Language people remember.</h2>
-      <p style="color:#bbb7ae;max-width:520px">Writing, research, websites, product language and AI systems that do not sound generic.</p>
+      <p style="color:#bbb7ae;max-width:480px;margin-top:14px">Research, writing, product language and AI systems.</p>
     </div>
     <div>
       <strong>Work</strong>
@@ -62,12 +62,20 @@
       </ul>
     </div>
     <div>
-      <strong>Start</strong>
+      <strong>Company</strong>
       <ul>
-        <li><a href="{% url 'humanizer' %}">Use the text tool</a></li>
-        <li><a href="{% url 'platformhub:start' %}">Start a project</a></li>
-        <li><a href="{% url 'platformhub:consultation' %}">Book a consultation</a></li>
+        <li><a href="{% url 'platformhub:about' %}">About</a></li>
         <li><a href="{% url 'platformhub:pricing' %}">Pricing</a></li>
+        <li><a href="{% url 'platformhub:consultation' %}">Consultation</a></li>
+        <li><a href="mailto:support@infinihumanizer.com">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <strong>Legal</strong>
+      <ul>
+        <li><a href="{% url 'platformhub:privacy' %}">Privacy Policy</a></li>
+        <li><a href="{% url 'platformhub:terms' %}">Terms of Service</a></li>
+        <li><a href="{% url 'platformhub:disclaimer' %}">Disclaimer</a></li>
       </ul>
     </div>
   </div>
