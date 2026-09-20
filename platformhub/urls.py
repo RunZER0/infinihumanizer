@@ -5,6 +5,10 @@ app_name = "platformhub"
 
 urlpatterns = [
     path("", views.home, name="home"),
+    path("about/", views.about, name="about"),
+    path("privacy/", views.privacy, name="privacy"),
+    path("terms/", views.terms, name="terms"),
+    path("disclaimer/", views.disclaimer, name="disclaimer"),
     path("services/", views.services, name="services"),
     path("services/<slug:family_slug>/", views.service_detail, name="service_detail"),
     path("pricing/", views.pricing, name="pricing"),
