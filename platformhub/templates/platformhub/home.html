@@ -1,27 +1,27 @@
 {% extends "base.html" %}
 {% block title %}InfiniAI — Language, research and AI systems{% endblock %}
-{% block description %}Clearer writing, sharper research, better product language and AI systems trained to sound like you.{% endblock %}
+{% block description %}InfiniAI improves writing, research, product language and AI output.{% endblock %}
 {% block content %}
 <section class="hero">
   <div class="hero-copy">
     <div class="eyebrow">Language · Research · Product · AI</div>
-    <h1 class="display">We know language.<br>You can hear the difference.</h1>
-    <p class="lede">We turn rough thinking, flat AI copy and messy source material into writing people can trust, read and remember.</p>
+    <h1 class="display">Nobody knows language better than we do.</h1>
+    <p class="lede">We handle the research and the writing, then shape the final language for the people who will read it.</p>
     <div class="hero-actions">
       <a class="btn btn-primary" href="{% url 'platformhub:start' %}">Start a project</a>
-      <a class="btn" href="{% url 'humanizer' %}">Fix my text</a>
+      <a class="btn" href="{% url 'humanizer' %}">Improve my text</a>
     </div>
   </div>
 
   <aside class="hero-proof">
     <div>
-      <div class="micro">WHAT NEEDS TO BE BETTER?</div>
+      <div class="micro">WHAT DO YOU NEED?</div>
       <ul class="route-list" style="margin-top:18px">
-        <li><a href="{% url 'humanizer' %}"><span class="route-index">01</span><span><span class="route-name">The writing</span><span class="route-desc">Make it clearer, more natural and more like you.</span></span><span class="arrow">↗</span></a></li>
-        <li><a href="{% url 'platformhub:service_detail' 'assurance' %}"><span class="route-index">02</span><span><span class="route-name">The quality</span><span class="route-desc">Check originality, sources, structure and weak spots.</span></span><span class="arrow">↗</span></a></li>
-        <li><a href="{% url 'platformhub:service_detail' 'studio' %}"><span class="route-index">03</span><span><span class="route-name">The whole piece</span><span class="route-desc">Research, reports, decks, analysis and technical writing.</span></span><span class="arrow">↗</span></a></li>
-        <li><a href="{% url 'platformhub:service_detail' 'communication' %}"><span class="route-index">04</span><span><span class="route-name">The website or product</span><span class="route-desc">Say the right thing, in the right place, in the right voice.</span></span><span class="arrow">↗</span></a></li>
-        <li><a href="{% url 'platformhub:service_detail' 'systems' %}"><span class="route-index">05</span><span><span class="route-name">The AI behind it</span><span class="route-desc">Build models, datasets and workflows around your standards.</span></span><span class="arrow">↗</span></a></li>
+        <li><a href="{% url 'humanizer' %}"><span class="route-index">01</span><span><span class="route-name">Improve the writing</span><span class="route-desc">Make it sound more like you and easier to read.</span></span><span class="arrow">↗</span></a></li>
+        <li><a href="{% url 'platformhub:service_detail' 'assurance' %}"><span class="route-index">02</span><span><span class="route-name">Review the work</span><span class="route-desc">Check originality, sources, citations and consistency.</span></span><span class="arrow">↗</span></a></li>
+        <li><a href="{% url 'platformhub:service_detail' 'studio' %}"><span class="route-index">03</span><span><span class="route-name">Create the piece</span><span class="route-desc">Research, reports, decks, analysis and technical writing.</span></span><span class="arrow">↗</span></a></li>
+        <li><a href="{% url 'platformhub:service_detail' 'communication' %}"><span class="route-index">04</span><span><span class="route-name">Improve the website or product</span><span class="route-desc">Make the page or flow easier to understand and act on.</span></span><span class="arrow">↗</span></a></li>
+        <li><a href="{% url 'platformhub:service_detail' 'systems' %}"><span class="route-index">05</span><span><span class="route-name">Build the AI system</span><span class="route-desc">Create the data, model and workflow around your standards.</span></span><span class="arrow">↗</span></a></li>
       </ul>
     </div>
   </aside>
@@ -31,26 +31,26 @@
   <div class="shell statement-shell">
     <div class="eyebrow">Our standard</div>
     <div>
-      <h2 class="h2">Most AI writing sounds like AI writing.</h2>
-      <p class="statement-copy">Vague. Padded. Repetitive. Safe. We cut that out. The point is not to sound “human.” The point is to sound specific, deliberate and worth reading.</p>
+      <h2 class="h2">AI-assisted writing often settles into the same phrases and rhythms.</h2>
+      <p class="statement-copy">We edit for specificity, voice and clarity so the final text fits the person, product or audience it belongs to.</p>
     </div>
   </div>
 </section>
 
 <section class="section">
   <div class="shell">
-    <div class="section-head"><div class="eyebrow">What we make better</div><div><h2 class="h2">The words. The thinking behind them. The system producing them.</h2></div></div>
+    <div class="section-head"><div class="eyebrow">What we do</div><div><h2 class="h2">We work on language from the first research question to the final interface.</h2></div></div>
     <div class="choice-grid">
       <a class="choice choice-rise-1" href="{% url 'platformhub:service_detail' 'studio' %}">
-        <div><span class="micro">RESEARCH &amp; WRITING</span><strong>Say something worth saying.</strong><p>Research, analysis, reports, decks, briefs and technical work with a clear point.</p></div>
+        <div><span class="micro">RESEARCH &amp; WRITING</span><strong>Research and writing.</strong><p>Reports, decks, briefs, analysis and technical work built from the evidence.</p></div>
         <span>See research &amp; production →</span>
       </a>
       <a class="choice choice-rise-2" href="{% url 'platformhub:service_detail' 'communication' %}">
-        <div><span class="micro">WEBSITES &amp; PRODUCTS</span><strong>Sound like yourself.</strong><p>Website copy, product language and UX writing that fit the product instead of sounding templated.</p></div>
+        <div><span class="micro">WEBSITES &amp; PRODUCTS</span><strong>Website and product language.</strong><p>Copy and UX writing that fit the product, the page and the user.</p></div>
         <span>See communication work →</span>
       </a>
       <a class="choice choice-rise-3" href="{% url 'platformhub:service_detail' 'systems' %}">
-        <div><span class="micro">AI &amp; DATA</span><strong>Teach the system your standard.</strong><p>Datasets, fine-tuning, evaluation and deployment for teams that need better output at scale.</p></div>
+        <div><span class="micro">AI &amp; DATA</span><strong>AI systems.</strong><p>Datasets, fine-tuning, evaluation and deployment for teams that need reliable language output.</p></div>
         <span>See AI systems →</span>
       </a>
     </div>
@@ -59,12 +59,12 @@
 
 <section class="section home-process">
   <div class="shell">
-    <div class="section-head"><div class="eyebrow">Working with us</div><div><h2 class="h2">Give us the outcome. We’ll work from there.</h2></div></div>
+    <div class="section-head"><div class="eyebrow">Working with us</div><div><h2 class="h2">Tell us what you need and what already exists.</h2></div></div>
     <div class="process">
-      <div class="process-step"><strong>Brief</strong><p>Tell us what you need and what already exists.</p></div>
-      <div class="process-step"><strong>Scope</strong><p>We agree on the work, timing and price.</p></div>
-      <div class="process-step"><strong>Make</strong><p>We research, write, review and revise.</p></div>
-      <div class="process-step"><strong>Deliver</strong><p>You get the finished work.</p></div>
+      <div class="process-step"><strong>Brief</strong><p>Send the problem, audience and material you already have.</p></div>
+      <div class="process-step"><strong>Scope</strong><p>We confirm the work, timing and price.</p></div>
+      <div class="process-step"><strong>Work</strong><p>We research, write, review and revise as agreed.</p></div>
+      <div class="process-step"><strong>Delivery</strong><p>You receive the finished work and the agreed files.</p></div>
     </div>
   </div>
 </section>
@@ -73,7 +73,7 @@
   <div class="callout">
     <div>
       <div class="eyebrow" style="color:#e46b5d">Have something in mind?</div>
-      <h2 class="h2" style="margin-top:14px">Let’s make it say what it should.</h2>
+      <h2 class="h2" style="margin-top:14px">Tell us what you need to say.</h2>
     </div>
     <a class="btn btn-primary" href="{% url 'platformhub:start' %}">Start a project</a>
   </div>
