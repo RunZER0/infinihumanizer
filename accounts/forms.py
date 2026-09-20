@@ -68,16 +68,12 @@ class CustomLoginForm(LoginForm):
 
         if user:
             # In production, enforce verified emails. In offline/local mode, allow login for testing.
-            if not (getattr(settings, 'OFFLINE_MODE', False) or getattr(settings, 'DEBUG', False)):
-                # Production path (kept for reference):
-                # email_verified = EmailAddress.objects.filter(user=user, verified=True).exists()
-                # if not email_verified:
-                #     self.request.session['resend_email'] = user.email
-                #     raise ValidationError("⚠️ Your email is not verified. Please verify to continue.")
+            verification_required = getattr(settings, "ACCOUNT_EMAIL_VERIFICATION", "none") == "mandatory"
+            if verification_required and not (getattr(settings, "OFFLINE_MODE", False) or getattr(settings, "DEBUG", False)):
                 email_verified = EmailAddress.objects.filter(user=user, verified=True).exists()
                 if not email_verified:
-                    self.request.session['resend_email'] = user.email
-                    raise ValidationError("⚠️ Your email is not verified. Please verify to continue.")
+                    self.request.session["resend_email"] = user.email
+                    raise ValidationError("Verify your email before signing in.")
         else:
             raise ValidationError("Invalid login credentials.")
 
