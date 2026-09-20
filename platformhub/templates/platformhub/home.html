@@ -62,6 +62,25 @@
   </div>
 </section>
 
+<section class="section home-notes">
+  <div class="shell">
+    <div class="section-head">
+      <div class="eyebrow">Notes</div>
+      <div><h2 class="h2">We write about the decisions hidden inside language.</h2></div>
+    </div>
+    <div class="home-note-grid">
+      {% for article in latest_notes %}
+      <article class="home-note">
+        <div class="note-date">{{ article.date|date:"F j, Y" }}</div>
+        <h3><a href="{% url 'platformhub:note_detail' article.slug %}">{{ article.title }}</a></h3>
+        <p>{{ article.dek }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    <div class="home-notes-link"><a class="btn" href="{% url 'platformhub:notes' %}">Read all notes</a></div>
+  </div>
+</section>
+
 <section class="section home-process">
   <div class="shell">
     <div class="section-head"><div class="eyebrow">Working with us</div><div><h2 class="h2">Tell us what you need and what already exists.</h2></div></div>
