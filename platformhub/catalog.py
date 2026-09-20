@@ -4,8 +4,8 @@ SERVICE_FAMILIES = {
     "text-intelligence": {
         "name": "Text Intelligence",
         "kicker": "Use a tool",
-        "headline": "Work directly on the words.",
-        "description": "Tools for rewriting, refining and adapting text you already have.",
+        "headline": "Make the writing sound like you.",
+        "description": "Rewrite, refine and reshape text without flattening the voice.",
         "services": [
             {"code": "text-humanize", "name": "Humanize & refine", "summary": "Make the writing sound more natural while keeping the meaning.", "from_usd": 12, "billing": "subscription"},
             {"code": "text-rewrite", "name": "Rewrite & adapt", "summary": "Change the tone, structure or level of formality.", "from_usd": 15, "billing": "usage"},
@@ -15,8 +15,8 @@ SERVICE_FAMILIES = {
     "assurance": {
         "name": "Content Assurance",
         "kicker": "Check the work",
-        "headline": "Check the work before you send it.",
-        "description": "Originality, source, citation, structure and consistency checks.",
+        "headline": "Catch weak, copied or careless writing before it ships.",
+        "description": "Check originality, sources, citations, structure and consistency before the work goes out.",
         "services": [
             {"code": "assurance-originality", "name": "Originality check", "summary": "A quick originality check with a short report.", "from_usd": 2, "billing": "per document"},
             {"code": "assurance-report", "name": "Originality report", "summary": "A fuller review of source overlap, readability and issues to fix.", "from_usd": 15, "billing": "per document"},
@@ -26,8 +26,8 @@ SERVICE_FAMILIES = {
     "studio": {
         "name": "Research & Production",
         "kicker": "Hand us the work",
-        "headline": "Need something made? Send us the brief.",
-        "description": "Research, review, analysis, writing, decks, reports, technical documents and other professional work.",
+        "headline": "Research it properly. Write it clearly.",
+        "description": "Research, analysis, reports, decks and technical writing with a clear point and a real voice.",
         "services": [
             {"code": "studio-review", "name": "Review & synthesis", "summary": "We read the material, pull out what matters and return a clear synthesis.", "from_usd": 35, "billing": "project"},
             {"code": "studio-research", "name": "Research brief", "summary": "Research built around the question or decision you need answered.", "from_usd": 75, "billing": "project"},
@@ -40,8 +40,8 @@ SERVICE_FAMILIES = {
     "communication": {
         "name": "Communication & Experience",
         "kicker": "Make the product communicate",
-        "headline": "Make the website or product easier to understand.",
-        "description": "Website copy, product language, UX writing and content structure.",
+        "headline": "Make every screen say the right thing.",
+        "description": "Website copy, product language and UX writing that sound like the product, not a template.",
         "services": [
             {"code": "communication-audit", "name": "Communication audit", "summary": "A page-by-page review of message, structure and friction.", "from_usd": 150, "billing": "project"},
             {"code": "communication-copy", "name": "Website / product copy", "summary": "Research, structure and final copy for websites, landing pages and product flows.", "from_usd": 350, "billing": "project"},
@@ -51,8 +51,8 @@ SERVICE_FAMILIES = {
     "systems": {
         "name": "AI & Data Systems",
         "kicker": "Build the capability",
-        "headline": "Build the AI capability you need.",
-        "description": "Datasets, fine-tuning, evaluation, NLP, deployment and hosting.",
+        "headline": "Train the system on your standard, not the internet’s average.",
+        "description": "Datasets, fine-tuning, evaluation and deployment for teams that care how the output reads.",
         "services": [
             {"code": "systems-discovery", "name": "AI systems discovery", "summary": "We review the problem, data and practical ways to build it.", "from_usd": 500, "billing": "project"},
             {"code": "systems-dataset", "name": "Dataset creation", "summary": "Data collection, cleaning, annotation, synthetic data and evaluation sets.", "from_usd": 1000, "billing": "project"},
