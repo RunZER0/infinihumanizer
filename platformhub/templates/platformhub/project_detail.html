@@ -9,7 +9,7 @@
   <div class="hero-actions"><span class="status status-pending">{{ item.get_status_display }}</span></div>
 </div>
 <section class="section"><div class="shell">
-  <div class="section-head"><div class="eyebrow">Scope</div><div><h2 class="h2">What we’re doing.</h2></div></div>
+  <div class="section-head"><div class="eyebrow">Scope</div><div><h2 class="h2">This is the agreed scope.</h2></div></div>
   <table class="proof-table">
     <tr><th>Service</th><td>{{ item.metadata.service_name }}</td></tr>
     <tr><th>Audience</th><td>{{ item.audience|default:"Not specified" }}</td></tr>
@@ -42,7 +42,7 @@
       <form method="post" class="review-form">{% csrf_token %}<input type="hidden" name="deliverable_id" value="{{ deliverable.id }}"><div class="field"><label for="feedback-{{ deliverable.id }}">Review note <span class="help">(required for a revision request)</span></label><textarea id="feedback-{{ deliverable.id }}" name="message" rows="3"></textarea></div><div class="review-actions"><button class="btn" type="submit" name="action" value="comment">Add comment</button><button class="btn" type="submit" name="action" value="revision">Request revision</button><button class="btn btn-primary" type="submit" name="action" value="approve">Approve</button></div></form>
       {% endif %}
     </div>
-    {% empty %}<div class="list-item"><strong>Nothing here yet.</strong><small>Files will appear when they are ready.</small></div>{% endfor %}
+    {% empty %}<div class="list-item"><strong>Files will appear here when they are ready.</strong></div>{% endfor %}
   </div>
 </div></section>
 {% endblock %}
