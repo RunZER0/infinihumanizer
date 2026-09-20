@@ -2,27 +2,27 @@
 {% extends "base.html" %}
 {% block title %}Project brief — InfiniAI{% endblock %}
 {% block content %}
-<div class="page-shell"><div class="eyebrow">Project brief</div><h1 class="h1">Describe the finished state.</h1><p class="lede">The estimate is directional. The final quote is based on the actual research, production, review and delivery responsibility.</p></div>
+<div class="page-shell"><div class="eyebrow">Project brief</div><h1 class="h1">Tell us what you need.</h1><p class="lede">A few details are enough to start.</p></div>
 <section class="section"><div class="shell form-layout">
 <form method="post" class="form-stack">{% csrf_token %}
-  <div class="field"><label for="service_code">What do you need?</label><select name="service_code" id="service_code" required><option value="">Choose the closest service</option>
-  {% for family_slug,family in families.items %}<optgroup label="{{ family.name }}">{% for service in family.services %}<option value="{{ service.code }}" {% if selected.code == service.code or values.service_code == service.code %}selected{% endif %}>{{ service.name }} — from USD {{ service.from_usd }}</option>{% endfor %}</optgroup>{% endfor %}
+  <div class="field"><label for="service_code">What is closest?</label><select name="service_code" id="service_code" required><option value="">Choose a service</option>
+  {% for family_slug,family in families.items %}<optgroup label="{{ family.name }}">{% for service in family.services %}<option value="{{ service.code }}" {% if selected.code == service.code or values.service_code == service.code %}selected{% endif %}>{{ service.name }}</option>{% endfor %}</optgroup>{% endfor %}
   </select></div>
   <div class="form-grid-2"><div class="field"><label for="full_name">Your name</label><input id="full_name" name="full_name" required value="{{ values.full_name|default:user.get_full_name }}"></div><div class="field"><label for="email">Email</label><input id="email" type="email" name="email" required value="{{ values.email|default:user.email }}"></div></div>
   <div class="field"><label for="company">Company / team <span class="help">(optional)</span></label><input id="company" name="company" value="{{ values.company }}"></div>
-  <div class="field"><label for="title">Give the work a short name</label><input id="title" name="title" required value="{{ values.title }}" placeholder="e.g. Q4 market-entry research and board deck"></div>
-  <div class="field"><label for="objective">What must this work help you decide, communicate or accomplish?</label><textarea id="objective" name="objective" required>{{ values.objective }}</textarea></div>
-  <div class="field"><label for="audience">Who will use or read the result?</label><textarea id="audience" name="audience">{{ values.audience }}</textarea></div>
-  <div class="field"><label for="scope">What material already exists, and what still has to be figured out?</label><textarea id="scope" name="scope" required>{{ values.scope }}</textarea></div>
-  <div class="field"><label for="deliverable">What should exist at the end?</label><textarea id="deliverable" name="deliverable" required placeholder="Report, deck, website copy, reviewed document, dataset, deployed model…">{{ values.deliverable }}</textarea></div>
+  <div class="field"><label for="title">Project name</label><input id="title" name="title" required value="{{ values.title }}" placeholder="e.g. Q4 market-entry report"></div>
+  <div class="field"><label for="objective">What do you need this work to achieve?</label><textarea id="objective" name="objective" required>{{ values.objective }}</textarea></div>
+  <div class="field"><label for="audience">Who is it for?</label><textarea id="audience" name="audience">{{ values.audience }}</textarea></div>
+  <div class="field"><label for="scope">What do you already have?</label><textarea id="scope" name="scope" required>{{ values.scope }}</textarea></div>
+  <div class="field"><label for="deliverable">What should we deliver?</label><textarea id="deliverable" name="deliverable" required placeholder="Report, deck, website copy, reviewed document, dataset, model…">{{ values.deliverable }}</textarea></div>
   <div class="form-grid-2">
-    <div class="field"><label for="research_depth">Research depth</label><select id="research_depth" name="research_depth"><option value="none">No external research</option><option value="light">Light research</option><option value="standard" selected>Standard research</option><option value="deep">Deep research</option></select></div>
-    <div class="field"><label for="turnaround">Turnaround</label><select id="turnaround" name="turnaround"><option value="flexible">Flexible</option><option value="standard" selected>Standard</option><option value="priority">Priority</option></select></div>
+    <div class="field"><label for="research_depth">Research</label><select id="research_depth" name="research_depth"><option value="none">None</option><option value="light">Light</option><option value="standard" selected>Standard</option><option value="deep">Deep</option></select></div>
+    <div class="field"><label for="turnaround">Timing</label><select id="turnaround" name="turnaround"><option value="flexible">Flexible</option><option value="standard" selected>Standard</option><option value="priority">Priority</option></select></div>
   </div>
-  <div class="field"><label for="budget_band">Budget range <span class="help">(helps scope the right version)</span></label><select id="budget_band" name="budget_band"><option value="">Not sure yet</option><option>USD 35–75</option><option>USD 75–250</option><option>USD 250–750</option><option>USD 750–3,000</option><option>USD 3,000–10,000+</option></select></div>
-  <div class="form-note">Submitting the brief creates a request, not a charge. A project payment is attached only after the service and scope are clear.</div>
-  <div><button class="btn btn-primary" type="submit">Create request</button></div>
+  <div class="field"><label for="budget_band">Budget <span class="help">(optional)</span></label><select id="budget_band" name="budget_band"><option value="">Not sure yet</option><option>USD 35–75</option><option>USD 75–250</option><option>USD 250–750</option><option>USD 750–3,000</option><option>USD 3,000–10,000+</option></select></div>
+  <div class="form-note">This creates a request, not a charge.</div>
+  <div><button class="btn btn-primary" type="submit">Send brief</button></div>
 </form>
-<aside class="summary-rail"><div class="eyebrow">What happens next</div><ol style="padding-left:20px;color:var(--text-muted)"><li style="margin:12px 0">Your brief gets a reference.</li><li style="margin:12px 0">The work is scoped into research, production, review and delivery.</li><li style="margin:12px 0">You receive a quote or a request for a short scoping conversation.</li><li style="margin:12px 0">Invoices and payments attach to the project, not the other way around.</li></ol></aside>
+<aside class="summary-rail"><div class="eyebrow">Next</div><ol style="padding-left:20px;color:var(--text-muted)"><li style="margin:12px 0">We review the brief.</li><li style="margin:12px 0">We confirm the scope and timing.</li><li style="margin:12px 0">You receive a quote or a short follow-up question.</li></ol></aside>
 </div></section>
 {% endblock %}
