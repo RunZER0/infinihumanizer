@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Legacy reconciliation — InfiniAI{% endblock %}
+{% block content %}
+<div class="page-shell"><div class="eyebrow">Internal finance</div><h1 class="h1">Historical receipts, normalized without rewriting history.</h1><p class="lede">{{ summary.principle }}</p></div>
+<section class="section"><div class="shell">
+  <div class="ledger-stats">
+    <div><span>Total rows</span><strong>{{ summary.rows }}</strong></div>
+    <div><span>Successful</span><strong>{{ summary.success }}</strong></div>
+    <div><span>Abandoned</span><strong>{{ summary.abandoned }}</strong></div>
+    <div><span>Failed</span><strong>{{ summary.failed }}</strong></div>
+  </div>
+  <div class="notice" style="margin-top:28px">Observed successful ranges: USD {{ summary.successful_ranges.USD }} · KES {{ summary.successful_ranges.KES }}. These ranges explain historical commercial events; they do not set current service prices.</div>
+</div></section>
+<section class="section"><div class="shell">
+  <div class="section-head"><div class="eyebrow">Reconciliation bands</div><div><h2 class="h2">Amount is a commercial clue, not a service label.</h2><p class="lede">Descriptions and references determine the normalized service family where possible. Ambiguous quick-pay records stay unclassified for manual review.</p></div></div>
+  <div class="price-bands">
+    {% for band in bands %}
+    <div class="price-band"><strong>{{ band.label }}</strong><span class="range">{{ band.usd }}<br>{{ band.kes }}</span><p>{{ band.meaning }}</p><p>Original memo retained in PaymentRecord.</p></div>
+    {% endfor %}
+  </div>
+</div></section>
+<section class="section"><div class="shell"><div class="section-head"><div class="eyebrow">Database import</div><div><h2 class="h2">Ready when Stashi is connected.</h2><p class="lede">The importer stores the provider reference, original description, amount, currency, status, normalized family/code, commercial band and raw legacy metadata. It does not need the public product catalog to match an old receipt.</p></div></div></div></section>
+{% endblock %}
