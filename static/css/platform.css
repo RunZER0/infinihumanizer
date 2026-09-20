@@ -733,3 +733,29 @@ a.partner-logo:hover{opacity:1;transform:translateY(-2px)}
 @media(prefers-reduced-motion:reduce){
   .auth-email-panel{animation:none}
 }
+
+/* Normalize partner wordmarks by visible height. */
+.partner-stashi,.partner-valdace{
+  min-width:160px!important;
+  justify-content:center;
+}
+.partner-stashi img{
+  width:auto!important;
+  height:32px!important;
+  max-width:160px!important;
+  max-height:32px!important;
+  object-fit:contain!important;
+}
+.partner-valdace img{
+  width:auto!important;
+  height:31px!important;
+  max-width:165px!important;
+  max-height:31px!important;
+  object-fit:contain!important;
+  transform:none!important;
+}
+@media(max-width:760px){
+  .partner-stashi,.partner-valdace{min-width:145px!important}
+  .partner-stashi img{height:29px!important;max-width:145px!important;max-height:29px!important}
+  .partner-valdace img{height:28px!important;max-width:150px!important;max-height:28px!important}
+}
