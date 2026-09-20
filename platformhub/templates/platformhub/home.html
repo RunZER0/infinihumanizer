@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}InfiniAI — Language, research and AI systems{% endblock %}
 {% block description %}InfiniAI improves writing, research, product language and AI output.{% endblock %}
 {% block content %}
@@ -30,6 +31,46 @@
       </ul>
     </div>
   </aside>
+</section>
+
+<section class="brand-rail" aria-label="Brands we have worked with">
+  <div class="brand-rail-label">Worked with</div>
+  <div class="brand-marquee">
+    <div class="brand-marquee-track">
+      <div class="brand-marquee-group">
+        <a class="partner-logo partner-stashi" href="https://mystashi.online" target="_blank" rel="noopener" aria-label="Stashi">
+          <img src="{% static 'brands/stashi.png' %}" alt="Stashi">
+        </a>
+        <a class="partner-logo partner-orbit" href="https://orbit.ynai.co.ke" target="_blank" rel="noopener" aria-label="Ynai Orbit">
+          <img src="{% static 'brands/orbit.png' %}" alt="">
+          <span>Orbit</span>
+        </a>
+        <a class="partner-logo partner-ynai" href="https://ynai.co.ke" target="_blank" rel="noopener" aria-label="Ynai">
+          <img src="{% static 'brands/ynai.png' %}" alt="">
+          <span>Ynai</span>
+        </a>
+        <a class="partner-logo partner-emerald" href="https://emerald.co.ke" target="_blank" rel="noopener" aria-label="Emerald">
+          <img src="{% static 'brands/emerald.png' %}" alt="">
+          <span>Emerald</span>
+        </a>
+        <a class="partner-logo partner-lune" href="https://mylune.co.ke" target="_blank" rel="noopener" aria-label="MyLune">
+          <span>mylune</span>
+        </a>
+        <a class="partner-logo partner-cravyo" href="https://cravyo.co.ke" target="_blank" rel="noopener" aria-label="Cravyo">
+          <img src="{% static 'brands/cravyo.png' %}" alt="">
+          <span>cravyo</span>
+        </a>
+      </div>
+      <div class="brand-marquee-group" aria-hidden="true">
+        <span class="partner-logo partner-stashi"><img src="{% static 'brands/stashi.png' %}" alt=""></span>
+        <span class="partner-logo partner-orbit"><img src="{% static 'brands/orbit.png' %}" alt=""><span>Orbit</span></span>
+        <span class="partner-logo partner-ynai"><img src="{% static 'brands/ynai.png' %}" alt=""><span>Ynai</span></span>
+        <span class="partner-logo partner-emerald"><img src="{% static 'brands/emerald.png' %}" alt=""><span>Emerald</span></span>
+        <span class="partner-logo partner-lune"><span>mylune</span></span>
+        <span class="partner-logo partner-cravyo"><img src="{% static 'brands/cravyo.png' %}" alt=""><span>cravyo</span></span>
+      </div>
+    </div>
+  </div>
 </section>
 
 <section class="section language-statement">
