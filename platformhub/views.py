@@ -318,6 +318,8 @@ def start_checkout(request):
         currency = invoice.currency
         label = invoice.description or invoice.number
         request_id = invoice.request_id
+        normalized_family = invoice.request.service_family if invoice.request else ""
+        normalized_service_code = invoice.request.service_code if invoice.request else ""
     else:
         package = PACKAGES.get(package_slug)
         if not package:
@@ -325,6 +327,8 @@ def start_checkout(request):
         amount = package["kes"] if currency == "KES" else package["usd"]
         label = package["name"]
         request_id = None
+        normalized_service_code = package.get("service_code", "")
+        normalized_family = (SERVICE_INDEX.get(normalized_service_code) or {}).get("family", "text-intelligence" if normalized_service_code == "text-humanize" else "")
 
     if not email:
         return JsonResponse({"error": "Email is required."}, status=400)
@@ -373,7 +377,8 @@ def start_checkout(request):
         currency=currency,
         status="pending",
         email=email,
-        normalized_service_code=(PACKAGES.get(package_slug) or {}).get("service_code", "") if package_slug else "",
+        normalized_family=normalized_family,
+        normalized_service_code=normalized_service_code,
         metadata=payload["metadata"],
     )
     return JsonResponse({"authorization_url": data["data"]["authorization_url"]})
