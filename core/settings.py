@@ -84,7 +84,7 @@ ACCOUNT_FORMS = {
 }
 
 # Loosen auth in offline/local mode for easier testing
-if OFFLINE_MODE or DEBUG:
+if OFFLINE_MODE or DEBUG or not (EMAIL_HOST_USER and EMAIL_HOST_PASSWORD):
     ACCOUNT_EMAIL_VERIFICATION = 'none'
     # Don't set deprecated settings in new django-allauth version
     # ACCOUNT_LOGIN_METHODS already set above
