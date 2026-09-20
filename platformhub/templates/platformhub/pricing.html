@@ -1,17 +1,17 @@
-
 {% extends "base.html" %}
 {% block title %}Pricing — InfiniAI{% endblock %}
 {% block content %}
 <div class="page-shell">
   <div class="eyebrow">Pricing</div>
-  <h1 class="h1">Pay for the depth of the work.</h1>
-  <p class="lede">Fixed prices make sense where the unit is known. Project ranges make sense where research and production vary. Retainers reserve capacity across several capabilities.</p>
+  <h1 class="h1">Straightforward where it can be. Scoped where it can’t.</h1>
+  <p class="lede">Tools have fixed prices. Project work depends on what you need. Ongoing work is billed monthly.</p>
 </div>
+
 <section class="section">
   <div class="shell">
-    <div class="section-head"><div class="eyebrow">Self-service</div><div><h2 class="h2">Known unit. Known price.</h2><p class="lede">These are the parts of the system that can be bought without a scope call.</p></div></div>
+    <div class="section-head"><div class="eyebrow">Tools</div><div><h2 class="h2">Fixed-price access.</h2></div></div>
     <table class="proof-table">
-      <thead><tr><th>Product</th><th>USD</th><th>KES</th><th>Cadence</th><th></th></tr></thead>
+      <thead><tr><th>Product</th><th>USD</th><th>KES</th><th>Billing</th><th></th></tr></thead>
       <tbody>
       {% for slug,package in packages.items %}
         <tr>
@@ -24,9 +24,10 @@
     </table>
   </div>
 </section>
+
 <section class="section">
   <div class="shell">
-    <div class="section-head"><div class="eyebrow">Managed work</div><div><h2 class="h2">A range before scope. A quote after scope.</h2><p class="lede">One-off professional work naturally spans small tasks through full deliverables. The system keeps that flexibility while giving every payment a clear service context.</p></div></div>
+    <div class="section-head"><div class="eyebrow">Projects</div><div><h2 class="h2">A useful range before the quote.</h2><p class="lede">Research depth, production time, revisions and urgency change the final price.</p></div></div>
     <div class="price-bands">
       {% for band in price_bands %}
       <div class="price-band"><strong>{{ band.label }}</strong><span class="range">{{ band.range }}</span><p>{{ band.examples }}</p><p>{{ band.logic }}</p></div>
@@ -34,45 +35,36 @@
     </div>
   </div>
 </section>
+
 <section class="section" id="retainers">
   <div class="shell">
-    <div class="section-head"><div class="eyebrow">Recurring capacity</div><div><h2 class="h2">A monthly relationship pays for reserved responsibility.</h2><p class="lede">Retainers are appropriate when research, production and review keep recurring. They are not larger versions of a word bundle.</p></div></div>
+    <div class="section-head"><div class="eyebrow">Monthly work</div><div><h2 class="h2">For teams that need us regularly.</h2></div></div>
     <div class="retainer-ledger">
       {% for retainer in retainers %}
       <article class="retainer-row {% if retainer.usd == 10000 %}retainer-row-featured{% endif %}">
         <div><span class="micro">{{ retainer.capacity }}</span><h3>{{ retainer.name }}</h3><p>{{ retainer.summary }}</p></div>
         <strong>USD {{ retainer.usd|floatformat:0 }}<small>/month</small></strong>
         <ul>{% for item in retainer.includes %}<li>{{ item }}</li>{% endfor %}</ul>
-        <a class="btn {% if retainer.usd == 10000 %}btn-primary{% endif %}" href="{% url 'platformhub:request_service_code' 'studio-retainer' %}">Scope this relationship</a>
+        <a class="btn {% if retainer.usd == 10000 %}btn-primary{% endif %}" href="{% url 'platformhub:request_service_code' 'studio-retainer' %}">Start a request</a>
       </article>
       {% endfor %}
     </div>
   </div>
 </section>
+
 <section class="section">
   <div class="shell">
-    <div class="section-head"><div class="eyebrow">Why USD 10,000 / month can be rational</div><div><h2 class="h2">The number is explainable when the responsibility is real.</h2><p class="lede">An embedded engagement reserves a multidisciplinary production function, not a bundle of arbitrary credits.</p></div></div>
+    <div class="section-head"><div class="eyebrow">Project payments</div><div><h2 class="h2">Larger work is split into sensible stages.</h2></div></div>
     <div class="process">
-      <div class="process-step"><strong>Research capacity</strong><p>Recurring market, product, technical and review research across active workstreams.</p></div>
-      <div class="process-step"><strong>Production capacity</strong><p>Reports, decks, briefs, documentation and executive-ready outputs through the month.</p></div>
-      <div class="process-step"><strong>Communication</strong><p>Website, product and service language reviewed as part of the same operating relationship.</p></div>
-      <div class="process-step"><strong>Assurance</strong><p>Originality, source, editorial and release-readiness checks on delivered work.</p></div>
-      <div class="process-step"><strong>AI systems support</strong><p>Evaluation, dataset, automation or model work can be scoped into the retainer rather than opened as unrelated purchases.</p></div>
+      <div class="process-step"><strong>Under USD 500</strong><p>Usually paid in full once the scope is accepted.</p></div>
+      <div class="process-step"><strong>USD 500–4,999</strong><p>50% to start, with the balance tied to delivery.</p></div>
+      <div class="process-step"><strong>USD 5,000+</strong><p>30% to start, then agreed milestones.</p></div>
+      <div class="process-step"><strong>Monthly work</strong><p>Billed at the start of the month.</p></div>
     </div>
   </div>
 </section>
-<section class="section">
-  <div class="shell">
-    <div class="section-head"><div class="eyebrow">Commercial events</div><div><h2 class="h2">A receipt does not have to equal a published package.</h2><p class="lede">A payment can be product access, a one-time service, a deposit, a mobilisation payment, a milestone, a balance, or a monthly retainer. The invoice and project record explain which one it is.</p></div></div>
-    <div class="process">
-      <div class="process-step"><strong>Under USD 500</strong><p>Focused managed work is normally paid in full after the scope is accepted.</p></div>
-      <div class="process-step"><strong>USD 500–4,999</strong><p>A 50% project deposit starts production; the remaining value is invoiced at the agreed final milestone.</p></div>
-      <div class="process-step"><strong>USD 5,000+</strong><p>A 30% mobilisation payment starts the engagement, with the rest billed against named milestones.</p></div>
-      <div class="process-step"><strong>Monthly work</strong><p>Retainers are billed at the start of each service month because capacity is being reserved.</p></div>
-    </div>
-  </div>
-</section>
+
 <section class="shell" style="padding:var(--space-section) 24px">
-  <div class="callout"><div><div class="eyebrow" style="color:#e46b5d">Need a number for the actual scope?</div><h2 class="h2" style="margin-top:14px">Start with the brief.</h2><p>For complex work, the site gives a directional range and the final quote follows the workstream definition.</p></div><a class="btn btn-primary" href="{% url 'platformhub:start' %}">Start a request</a></div>
+  <div class="callout"><div><div class="eyebrow" style="color:#e46b5d">Need a quote?</div><h2 class="h2" style="margin-top:14px">Send us the brief.</h2></div><a class="btn btn-primary" href="{% url 'platformhub:start' %}">Start a project</a></div>
 </section>
 {% endblock %}
