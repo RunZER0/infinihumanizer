@@ -3,9 +3,9 @@
 {% block title %}Services — InfiniAI{% endblock %}
 {% block content %}
 <div class="page-shell">
-  <div class="eyebrow">Capabilities</div>
-  <h1 class="h1">One operating system for knowledge work.</h1>
-  <p class="lede">The categories describe how the work is done, not rigid boxes. Research may feed a deck, an originality review may sit inside a report project, and a communication engagement may end in an AI system.</p>
+  <div class="eyebrow">Services</div>
+  <h1 class="h1">What we do.</h1>
+  <p class="lede">Use a tool, send us a project, or bring us in for ongoing work.</p>
 </div>
 {% for slug,family in families.items %}
 <section class="section">
@@ -24,7 +24,7 @@
       </div>
       {% endfor %}
     </div>
-    <div style="margin-top:26px"><a class="btn" href="{% url 'platformhub:service_detail' slug %}">How this work is scoped</a></div>
+    <div style="margin-top:26px"><a class="btn" href="{% url 'platformhub:service_detail' slug %}">Learn more</a></div>
   </div>
 </section>
 {% endfor %}
