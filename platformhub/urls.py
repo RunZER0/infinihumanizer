@@ -18,6 +18,7 @@ urlpatterns = [
     path("request/success/<uuid:request_id>/", views.request_success, name="request_success"),
     path("consultation/", views.consultation, name="consultation"),
     path("workspace/", views.workspace, name="workspace"),
+    path("quickpay/", views.quickpay, name="quickpay"),
     path("assurance/check/", views.assurance_check, name="assurance_check"),
     path("assurance/check/<uuid:job_id>/", views.assurance_result, name="assurance_result"),
     path("workspace/project/<uuid:request_id>/", views.project_detail, name="project_detail"),
@@ -25,6 +26,9 @@ urlpatterns = [
     path("billing/checkout/", views.checkout, name="checkout"),
     path("billing/start/", views.start_checkout, name="start_checkout"),
     path("billing/verify/", views.verify_checkout, name="verify_checkout"),
+    path("billing/webhook/", views.paystack_webhook, name="paystack_webhook"),
+    path("billing/config/", views.payment_config, name="payment_config"),
+    path(".well-known/apple-developer-merchantid-domain-association", views.apple_pay_domain, name="apple_pay_domain"),
     path("operations/reconciliation/", views.reconciliation, name="reconciliation"),
     path("health/", views.health, name="health"),
 ]
