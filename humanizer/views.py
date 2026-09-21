@@ -44,23 +44,26 @@ def _anonymous_fingerprint(request):
     return hashlib.sha256(raw).hexdigest()
 
 
-def _anonymous_state(request):
+def _anonymous_state(request, create=False):
     limit = max(0, int(getattr(settings, "HUMANIZER_ANON_DAILY_WORDS", 300)))
-    usage, _ = AnonymousHumanizerUsage.objects.get_or_create(
-        day=timezone.localdate(),
-        fingerprint=_anonymous_fingerprint(request),
-    )
-    used = max(0, int(usage.words_used or 0))
+    lookup = {
+        "day": timezone.localdate(),
+        "fingerprint": _anonymous_fingerprint(request),
+    }
+    usage = AnonymousHumanizerUsage.objects.filter(**lookup).first()
+    if usage is None and create:
+        usage, _ = AnonymousHumanizerUsage.objects.get_or_create(**lookup)
+    used = max(0, int(usage.words_used or 0)) if usage else 0
     return {
         "limit": limit,
         "used": used,
         "remaining": max(0, limit - used),
-        "usage_id": usage.pk,
+        "usage_id": usage.pk if usage else None,
     }
 
 
 def _reserve_anonymous_words(request, word_count):
-    state = _anonymous_state(request)
+    state = _anonymous_state(request, create=True)
     if word_count > state["remaining"]:
         return state, False
     updated = AnonymousHumanizerUsage.objects.filter(
