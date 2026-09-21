@@ -3,7 +3,7 @@ name: Humanizer Runtime
 on:
   push:
     branches:
-      - runtime/openrouter-sentence-rewrite-20260921
+      - "runtime/**"
       - platform/infiniai-rebuild-20260920
   pull_request:
     paths:
@@ -28,3 +28,5 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
       - run: python manage.py test humanizer
+      - name: Long academic production smoke at strength 8
+        run: python .github/scripts/strength8_long_academic_smoke.py
