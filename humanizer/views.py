@@ -147,11 +147,19 @@ def humanize_ajax(request):
     input_text = request.POST.get("text", "").strip()
     word_count = len(input_text.split())
 
-    try:
-        temperature = float(request.POST.get("temperature", 0.65))
-    except (TypeError, ValueError):
-        temperature = 0.65
-    temperature = max(0.1, min(1.0, temperature))
+    raw_strength = request.POST.get("strength")
+    if raw_strength in (None, ""):
+        legacy_temperature = request.POST.get("temperature")
+        try:
+            strength = int(round(float(legacy_temperature) * 10)) if legacy_temperature not in (None, "") else int(getattr(settings, "HUMANIZER_DEFAULT_STRENGTH", 8))
+        except (TypeError, ValueError):
+            strength = int(getattr(settings, "HUMANIZER_DEFAULT_STRENGTH", 8))
+    else:
+        try:
+            strength = int(round(float(raw_strength)))
+        except (TypeError, ValueError):
+            strength = int(getattr(settings, "HUMANIZER_DEFAULT_STRENGTH", 8))
+    strength = max(1, min(10, strength))
 
     if not input_text:
         return JsonResponse({"error": "Add text to rewrite."}, status=400)
@@ -184,7 +192,7 @@ def humanize_ajax(request):
             }, status=429)
 
     try:
-        output_text, model_used = rewrite_text(input_text, temperature=temperature)
+        output_text, model_used = rewrite_text(input_text, strength=strength)
     except ValueError as exc:
         if anonymous_reserved:
             _release_anonymous_words(anon["usage_id"], word_count)
@@ -211,7 +219,7 @@ def humanize_ajax(request):
             user=request.user,
             source_text=input_text,
             output_text=output_text,
-            variation=temperature,
+            variation=strength / 10.0,
             model_name=model_used,
             input_words=word_count,
             output_words=len(output_text.split()),
@@ -231,6 +239,7 @@ def humanize_ajax(request):
         "saved": bool(humanization),
         "words_used": word_count,
         "output_words": len(output_text.split()),
+        "strength": strength,
         "word_balance": word_balance,
         "anonymous_remaining": anonymous_remaining,
         "login_prompt": not request.user.is_authenticated,
@@ -250,11 +259,19 @@ def save_humanization(request):
     if len(source_text) > MAX_INPUT_CHARS or len(output_text) > MAX_INPUT_CHARS * 2:
         return JsonResponse({"error": "This rewrite is too large to save."}, status=413)
 
-    try:
-        variation = float(request.POST.get("temperature", 0.65))
-    except (TypeError, ValueError):
-        variation = 0.65
-    variation = max(0.1, min(1.0, variation))
+    raw_strength = request.POST.get("strength")
+    if raw_strength in (None, ""):
+        try:
+            strength = int(round(float(request.POST.get("temperature", 0.8)) * 10))
+        except (TypeError, ValueError):
+            strength = int(getattr(settings, "HUMANIZER_DEFAULT_STRENGTH", 8))
+    else:
+        try:
+            strength = int(round(float(raw_strength)))
+        except (TypeError, ValueError):
+            strength = int(getattr(settings, "HUMANIZER_DEFAULT_STRENGTH", 8))
+    strength = max(1, min(10, strength))
+    variation = strength / 10.0
 
     if humanization_id:
         item = get_object_or_404(Humanization, id=humanization_id, user=request.user)
