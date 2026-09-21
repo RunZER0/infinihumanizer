@@ -20,12 +20,22 @@ class SignupViewTests(TestCase):
         self.assertTemplateUsed(response, "account/login.html")
         self.assertContains(response, "Create an account")
 
-    def test_login_page_exposes_collapsed_signup(self):
+    def test_login_defaults_to_social_mode_with_separate_email_and_signup_panels(self):
         response = self.client.get(reverse("account_login"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, reverse("account_signup"))
-        self.assertContains(response, "Create an account")
-        self.assertNotContains(response, '<details class="auth-disclosure auth-signup-disclosure" open>')
+        self.assertEqual(response.context["auth_mode"], "social")
+        self.assertContains(response, 'id="auth-social-panel"')
+        self.assertContains(response, 'id="auth-email-panel" hidden')
+        self.assertContains(response, 'id="auth-signup-panel" hidden')
+        self.assertContains(response, "Continue with Google")
+        self.assertContains(response, "Use email instead")
+
+    def test_signup_route_opens_signup_mode_without_showing_google_panel(self):
+        response = self.client.get(self.signup_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["auth_mode"], "signup")
+        self.assertContains(response, 'id="auth-social-panel" hidden')
+        self.assertContains(response, 'id="auth-signup-panel"')
 
     @override_settings(ACCOUNT_EMAIL_VERIFICATION="none")
     def test_signup_creates_user_and_profile_when_verification_not_required(self):
