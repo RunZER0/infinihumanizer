@@ -71,13 +71,13 @@ def strength_profile(strength: int) -> str:
 
 
 def model_temperature(strength: int) -> float:
-    # Keep the model controlled across the range; strength changes rewrite distance,
-    # not creativity or permission to invent details.
-    return round(max(0.20, min(0.58, 0.16 + 0.043 * strength)), 2)
+    # Strength changes rewrite distance, not creativity. Lower sampling variance
+    # helps preserve the same semantic inventory while the prompt drives structure.
+    return round(max(0.20, min(0.55, 0.15 + 0.04 * strength)), 2)
 
 
 def model_top_p(strength: int) -> float:
-    return round(max(0.86, min(0.95, 0.84 + 0.011 * strength)), 2)
+    return round(max(0.84, min(0.92, 0.82 + 0.01 * strength)), 2)
 
 
 def _is_heading(text: str) -> bool:
@@ -214,7 +214,9 @@ def validate_candidate(source: str, candidate: str, strength: int) -> tuple[bool
         return False, "empty-or-multiline"
     source_words = max(1, len(source.split()))
     ratio = len(candidate.split()) / source_words
-    if ratio < 0.50 or ratio > 2.10:
+    min_ratio = 0.75 if strength >= 7 and source_words >= 8 else 0.50
+    max_ratio = 1.85 if strength >= 7 and source_words >= 8 else 2.30 if source_words < 8 else 2.10
+    if ratio < min_ratio or ratio > max_ratio:
         return False, "length"
     if len(split_sentences(candidate)[0]) > 1:
         return False, "sentence-count"
@@ -258,16 +260,24 @@ def few_shots(strength: int) -> list[dict]:
         ],
         "deep": [
             (
-                "Accountability begins with reasons.",
-                "The first step to accountability is to give reasons.",
+                "Their value is therefore not limited to beauty.",
+                "They take on a wider meaning than just beauty.",
             ),
             (
-                "The clearest advantage of remote work is flexibility.",
-                "Flexibility is the greatest benefit of telecommuting.",
+                "These uses appear modest, but they accumulate.",
+                "These uses seem small but they add up.",
             ),
             (
-                "The social value of green space is more difficult to measure, yet it is equally important.",
-                "Social value of green space is more challenging to measure, but it is also significant.",
+                "Independence, however, does not mean that judges operate beyond scrutiny.",
+                "But independence is no guarantee that judges are not subject to scrutiny.",
+            ),
+            (
+                "Appointment systems create another tension.",
+                "Another tension arises when there are appointment systems.",
+            ),
+            (
+                "Communication becomes a central design problem.",
+                "There is a core design challenge of communicating.",
             ),
         ],
     }
@@ -310,12 +320,16 @@ Semantic boundary:
 - Never infer or import context that is merely plausible.
 - Never explain what the sentence might imply.
 - Never add examples, consequences, motivations, background, or evaluative language absent from the source.
-- Keep the proposition at roughly the same informational density. A short sentence should remain concise rather than becoming an explanation.
+- Do not turn a broad or abstract source concept into a narrower concrete one. Keep "flexibility" as flexibility unless the source itself defines a type of flexibility; keep "private interests" broad rather than replacing it with one kind of private actor.
+- Keep the proposition at roughly the same informational density and approximately the same length. Do not compress a developed sentence into a summary, and do not expand a short sentence into an explanation.
 
 Target prose:
 - Use ordinary, direct, natural English.
 - Preserve the writer's level of formality.
 - Prefer common accurate wording over elevated or editorial wording.
+- Preserve some ordinary source wording when it is already natural and semantically exact. Do not replace every content phrase merely to maximize difference.
+- Keep key nouns, legal/technical terms, and broad category words when a substitute would narrow, broaden, or distort the meaning.
+- Create distance mainly through sentence opening, clause order, voice, and selective wording changes rather than wholesale synonym replacement.
 - Do not manufacture symmetry, rhetorical flourish, or decorative punctuation.
 - Never use an em dash (—), even if one appears in the source. Use ordinary punctuation or sentence structure instead.
 
