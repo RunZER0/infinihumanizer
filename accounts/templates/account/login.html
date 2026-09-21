@@ -63,15 +63,23 @@
         </div>
       </details>
 
-      <details class="auth-disclosure auth-signup-disclosure">
+      <details class="auth-disclosure auth-signup-disclosure" {% if signup_open or signup_form.errors %}open{% endif %}>
         <summary>Create an account</summary>
         <div class="auth-disclosure-body">
+          {% if signup_form.errors %}
+          <div class="notice">
+            {% for field in signup_form %}
+              {% for error in field.errors %}<div>{{ field.label }}: {{ error }}</div>{% endfor %}
+            {% endfor %}
+            {% for error in signup_form.non_field_errors %}<div>{{ error }}</div>{% endfor %}
+          </div>
+          {% endif %}
           <form method="post" action="{% url 'account_signup' %}" class="form-stack">
             {% csrf_token %}
             {% if redirect_field_value %}<input type="hidden" name="next" value="{{ redirect_field_value }}">{% endif %}
             <div class="field">
               <label for="signup_email">Email</label>
-              <input id="signup_email" type="email" name="email" required autocomplete="email">
+              <input id="signup_email" type="email" name="email" value="{{ signup_form.email.value|default:'' }}" required autocomplete="email">
             </div>
             <div class="field">
               <label for="signup_password1">Password</label>
