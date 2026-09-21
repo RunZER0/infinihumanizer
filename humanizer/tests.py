@@ -226,6 +226,55 @@ class SentenceRuntimeTests(SimpleTestCase):
         self.assertNotIn("(Council of Europe, 2018)", protected)
         self.assertEqual(restore_sentence(protected, literals), source)
 
+    def test_formatting_round_trip_preserves_headers_indentation_and_bibliography_exactly(self):
+        source = (
+            "TITLE\n"
+            "Introduction:\n"
+            "    First sentence.  Second sentence.\n"
+            "\n"
+            "References\n"
+            "    Smith, J. (2024). Example source.\n"
+            "\tDoe, A. (2023). Another source.\n"
+        )
+        plans, separators, tasks = plan_document(source)
+        self.assertEqual([task.source for task in tasks], ["First sentence.", "Second sentence."])
+
+        rewritten = {
+            tasks[0].id: "Opening sentence changed.",
+            tasks[1].id: "Following sentence changed.",
+        }
+        output = reassemble(plans, separators, rewritten)
+        expected = (
+            "TITLE\n"
+            "Introduction:\n"
+            "    Opening sentence changed.  Following sentence changed.\n"
+            "\n"
+            "References\n"
+            "    Smith, J. (2024). Example source.\n"
+            "\tDoe, A. (2023). Another source.\n"
+        )
+        self.assertEqual(output, expected)
+
+    def test_markdown_works_cited_header_preserves_everything_after_it_verbatim(self):
+        source = (
+            "Body sentence.\n\n"
+            "## Works Cited\n"
+            "  Smith, J. Title. Publisher, 2024.\n"
+            "    https://example.com/source\n"
+        )
+        plans, separators, tasks = plan_document(source)
+        self.assertEqual([task.source for task in tasks], ["Body sentence."])
+        output = reassemble(plans, separators, {tasks[0].id: "Body text changed."})
+        self.assertEqual(
+            output,
+            (
+                "Body text changed.\n\n"
+                "## Works Cited\n"
+                "  Smith, J. Title. Publisher, 2024.\n"
+                "    https://example.com/source\n"
+            ),
+        )
+
     def test_document_plan_preserves_heading_and_references(self):
         source = "Short Heading\n\nFirst sentence. Second sentence.\n\nReferences\n\nSmith, J. (2024). Example."
         plans, paragraph_separators, tasks = plan_document(source)
