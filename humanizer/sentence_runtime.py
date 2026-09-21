@@ -643,8 +643,10 @@ class RewriteRuntime:
 
 
 def _edge_whitespace(block: str) -> tuple[str, str, str]:
-    leading_match = re.match(r"^[ \\t]*", block)
-    trailing_match = re.search(r"[ \\t]*$", block)
+    # Edge whitespace belongs to document formatting, not rewriteable prose.
+    # This includes indentation, trailing spaces and structural newlines.
+    leading_match = re.match(r"^\\s*", block)
+    trailing_match = re.search(r"\\s*$", block)
     leading = leading_match.group(0) if leading_match else ""
     trailing = trailing_match.group(0) if trailing_match else ""
     start = len(leading)
