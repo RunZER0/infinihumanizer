@@ -77,6 +77,9 @@ PACKAGES = {
         "kes": Decimal("1500.00"),
         "cadence": "monthly",
         "service_code": "text-humanize",
+        "word_credits": 100000,
+        "account_type": "STANDARD",
+        "max_devices": 1,
     },
     "humanizer-pro": {
         "name": "Text Intelligence — Pro",
@@ -85,6 +88,9 @@ PACKAGES = {
         "kes": Decimal("3200.00"),
         "cadence": "monthly",
         "service_code": "text-humanize",
+        "word_credits": 250000,
+        "account_type": "PRO",
+        "max_devices": 2,
     },
     "humanizer-team": {
         "name": "Text Intelligence — Team",
@@ -93,6 +99,9 @@ PACKAGES = {
         "kes": Decimal("6400.00"),
         "cadence": "monthly",
         "service_code": "text-humanize",
+        "word_credits": 600000,
+        "account_type": "ENTERPRISE",
+        "max_devices": 5,
     },
     "originality-quick": {
         "name": "Originality Quick Check",
