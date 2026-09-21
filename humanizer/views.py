@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.db import transaction
 from django.db.models import F
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
@@ -101,10 +101,6 @@ def _auth_urls():
 
 
 def humanizer_view(request):
-    public_base = str(getattr(settings, "PUBLIC_BASE_URL", "") or "").rstrip("/")
-    if not settings.DEBUG and request.get_host().lower().startswith("www.") and public_base:
-        return redirect(f"{public_base}{request.get_full_path()}")
-
     storage = messages.get_messages(request)
     list(storage)
 
@@ -197,7 +193,7 @@ def humanize_ajax(request):
         if anonymous_reserved:
             _release_anonymous_words(anon["usage_id"], word_count)
         logger.warning("Humanizer configuration/request error: %s", exc)
-        return JsonResponse({"error": str(exc)}, status=503)
+        return JsonResponse({"error": "Service unavailable. Try again shortly."}, status=503)
     except Exception:
         if anonymous_reserved:
             _release_anonymous_words(anon["usage_id"], word_count)
