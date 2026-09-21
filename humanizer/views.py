@@ -20,6 +20,15 @@ from .service import MAX_INPUT_CHARS, MAX_INPUT_WORDS, rewrite_text
 logger = logging.getLogger(__name__)
 
 
+def _engine_configured():
+    backend = getattr(settings, "HUMANIZER_BACKEND", "openrouter").lower()
+    if backend == "openrouter":
+        return bool(getattr(settings, "OPENROUTER_API_KEY", ""))
+    if backend == "openai":
+        return bool(getattr(settings, "OPENAI_API_KEY", ""))
+    return False
+
+
 def _profile_state(user):
     profile, _ = Profile.objects.get_or_create(user=user)
     quota = max(0, int(profile.word_quota or 0))
@@ -126,7 +135,7 @@ def humanizer_view(request):
 
     return render(request, "humanizer/humanizer.html", {
         "balance_label": balance_label,
-        "engine_configured": bool(getattr(settings, "OPENROUTER_API_KEY", "")),
+        "engine_configured": _engine_configured(),
         "max_words": MAX_INPUT_WORDS,
         "max_chars": MAX_INPUT_CHARS,
         "anonymous_daily_limit": int(getattr(settings, "HUMANIZER_ANON_DAILY_WORDS", 300)),
