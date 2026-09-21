@@ -22,6 +22,7 @@ from .catalog import PACKAGES, PRICE_BANDS, RETAINERS, SERVICE_FAMILIES, SERVICE
 from .models import AssuranceJob, Consultation, Deliverable, DeliverableFeedback, Invoice, PaymentRecord, Quote, ServiceRequest
 from .legacy_summary import LEGACY_LEDGER_SUMMARY, LEGACY_RECONCILIATION_BANDS
 from .knowledge import ARTICLES, ARTICLE_BY_SLUG
+from humanizer.models import ClientConversation, ClientMessage, Humanization
 from .payments import PaystackError, apply_gateway_transaction, ingest_webhook_transaction, initialize_transaction, valid_webhook_signature, verify_transaction
 
 logger = logging.getLogger(__name__)
@@ -356,11 +357,59 @@ def workspace(request):
         invoices = Invoice.objects.filter(Q(user=request.user) | Q(email__iexact=request.user.email)).distinct()
         payments = PaymentRecord.objects.filter(Q(user=request.user) | Q(email__iexact=request.user.email)).distinct()
 
+    profile = getattr(request.user, "profile", None)
+    conversation = ClientConversation.objects.filter(user=request.user).first()
+    unread_messages = 0
+    if conversation:
+        unread_messages = conversation.messages.filter(sender="admin", read_at__isnull=True).count()
+
     return render(request, "platformhub/workspace.html", {
         "requests": items[:20],
         "invoices": invoices[:20],
         "payments": payments[:30],
         "assurance_jobs": AssuranceJob.objects.filter(user=request.user).order_by("-created_at")[:20],
+        "humanizations": Humanization.objects.filter(user=request.user)[:12],
+        "profile": profile,
+        "unread_messages": unread_messages,
+    })
+
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def client_chat(request):
+    conversation, _ = ClientConversation.objects.get_or_create(user=request.user)
+
+    if request.method == "POST":
+        body = request.POST.get("message", "").strip()
+        if not body:
+            messages.error(request, "Write a message before sending.")
+        elif len(body) > 5000:
+            messages.error(request, "Keep each message under 5,000 characters.")
+        else:
+            ClientMessage.objects.create(
+                conversation=conversation,
+                author=request.user,
+                sender="client",
+                body=body,
+            )
+            conversation.status = "open"
+            conversation.save(update_fields=["status", "updated_at"])
+            messages.success(request, "Message sent.")
+        return redirect("platformhub:client_chat")
+
+    conversation.messages.filter(sender="admin", read_at__isnull=True).update(read_at=timezone.now())
+
+    project_qs = ServiceRequest.objects.filter(user=request.user)
+    if request.user.email:
+        project_qs = ServiceRequest.objects.filter(
+            Q(user=request.user) | Q(email__iexact=request.user.email)
+        ).distinct()
+
+    projects = project_qs.prefetch_related("deliverables").order_by("-updated_at")[:20]
+    return render(request, "platformhub/client_chat.html", {
+        "conversation": conversation,
+        "chat_messages": conversation.messages.select_related("author").all(),
+        "projects": projects,
     })
 
 
