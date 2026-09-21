@@ -20,7 +20,8 @@ Browser
   -> POST /humanizer/humanize/
   -> humanizer.views.humanize_ajax
   -> humanizer.service.rewrite_text
-  -> OpenAI API
+  -> sentence-local concurrent runtime
+  -> OpenRouter
   -> rewritten text
 ```
 
@@ -49,7 +50,9 @@ On Windows, activate with:
 ```bash
 DJANGO_SECRET_KEY=...
 DATABASE_URL=...
-OPENAI_API_KEY=...
+OPENROUTER_API_KEY=...
+HUMANIZER_BACKEND=openrouter
+HUMANIZER_MODEL_ID=mistralai/ministral-3b-2512
 ```
 
 Common production settings:
@@ -63,11 +66,7 @@ EMAIL_HOST_USER=...
 EMAIL_HOST_PASSWORD=...
 ```
 
-Optional Humanizer model override:
-
-```bash
-HUMANIZER_MODEL_ID=...
-```
+Humanizer runtime tuning is optional. Defaults are documented in `HUMANIZER.md`.
 
 ## Tests
 
