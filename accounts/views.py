@@ -14,7 +14,7 @@ try:
 except ImportError:
     send_email_confirmation = None
 
-from .forms import SignUpForm
+from .forms import CustomLoginForm, SignUpForm
 from .models import Profile
 from .verification import session_email_is_verified
 
@@ -37,7 +37,7 @@ class VerifiedEmailLoginView(LoginView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["signup_form"] = SignUpForm()
-        context["signup_open"] = False
+        context["signup_open"] = self.request.GET.get("signup") == "1"
         return context
 
     def form_valid(self, form):
@@ -108,10 +108,21 @@ def signup_view(request):
                 login(request, user, backend="django.contrib.auth.backends.ModelBackend")
                 return redirect(next_url)
         messages.error(request, "Please correct the fields below.")
-    else:
-        form = SignUpForm()
+        return render(request, "account/login.html", {
+            "form": CustomLoginForm(request=request),
+            "signup_form": form,
+            "signup_open": True,
+            "redirect_field_name": "next",
+            "redirect_field_value": next_url,
+        })
 
-    return render(request, "account/signup.html", {"form": form, "next_url": next_url})
+    return render(request, "account/login.html", {
+        "form": CustomLoginForm(request=request),
+        "signup_form": SignUpForm(),
+        "signup_open": True,
+        "redirect_field_name": "next",
+        "redirect_field_value": next_url,
+    })
 
 
 def resend_verification(request):
