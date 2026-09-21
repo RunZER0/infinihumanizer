@@ -29,8 +29,8 @@ PAYSTACK_PUBLIC_KEY = os.getenv("PAYSTACK_PUBLIC_KEY")
 PAYSTACK_SECRET_KEY = os.getenv("PAYSTACK_SECRET_KEY")
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
 HUMANIZER_BACKEND = os.getenv("HUMANIZER_BACKEND", "openrouter").strip().lower()
-HUMANIZER_MODEL_ID = os.getenv("HUMANIZER_MODEL_ID", "deepseek/deepseek-v4-flash-0731")
-HUMANIZER_FALLBACK_MODELS = os.getenv("HUMANIZER_FALLBACK_MODELS", "qwen/qwen3.7-flash,qwen/qwen3.5-9b")
+HUMANIZER_MODEL_ID = os.getenv("HUMANIZER_MODEL_ID", "inclusionai/ling-3.0-flash")
+HUMANIZER_FALLBACK_MODELS = os.getenv("HUMANIZER_FALLBACK_MODELS", "")
 HUMANIZER_ANON_DAILY_WORDS = int(os.getenv("HUMANIZER_ANON_DAILY_WORDS", "300"))
 INFINIAI_ADMIN_EMAIL = os.getenv("INFINIAI_ADMIN_EMAIL", "valdaceai@gmail.com").strip().lower()
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
@@ -124,7 +124,6 @@ if OFFLINE_MODE or DEBUG or not (EMAIL_HOST_USER and EMAIL_HOST_PASSWORD):
 MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'accounts.middleware.CanonicalHostMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
