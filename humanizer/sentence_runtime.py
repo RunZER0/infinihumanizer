@@ -85,8 +85,8 @@ def model_top_p(strength: int) -> float:
 
 def _heading_label(text: str) -> str:
     label = text.strip()
-    label = re.sub(r"^#{1,6}\\s*", "", label)
-    label = re.sub(r"^(?:\\d+(?:\\.\\d+)*|[ivxlcdm]+)[.)]?\\s+", "", label, flags=re.I)
+    label = re.sub(r"^#{1,6}\s*", "", label)
+    label = re.sub(r"^(?:\d+(?:\.\d+)*|[ivxlcdm]+)[.)]?\s+", "", label, flags=re.I)
     return label.strip().rstrip(":").strip()
 
 
@@ -100,9 +100,9 @@ def _is_heading(text: str) -> bool:
         return False
     if _is_reference_heading(raw):
         return True
-    if re.match(r"^#{1,6}\\s+\\S", raw):
+    if re.match(r"^#{1,6}\s+\S", raw):
         return True
-    if re.match(r"^(?:\\d+(?:\\.\\d+)*|[ivxlcdm]+)[.)]?\\s+\\S", raw, re.I):
+    if re.match(r"^(?:\d+(?:\.\d+)*|[ivxlcdm]+)[.)]?\s+\S", raw, re.I):
         return len(_heading_label(raw).split()) <= 18
     label = _heading_label(raw)
     words = label.split()
@@ -645,8 +645,8 @@ class RewriteRuntime:
 def _edge_whitespace(block: str) -> tuple[str, str, str]:
     # Edge whitespace belongs to document formatting, not rewriteable prose.
     # This includes indentation, trailing spaces and structural newlines.
-    leading_match = re.match(r"^\\s*", block)
-    trailing_match = re.search(r"\\s*$", block)
+    leading_match = re.match(r"^\s*", block)
+    trailing_match = re.search(r"\s*$", block)
     leading = leading_match.group(0) if leading_match else ""
     trailing = trailing_match.group(0) if trailing_match else ""
     start = len(leading)
@@ -659,7 +659,7 @@ def _split_embedded_headings(block: str) -> tuple[list[str], list[str]]:
     if "\n" not in block and "\r" not in block:
         return [block], []
 
-    parts = re.split(r"(\\r\\n|\\n|\\r)", block)
+    parts = re.split(r"(\r\n|\n|\r)", block)
     lines = parts[::2]
     line_separators = parts[1::2]
     if not any(_is_heading(line) for line in lines if line.strip()):
@@ -709,7 +709,7 @@ def _split_embedded_headings(block: str) -> tuple[list[str], list[str]]:
 
 
 def _document_blocks(text: str) -> tuple[list[str], list[str]]:
-    chunks = re.split(r"((?:\\r?\\n[ \\t]*){2,})", text)
+    chunks = re.split(r"((?:\r?\n[ \t]*){2,})", text)
     top_blocks = chunks[::2]
     top_separators = chunks[1::2]
 
