@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Projects — InfiniAI{% endblock %}
+{% block content %}
+<div class="page-shell account-section-head">
+  <div>
+    <div class="eyebrow">Workspace</div>
+    <h1 class="h1">Projects</h1>
+    <p class="lede">Open a project only when you need its detail.</p>
+  </div>
+  <div class="workspace-actions">
+    <a class="btn" href="{% url 'platformhub:workspace' %}">Workspace</a>
+    <a class="btn btn-primary" href="{% url 'platformhub:start' %}">Start work</a>
+  </div>
+</div>
+
+<section class="section account-list-section">
+  <div class="shell">
+    <div class="account-list">
+      {% for item in requests %}
+      <a class="account-list-row" href="{% url 'platformhub:project_detail' item.id %}">
+        <div>
+          <strong>{{ item.title }}</strong>
+          <small>{{ item.reference }} · {{ item.created_at|date:"M j, Y" }}</small>
+        </div>
+        <span class="status status-pending">{{ item.get_status_display }}</span>
+        <span aria-hidden="true">→</span>
+      </a>
+      {% empty %}
+      <div class="account-empty"><strong>No projects yet.</strong><p>Start work when you have something to send us.</p></div>
+      {% endfor %}
+    </div>
+
+    {% if assurance_jobs %}
+    <details class="account-secondary-list">
+      <summary>Content assurance history</summary>
+      <div class="account-list">
+        {% for job in assurance_jobs %}
+        <a class="account-list-row" href="{% url 'platformhub:assurance_result' job.id %}">
+          <div><strong>{{ job.title }}</strong><small>{{ job.reference }} · {{ job.created_at|date:"M j, Y" }}</small></div>
+          <span class="status status-pending">{{ job.get_status_display }}</span>
+          <span aria-hidden="true">→</span>
+        </a>
+        {% endfor %}
+      </div>
+    </details>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
