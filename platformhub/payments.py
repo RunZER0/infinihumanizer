@@ -106,15 +106,23 @@ def apply_gateway_transaction(payment_id, tx):
     payment.metadata = {**(payment.metadata or {}), "gateway": gateway}
 
     if gateway_status == "success":
-        paid_amount = Decimal(str(tx.get("amount") or 0)) / Decimal("100")
+        tx_reference = str(tx.get("reference") or "").strip()
+        if tx_reference and tx_reference != payment.reference:
+            raise PaystackError("Payment reference does not match the checkout.")
+
+        paid_amount = (Decimal(str(tx.get("amount") or 0)) / Decimal("100")).quantize(Decimal("0.01"))
+        expected_amount = Decimal(payment.amount).quantize(Decimal("0.01"))
         tx_currency = str(tx.get("currency") or payment.currency).upper()
+
         if tx_currency != payment.currency.upper():
             raise PaystackError("Payment currency does not match the checkout.")
+        if paid_amount != expected_amount:
+            raise PaystackError("Payment amount does not match the checkout.")
+
         if not was_success:
-            payment.amount = paid_amount
             payment.status = "success"
             payment.paid_at = timezone.now()
-        payment.save(update_fields=["amount", "status", "paid_at", "metadata"])
+        payment.save(update_fields=["status", "paid_at", "metadata"])
 
         if not was_success and payment.invoice_id:
             invoice = payment.invoice
