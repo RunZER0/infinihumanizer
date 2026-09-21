@@ -41,6 +41,10 @@
       </table>
       {% if payments_configured %}
       <button class="btn btn-primary" type="submit" id="checkout-button">Pay with Paystack</button>
+      <div class="checkout-return">
+        <a href="{% if user.is_authenticated %}{% url 'platformhub:workspace_billing' %}{% else %}{% url 'platformhub:pricing' %}{% endif %}">Cancel and return</a>
+        <span id="checkout-status" aria-live="polite"></span>
+      </div>
       {% else %}
       <div class="notice">Online payment is not connected yet.</div>
       <button class="btn" type="button" disabled>Payment unavailable</button>
@@ -71,26 +75,50 @@
 
   const form = document.getElementById("checkout-form");
   const button = document.getElementById("checkout-button");
+  const status = document.getElementById("checkout-status");
   if (!form || !button) return;
+
+  function resetCheckout(message) {
+    button.disabled = false;
+    button.textContent = "Pay with Paystack";
+    if (status) status.textContent = message || "";
+  }
+
+  window.addEventListener("pageshow", function () {
+    resetCheckout("");
+  });
+
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
+    if (button.disabled) return;
+
     button.disabled = true;
     button.textContent = "Opening Paystack…";
+    if (status) status.textContent = "";
+
+    const controller = new AbortController();
+    const timer = window.setTimeout(function () { controller.abort(); }, 15000);
+
     try {
       const response = await fetch("{% url 'platformhub:start_checkout' %}", {
         method: "POST",
         body: new FormData(form),
-        headers: {"X-CSRFToken": form.querySelector("[name=csrfmiddlewaretoken]").value}
+        headers: {"X-CSRFToken": form.querySelector("[name=csrfmiddlewaretoken]").value},
+        signal: controller.signal
       });
       const data = await response.json();
       if (!response.ok || !data.authorization_url) {
         throw new Error(data.error || "Checkout could not be started.");
       }
-      window.location.href = data.authorization_url;
+      window.location.assign(data.authorization_url);
     } catch (error) {
-      button.disabled = false;
-      button.textContent = "Pay with Paystack";
-      window.alert(error.message);
+      if (error && error.name === "AbortError") {
+        resetCheckout("Paystack took too long to respond. Try again.");
+      } else {
+        resetCheckout(error.message || "Checkout could not be started.");
+      }
+    } finally {
+      window.clearTimeout(timer);
     }
   });
 })();
