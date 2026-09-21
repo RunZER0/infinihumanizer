@@ -18,7 +18,10 @@ logger = logging.getLogger(__name__)
 DEFAULT_MODEL = "mistralai/ministral-3b-2512"
 DEFAULT_STRENGTH = 8
 
-_REF_HEADER = re.compile(r"^(references?|bibliography|works?\s+cited|works?\s+consulted)\s*$", re.I)
+_REF_HEADER = re.compile(
+    r"^(?:references?|reference\s+list|bibliography|works?\s+cited|works?\s+consulted|literature\s+cited|sources?)\s*$",
+    re.I,
+)
 _LIST_LINE = re.compile(r"^\s*(?:[-*]|\d+[.)]|[A-Za-z][.)]|[ivxlcdmIVXLCDM]+[.)])\s+")
 _URL = re.compile(r"https?://[^\s<>]+|www\.[^\s<>]+", re.I)
 _DOI = re.compile(r"\b10\.\d{4,9}/[-._;()/:A-Z0-9]+\b", re.I)
@@ -80,9 +83,38 @@ def model_top_p(strength: int) -> float:
     return round(max(0.82, min(0.90, 0.80 + 0.01 * strength)), 2)
 
 
+def _heading_label(text: str) -> str:
+    label = text.strip()
+    label = re.sub(r"^#{1,6}\\s*", "", label)
+    label = re.sub(r"^(?:\\d+(?:\\.\\d+)*|[ivxlcdm]+)[.)]?\\s+", "", label, flags=re.I)
+    return label.strip().rstrip(":").strip()
+
+
+def _is_reference_heading(text: str) -> bool:
+    return bool(_REF_HEADER.fullmatch(_heading_label(text)))
+
+
 def _is_heading(text: str) -> bool:
-    text = text.strip()
-    return bool(text) and "\n" not in text and len(text.split()) <= 14 and text[-1:] not in ".!?;:"
+    raw = text.strip()
+    if not raw or "\n" in raw or "\r" in raw:
+        return False
+    if _is_reference_heading(raw):
+        return True
+    if re.match(r"^#{1,6}\\s+\\S", raw):
+        return True
+    if re.match(r"^(?:\\d+(?:\\.\\d+)*|[ivxlcdm]+)[.)]?\\s+\\S", raw, re.I):
+        return len(_heading_label(raw).split()) <= 18
+    label = _heading_label(raw)
+    words = label.split()
+    if not words or len(words) > 14 or raw[-1:] in ".!?;":
+        return False
+    if raw.endswith(":"):
+        return len(words) <= 12
+    if label.isupper():
+        return True
+    # Preserve short standalone title/header lines. Sentence-like lines ending
+    # in normal prose punctuation are excluded above.
+    return len(words) <= 10
 
 
 def _is_list(text: str) -> bool:
@@ -610,29 +642,116 @@ class RewriteRuntime:
         return results, model
 
 
+def _edge_whitespace(block: str) -> tuple[str, str, str]:
+    leading_match = re.match(r"^[ \\t]*", block)
+    trailing_match = re.search(r"[ \\t]*$", block)
+    leading = leading_match.group(0) if leading_match else ""
+    trailing = trailing_match.group(0) if trailing_match else ""
+    start = len(leading)
+    end = len(block) - len(trailing) if trailing else len(block)
+    return leading, block[start:end], trailing
+
+
+def _split_embedded_headings(block: str) -> tuple[list[str], list[str]]:
+    """Split only structural heading lines, preserving every original newline."""
+    if "\n" not in block and "\r" not in block:
+        return [block], []
+
+    parts = re.split(r"(\\r\\n|\\n|\\r)", block)
+    lines = parts[::2]
+    line_separators = parts[1::2]
+    if not any(_is_heading(line) for line in lines if line.strip()):
+        return [block], []
+
+    segments: list[str] = []
+    separators: list[str] = []
+    current = ""
+
+    for index, line in enumerate(lines):
+        sep = line_separators[index] if index < len(line_separators) else ""
+        if line.strip() and _is_heading(line):
+            if current:
+                segments.append(current)
+                separators.append("")
+                current = ""
+            segments.append(line)
+            if sep:
+                separators.append(sep)
+        else:
+            current += line
+            if sep:
+                current += sep
+
+    if current:
+        segments.append(current)
+
+    # The loop temporarily stores separators after heading segments. Rebuild
+    # a clean separator list from the original block so len == segments - 1.
+    if len(segments) <= 1:
+        return segments or [block], []
+
+    rebuilt_blocks: list[str] = []
+    rebuilt_seps: list[str] = []
+    cursor = 0
+    for segment in segments:
+        pos = block.find(segment, cursor)
+        if pos < 0:
+            return [block], []
+        if rebuilt_blocks:
+            rebuilt_seps.append(block[cursor:pos])
+        rebuilt_blocks.append(segment)
+        cursor = pos + len(segment)
+    if cursor < len(block):
+        rebuilt_blocks[-1] += block[cursor:]
+    return rebuilt_blocks, rebuilt_seps
+
+
+def _document_blocks(text: str) -> tuple[list[str], list[str]]:
+    chunks = re.split(r"((?:\\r?\\n[ \\t]*){2,})", text)
+    top_blocks = chunks[::2]
+    top_separators = chunks[1::2]
+
+    blocks: list[str] = []
+    separators: list[str] = []
+    for index, block in enumerate(top_blocks):
+        subblocks, subseparators = _split_embedded_headings(block)
+        for sub_index, subblock in enumerate(subblocks):
+            if blocks:
+                if sub_index == 0:
+                    separators.append(top_separators[index - 1] if index > 0 and index - 1 < len(top_separators) else "")
+                else:
+                    separators.append(subseparators[sub_index - 1] if sub_index - 1 < len(subseparators) else "")
+            blocks.append(subblock)
+    return blocks, separators
+
+
 def plan_document(text: str) -> tuple[list[ParagraphPlan], list[str], list[SentenceTask]]:
-    chunks = re.split(r"(\n\s*\n)", text.strip())
-    blocks, paragraph_separators = chunks[::2], chunks[1::2]
+    blocks, paragraph_separators = _document_blocks(text)
     plans, tasks = [], []
     in_references = False
     task_id = 0
 
     for block in blocks:
         stripped = block.strip()
-        if _REF_HEADER.match(stripped):
+        if _is_reference_heading(stripped):
             in_references = True
+
         rewrite = bool(stripped) and not in_references and not _is_heading(stripped) and not _is_list(stripped)
         if not rewrite:
             plans.append(ParagraphPlan(block, (), (), False))
             continue
 
-        sentences, separators = split_sentences(stripped)
+        leading, core, trailing = _edge_whitespace(block)
+        sentences, separators = split_sentences(core)
         ids = []
         for sentence in sentences:
             protected, literals = protect_sentence(sentence)
             tasks.append(SentenceTask(task_id, sentence, protected, literals))
             ids.append(task_id)
             task_id += 1
+
+        # Store the exact edge whitespace in the original field. Reassembly
+        # derives it again so indentation/trailing spaces survive unchanged.
         plans.append(ParagraphPlan(block, tuple(ids), tuple(separators), True))
 
     return plans, paragraph_separators, tasks
@@ -642,19 +761,23 @@ def reassemble(plans: list[ParagraphPlan], paragraph_separators: list[str], rewr
     rendered = []
     for plan in plans:
         if not plan.rewrite:
-            rendered.append(plan.original.strip())
+            rendered.append(plan.original)
             continue
-        parts = []
+
+        leading, _, trailing = _edge_whitespace(plan.original)
+        parts = [leading]
         for index, task_id in enumerate(plan.ids):
             parts.append(rewritten.get(task_id, ""))
             if index < len(plan.separators):
                 parts.append(plan.separators[index])
-        rendered.append("".join(parts).strip())
+        parts.append(trailing)
+        rendered.append("".join(parts))
 
     if not rendered:
         return ""
+
     output = rendered[0]
     for index, block in enumerate(rendered[1:]):
-        separator = paragraph_separators[index] if index < len(paragraph_separators) else "\n\n"
+        separator = paragraph_separators[index] if index < len(paragraph_separators) else ""
         output += separator + block
-    return output.strip()
+    return output
