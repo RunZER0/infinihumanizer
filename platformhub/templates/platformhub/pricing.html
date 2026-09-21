@@ -10,12 +10,19 @@
   <div class="shell">
     <div class="section-head"><div class="eyebrow">Tools</div><div><h2 class="h2">Fixed prices.</h2></div></div>
     <table class="proof-table">
-      <thead><tr><th>Product</th><th>USD</th><th>KES</th><th>Billing</th><th></th></tr></thead>
+      <thead><tr><th>Product</th><th>Price</th><th>Billing</th><th></th></tr></thead>
       <tbody>
       {% for slug,package in packages.items %}
         <tr>
           <td><strong>{{ package.name }}</strong><br><span style="color:var(--text-muted)">{{ package.description }}</span></td>
-          <td>USD {{ package.usd }}</td><td>KSh {{ package.kes }}</td><td>{{ package.cadence }}</td>
+          <td>
+            <strong>USD {{ package.usd }}</strong>
+            <details class="kes-price">
+              <summary>Show KES</summary>
+              <span>KSh {{ package.kes }}</span>
+            </details>
+          </td>
+          <td>{{ package.cadence }}</td>
           <td>{% if slug == "originality-quick" %}<a class="btn btn-link" href="{% url 'platformhub:assurance_check' %}">Start check →</a>{% else %}<a class="btn btn-link" href="{% url 'platformhub:checkout' %}?package={{ slug }}">Buy →</a>{% endif %}</td>
         </tr>
       {% endfor %}
