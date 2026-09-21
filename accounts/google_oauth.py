@@ -1,8 +1,6 @@
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from django.conf import settings
-from django.shortcuts import redirect
-
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.views import OAuth2CallbackView, OAuth2LoginView
 
@@ -21,16 +19,7 @@ google_callback = OAuth2CallbackView.adapter_view(InfiniGoogleOAuth2Adapter)
 
 
 def google_login(request, *args, **kwargs):
-    """Start Google OAuth and force the callback to the canonical production origin."""
-    if (
-        not settings.DEBUG
-        and request.get_host().split(":", 1)[0].lower() == "www.byinfini.online"
-    ):
-        return redirect(
-            f"{settings.PUBLIC_BASE_URL}{request.get_full_path()}",
-            permanent=True,
-        )
-
+    """Start Google OAuth and force only the callback URI to the canonical origin."""
     response = _google_login(request, *args, **kwargs)
     location = response.get("Location", "")
     if not location:
