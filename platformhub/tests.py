@@ -2,13 +2,15 @@ from unittest.mock import patch
 from decimal import Decimal
 
 from django.contrib.auth.models import User
-from django.test import TestCase
+from django.core import mail
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from .catalog import SERVICE_INDEX, commercial_terms, estimate_request
 from .legacy_mapping import legacy_amount_band, normalize_legacy_transaction
 from .knowledge import ARTICLES
-from .models import Consultation, Deliverable, ServiceRequest
+from .models import AssuranceJob, Consultation, Deliverable, Invoice, PaymentRecord, ServiceRequest
+from .payments import PaystackError, apply_gateway_transaction
 
 
 class CommercialArchitectureTests(TestCase):
@@ -57,7 +59,12 @@ class PublicJourneyTests(TestCase):
             response = self.client.get(reverse("platformhub:note_detail", kwargs={"slug": article["slug"]}))
             self.assertEqual(response.status_code, 200, article["slug"])
 
-    def test_talking_to_us_does_not_create_a_payment(self):
+    @override_settings(
+        EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+        SUPPORT_EMAIL="valdaceai@gmail.com",
+        DEFAULT_FROM_EMAIL="InfiniAI <valdaceai@gmail.com>",
+    )
+    def test_talking_to_us_persists_and_notifies_support(self):
         response = self.client.post(reverse("platformhub:consultation"), {
             "full_name": "Potential client",
             "email": "client@example.com",
@@ -66,6 +73,9 @@ class PublicJourneyTests(TestCase):
         self.assertEqual(response.status_code, 302)
         item = Consultation.objects.get(email="client@example.com")
         self.assertEqual(item.payments.count(), 0)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, ["valdaceai@gmail.com"])
+        self.assertEqual(mail.outbox[0].reply_to, ["client@example.com"])
 
     def test_brief_creates_request_not_invoice(self):
         response = self.client.post(reverse("platformhub:request_service"), {
@@ -190,3 +200,161 @@ class QuickPayTests(TestCase):
         payment = invoice.payments.get()
         self.assertEqual(payment.source_type, "quickpay")
         self.assertEqual(payment.normalized_service_code, "quickpay")
+
+
+class PaymentCompletionTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="payments-user",
+            email="payments@example.com",
+            password="strong-password-123",
+        )
+        self.client.force_login(self.user)
+
+    @patch("platformhub.views.initialize_transaction")
+    def test_invoice_checkout_uses_public_callback(self, initialize):
+        initialize.return_value = {"authorization_url": "https://checkout.paystack.test/tx"}
+        invoice = Invoice.objects.create(
+            user=self.user,
+            email=self.user.email,
+            currency="USD",
+            amount_due=Decimal("40.00"),
+            description="QuickPay — Copy edit",
+        )
+        with self.settings(PAYSTACK_SECRET_KEY="test-secret", PUBLIC_BASE_URL="https://byinfini.online"):
+            response = self.client.post(reverse("platformhub:start_checkout"), {
+                "invoice_id": str(invoice.id),
+                "email": self.user.email,
+                "currency": "USD",
+            })
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            initialize.call_args.kwargs["callback_url"],
+            "https://byinfini.online" + reverse("platformhub:verify_checkout"),
+        )
+        payment = invoice.payments.get()
+        self.assertEqual(payment.status, "pending")
+        self.assertEqual(payment.source_type, "quickpay")
+
+    @patch("platformhub.views.verify_transaction")
+    def test_invoice_success_closes_transaction_and_invoice(self, verify):
+        invoice = Invoice.objects.create(
+            user=self.user,
+            email=self.user.email,
+            currency="USD",
+            amount_due=Decimal("40.00"),
+            description="QuickPay — Copy edit",
+        )
+        payment = PaymentRecord.objects.create(
+            invoice=invoice,
+            user=self.user,
+            reference="INF-INVOICE-SUCCESS",
+            source_type="quickpay",
+            amount=Decimal("40.00"),
+            currency="USD",
+            status="pending",
+            email=self.user.email,
+        )
+        verify.return_value = {
+            "reference": payment.reference,
+            "status": "success",
+            "amount": 4000,
+            "currency": "USD",
+            "channel": "card",
+        }
+        response = self.client.get(reverse("platformhub:verify_checkout"), {"reference": payment.reference})
+        self.assertRedirects(response, reverse("platformhub:workspace"), fetch_redirect_response=False)
+        payment.refresh_from_db()
+        invoice.refresh_from_db()
+        self.assertEqual(payment.status, "success")
+        self.assertEqual(invoice.status, "paid")
+        self.assertEqual(invoice.amount_paid, Decimal("40.00"))
+
+    @patch("platformhub.views.initialize_transaction")
+    @patch("platformhub.views.verify_transaction")
+    def test_humanizer_package_fulfills_entitlement_and_returns_to_tool(self, verify, initialize):
+        initialize.return_value = {"authorization_url": "https://checkout.paystack.test/humanizer"}
+        with self.settings(PAYSTACK_SECRET_KEY="test-secret", PUBLIC_BASE_URL="https://byinfini.online"):
+            start = self.client.post(reverse("platformhub:start_checkout"), {
+                "package_slug": "humanizer-pro",
+                "currency": "USD",
+                "email": self.user.email,
+            })
+        self.assertEqual(start.status_code, 200)
+        reference = start.json()["reference"]
+        verify.return_value = {
+            "reference": reference,
+            "status": "success",
+            "amount": 2500,
+            "currency": "USD",
+            "channel": "card",
+        }
+        done = self.client.get(reverse("platformhub:verify_checkout"), {"reference": reference})
+        self.assertRedirects(done, reverse("humanizer"), fetch_redirect_response=False)
+        self.user.profile.refresh_from_db()
+        self.assertTrue(self.user.profile.is_paid)
+        self.assertGreaterEqual(self.user.profile.word_quota, 250000)
+
+    @patch("platformhub.views.initialize_transaction")
+    @patch("platformhub.views.verify_transaction")
+    def test_assurance_payment_queues_job_and_returns_to_report(self, verify, initialize):
+        job = AssuranceJob.objects.create(
+            user=self.user,
+            title="Draft review",
+            content="This is enough source content for the assurance job to exist in the test.",
+        )
+        initialize.return_value = {"authorization_url": "https://checkout.paystack.test/assurance"}
+        with self.settings(PAYSTACK_SECRET_KEY="test-secret", PUBLIC_BASE_URL="https://byinfini.online"):
+            start = self.client.post(reverse("platformhub:start_checkout"), {
+                "package_slug": "originality-quick",
+                "job_id": str(job.id),
+                "currency": "USD",
+                "email": self.user.email,
+            })
+        self.assertEqual(start.status_code, 200)
+        reference = start.json()["reference"]
+        verify.return_value = {
+            "reference": reference,
+            "status": "success",
+            "amount": 200,
+            "currency": "USD",
+            "channel": "card",
+        }
+        done = self.client.get(reverse("platformhub:verify_checkout"), {"reference": reference})
+        self.assertRedirects(
+            done,
+            reverse("platformhub:assurance_result", kwargs={"job_id": job.id}),
+            fetch_redirect_response=False,
+        )
+        job.refresh_from_db()
+        self.assertEqual(job.status, "queued")
+        self.assertEqual(job.payment_reference, reference)
+
+    def test_gateway_amount_mismatch_never_fulfills_payment(self):
+        invoice = Invoice.objects.create(
+            user=self.user,
+            email=self.user.email,
+            currency="USD",
+            amount_due=Decimal("40.00"),
+            description="Invoice",
+        )
+        payment = PaymentRecord.objects.create(
+            invoice=invoice,
+            user=self.user,
+            reference="INF-AMOUNT-CHECK",
+            amount=Decimal("40.00"),
+            currency="USD",
+            status="pending",
+            email=self.user.email,
+        )
+        with self.assertRaises(PaystackError):
+            apply_gateway_transaction(payment.id, {
+                "reference": payment.reference,
+                "status": "success",
+                "amount": 100,
+                "currency": "USD",
+            })
+        payment.refresh_from_db()
+        invoice.refresh_from_db()
+        self.assertEqual(payment.status, "pending")
+        self.assertEqual(invoice.amount_paid, Decimal("0.00"))
