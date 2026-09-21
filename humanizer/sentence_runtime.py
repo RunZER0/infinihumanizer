@@ -71,13 +71,13 @@ def strength_profile(strength: int) -> str:
 
 
 def model_temperature(strength: int) -> float:
-    # Strength changes rewrite distance, not creativity. Lower sampling variance
-    # helps preserve the same semantic inventory while the prompt drives structure.
-    return round(max(0.20, min(0.55, 0.15 + 0.04 * strength)), 2)
+    # Strength changes rewrite distance, not creativity. Keep generation controlled
+    # enough to preserve lexical anchors and complete semantic coverage.
+    return round(max(0.20, min(0.52, 0.14 + 0.037 * strength)), 2)
 
 
 def model_top_p(strength: int) -> float:
-    return round(max(0.84, min(0.92, 0.82 + 0.01 * strength)), 2)
+    return round(max(0.82, min(0.90, 0.80 + 0.01 * strength)), 2)
 
 
 def _is_heading(text: str) -> bool:
@@ -279,6 +279,14 @@ def few_shots(strength: int) -> list[dict]:
                 "Communication becomes a central design problem.",
                 "There is a core design challenge of communicating.",
             ),
+            (
+                "Security of tenure, predictable remuneration, transparent case assignment, and protection against arbitrary discipline are intended to reduce these risks.",
+                "These risks have been addressed by giving security of tenure, certain predictability of remuneration, certainty of the assignment of cases and protection against arbitrary discipline.",
+            ),
+            (
+                "This distinction is essential.",
+                "This separation is vitally important.",
+            ),
         ],
     }
     pairs = list(examples[band])
@@ -321,13 +329,15 @@ Semantic boundary:
 - Never explain what the sentence might imply.
 - Never add examples, consequences, motivations, background, or evaluative language absent from the source.
 - Do not turn a broad or abstract source concept into a narrower concrete one. Keep "flexibility" as flexibility unless the source itself defines a type of flexibility; keep "private interests" broad rather than replacing it with one kind of private actor.
-- Keep the proposition at roughly the same informational density and approximately the same length. Do not compress a developed sentence into a summary, and do not expand a short sentence into an explanation.
+- If the source contains an enumeration or coordinated list, preserve every listed item and its scope. You may change grammar around the list, but do not omit, merge, narrow, or invent an item.
+- Keep the proposition at roughly the same informational density and approximately the same length. Do not compress a developed sentence into a summary.
+- For very short sentences, prefer a terse re-expression of the same proposition. Do not add framing such as "the issue extends beyond", "this highlights", "this means", or other explanatory setup unless that idea is present in the source.
 
 Target prose:
 - Use ordinary, direct, natural English.
 - Preserve the writer's level of formality.
 - Prefer common accurate wording over elevated or editorial wording.
-- Preserve some ordinary source wording when it is already natural and semantically exact. Do not replace every content phrase merely to maximize difference.
+- Preserve several ordinary source words or short phrases when they are already natural and semantically exact. Do not replace every content phrase merely to maximize difference.
 - Keep key nouns, legal/technical terms, and broad category words when a substitute would narrow, broaden, or distort the meaning.
 - Create distance mainly through sentence opening, clause order, voice, and selective wording changes rather than wholesale synonym replacement.
 - Do not manufacture symmetry, rhetorical flourish, or decorative punctuation.
