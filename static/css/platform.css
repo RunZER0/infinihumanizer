@@ -1204,3 +1204,73 @@ body.modal-open{overflow:hidden}
   .valdace-wordmark{font-size:1.14rem}
   .valdace-mark{width:19px;height:19px;flex-basis:19px}
 }
+
+
+/* Progressive logged-in workspace */
+.account-home{padding:48px 0 70px}
+.account-home-head{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;margin-bottom:26px}
+.account-home-head h1{font-size:clamp(2.4rem,5vw,4.8rem);line-height:.95;letter-spacing:-.055em;margin:10px 0 8px;max-width:12ch}
+.account-home-head p{margin:0;color:var(--text-muted)}
+.account-home-body{display:grid;gap:22px}
+.account-next-card{min-height:190px;display:flex;justify-content:space-between;align-items:flex-end;gap:28px;padding:28px 30px;background:var(--surface-ink);color:var(--text-inverse);text-decoration:none;border-radius:18px}
+.account-next-card h2{font-size:clamp(1.6rem,3vw,2.7rem);letter-spacing:-.045em;margin:8px 0 6px}
+.account-next-card p{margin:0;color:#c9c5bc}
+.account-next-card>strong{white-space:nowrap}
+.account-next-clear{background:var(--surface-paper);color:var(--text-primary);border:1px solid var(--line-subtle)}
+.account-next-clear p{color:var(--text-muted)}
+.account-route-grid{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line-subtle);border-radius:18px;overflow:hidden;background:var(--surface-paper)}
+.account-route{position:relative;min-height:180px;padding:24px 22px;text-decoration:none;border-right:1px solid var(--line-subtle)}
+.account-route:last-child{border-right:0}
+.account-route:hover{background:#fff}
+.account-route strong{display:block;font-size:1.25rem;margin:9px 0 4px;letter-spacing:-.025em}
+.account-route p{margin:0;color:var(--text-muted);font-size:.84rem}
+.account-route-arrow{position:absolute;right:20px;bottom:18px;font-size:1.2rem}
+.account-quiet-row{display:flex;justify-content:space-between;gap:20px;align-items:center;padding:18px 2px;border-top:1px solid var(--line-subtle)}
+.account-quiet-row strong{display:block;margin-top:4px}
+.account-quiet-row>a{font-size:.82rem;color:var(--text-muted)}
+.account-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:28px}
+.account-list-section{padding-top:20px}
+.account-list{border-top:1px solid var(--line-strong)}
+.account-list-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:22px;align-items:center;padding:20px 0;border-bottom:1px solid var(--line-subtle);text-decoration:none}
+.account-list-row strong,.account-list-row small{display:block}
+.account-list-row small{color:var(--text-muted);margin-top:3px}
+.account-list-row-static:hover{background:transparent}
+.account-money{font-weight:800;white-space:nowrap}
+.account-empty{padding:30px 0;border-bottom:1px solid var(--line-subtle)}
+.account-empty p{color:var(--text-muted)}
+.account-secondary-list{margin-top:28px;border-top:1px solid var(--line-subtle)}
+.account-secondary-list>summary{cursor:pointer;padding:18px 0;font-weight:700}
+.account-chat-page{padding:44px 0 70px}
+.account-chat-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:20px}
+.account-chat-head h1{font-size:clamp(2.2rem,4vw,4rem);letter-spacing:-.05em;margin:8px 0 6px}
+.account-chat-head p{margin:0;color:var(--text-muted)}
+.account-chat-shell{max-width:920px}
+.client-chat-panel-focused{border-radius:18px;background:var(--surface-paper)}
+.account-context-drawer{margin-top:14px;border-top:1px solid var(--line-subtle)}
+.account-context-drawer>summary{cursor:pointer;padding:14px 2px;font-weight:700;font-size:.84rem}
+.account-context-list{display:grid;border-top:1px solid var(--line-subtle)}
+.account-context-list a{display:flex;justify-content:space-between;gap:18px;padding:14px 0;border-bottom:1px solid var(--line-subtle);text-decoration:none}
+.account-context-list small{display:block;color:var(--text-muted)}
+.checkout-return{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-top:-10px;font-size:.78rem;color:var(--text-muted)}
+.checkout-return a{color:var(--text-muted)}
+#checkout-status{text-align:right}
+
+@media(max-width:900px){
+  .account-route-grid{grid-template-columns:1fr 1fr}
+  .account-route:nth-child(2){border-right:0}
+  .account-route:nth-child(-n+2){border-bottom:1px solid var(--line-subtle)}
+  .account-section-head,.account-home-head,.account-chat-head{align-items:flex-start;flex-direction:column}
+}
+@media(max-width:640px){
+  .account-home{padding:28px 0 50px}
+  .account-next-card{min-height:0;align-items:flex-start;flex-direction:column;padding:22px 20px}
+  .account-route-grid{grid-template-columns:1fr}
+  .account-route{min-height:130px;border-right:0!important;border-bottom:1px solid var(--line-subtle)}
+  .account-route:last-child{border-bottom:0}
+  .account-list-row{grid-template-columns:1fr auto;gap:10px}
+  .account-list-row>.status,.account-list-row>.account-money{grid-column:2}
+  .account-list-row>.btn{grid-column:1/-1;width:100%}
+  .account-quiet-row{align-items:flex-start;flex-direction:column}
+  .checkout-return{align-items:flex-start;flex-direction:column}
+  #checkout-status{text-align:left}
+}
