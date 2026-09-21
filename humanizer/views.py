@@ -1,5 +1,6 @@
 import hashlib
 import logging
+import uuid
 
 from django.conf import settings
 from django.contrib import messages
@@ -101,7 +102,15 @@ def humanizer_view(request):
         recent = Humanization.objects.filter(user=request.user)[:8]
         saved_id = request.GET.get("saved", "").strip()
         if saved_id:
-            initial_humanization = Humanization.objects.filter(user=request.user, id=saved_id).first()
+            try:
+                saved_uuid = uuid.UUID(saved_id)
+            except (TypeError, ValueError):
+                saved_uuid = None
+            if saved_uuid:
+                initial_humanization = Humanization.objects.filter(
+                    user=request.user,
+                    id=saved_uuid,
+                ).first()
         anonymous_remaining = None
     else:
         anon = _anonymous_state(request)
