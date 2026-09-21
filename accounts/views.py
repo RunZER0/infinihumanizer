@@ -16,6 +16,7 @@ except ImportError:
 
 from .forms import SignUpForm
 from .models import Profile
+from .verification import session_email_is_verified
 
 
 logger = logging.getLogger(__name__)
@@ -33,6 +34,12 @@ def _safe_next(request, default="platformhub:workspace"):
 
 
 class VerifiedEmailLoginView(LoginView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["signup_form"] = SignUpForm()
+        context["signup_open"] = False
+        return context
+
     def form_valid(self, form):
         user = form.user_cache
 
@@ -79,16 +86,20 @@ def signup_view(request):
                 Profile.objects.get_or_create(user=user)
 
                 verification_required = getattr(settings, "ACCOUNT_EMAIL_VERIFICATION", "none") == "mandatory"
+                already_verified = session_email_is_verified(request, email)
                 EmailAddress.objects.update_or_create(
                     user=user,
                     email=user.email,
-                    defaults={"primary": True, "verified": not verification_required},
+                    defaults={
+                        "primary": True,
+                        "verified": already_verified or not verification_required,
+                    },
                 )
 
-                if verification_required:
+                if verification_required and not already_verified:
                     if send_email_confirmation:
                         send_email_confirmation(request, user, email=user.email)
-                        messages.success(request, "Check your email to verify the account, then sign in.")
+                        messages.success(request, "Verify your email, then sign in.")
                     else:
                         messages.error(request, "Email verification is temporarily unavailable.")
                     login_url = reverse("account_login")
