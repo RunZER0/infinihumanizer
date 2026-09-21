@@ -10,6 +10,7 @@ from .catalog import SERVICE_INDEX, commercial_terms, estimate_request
 from .legacy_mapping import legacy_amount_band, normalize_legacy_transaction
 from .knowledge import ARTICLES
 from .models import AssuranceJob, Consultation, Deliverable, Invoice, PaymentRecord, ServiceRequest
+from accounts.verification import SESSION_VERIFIED_EMAIL
 from .payments import PaystackError, apply_gateway_transaction
 
 
@@ -64,10 +65,15 @@ class PublicJourneyTests(TestCase):
         SUPPORT_EMAIL="valdaceai@gmail.com",
         DEFAULT_FROM_EMAIL="InfiniAI <valdaceai@gmail.com>",
     )
-    def test_talking_to_us_persists_and_notifies_support(self):
+    def test_talking_to_us_requires_verified_email_then_persists_and_notifies(self):
+        session = self.client.session
+        session["infini_consult_name"] = "Potential client"
+        session["infini_consult_email"] = "client@example.com"
+        session[SESSION_VERIFIED_EMAIL] = "client@example.com"
+        session.save()
+
         response = self.client.post(reverse("platformhub:consultation"), {
-            "full_name": "Potential client",
-            "email": "client@example.com",
+            "action": "submit_note",
             "topic": "We need help deciding how to structure product language.",
         })
         self.assertEqual(response.status_code, 302)
@@ -76,6 +82,38 @@ class PublicJourneyTests(TestCase):
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].to, ["valdaceai@gmail.com"])
         self.assertEqual(mail.outbox[0].reply_to, ["client@example.com"])
+
+    @patch("platformhub.views.issue_email_code")
+    def test_first_contact_progresses_from_name_to_email_verification(self, issue_code):
+        issue_code.return_value = (object(), True)
+        first = self.client.post(reverse("platformhub:consultation"), {
+            "action": "set_name",
+            "full_name": "Potential client",
+        })
+        self.assertEqual(first.status_code, 302)
+
+        second = self.client.post(reverse("platformhub:consultation"), {
+            "action": "set_email",
+            "email": "client@example.com",
+        })
+        self.assertEqual(second.status_code, 302)
+        issue_code.assert_called_once_with("client@example.com", "Potential client")
+
+        page = self.client.get(reverse("platformhub:consultation"))
+        self.assertContains(page, "Check your inbox.")
+
+    def test_first_contact_rejects_disposable_email(self):
+        session = self.client.session
+        session["infini_consult_name"] = "Potential client"
+        session.save()
+
+        response = self.client.post(reverse("platformhub:consultation"), {
+            "action": "set_email",
+            "email": "someone@mailinator.com",
+        }, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Consultation.objects.filter(email="someone@mailinator.com").exists())
+        self.assertContains(response, "Use a permanent email address.")
 
     def test_brief_creates_request_not_invoice(self):
         response = self.client.post(reverse("platformhub:request_service"), {
