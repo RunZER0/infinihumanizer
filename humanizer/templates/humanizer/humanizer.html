@@ -13,7 +13,11 @@
     <div class="humanizer-account">
       <span class="micro">WORD BALANCE</span>
       <strong id="word-balance">{{ balance_label }}</strong>
+      {% if user.is_authenticated %}
       <a href="{% url 'platformhub:pricing' %}">Plans</a>
+      {% else %}
+      <a href="{% url 'account_login' %}?next={% url 'humanizer' %}">Sign in</a>
+      {% endif %}
     </div>
   </div>
 
@@ -126,6 +130,12 @@
 
   const wordCount = (value) => (value.trim().match(/\S+/g) || []).length;
 
+  const savedDraft = sessionStorage.getItem("infiniai_humanizer_draft");
+  if (savedDraft && !input.value) {
+    input.value = savedDraft;
+    inputCount.textContent = wordCount(input.value).toLocaleString() + " words";
+  }
+
   input.addEventListener("input", function () {
     inputCount.textContent = wordCount(input.value).toLocaleString() + " words";
   });
@@ -167,8 +177,16 @@
           headers: {"X-CSRFToken": form.querySelector("[name=csrfmiddlewaretoken]").value}
         });
         const data = await response.json();
-        if (!response.ok) throw new Error(data.error || "The text could not be rewritten.");
+        if (!response.ok) {
+          if (data.auth_required) {
+            sessionStorage.setItem("infiniai_humanizer_draft", input.value);
+            status.innerHTML = 'Please sign in to continue. <a href="' + data.login_url + '">Sign in</a>';
+            return;
+          }
+          throw new Error(data.error || "The text could not be rewritten.");
+        }
 
+        sessionStorage.removeItem("infiniai_humanizer_draft");
         setResult(data.output_text || "");
         if (typeof data.word_balance !== "undefined") {
           document.getElementById("word-balance").textContent =
