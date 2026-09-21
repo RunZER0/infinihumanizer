@@ -98,8 +98,12 @@ def signup_view(request):
 
                 if verification_required and not already_verified:
                     if send_email_confirmation:
-                        send_email_confirmation(request, user, email=user.email)
-                        messages.success(request, "Verify your email, then sign in.")
+                        try:
+                            send_email_confirmation(request, user, email=user.email)
+                            messages.success(request, "Verify your email, then sign in.")
+                        except Exception:
+                            logger.exception("Could not send signup verification email to %s", user.email)
+                            messages.error(request, "We could not send the verification email. Try again shortly.")
                     else:
                         messages.error(request, "Email verification is temporarily unavailable.")
                     login_url = reverse("account_login")
@@ -131,8 +135,12 @@ def resend_verification(request):
         email_address = EmailAddress.objects.filter(email=email).first()
         if email_address and not email_address.verified:
             if send_email_confirmation:
-                send_email_confirmation(request, email_address.user, email=email)
-                messages.success(request, "A new verification email has been sent.")
+                try:
+                    send_email_confirmation(request, email_address.user, email=email)
+                    messages.success(request, "A new verification email has been sent.")
+                except Exception:
+                    logger.exception("Could not resend verification email to %s", email)
+                    messages.error(request, "We could not send another verification email. Try again shortly.")
             else:
                 messages.warning(request, "Email verification is not available.")
         else:
