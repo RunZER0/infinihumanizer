@@ -470,30 +470,94 @@ def assurance_result(request, job_id):
     return render(request, "platformhub/assurance_result.html", {"job": job})
 
 
+def _workspace_querysets(user):
+    items = ServiceRequest.objects.filter(user=user)
+    invoices = Invoice.objects.filter(user=user)
+    payments = PaymentRecord.objects.filter(user=user)
+    if user.email:
+        items = ServiceRequest.objects.filter(
+            Q(user=user) | Q(email__iexact=user.email)
+        ).distinct()
+        invoices = Invoice.objects.filter(
+            Q(user=user) | Q(email__iexact=user.email)
+        ).distinct()
+        payments = PaymentRecord.objects.filter(
+            Q(user=user) | Q(email__iexact=user.email)
+        ).distinct()
+    return (
+        items.order_by("-updated_at"),
+        invoices.order_by("-created_at"),
+        payments.order_by("-created_at"),
+    )
+
+
 @login_required
 def workspace(request):
-    items = ServiceRequest.objects.filter(user=request.user)
-    invoices = Invoice.objects.filter(user=request.user)
-    payments = PaymentRecord.objects.filter(user=request.user)
-    if request.user.email:
-        items = ServiceRequest.objects.filter(Q(user=request.user) | Q(email__iexact=request.user.email)).distinct()
-        invoices = Invoice.objects.filter(Q(user=request.user) | Q(email__iexact=request.user.email)).distinct()
-        payments = PaymentRecord.objects.filter(Q(user=request.user) | Q(email__iexact=request.user.email)).distinct()
-
+    items, invoices, payments = _workspace_querysets(request.user)
     profile = getattr(request.user, "profile", None)
     conversation = ClientConversation.objects.filter(user=request.user).first()
-    unread_messages = 0
-    if conversation:
-        unread_messages = conversation.messages.filter(sender="admin", read_at__isnull=True).count()
+    unread_messages = (
+        conversation.messages.filter(sender="admin", read_at__isnull=True).count()
+        if conversation else 0
+    )
+    unpaid_invoice = invoices.exclude(status="paid").first()
+    active_project = items.exclude(status__in=["completed", "closed", "cancelled"]).first()
+    recent_rewrite = Humanization.objects.filter(user=request.user).first()
+
+    next_action = None
+    if unpaid_invoice:
+        next_action = {
+            "eyebrow": "Payment due",
+            "title": unpaid_invoice.description or unpaid_invoice.number,
+            "detail": f"{unpaid_invoice.currency} {unpaid_invoice.amount_due - unpaid_invoice.amount_paid}",
+            "url": f"{reverse('platformhub:checkout')}?invoice={unpaid_invoice.id}",
+            "label": "Pay invoice",
+        }
+    elif unread_messages:
+        next_action = {
+            "eyebrow": "New message",
+            "title": f"{unread_messages} unread message{'s' if unread_messages != 1 else ''}",
+            "detail": "InfiniAI replied in your workspace.",
+            "url": reverse("platformhub:client_chat"),
+            "label": "Open messages",
+        }
+    elif active_project:
+        next_action = {
+            "eyebrow": "In progress",
+            "title": active_project.title,
+            "detail": active_project.get_status_display(),
+            "url": reverse("platformhub:project_detail", args=[active_project.id]),
+            "label": "Continue project",
+        }
 
     return render(request, "platformhub/workspace.html", {
-        "requests": items[:20],
-        "invoices": invoices[:20],
-        "payments": payments[:30],
-        "assurance_jobs": AssuranceJob.objects.filter(user=request.user).order_by("-created_at")[:20],
-        "humanizations": Humanization.objects.filter(user=request.user)[:12],
         "profile": profile,
         "unread_messages": unread_messages,
+        "project_count": items.count(),
+        "open_invoice_count": invoices.exclude(status="paid").count(),
+        "saved_rewrite_count": Humanization.objects.filter(user=request.user).count(),
+        "next_action": next_action,
+        "recent_rewrite": recent_rewrite,
+    })
+
+
+@login_required
+def workspace_projects(request):
+    items, _, _ = _workspace_querysets(request.user)
+    return render(request, "platformhub/workspace_projects.html", {
+        "requests": items[:50],
+        "assurance_jobs": AssuranceJob.objects.filter(
+            user=request.user
+        ).order_by("-created_at")[:30],
+    })
+
+
+@login_required
+def workspace_billing(request):
+    _, invoices, payments = _workspace_querysets(request.user)
+    return render(request, "platformhub/workspace_billing.html", {
+        "invoices": invoices[:50],
+        "payments": payments[:80],
     })
 
 
@@ -528,7 +592,7 @@ def client_chat(request):
             Q(user=request.user) | Q(email__iexact=request.user.email)
         ).distinct()
 
-    projects = project_qs.prefetch_related("deliverables").order_by("-updated_at")[:20]
+    projects = project_qs.prefetch_related("deliverables").order_by("-updated_at")[:4]
     return render(request, "platformhub/client_chat.html", {
         "conversation": conversation,
         "chat_messages": conversation.messages.select_related("author").all(),
