@@ -102,14 +102,6 @@ PACKAGES = {
         "cadence": "one-time",
         "service_code": "assurance-originality",
     },
-    "consultation": {
-        "name": "Scoping Consultation",
-        "description": "A focused scoping session. The fee can be credited to a project commissioned within seven days.",
-        "usd": Decimal("50.00"),
-        "kes": Decimal("6500.00"),
-        "cadence": "one-time",
-        "service_code": "studio-review",
-    },
 }
 
 
