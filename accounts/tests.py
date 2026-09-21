@@ -117,3 +117,34 @@ class SignupViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFalse(User.objects.filter(email="valdaceai@gmail.com").exists())
         self.assertContains(response, "Use Google")
+
+
+
+class AdminAccessTests(TestCase):
+    def setUp(self):
+        self.admin_email = "valdaceai@gmail.com"
+        self.user = User.objects.create_user(
+            username="owner",
+            email=self.admin_email,
+            password="strong-password-123",
+        )
+
+    def test_matching_email_without_google_identity_is_denied(self):
+        self.client.force_login(self.user)
+        with self.settings(INFINIAI_ADMIN_EMAIL=self.admin_email):
+            response = self.client.get("/admin/")
+        self.assertEqual(response.status_code, 403)
+
+    def test_authorized_google_identity_can_open_admin(self):
+        from allauth.socialaccount.models import SocialAccount
+
+        SocialAccount.objects.create(
+            user=self.user,
+            provider="google",
+            uid="google-owner-uid",
+            extra_data={"email": self.admin_email},
+        )
+        self.client.force_login(self.user)
+        with self.settings(INFINIAI_ADMIN_EMAIL=self.admin_email):
+            response = self.client.get("/admin/")
+        self.assertEqual(response.status_code, 200)
