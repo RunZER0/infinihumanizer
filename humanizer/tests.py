@@ -27,7 +27,7 @@ class HumanizerTests(TestCase):
     def test_page_is_public(self):
         response = self.client.get(reverse("humanizer"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Rewrite the text in natural prose.")
+        self.assertContains(response, "Sentence-level rewriting with the meaning kept intact.")
         self.assertContains(response, "300 free today")
 
     @patch("humanizer.views.rewrite_text", return_value=("A cleaner version.", "qwen/qwen3.7-flash"))
@@ -59,7 +59,7 @@ class HumanizerTests(TestCase):
         self.client.force_login(self.user)
         response = self.client.get(reverse("humanizer"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Rewrite the text in natural prose.")
+        self.assertContains(response, "Sentence-level rewriting with the meaning kept intact.")
 
     @patch("humanizer.views.rewrite_text", return_value=("A cleaner version of the text.", "qwen/qwen3.7-flash"))
     def test_api_rewrites_records_usage_and_saves(self, rewrite):
