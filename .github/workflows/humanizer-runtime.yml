@@ -92,3 +92,5 @@ jobs:
               print(output)
               print()
           PY
+
+# live-smoke push trigger
