@@ -7,7 +7,7 @@ from django.conf import settings
 from .sentence_runtime import DEFAULT_MODEL, DEFAULT_STRENGTH, RewriteRuntime, plan_document, reassemble
 
 MAX_INPUT_WORDS = 3000
-MAX_INPUT_CHARS = 18000
+MAX_INPUT_CHARS = 48000
 
 
 def rewrite_text(
