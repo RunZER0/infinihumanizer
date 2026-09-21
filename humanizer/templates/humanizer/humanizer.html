@@ -56,7 +56,7 @@
           maxlength="{{ max_chars }}"
           placeholder="Paste the text you want to rewrite."
           aria-label="Text to rewrite"
-        ></textarea>
+        >{% if initial_humanization %}{{ initial_humanization.source_text }}{% endif %}</textarea>
       </form>
     </section>
 
@@ -70,7 +70,7 @@
       </div>
 
       <div class="output-wrap">
-        <textarea id="output-text" placeholder="Your rewritten text will appear here." aria-label="Rewritten output"></textarea>
+        <textarea id="output-text" placeholder="Your rewritten text will appear here." aria-label="Rewritten output">{% if initial_humanization %}{{ initial_humanization.output_text }}{% endif %}</textarea>
         <div class="output-empty" id="output-empty">
           <span class="output-mark">Aa</span>
           <p>The result will appear here.</p>
@@ -147,7 +147,8 @@
   const modalClose = document.getElementById("auth-modal-close");
   const modalTitle = document.getElementById("auth-modal-title");
   const modalCopy = document.getElementById("auth-modal-copy");
-  let currentId = sessionStorage.getItem("infiniai_humanizer_id") || "";
+  const serverId = "{% if initial_humanization %}{{ initial_humanization.id }}{% endif %}";
+  let currentId = serverId || sessionStorage.getItem("infiniai_humanizer_id") || "";
   let saveTimer = null;
 
   const wordCount = (value) => (value.trim().match(/\S+/g) || []).length;
@@ -203,9 +204,14 @@
   const savedDraft = sessionStorage.getItem("infiniai_humanizer_draft");
   const savedOutput = sessionStorage.getItem("infiniai_humanizer_output");
   const savedTemperature = sessionStorage.getItem("infiniai_humanizer_temperature");
-  if (savedDraft && !input.value) input.value = savedDraft;
-  if (savedOutput) setResult(savedOutput);
-  if (savedTemperature) temperature.value = savedTemperature;
+  if (serverId) {
+    setResult(output.value);
+    sessionStorage.setItem("infiniai_humanizer_id", serverId);
+  } else {
+    if (savedDraft && !input.value) input.value = savedDraft;
+    if (savedOutput) setResult(savedOutput);
+    if (savedTemperature) temperature.value = savedTemperature;
+  }
   updateCounts();
 
   input.addEventListener("input", function () {
