@@ -1,53 +1,22 @@
 {% extends "base.html" %}
-{% block title %}Messages - InfiniAI{% endblock %}
+{% block title %}Messages — InfiniAI{% endblock %}
 {% block content %}
-<div class="page-shell workspace-head">
-  <div>
-    <div class="eyebrow">Workspace</div>
-    <h1 class="h1">Progress and messages.</h1>
-    <p class="lede">Follow active work and keep the conversation attached to your account.</p>
+<section class="account-chat-page">
+  <div class="shell account-chat-head">
+    <div>
+      <div class="eyebrow">Workspace</div>
+      <h1>Messages</h1>
+      <p>One conversation. Everything stays attached to your account.</p>
+    </div>
+    <a class="btn" href="{% url 'platformhub:workspace' %}">Workspace</a>
   </div>
-  <div class="workspace-actions">
-    <a class="btn" href="{% url 'platformhub:workspace' %}">Back to workspace</a>
-    <a class="btn btn-primary" href="{% url 'platformhub:start' %}">Start a project</a>
-  </div>
-</div>
 
-<section class="section">
-  <div class="shell client-chat-layout">
-    <aside class="client-progress-panel">
-      <div class="section-head section-head-compact">
-        <div class="eyebrow">Progress</div>
-        <div><h2 class="h3">Your projects</h2></div>
-      </div>
-      <div class="list-block">
-        {% for project in projects %}
-        <article class="list-item client-progress-item">
-          <div class="client-progress-title">
-            <strong>{{ project.title }}</strong>
-            <span class="status status-pending">{{ project.get_status_display }}</span>
-          </div>
-          <small>{{ project.reference }} · Updated {{ project.updated_at|date:"M j, Y" }}</small>
-          {% if project.deliverables.all %}
-          <div class="client-deliverable-list">
-            {% for deliverable in project.deliverables.all %}
-            <div><span>{{ deliverable.title }}</span><small>{{ deliverable.get_status_display }}</small></div>
-            {% endfor %}
-          </div>
-          {% endif %}
-          <a class="btn btn-link" href="{% url 'platformhub:project_detail' project.id %}">Open project →</a>
-        </article>
-        {% empty %}
-        <div class="list-item"><strong>No projects yet.</strong><small>Your project status will appear here after you start work.</small></div>
-        {% endfor %}
-      </div>
-    </aside>
-
-    <section class="client-chat-panel">
+  <div class="shell account-chat-shell">
+    <section class="client-chat-panel client-chat-panel-focused">
       <div class="client-chat-head">
         <div>
-          <span class="micro">MESSAGES</span>
-          <h2>Talk to InfiniAI</h2>
+          <span class="micro">INFINIAI</span>
+          <h2>Conversation</h2>
         </div>
         <span class="status {% if conversation.status == 'open' %}status-success{% else %}status-pending{% endif %}">{{ conversation.get_status_display }}</span>
       </div>
@@ -57,14 +26,14 @@
         <article class="client-message {% if item.sender == 'client' %}client-message-user{% else %}client-message-admin{% endif %}">
           <div class="client-message-meta">
             <strong>{% if item.sender == "client" %}You{% else %}InfiniAI{% endif %}</strong>
-            <time>{{ item.created_at|date:"M j, Y · H:i" }}</time>
+            <time>{{ item.created_at|date:"M j · H:i" }}</time>
           </div>
           <p>{{ item.body|linebreaksbr }}</p>
         </article>
         {% empty %}
         <div class="client-chat-empty">
-          <strong>No messages yet.</strong>
-          <p>Send a question about a project, payment, delivery or account.</p>
+          <strong>Start the conversation.</strong>
+          <p>Ask about a project, payment, delivery or your account.</p>
         </div>
         {% endfor %}
       </div>
@@ -72,13 +41,27 @@
       <form method="post" class="client-chat-form">
         {% csrf_token %}
         <label for="client-message">Message</label>
-        <textarea id="client-message" name="message" maxlength="5000" required placeholder="Write your message."></textarea>
+        <textarea id="client-message" name="message" maxlength="5000" required placeholder="Write a message…"></textarea>
         <div class="client-chat-send">
-          <small>Messages remain attached to this account.</small>
-          <button class="btn btn-primary" type="submit">Send message</button>
+          <small>Replies appear here.</small>
+          <button class="btn btn-primary" type="submit">Send</button>
         </div>
       </form>
     </section>
+
+    {% if projects %}
+    <details class="account-context-drawer">
+      <summary>Project context</summary>
+      <div class="account-context-list">
+        {% for project in projects %}
+        <a href="{% url 'platformhub:project_detail' project.id %}">
+          <div><strong>{{ project.title }}</strong><small>{{ project.reference }}</small></div>
+          <span>{{ project.get_status_display }} →</span>
+        </a>
+        {% endfor %}
+      </div>
+    </details>
+    {% endif %}
   </div>
 </section>
 {% endblock %}
