@@ -61,27 +61,45 @@ def rewrite_text(text: str, temperature: float = 0.65) -> tuple[str, str]:
     if word_count > MAX_INPUT_WORDS:
         raise ValueError(f"Text exceeds the {MAX_INPUT_WORDS:,}-word limit.")
 
-    api_key = getattr(settings, "OPENROUTER_API_KEY", "")
-    if not api_key:
-        raise RuntimeError("Humanizer API is not configured.")
-
+    backend = getattr(settings, "HUMANIZER_BACKEND", "openrouter").lower()
     primary = getattr(settings, "HUMANIZER_MODEL_ID", DEFAULT_MODEL) or DEFAULT_MODEL
     temperature = max(0.1, min(1.0, float(temperature)))
-    fallbacks = _fallback_models(primary)
 
-    client = OpenAI(
-        base_url="https://openrouter.ai/api/v1",
-        api_key=api_key,
-        timeout=60.0,
-        max_retries=1,
-        default_headers={
-            "HTTP-Referer": getattr(settings, "PUBLIC_BASE_URL", "https://byinfini.online"),
-            "X-Title": "InfiniAI Humanizer",
-        },
-    )
-    response = client.chat.completions.create(
-        model=primary,
-        messages=[
+    if backend == "openrouter":
+        api_key = getattr(settings, "OPENROUTER_API_KEY", "")
+        if not api_key:
+            raise RuntimeError("Humanizer API is not configured.")
+        client = OpenAI(
+            base_url="https://openrouter.ai/api/v1",
+            api_key=api_key,
+            timeout=60.0,
+            max_retries=1,
+            default_headers={
+                "HTTP-Referer": getattr(settings, "PUBLIC_BASE_URL", "https://byinfini.online"),
+                "X-Title": "InfiniAI Humanizer",
+            },
+        )
+        extra_body = {
+            "models": _fallback_models(primary),
+            "reasoning": {"enabled": False},
+            "provider": {
+                "sort": "throughput",
+                "data_collection": "deny",
+                "allow_fallbacks": True,
+            },
+        }
+    elif backend == "openai":
+        api_key = getattr(settings, "OPENAI_API_KEY", "")
+        if not api_key:
+            raise RuntimeError("Humanizer API is not configured.")
+        client = OpenAI(api_key=api_key, timeout=180.0, max_retries=2)
+        extra_body = None
+    else:
+        raise RuntimeError("Humanizer backend is not configured.")
+
+    request_args = {
+        "model": primary,
+        "messages": [
             {"role": "system", "content": SYSTEM_PROMPT},
             {
                 "role": "user",
@@ -91,18 +109,13 @@ def rewrite_text(text: str, temperature: float = 0.65) -> tuple[str, str]:
                 ),
             },
         ],
-        temperature=temperature,
-        max_tokens=min(5000, max(800, int(word_count * 2.2))),
-        extra_body={
-            "models": fallbacks,
-            "reasoning": {"enabled": False},
-            "provider": {
-                "sort": "throughput",
-                "data_collection": "deny",
-                "allow_fallbacks": True,
-            },
-        },
-    )
+        "temperature": temperature,
+        "max_tokens": min(5000, max(800, int(word_count * 2.2))),
+    }
+    if extra_body is not None:
+        request_args["extra_body"] = extra_body
+
+    response = client.chat.completions.create(**request_args)
     content = response.choices[0].message.content if response.choices else ""
     result = _clean_output(content)
     if not result:
