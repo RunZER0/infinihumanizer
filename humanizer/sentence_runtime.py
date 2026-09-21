@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
 import random
@@ -81,6 +82,100 @@ def model_temperature(strength: int) -> float:
 
 def model_top_p(strength: int) -> float:
     return round(max(0.84, min(0.93, 0.84 + 0.01 * strength)), 2)
+
+
+_STRATEGY_STOPWORDS = {
+    "a", "an", "and", "are", "as", "at", "be", "because", "been", "being",
+    "but", "by", "can", "could", "for", "from", "had", "has", "have", "if",
+    "in", "into", "is", "it", "its", "may", "more", "not", "of", "on", "or",
+    "should", "that", "the", "their", "there", "these", "they", "this", "to",
+    "was", "were", "when", "where", "which", "while", "with", "would",
+}
+_REGISTER_DRIFT = re.compile(
+    r"\b(?:folks?|kids?|kinda|gonna|wanna|stuff)\b|"
+    r"hit the pavement|heat mess|big fights?|best part|calm (?:their|your) nerves",
+    re.I,
+)
+
+
+def _stable_bucket(source: str, salt: str) -> int:
+    digest = hashlib.sha256((salt + "\0" + source).encode("utf-8")).digest()
+    return int.from_bytes(digest[:4], "big") % 100
+
+
+def _lexical_anchors(source: str) -> list[str]:
+    """Choose dispersed exact source phrases to retain, without freezing the sentence."""
+    matches = list(re.finditer(r"[A-Za-z][A-Za-z'’-]*(?:-[A-Za-z][A-Za-z'’-]*)?", source))
+    if len(matches) < 4:
+        return []
+
+    word_count = len(matches)
+    desired = 1 if word_count < 10 else 2 if word_count < 18 else 3
+    candidates = []
+    for width in (3, 2):
+        for i in range(0, word_count - width + 1):
+            start, end = matches[i].start(), matches[i + width - 1].end()
+            phrase = source[start:end]
+            # Exact anchors should be clean contiguous word phrases, not punctuation-heavy spans.
+            if re.search(r"[,;:()\[\]{}]", phrase):
+                continue
+            words = [m.group(0).lower() for m in matches[i:i + width]]
+            if not any(len(w) >= 4 and w not in _STRATEGY_STOPWORDS for w in words):
+                continue
+            candidates.append((i / max(1, word_count - 1), phrase))
+
+    if not candidates:
+        return []
+
+    targets = [0.18, 0.52, 0.82][:desired]
+    chosen = []
+    used = set()
+    for target in targets:
+        ranked = sorted(candidates, key=lambda item: abs(item[0] - target))
+        for _, phrase in ranked:
+            key = phrase.lower()
+            if key not in used and all(key not in x.lower() and x.lower() not in key for x in chosen):
+                chosen.append(phrase)
+                used.add(key)
+                break
+    return chosen
+
+
+def transformation_instruction(source: str, strength: int) -> str:
+    if strength < 7:
+        return ""
+
+    opening_bucket = _stable_bucket(source, "opening")
+    length_bucket = _stable_bucket(source, "length")
+    anchors = _lexical_anchors(source)
+
+    if opening_bucket < 40:
+        opening = (
+            "Keep the original opening subject or opening phrase recognizable. "
+            "Do not invert the sentence merely to create difference."
+        )
+    else:
+        opening = (
+            "You may change the opening or clause order if it arises naturally, "
+            "but do not force a dramatic inversion."
+        )
+
+    if length_bucket < 45:
+        length = "Keep the transformed sentence broadly similar in length to the source (roughly 90%-115%)."
+    elif length_bucket < 85:
+        length = "Allow moderate expansion rather than compression (roughly 115%-145% of source length)."
+    else:
+        length = "Allow a more noticeable expansion while preserving the same proposition (roughly 145%-180% of source length)."
+
+    anchor_text = ""
+    if anchors:
+        quoted = ", ".join(json.dumps(x, ensure_ascii=False) for x in anchors)
+        anchor_text = (
+            f" Retain these exact source phrases somewhere in the transformation: {quoted}. "
+            "They are lexical anchors, not a required sentence frame."
+        )
+
+    return opening + " " + length + anchor_text
 
 
 def _heading_label(text: str) -> str:
@@ -254,6 +349,8 @@ def validate_candidate(source: str, candidate: str, strength: int) -> tuple[bool
         return False, "sentence-count"
     if strength >= 7 and candidate.strip() == source.strip():
         return False, "unchanged"
+    if strength >= 7 and _REGISTER_DRIFT.search(candidate) and not _REGISTER_DRIFT.search(source):
+        return False, "register-drift"
     if source_words >= 4:
         threshold = 0.985 if strength <= 3 else 0.955 if strength <= 6 else 0.97
         if _similarity(source, candidate) > threshold:
@@ -559,10 +656,17 @@ class RewriteRuntime:
     def _payload(self, batch: list[SentenceTask], repair=False) -> dict:
         messages = [{"role": "system", "content": system_prompt(self.strength)}]
         messages.extend(few_shots(self.strength))
+        task = batch[0]
         instruction = "Transform this sentence using only information contained in this sentence."
+        strategy = transformation_instruction(task.source, self.strength)
+        if strategy:
+            instruction += " " + strategy
         if repair:
-            instruction += " The previous output failed structural validation. Preserve the proposition and every protected token, but do not polish the language merely because the transformed wording is awkward."
-        data = {"sentences": [{"id": task.id, "text": task.protected} for task in batch]}
+            instruction += (
+                " The previous output failed structural validation. Preserve the proposition, academic register, "
+                "lexical anchors, and every protected token, but do not polish the language merely because the transformed wording is awkward."
+            )
+        data = {"sentences": [{"id": item.id, "text": item.protected} for item in batch]}
         messages.append({"role": "user", "content": instruction + "\n" + json.dumps(data, ensure_ascii=False)})
         words = sum(len(task.source.split()) for task in batch)
         payload = {
