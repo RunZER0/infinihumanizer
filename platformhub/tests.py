@@ -358,3 +358,74 @@ class PaymentCompletionTests(TestCase):
         invoice.refresh_from_db()
         self.assertEqual(payment.status, "pending")
         self.assertEqual(invoice.amount_paid, Decimal("0.00"))
+
+
+
+class WorkspaceChatTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="chat-user",
+            email="chat@example.com",
+            password="strong-password-123",
+        )
+        self.client.force_login(self.user)
+
+    def test_client_can_send_workspace_message(self):
+        from humanizer.models import ClientMessage
+
+        response = self.client.post(reverse("platformhub:client_chat"), {
+            "message": "Please confirm the current delivery status.",
+        })
+        self.assertRedirects(
+            response,
+            reverse("platformhub:client_chat"),
+            fetch_redirect_response=False,
+        )
+        message = ClientMessage.objects.get(conversation__user=self.user)
+        self.assertEqual(message.sender, "client")
+        self.assertEqual(message.body, "Please confirm the current delivery status.")
+
+    def test_workspace_links_to_messages(self):
+        response = self.client.get(reverse("platformhub:workspace"))
+        self.assertContains(response, reverse("platformhub:client_chat"))
+
+
+class HumanizerEntitlementTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="credit-user",
+            email="credits@example.com",
+            password="strong-password-123",
+        )
+
+    def _fulfill(self, reference):
+        payment = PaymentRecord.objects.create(
+            user=self.user,
+            reference=reference,
+            amount=Decimal("25.00"),
+            currency="USD",
+            status="pending",
+            email=self.user.email,
+            metadata={"package_slug": "humanizer-pro"},
+        )
+        apply_gateway_transaction(payment.id, {
+            "reference": reference,
+            "status": "success",
+            "amount": 2500,
+            "currency": "USD",
+            "channel": "card",
+        })
+        payment.refresh_from_db()
+        return payment
+
+    def test_repeat_tool_purchases_add_credits_and_record_fulfillment(self):
+        starting_quota = self.user.profile.word_quota
+        first = self._fulfill("INF-CREDITS-1")
+        self.user.profile.refresh_from_db()
+        self.assertEqual(self.user.profile.word_quota, starting_quota + 250000)
+        self.assertEqual(first.metadata["fulfillment"]["word_credits_added"], 250000)
+
+        second = self._fulfill("INF-CREDITS-2")
+        self.user.profile.refresh_from_db()
+        self.assertEqual(self.user.profile.word_quota, starting_quota + 500000)
+        self.assertEqual(second.metadata["fulfillment"]["account_type"], "PRO")
