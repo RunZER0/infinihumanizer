@@ -34,6 +34,8 @@ class Command(BaseCommand):
             "humanize_ajax",
             "save_humanization",
             "platformhub:workspace",
+            "platformhub:workspace_projects",
+            "platformhub:workspace_billing",
             "platformhub:client_chat",
             "platformhub:start_checkout",
             "platformhub:verify_checkout",
@@ -43,8 +45,11 @@ class Command(BaseCommand):
         for template_name in [
             "humanizer/humanizer.html",
             "platformhub/workspace.html",
+            "platformhub/workspace_projects.html",
+            "platformhub/workspace_billing.html",
             "platformhub/client_chat.html",
             "platformhub/checkout.html",
+            "admin/humanizer/clientconversation/chat.html",
         ]:
             get_template(template_name)
 
