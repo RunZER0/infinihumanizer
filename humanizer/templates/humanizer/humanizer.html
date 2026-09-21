@@ -254,7 +254,7 @@
     }
   }
 
-  if (authenticated && savedOutput && sessionStorage.getItem("infiniai_humanizer_pending_save") === "true") {
+  if (authenticated && !serverId && savedOutput && sessionStorage.getItem("infiniai_humanizer_pending_save") === "true") {
     currentId = "";
     saveResult(true);
   }
