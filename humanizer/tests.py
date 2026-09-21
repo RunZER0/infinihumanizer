@@ -13,9 +13,19 @@ class HumanizerTests(TestCase):
             password="strong-password-123",
         )
 
-    def test_page_requires_login(self):
+    def test_page_is_public(self):
         response = self.client.get(reverse("humanizer"))
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Rewrite the text in natural prose.")
+
+    def test_api_requires_login_without_hiding_the_tool(self):
+        response = self.client.post(reverse("humanize_ajax"), {
+            "text": "This is a draft the visitor wants to rewrite.",
+            "temperature": "0.65",
+        })
+        self.assertEqual(response.status_code, 401)
+        self.assertTrue(response.json()["auth_required"])
+        self.assertIn("login_url", response.json())
 
     def test_page_renders_for_signed_in_user(self):
         self.client.force_login(self.user)
