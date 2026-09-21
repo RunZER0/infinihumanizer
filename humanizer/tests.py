@@ -16,6 +16,7 @@ from .sentence_runtime import (
     reassemble,
     restore_sentence,
     split_sentences,
+    transformation_instruction,
     validate_candidate,
 )
 
@@ -201,6 +202,25 @@ class SentenceRuntimeTests(SimpleTestCase):
         )
         self.assertFalse(valid)
         self.assertEqual(reason, "unchanged")
+
+    def test_strength8_strategy_is_stable_and_uses_lexical_anchors(self):
+        source = (
+            "Judicial independence is commonly defended as a condition of the rule of law "
+            "because courts must decide cases without improper pressure."
+        )
+        first = transformation_instruction(source, 8)
+        second = transformation_instruction(source, 8)
+        self.assertEqual(first, second)
+        self.assertIn("exact source phrases", first)
+
+    def test_strength8_rejects_colloquial_register_drift(self):
+        valid, reason = validate_candidate(
+            "Well-planned green space can support physical activity and social contact.",
+            "Green spaces can help folks move and meet.",
+            8,
+        )
+        self.assertFalse(valid)
+        self.assertEqual(reason, "register-drift")
 
     def test_strength8_accepts_rough_fragment_like_reconstruction(self):
         valid, reason = validate_candidate(
