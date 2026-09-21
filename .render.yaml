@@ -12,8 +12,26 @@ services:
         sync: false
       - key: DATABASE_URL
         sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
       - key: OPENAI_API_KEY
         sync: false
+      - key: HUMANIZER_BACKEND
+        value: "openrouter"
+      - key: HUMANIZER_MODEL_ID
+        value: "mistralai/ministral-3b-2512"
+      - key: HUMANIZER_SENTENCE_BATCH_SIZE
+        value: "8"
+      - key: HUMANIZER_MAX_CONCURRENCY
+        value: "6"
+      - key: HUMANIZER_REQUEST_TIMEOUT
+        value: "30"
+      - key: HUMANIZER_MAX_RETRIES
+        value: "2"
+      - key: HUMANIZER_PROVIDER_SORT
+        value: "throughput"
+      - key: HUMANIZER_DEFAULT_STRENGTH
+        value: "8"
       - key: DEBUG
         value: "False"
       - key: OFFLINE_MODE

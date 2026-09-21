@@ -1,10 +1,19 @@
 from unittest.mock import patch
 
 from django.contrib.auth.models import User
-from django.test import TestCase, override_settings
+from django.test import SimpleTestCase, TestCase, override_settings
 from django.urls import reverse
 
 from .models import Humanization
+from .sentence_runtime import (
+    clamp_strength,
+    model_temperature,
+    plan_document,
+    protect_sentence,
+    reassemble,
+    restore_sentence,
+    split_sentences,
+)
 
 
 class HumanizerTests(TestCase):
@@ -18,19 +27,19 @@ class HumanizerTests(TestCase):
     def test_page_is_public(self):
         response = self.client.get(reverse("humanizer"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Rewrite the text in natural prose.")
+        self.assertContains(response, "Sentence-level rewriting with the meaning kept intact.")
         self.assertContains(response, "300 free today")
 
     @patch("humanizer.views.rewrite_text", return_value=("A cleaner version.", "qwen/qwen3.7-flash"))
     def test_anonymous_user_can_rewrite_within_daily_limit(self, rewrite):
         response = self.client.post(reverse("humanize_ajax"), {
             "text": "one two three four five",
-            "temperature": "0.65",
+            "strength": "8",
         })
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.json()["saved"])
         self.assertEqual(response.json()["anonymous_remaining"], 295)
-        rewrite.assert_called_once()
+        rewrite.assert_called_once_with("one two three four five", strength=8)
 
     @override_settings(HUMANIZER_ANON_DAILY_WORDS=5)
     @patch("humanizer.views.rewrite_text", return_value=("A cleaner version.", "qwen/qwen3.7-flash"))
@@ -50,14 +59,14 @@ class HumanizerTests(TestCase):
         self.client.force_login(self.user)
         response = self.client.get(reverse("humanizer"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Rewrite the text in natural prose.")
+        self.assertContains(response, "Sentence-level rewriting with the meaning kept intact.")
 
     @patch("humanizer.views.rewrite_text", return_value=("A cleaner version of the text.", "qwen/qwen3.7-flash"))
     def test_api_rewrites_records_usage_and_saves(self, rewrite):
         self.client.force_login(self.user)
         response = self.client.post(reverse("humanize_ajax"), {
             "text": "This is a short source passage with enough words to rewrite clearly.",
-            "temperature": "0.65",
+            "strength": "8",
         })
         self.assertEqual(response.status_code, 200)
         payload = response.json()
@@ -69,7 +78,10 @@ class HumanizerTests(TestCase):
         item = Humanization.objects.get(id=payload["humanization_id"])
         self.assertEqual(item.user, self.user)
         self.assertEqual(item.model_name, "qwen/qwen3.7-flash")
-        rewrite.assert_called_once()
+        rewrite.assert_called_once_with(
+            "This is a short source passage with enough words to rewrite clearly.",
+            strength=8,
+        )
 
     def test_signed_in_user_can_save_edited_output(self):
         item = Humanization.objects.create(
@@ -84,11 +96,12 @@ class HumanizerTests(TestCase):
             "humanization_id": str(item.id),
             "source_text": "Source",
             "output_text": "Edited output kept here.",
-            "temperature": "0.7",
+            "strength": "7",
         })
         self.assertEqual(response.status_code, 200)
         item.refresh_from_db()
         self.assertEqual(item.output_text, "Edited output kept here.")
+        self.assertEqual(item.variation, 0.7)
 
     def test_api_enforces_account_word_balance(self):
         self.user.profile.word_quota = 2
@@ -98,7 +111,42 @@ class HumanizerTests(TestCase):
         self.client.force_login(self.user)
         response = self.client.post(reverse("humanize_ajax"), {
             "text": "This input is longer than two words.",
-            "temperature": "0.65",
+            "strength": "8",
         })
         self.assertEqual(response.status_code, 400)
         self.assertIn("balance", response.json()["error"].lower())
+
+
+class SentenceRuntimeTests(SimpleTestCase):
+    def test_strength_profiles_keep_sampling_temperature_bounded(self):
+        self.assertEqual(clamp_strength(0), 1)
+        self.assertEqual(clamp_strength(8), 8)
+        self.assertEqual(clamp_strength(20), 10)
+        self.assertLess(model_temperature(4), model_temperature(8))
+        self.assertLessEqual(model_temperature(10), 0.68)
+
+    def test_sentence_splitter_handles_abbreviations_decimals_and_quotes(self):
+        source = 'Dr. Smith recorded 29.5 units. The court called it "a serious problem." Another sentence followed.'
+        sentences, separators = split_sentences(source)
+        self.assertEqual(len(sentences), 3)
+        self.assertEqual(sentences[0], "Dr. Smith recorded 29.5 units.")
+        self.assertEqual(sentences[1], 'The court called it "a serious problem."')
+        self.assertEqual(separators, [" ", " "])
+
+    def test_protected_literals_round_trip_exactly(self):
+        source = 'The rate was 29.5% in 2024 (Council of Europe, 2018) and the report called it "material."'
+        protected, literals = protect_sentence(source)
+        self.assertNotIn("29.5%", protected)
+        self.assertNotIn("(Council of Europe, 2018)", protected)
+        self.assertEqual(restore_sentence(protected, literals), source)
+
+    def test_document_plan_preserves_heading_and_references(self):
+        source = "Short Heading\n\nFirst sentence. Second sentence.\n\nReferences\n\nSmith, J. (2024). Example."
+        plans, paragraph_separators, tasks = plan_document(source)
+        self.assertEqual([task.source for task in tasks], ["First sentence.", "Second sentence."])
+        rewritten = {tasks[0].id: "Sentence one changed.", tasks[1].id: "Sentence two changed."}
+        output = reassemble(plans, paragraph_separators, rewritten)
+        self.assertIn("Short Heading", output)
+        self.assertIn("Sentence one changed. Sentence two changed.", output)
+        self.assertIn("References", output)
+        self.assertIn("Smith, J. (2024). Example.", output)
