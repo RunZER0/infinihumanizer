@@ -202,6 +202,15 @@ class SentenceRuntimeTests(SimpleTestCase):
         self.assertFalse(valid)
         self.assertEqual(reason, "too-close")
 
+    def test_strength8_rejects_overcompressed_developed_sentence(self):
+        valid, reason = validate_candidate(
+            "Judicial independence protects courts from improper pressure by government and private interests.",
+            "Courts need independence from pressure.",
+            8,
+        )
+        self.assertFalse(valid)
+        self.assertEqual(reason, "length")
+
     def test_sentence_splitter_handles_abbreviations_decimals_and_quotes(self):
         source = 'Dr. Smith recorded 29.5 units. The court called it "a serious problem." Another sentence followed.'
         sentences, separators = split_sentences(source)
