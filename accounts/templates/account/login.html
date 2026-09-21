@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>{% if signup_open or signup_form.errors %}Create account{% else %}Sign in{% endif %} - InfiniAI</title>
+  <title>{% if auth_mode == "signup" %}Create account{% else %}Sign in{% endif %} - InfiniAI</title>
   <link rel="stylesheet" href="{% static 'css/platform.css' %}">
 </head>
 <body class="auth-clean-body">
@@ -15,27 +15,18 @@
   </a>
 
   <section class="auth-clean-card" aria-live="polite">
-    <div
-      class="auth-choice-panel auth-login-panel"
-      id="auth-login-panel"
-      {% if signup_open or signup_form.errors %}hidden{% endif %}
-    >
+
+    <div class="auth-choice-panel" id="auth-social-panel" {% if auth_mode and auth_mode != "social" %}hidden{% endif %}>
       <div class="auth-clean-heading">
         <span class="micro">ACCOUNT</span>
         <h1>Sign in</h1>
-        <p>Continue to your workspace.</p>
+        <p>Choose how you want to continue.</p>
       </div>
 
       {% if messages %}
       <div class="auth-clean-messages">
-        {% for message in messages %}
-        <div class="notice">{{ message }}</div>
-        {% endfor %}
+        {% for message in messages %}<div class="notice">{{ message }}</div>{% endfor %}
       </div>
-      {% endif %}
-
-      {% if form.errors %}
-      <div class="notice">Check your email and password, then try again.</div>
       {% endif %}
 
       <a class="google-auth-btn auth-google-primary" href="{% url 'google_login_fixed' %}{% if redirect_field_value %}?next={{ redirect_field_value|urlencode }}{% endif %}">
@@ -50,13 +41,34 @@
         <span>Continue with Google</span>
       </a>
 
-      <div class="auth-clean-divider"><span>or</span></div>
+      <button class="btn auth-mode-secondary" type="button" data-auth-switch="email">Use email instead</button>
+
+      <button class="auth-clean-switch" type="button" data-auth-switch="signup">
+        New here? <strong>Create account</strong>
+      </button>
+    </div>
+
+    <div class="auth-choice-panel" id="auth-email-panel" {% if auth_mode != "email" %}hidden{% endif %}>
+      <div class="auth-clean-heading">
+        <span class="micro">EMAIL SIGN IN</span>
+        <h1>Sign in</h1>
+        <p>Enter your account details.</p>
+      </div>
+
+      {% if form.errors %}
+      <div class="notice">Check your email and password, then try again.</div>
+      {% endif %}
+      {% if messages %}
+      <div class="auth-clean-messages">
+        {% for message in messages %}<div class="notice">{{ message }}</div>{% endfor %}
+      </div>
+      {% endif %}
 
       <form method="post" action="{% url 'account_login' %}" class="auth-clean-form">
         {% csrf_token %}
         <div class="field">
           <label for="id_login">Email</label>
-          <input id="id_login" type="email" name="login" autocomplete="email" required autofocus>
+          <input id="id_login" type="email" name="login" autocomplete="email" required {% if auth_mode == "email" %}autofocus{% endif %}>
         </div>
         <div class="field">
           <div class="auth-field-label-row">
@@ -71,16 +83,13 @@
         <button class="btn btn-primary auth-clean-submit" type="submit">Sign in</button>
       </form>
 
-      <button class="auth-clean-switch" type="button" data-auth-switch="signup">
-        New here? <strong>Create account</strong>
-      </button>
+      <div class="auth-mode-links">
+        <button type="button" data-auth-switch="social">Use Google instead</button>
+        <button type="button" data-auth-switch="signup">Create account</button>
+      </div>
     </div>
 
-    <div
-      class="auth-choice-panel auth-signup-panel"
-      id="auth-signup-panel"
-      {% if not signup_open and not signup_form.errors %}hidden{% endif %}
-    >
+    <div class="auth-choice-panel" id="auth-signup-panel" {% if auth_mode != "signup" %}hidden{% endif %}>
       <div class="auth-clean-heading">
         <span class="micro">ACCOUNT</span>
         <h1>Create account</h1>
@@ -101,7 +110,7 @@
         {% if redirect_field_value %}<input type="hidden" name="next" value="{{ redirect_field_value }}">{% endif %}
         <div class="field">
           <label for="signup_email">Email</label>
-          <input id="signup_email" type="email" name="email" value="{{ signup_form.email.value|default:'' }}" required autocomplete="email">
+          <input id="signup_email" type="email" name="email" value="{{ signup_form.email.value|default:'' }}" required autocomplete="email" {% if auth_mode == "signup" %}autofocus{% endif %}>
         </div>
         <div class="field">
           <label for="signup_password1">Password</label>
@@ -114,40 +123,44 @@
         <button class="btn btn-primary auth-clean-submit" type="submit">Create account</button>
       </form>
 
-      <p class="auth-clean-note">We will verify a new email before first sign-in.</p>
+      <p class="auth-clean-note">We verify a new email before first sign-in.</p>
 
-      <button class="auth-clean-switch" type="button" data-auth-switch="login">
-        Already have an account? <strong>Sign in</strong>
-      </button>
+      <div class="auth-mode-links">
+        <button type="button" data-auth-switch="social">Use Google instead</button>
+        <button type="button" data-auth-switch="email">Sign in with email</button>
+      </div>
     </div>
   </section>
 </main>
 
 <script>
 (function () {
-  const loginPanel = document.getElementById("auth-login-panel");
-  const signupPanel = document.getElementById("auth-signup-panel");
+  const panels = {
+    social: document.getElementById("auth-social-panel"),
+    email: document.getElementById("auth-email-panel"),
+    signup: document.getElementById("auth-signup-panel")
+  };
 
   function showPanel(name) {
-    const signup = name === "signup";
-    loginPanel.hidden = signup;
-    signupPanel.hidden = !signup;
+    Object.entries(panels).forEach(function ([key, panel]) {
+      panel.hidden = key !== name;
+    });
 
     const url = new URL(window.location.href);
-    if (signup) {
+    if (name === "signup") {
       url.searchParams.set("signup", "1");
     } else {
       url.searchParams.delete("signup");
     }
     window.history.replaceState({}, "", url);
+
+    const input = panels[name].querySelector("input:not([type=hidden])");
+    if (input) window.setTimeout(function () { input.focus(); }, 20);
   }
 
   document.querySelectorAll("[data-auth-switch]").forEach(function (button) {
     button.addEventListener("click", function () {
       showPanel(button.dataset.authSwitch);
-      const panel = button.dataset.authSwitch === "signup" ? signupPanel : loginPanel;
-      const input = panel.querySelector("input:not([type=hidden])");
-      if (input) input.focus();
     });
   });
 })();
