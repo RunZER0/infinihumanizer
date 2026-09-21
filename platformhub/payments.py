@@ -8,6 +8,7 @@ from django.conf import settings
 from django.db import transaction
 from django.utils import timezone
 
+from .catalog import PACKAGES
 from .models import PaymentRecord
 
 
@@ -64,26 +65,42 @@ def valid_webhook_signature(raw_body, signature):
 
 def _apply_entitlement(payment):
     package_slug = (payment.metadata or {}).get("package_slug", "")
-    if not package_slug or not payment.user_id:
+    package = PACKAGES.get(package_slug) or {}
+    credits = int(package.get("word_credits") or 0)
+    if not credits or not payment.user_id:
         return
+
     from accounts.models import Profile
+
     profile, _ = Profile.objects.get_or_create(user_id=payment.user_id)
-    if package_slug == "humanizer-individual":
-        profile.account_type = "STANDARD"
-        profile.is_paid = True
-        profile.word_quota = max(profile.word_quota, 100000)
-    elif package_slug == "humanizer-pro":
-        profile.account_type = "PRO"
-        profile.is_paid = True
-        profile.word_quota = max(profile.word_quota, 250000)
-    elif package_slug == "humanizer-team":
-        profile.account_type = "ENTERPRISE"
-        profile.is_paid = True
-        profile.word_quota = max(profile.word_quota, 600000)
-        profile.max_concurrent_devices = max(profile.max_concurrent_devices, 5)
-    else:
-        return
-    profile.save()
+    profile.account_type = package.get("account_type") or profile.account_type
+    profile.is_paid = True
+    profile.word_quota = max(0, int(profile.word_quota or 0)) + credits
+    profile.max_concurrent_devices = max(
+        int(profile.max_concurrent_devices or 1),
+        int(package.get("max_devices") or 1),
+    )
+    profile.save(
+        update_fields=[
+            "account_type",
+            "is_paid",
+            "word_quota",
+            "max_concurrent_devices",
+        ]
+    )
+
+    payment.metadata = {
+        **(payment.metadata or {}),
+        "fulfillment": {
+            "type": "humanizer_words",
+            "package_slug": package_slug,
+            "word_credits_added": credits,
+            "word_quota_after": profile.word_quota,
+            "account_type": profile.account_type,
+            "max_devices": profile.max_concurrent_devices,
+        },
+    }
+    payment.save(update_fields=["metadata"])
 
 
 @transaction.atomic
