@@ -1,23 +1,98 @@
 
 {% extends "base.html" %}
-{% block title %}Checkout — InfiniAI{% endblock %}
+{% block title %}Checkout - InfiniAI{% endblock %}
 {% block content %}
 <div class="page-shell"><div class="eyebrow">Checkout</div><h1 class="h1">{{ label }}</h1></div>
-<section class="section"><div class="shell form-layout">
-<form class="form-stack" id="checkout-form">{% csrf_token %}{% if kind == "package" %}<input type="hidden" name="package_slug" value="{{ package_slug }}">{% else %}<input type="hidden" name="invoice_id" value="{{ invoice.id }}">{% endif %}<input type="hidden" name="currency" value="{{ currency }}">{% if job_id %}<input type="hidden" name="job_id" value="{{ job_id }}">{% endif %}{% if consultation_id %}<input type="hidden" name="consultation_id" value="{{ consultation_id }}">{% endif %}<div class="field"><label>Email</label><input type="email" name="email" required value="{{ email }}"></div><table class="proof-table"><tr><th>For</th><td>{{ label }}</td></tr><tr><th>Amount</th><td><strong>{{ currency }} {{ amount }}</strong></td></tr><tr><th>Payment</th><td>Paystack</td></tr></table>{% if payments_configured %}<button class="btn btn-primary" type="submit" id="checkout-button">Pay with Paystack</button>{% else %}<div class="notice">Online payment is not connected yet.</div><button class="btn" type="button" disabled>Payment unavailable</button>{% endif %}</form>
-<aside class="summary-rail"><div class="eyebrow">Summary</div><p>{% if kind == "invoice" %}Payment for {{ invoice.number }}.{% else %}{{ label }}.{% endif %}</p></aside>
-</div></section>
+<section class="section">
+  <div class="shell form-layout">
+    <form class="form-stack" id="checkout-form">
+      {% csrf_token %}
+      {% if kind == "package" %}
+      <input type="hidden" name="package_slug" value="{{ package_slug }}">
+      <div class="field">
+        <label for="checkout-currency">Currency</label>
+        <select id="checkout-currency" name="currency">
+          <option value="USD" {% if currency == "USD" %}selected{% endif %}>USD</option>
+          <option value="KES" {% if currency == "KES" %}selected{% endif %}>KES</option>
+        </select>
+      </div>
+      {% else %}
+      <input type="hidden" name="invoice_id" value="{{ invoice.id }}">
+      <input type="hidden" name="currency" value="{{ currency }}">
+      {% endif %}
+      {% if job_id %}<input type="hidden" name="job_id" value="{{ job_id }}">{% endif %}
+      {% if consultation_id %}<input type="hidden" name="consultation_id" value="{{ consultation_id }}">{% endif %}
+      <div class="field">
+        <label>Email</label>
+        <input type="email" name="email" required value="{{ email }}" {% if user.is_authenticated %}readonly{% endif %}>
+      </div>
+      <table class="proof-table">
+        <tr><th>For</th><td>{{ label }}</td></tr>
+        <tr>
+          <th>Amount</th>
+          <td>
+            <strong id="checkout-amount"
+              {% if kind == "package" %}data-usd="{{ package.usd }}" data-kes="{{ package.kes }}"{% endif %}>
+              {{ currency }} {{ amount }}
+            </strong>
+          </td>
+        </tr>
+        <tr><th>Payment</th><td>Paystack</td></tr>
+      </table>
+      {% if payments_configured %}
+      <button class="btn btn-primary" type="submit" id="checkout-button">Pay with Paystack</button>
+      {% else %}
+      <div class="notice">Online payment is not connected yet.</div>
+      <button class="btn" type="button" disabled>Payment unavailable</button>
+      {% endif %}
+    </form>
+    <aside class="summary-rail">
+      <div class="eyebrow">Summary</div>
+      <p>{% if kind == "invoice" %}Payment for {{ invoice.number }}.{% else %}{{ package.description }}{% endif %}</p>
+      {% if kind == "package" and package.word_credits %}
+      <p><strong>{{ package.word_credits|floatformat:0 }} words</strong> are added to the signed-in account after Paystack confirms the payment.</p>
+      {% endif %}
+    </aside>
+  </div>
+</section>
 {% endblock %}
-{% block extra_scripts %}{% if payments_configured %}
+
+{% block extra_scripts %}
 <script>
-document.getElementById("checkout-form").addEventListener("submit", async function(event) {
-  event.preventDefault();
-  var button = document.getElementById("checkout-button");
-  button.disabled = true; button.textContent = "Opening Paystack…";
-  var response = await fetch("{% url 'platformhub:start_checkout' %}", {method:"POST",body:new FormData(event.currentTarget),headers:{"X-CSRFToken":event.currentTarget.querySelector("[name=csrfmiddlewaretoken]").value}});
-  var data = await response.json();
-  if (response.ok && data.authorization_url) { window.location.href = data.authorization_url; return; }
-  button.disabled = false; button.textContent = "Pay with Paystack"; alert(data.error || "Checkout could not be started.");
-});
+(function () {
+  const currency = document.getElementById("checkout-currency");
+  const amount = document.getElementById("checkout-amount");
+  if (currency && amount) {
+    currency.addEventListener("change", function () {
+      const code = currency.value;
+      amount.textContent = code + " " + (code === "KES" ? amount.dataset.kes : amount.dataset.usd);
+    });
+  }
+
+  const form = document.getElementById("checkout-form");
+  const button = document.getElementById("checkout-button");
+  if (!form || !button) return;
+  form.addEventListener("submit", async function (event) {
+    event.preventDefault();
+    button.disabled = true;
+    button.textContent = "Opening Paystack…";
+    try {
+      const response = await fetch("{% url 'platformhub:start_checkout' %}", {
+        method: "POST",
+        body: new FormData(form),
+        headers: {"X-CSRFToken": form.querySelector("[name=csrfmiddlewaretoken]").value}
+      });
+      const data = await response.json();
+      if (!response.ok || !data.authorization_url) {
+        throw new Error(data.error || "Checkout could not be started.");
+      }
+      window.location.href = data.authorization_url;
+    } catch (error) {
+      button.disabled = false;
+      button.textContent = "Pay with Paystack";
+      window.alert(error.message);
+    }
+  });
+})();
 </script>
-{% endif %}{% endblock %}
+{% endblock %}
