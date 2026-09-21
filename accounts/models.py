@@ -113,3 +113,16 @@ class DeviceSession(models.Model):
         return f"{self.user.username} - {self.device_fingerprint[:16]}... ({'Active' if self.is_active else 'Inactive'})"
 
 
+
+
+class EmailCodeChallenge(models.Model):
+    email = models.EmailField(unique=True)
+    code_hash = models.CharField(max_length=255, blank=True)
+    expires_at = models.DateTimeField(null=True, blank=True)
+    attempts = models.PositiveSmallIntegerField(default=0)
+    last_sent_at = models.DateTimeField(null=True, blank=True)
+    verified_at = models.DateTimeField(null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.email
