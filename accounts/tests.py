@@ -90,3 +90,30 @@ class SignupViewTests(TestCase):
         form = response.context['form']
         self.assertTrue(form.errors)
         self.assertIn('email', form.errors)
+
+
+    def test_signup_preserves_safe_next_destination(self):
+        response = self.client.post(
+            self.signup_url,
+            {
+                "email": "returning@example.com",
+                "password1": "TestPass123!",
+                "password2": "TestPass123!",
+                "next": reverse("humanizer"),
+            },
+        )
+        self.assertRedirects(response, reverse("humanizer"), fetch_redirect_response=False)
+
+    def test_admin_email_cannot_be_claimed_with_password_signup(self):
+        with self.settings(INFINIAI_ADMIN_EMAIL="valdaceai@gmail.com"):
+            response = self.client.post(
+                self.signup_url,
+                {
+                    "email": "valdaceai@gmail.com",
+                    "password1": "TestPass123!",
+                    "password2": "TestPass123!",
+                },
+            )
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(User.objects.filter(email="valdaceai@gmail.com").exists())
+        self.assertContains(response, "Use Google")
