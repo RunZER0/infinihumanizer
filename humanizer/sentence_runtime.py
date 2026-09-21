@@ -74,12 +74,13 @@ def strength_profile(strength: int) -> str:
 
 
 def model_temperature(strength: int) -> float:
-    # The reference corpus is materially less uniform at high strengths.
-    return round(max(0.20, min(0.64, 0.18 + 0.052 * strength)), 2)
+    # Keep enough variance for corpus-style unevenness without encouraging
+    # wholesale register shifts or lexical replacement.
+    return round(max(0.20, min(0.58, 0.18 + 0.045 * strength)), 2)
 
 
 def model_top_p(strength: int) -> float:
-    return round(max(0.84, min(0.95, 0.84 + 0.012 * strength)), 2)
+    return round(max(0.84, min(0.93, 0.84 + 0.01 * strength)), 2)
 
 
 def _heading_label(text: str) -> str:
@@ -297,20 +298,20 @@ def few_shots(strength: int) -> list[dict]:
                 "The most fundamental of judicial independence is in substance.",
             ),
             (
-                "A reasoned judgment exposes the decision to criticism by litigants, appellate courts, scholars, journalists, and the public.",
-                "A well-founded decision puts the decision at risk by the litigants, high courts, scholars and the media and the public.",
+                "These arrangements do not guarantee good judging, but they help create an institutional environment in which legal reasoning can take priority over personal survival.",
+                "These do not ensure good judging, but do help to establish an atmosphere that can become institutionalized so that legal reasoning can be paramount over survival.",
             ),
             (
-                "The reasoning must be capable of being examined against legal materials and procedural standards.",
-                "The argument should be based on arguments that can be analyzed and critique in light of the legal materials and the rules of procedure.",
+                "Transparency can reinforce accountability, but it has limits.",
+                "Transparency can help increase accountability, but can't do everything.",
             ),
             (
-                "This is not simply an orientation issue.",
-                "This is not the orientation problem only.",
+                "Culture is often described through values statements, but employees learn it through repeated practices.",
+                "Culture is usually grained on values statements, but it is delivered via repetition of practices.",
             ),
             (
-                "Street trees improve routes rather than destinations.",
-                "Street trees do not make the destination more desirable, they help to make the routes more desirable.",
+                "Remote onboarding therefore requires more structure than many organizations initially expect.",
+                "There is a higher level of structure needed for remote onboarding than many organizations realize.",
             ),
             (
                 "The history of an object should include more than the date on which a museum acquired it.",
@@ -361,9 +362,11 @@ You will receive exactly one source sentence. Transform only that sentence.
 The target is NOT polished editing. Do not optimize for elegant, fluent, publication-ready, or uniformly grammatical prose. At higher strengths, the reference process often changes grammatical structure aggressively and accepts imperfect results.
 
 Corpus behavior to reproduce at strengths 7-10:
-- Some source wording survives while other wording changes substantially.
-- Sentence openings and clause order often change, but not by a fixed rule.
-- Contractions may appear.
+- Preserve the source's academic, professional, or technical register even when the grammar becomes awkward. Roughness is not casualization.
+- Some source wording survives while other wording changes substantially. Keep several exact content words and short multi-word phrases when they remain semantically correct.
+- Do not replace every noun, verb, or technical phrase with a synonym. The reference commonly retains substantial lexical material.
+- Sentence openings and clause order sometimes change, but many sentences retain their original subject or opening. Never force an opening change.
+- Contractions may appear when compatible with the original register, but slang, chatty filler, and conversational simplification should not.
 - Articles, prepositions, agreement, noun forms, collocations, attachment, or clause structure may become slightly awkward during reconstruction.
 - A rewrite may become clumsy, repetitive, fragment-like, or less idiomatic while still preserving the main proposition.
 - Do not repair an awkward transformed construction merely because a polished editor would improve it.
@@ -380,8 +383,10 @@ Semantic boundary:
 
 Transformation behavior:
 - Do not summarize the sentence into a cleaner thesis.
+- Do not lower the register into conversational language. Prefer the same academic vocabulary level as the source.
 - Do not systematically improve vocabulary, coherence, rhythm, or academic style.
-- Do not systematically preserve or systematically replace every phrase.
+- Do not systematically preserve or systematically replace every phrase. Retain enough source phrasing that the transformation still has lexical continuity with the original.
+- Create roughness through imperfect restructuring, attachment, articles, prepositions, agreement, collocation, or clause formation rather than through slang or deliberately simplistic vocabulary.
 - At strengths 7-10, return a genuine transformation rather than the source unchanged when a plausible alternative exists.
 - A short source may become a short fragment-like reconstruction if that still conveys the proposition.
 - A developed source may expand or contract unevenly.
