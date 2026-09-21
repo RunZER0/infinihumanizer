@@ -10,6 +10,7 @@ from .sentence_runtime import (
     model_temperature,
     plan_document,
     protect_sentence,
+    remove_em_dashes,
     reassemble,
     restore_sentence,
     split_sentences,
@@ -151,6 +152,12 @@ class SentenceRuntimeTests(SimpleTestCase):
         self.assertEqual(clamp_strength(20), 10)
         self.assertLess(model_temperature(4), model_temperature(8))
         self.assertLessEqual(model_temperature(10), 0.68)
+
+    def test_em_dash_is_removed_at_every_strength(self):
+        source = "Layered safeguards—from backup systems to trained operators—reduce risk."
+        cleaned = remove_em_dashes(source)
+        self.assertNotIn("—", cleaned)
+        self.assertEqual(cleaned, "Layered safeguards, from backup systems to trained operators, reduce risk.")
 
     def test_sentence_splitter_handles_abbreviations_decimals_and_quotes(self):
         source = 'Dr. Smith recorded 29.5 units. The court called it "a serious problem." Another sentence followed.'
