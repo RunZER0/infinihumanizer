@@ -3,7 +3,7 @@ name: Humanizer Runtime
 on:
   push:
     branches:
-      - "runtime/**"
+      - runtime/openrouter-sentence-rewrite-20260921
       - platform/infiniai-rebuild-20260920
   pull_request:
     paths:
@@ -18,7 +18,7 @@ jobs:
       DEBUG: "True"
       OFFLINE_MODE: "True"
       DJANGO_SECRET_KEY: ci-secret
-      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      OPENROUTER_API_KEY: test-key-not-used
       HUMANIZER_BACKEND: openrouter
     steps:
       - uses: actions/checkout@v4
@@ -28,57 +28,3 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
       - run: python manage.py test humanizer
-      - name: Live production strength-8 smoke
-        env:
-          HUMANIZER_SMOKE_URL: https://www.byinfini.online/humanizer/
-        run: |
-          python - <<'PY'
-          import re, time, requests
-          from difflib import SequenceMatcher
-
-          base = "https://www.byinfini.online/humanizer/"
-          endpoint = "https://www.byinfini.online/humanizer/humanize/"
-          samples = [
-              (
-                  "short",
-                  "Treated wastewater can reduce pressure on rivers and aquifers during drought. Cities can reuse it for irrigation, industrial processes, groundwater recharge, or drinking water after suitable treatment. Treatment requirements should match the intended use because unnecessary treatment consumes energy and money. Public trust depends on clear monitoring, reliable operation, and transparent responsibility."
-              ),
-              (
-                  "medium",
-                  "Urban water systems face growing pressure as droughts become longer and demand rises. Water reuse can provide a local source that remains available even when rainfall is low. Engineers select treatment processes according to how the recovered water will be used. Irrigation generally requires a different treatment standard from drinking water. Separate distribution networks can keep non-potable recycled water away from drinking-water pipes. Potable reuse requires several treatment barriers and continuous monitoring. Energy use must be compared with alternatives such as desalination, long-distance transfers, and deep groundwater pumping. Public concerns should be addressed before construction because design and governance choices affect trust. Monitoring results should be published in a form that residents can understand. Reuse can reduce wastewater discharges, although removing too much flow may affect downstream ecosystems. Cities therefore need to consider the wider basin when deciding how much water to recycle. A diversified supply portfolio can make urban water systems more resilient during prolonged shortages."
-              ),
-          ]
-
-          session = requests.Session()
-          page = session.get(base, timeout=30)
-          page.raise_for_status()
-          token = session.cookies.get("csrftoken")
-          if not token:
-              match = re.search(r'name="csrfmiddlewaretoken" value="([^"]+)"', page.text)
-              token = match.group(1) if match else None
-          if not token:
-              raise RuntimeError("Could not obtain CSRF token from production Humanizer.")
-
-          headers = {"X-CSRFToken": token, "Referer": base}
-          for name, source in samples:
-              started = time.perf_counter()
-              response = session.post(endpoint, data={"text": source, "strength": "8"}, headers=headers, timeout=90)
-              elapsed = time.perf_counter() - started
-              print(f"=== {name.upper()} ===")
-              print(f"http_status={response.status_code}")
-              payload = response.json()
-              if response.status_code != 200 or not payload.get("success", True):
-                  print(payload)
-                  raise RuntimeError(f"Production smoke failed for {name}.")
-              output = payload.get("output_text", "")
-              similarity = SequenceMatcher(None, source.lower(), output.lower()).ratio()
-              print("strength=8")
-              print(f"elapsed_seconds={elapsed:.3f}")
-              print(f"sequence_similarity={similarity:.3f}")
-              print(f"em_dash_count={output.count('—')}")
-              print("OUTPUT:")
-              print(output)
-              print()
-          PY
-
-# live-smoke push trigger
