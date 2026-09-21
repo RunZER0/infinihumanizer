@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Billing — InfiniAI{% endblock %}
+{% block content %}
+<div class="page-shell account-section-head">
+  <div>
+    <div class="eyebrow">Workspace</div>
+    <h1 class="h1">Billing</h1>
+    <p class="lede">Invoices first. History stays out of the way until you need it.</p>
+  </div>
+  <div class="workspace-actions">
+    <a class="btn" href="{% url 'platformhub:workspace' %}">Workspace</a>
+    <a class="btn btn-primary" href="{% url 'platformhub:quickpay' %}">QuickPay</a>
+  </div>
+</div>
+
+<section class="section account-list-section">
+  <div class="shell">
+    <div class="eyebrow" style="margin-bottom:16px">Invoices</div>
+    <div class="account-list">
+      {% for invoice in invoices %}
+      <div class="account-list-row account-list-row-static">
+        <div>
+          <strong>{{ invoice.number }}</strong>
+          <small>{{ invoice.description|default:"Invoice" }} · {{ invoice.created_at|date:"M j, Y" }}</small>
+        </div>
+        <div class="account-money">{{ invoice.currency }} {{ invoice.amount_due }}</div>
+        {% if invoice.status != "paid" %}
+        <a class="btn btn-primary" href="{% url 'platformhub:checkout' %}?invoice={{ invoice.id }}">Pay</a>
+        {% else %}
+        <span class="status status-success">Paid</span>
+        {% endif %}
+      </div>
+      {% empty %}
+      <div class="account-empty"><strong>No invoices.</strong></div>
+      {% endfor %}
+    </div>
+
+    <details class="account-secondary-list">
+      <summary>Payment history</summary>
+      <div class="account-list">
+        {% for payment in payments %}
+        <div class="account-list-row account-list-row-static">
+          <div>
+            <strong>{{ payment.original_description|default:payment.metadata.label|default:"Payment" }}</strong>
+            <small>{{ payment.reference }} · {{ payment.paid_at|default:payment.created_at|date:"M j, Y" }}</small>
+          </div>
+          <div class="account-money">{{ payment.currency }} {{ payment.amount }}</div>
+          <span class="status {% if payment.status == 'success' %}status-success{% else %}status-pending{% endif %}">{{ payment.get_status_display }}</span>
+        </div>
+        {% empty %}
+        <div class="account-empty"><strong>No payments yet.</strong></div>
+        {% endfor %}
+      </div>
+    </details>
+  </div>
+</section>
+{% endblock %}
