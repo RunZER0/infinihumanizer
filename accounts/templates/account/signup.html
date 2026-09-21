@@ -24,7 +24,7 @@
 
       <div class="auth-choice" data-auth-choice data-email-open="{% if form.errors %}true{% else %}false{% endif %}">
         <div class="auth-choice-panel" data-google-panel>
-          <a class="google-auth-btn" href="{% url 'google_login_fixed' %}">
+          <a class="google-auth-btn" href="{% url 'google_login_fixed' %}{% if next_url %}?next={{ next_url|urlencode }}{% endif %}">
             <span class="google-g" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="20" height="20" role="img">
                 <path fill="#4285F4" d="M21.6 12.23c0-.71-.06-1.4-.18-2.07H12v3.91h5.38a4.6 4.6 0 0 1-2 3.02v2.51h3.23c1.89-1.74 2.99-4.3 2.99-7.37Z"/>
@@ -36,7 +36,7 @@
             <span>Continue with Google</span>
           </a>
           <button class="auth-switch" type="button" data-show-email aria-expanded="false">or use email</button>
-          <p class="auth-alt-path">Already have an account? <a href="{% url 'account_login' %}">Sign in</a></p>
+          <p class="auth-alt-path">Already have an account? <a href="{% url 'account_login' %}{% if next_url %}?next={{ next_url|urlencode }}{% endif %}">Sign in</a></p>
         </div>
 
         <div class="auth-choice-panel auth-email-panel" data-email-panel hidden>
@@ -53,6 +53,7 @@
 
           <form method="post" action="{% url 'account_signup' %}" class="form-stack">
             {% csrf_token %}
+            {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}">{% endif %}
             <div class="field">
               <label for="id_email">Email</label>
               <input id="id_email" type="email" name="email" value="{{ form.email.value|default:'' }}" required autocomplete="email">
@@ -70,7 +71,7 @@
           </form>
 
           <p class="auth-legal">By creating an account, you agree to the <a href="{% url 'platformhub:terms' %}">Terms of Service</a> and acknowledge the <a href="{% url 'platformhub:privacy' %}">Privacy Policy</a>.</p>
-          <div class="auth-links"><span>Already have an account?</span><a href="{% url 'account_login' %}">Sign in</a></div>
+          <div class="auth-links"><span>Already have an account?</span><a href="{% url 'account_login' %}{% if next_url %}?next={{ next_url|urlencode }}{% endif %}">Sign in</a></div>
         </div>
       </div>
 
