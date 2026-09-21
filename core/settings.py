@@ -29,9 +29,11 @@ PAYSTACK_PUBLIC_KEY = os.getenv("PAYSTACK_PUBLIC_KEY")
 PAYSTACK_SECRET_KEY = os.getenv("PAYSTACK_SECRET_KEY")
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
+PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", "https://byinfini.online").rstrip("/")
+SUPPORT_EMAIL = os.getenv("SUPPORT_EMAIL", "valdaceai@gmail.com")
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "Infiniai <noreply@infiniaihumanizer.live>")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "InfiniAI <valdaceai@gmail.com>")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 OFFLINE_MODE = os.getenv("OFFLINE_MODE", "False") == "True"
 ALLOWED_HOSTS = [
