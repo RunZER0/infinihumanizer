@@ -38,6 +38,12 @@ class VerifiedEmailLoginView(LoginView):
         context = super().get_context_data(**kwargs)
         context["signup_form"] = SignUpForm()
         context["signup_open"] = self.request.GET.get("signup") == "1"
+        if context["signup_open"]:
+            context["auth_mode"] = "signup"
+        elif self.request.method == "POST":
+            context["auth_mode"] = "email"
+        else:
+            context["auth_mode"] = "social"
         return context
 
     def form_valid(self, form):
@@ -116,6 +122,7 @@ def signup_view(request):
             "form": CustomLoginForm(request=request),
             "signup_form": form,
             "signup_open": True,
+            "auth_mode": "signup",
             "redirect_field_name": "next",
             "redirect_field_value": next_url,
         })
@@ -124,6 +131,7 @@ def signup_view(request):
         "form": CustomLoginForm(request=request),
         "signup_form": SignUpForm(),
         "signup_open": True,
+        "auth_mode": "signup",
         "redirect_field_name": "next",
         "redirect_field_value": next_url,
     })
