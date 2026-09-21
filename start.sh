@@ -8,6 +8,7 @@ python manage.py check
 python manage.py import_homeworkpal_payments --if-configured
 python manage.py smoke_service_requests
 python manage.py smoke_humanizer_platform
+python manage.py smoke_google_oauth
 if [[ "${RUN_DEPLOY_TESTS:-0}" == "1" ]]; then
   echo "Running isolated Django test suite..."
   DATABASE_URL="" DEBUG=True python manage.py test accounts humanizer platformhub --verbosity 1
