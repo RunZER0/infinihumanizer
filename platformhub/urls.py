@@ -20,6 +20,7 @@ urlpatterns = [
     path("request/success/<uuid:request_id>/", views.request_success, name="request_success"),
     path("consultation/", views.consultation, name="consultation"),
     path("workspace/", views.workspace, name="workspace"),
+    path("workspace/chat/", views.client_chat, name="client_chat"),
     path("quickpay/", views.quickpay, name="quickpay"),
     path("assurance/check/", views.assurance_check, name="assurance_check"),
     path("assurance/check/<uuid:job_id>/", views.assurance_result, name="assurance_result"),
