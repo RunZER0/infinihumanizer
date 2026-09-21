@@ -1,16 +1,19 @@
+import hashlib
 import logging
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.db import transaction
+from django.db.models import F
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
 from accounts.models import Profile
-from .models import Humanization
+from .models import AnonymousHumanizerUsage, Humanization
 from .service import MAX_INPUT_CHARS, MAX_INPUT_WORDS, rewrite_text
 
 logger = logging.getLogger(__name__)
@@ -30,18 +33,50 @@ def _profile_state(user):
     }
 
 
+def _anonymous_fingerprint(request):
+    forwarded = request.META.get("HTTP_X_FORWARDED_FOR", "")
+    ip_address = forwarded.split(",")[0].strip() if forwarded else ""
+    if not ip_address:
+        ip_address = request.META.get("REMOTE_ADDR", "")
+    user_agent = request.META.get("HTTP_USER_AGENT", "")[:500]
+    raw = f"{settings.SECRET_KEY}|{ip_address}|{user_agent}".encode("utf-8")
+    return hashlib.sha256(raw).hexdigest()
+
+
 def _anonymous_state(request):
     limit = max(0, int(getattr(settings, "HUMANIZER_ANON_DAILY_WORDS", 300)))
-    today = timezone.localdate().isoformat()
-    if request.session.get("humanizer_anon_day") != today:
-        request.session["humanizer_anon_day"] = today
-        request.session["humanizer_anon_words"] = 0
-    used = max(0, int(request.session.get("humanizer_anon_words", 0) or 0))
+    usage, _ = AnonymousHumanizerUsage.objects.get_or_create(
+        day=timezone.localdate(),
+        fingerprint=_anonymous_fingerprint(request),
+    )
+    used = max(0, int(usage.words_used or 0))
     return {
         "limit": limit,
         "used": used,
         "remaining": max(0, limit - used),
+        "usage_id": usage.pk,
     }
+
+
+def _reserve_anonymous_words(request, word_count):
+    state = _anonymous_state(request)
+    if word_count > state["remaining"]:
+        return state, False
+    updated = AnonymousHumanizerUsage.objects.filter(
+        pk=state["usage_id"],
+        words_used__lte=state["limit"] - word_count,
+    ).update(words_used=F("words_used") + word_count)
+    if not updated:
+        return _anonymous_state(request), False
+    return _anonymous_state(request), True
+
+
+def _release_anonymous_words(usage_id, word_count):
+    with transaction.atomic():
+        usage = AnonymousHumanizerUsage.objects.select_for_update().filter(pk=usage_id).first()
+        if usage:
+            usage.words_used = max(0, int(usage.words_used or 0) - word_count)
+            usage.save(update_fields=["words_used", "updated_at"])
 
 
 def _auth_urls():
@@ -102,6 +137,7 @@ def humanize_ajax(request):
     profile = None
     state = None
     anon = None
+    anonymous_reserved = False
     if request.user.is_authenticated:
         profile, state = _profile_state(request.user)
         if not state["unlimited"] and word_count > state["remaining"]:
@@ -110,8 +146,8 @@ def humanize_ajax(request):
                 "quota_reached": state["remaining"] == 0,
             }, status=400)
     else:
-        anon = _anonymous_state(request)
-        if word_count > anon["remaining"]:
+        anon, anonymous_reserved = _reserve_anonymous_words(request, word_count)
+        if not anonymous_reserved:
             urls = _auth_urls()
             return JsonResponse({
                 "error": "Your free daily rewrite limit has been reached. Sign in to rewrite more and save your work.",
@@ -124,11 +160,17 @@ def humanize_ajax(request):
     try:
         output_text, model_used = rewrite_text(input_text, temperature=temperature)
     except ValueError as exc:
+        if anonymous_reserved:
+            _release_anonymous_words(anon["usage_id"], word_count)
         return JsonResponse({"error": str(exc)}, status=400)
     except RuntimeError as exc:
+        if anonymous_reserved:
+            _release_anonymous_words(anon["usage_id"], word_count)
         logger.warning("Humanizer configuration/request error: %s", exc)
         return JsonResponse({"error": str(exc)}, status=503)
     except Exception:
+        if anonymous_reserved:
+            _release_anonymous_words(anon["usage_id"], word_count)
         logger.exception(
             "Humanizer API request failed for %s",
             request.user.pk if request.user.is_authenticated else "anonymous",
@@ -152,10 +194,8 @@ def humanize_ajax(request):
         word_balance = "Unlimited" if remaining is None else remaining
         anonymous_remaining = None
     else:
-        used = anon["used"] + word_count
-        request.session["humanizer_anon_words"] = used
-        request.session.modified = True
-        anonymous_remaining = max(0, anon["limit"] - used)
+        anon = _anonymous_state(request)
+        anonymous_remaining = anon["remaining"]
         word_balance = f"{anonymous_remaining:,} free today"
 
     return JsonResponse({
