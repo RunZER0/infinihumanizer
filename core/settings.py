@@ -43,9 +43,12 @@ GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
 PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", "https://byinfini.online").rstrip("/")
 SUPPORT_EMAIL = os.getenv("SUPPORT_EMAIL", "valdaceai@gmail.com")
+BREVO_API_KEY = os.getenv("BREVO_API_KEY", "")
+BREVO_SENDER_EMAIL = os.getenv("BREVO_SENDER_EMAIL", "")
+BREVO_SENDER_NAME = os.getenv("BREVO_SENDER_NAME", "InfiniAI")
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "InfiniAI <valdaceai@gmail.com>")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", f"{BREVO_SENDER_NAME} <{BREVO_SENDER_EMAIL or SUPPORT_EMAIL}>")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 OFFLINE_MODE = os.getenv("OFFLINE_MODE", "False") == "True"
 ALLOWED_HOSTS = [
@@ -121,7 +124,7 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 # Loosen auth in offline/local mode for easier testing
-if OFFLINE_MODE or DEBUG or not (EMAIL_HOST_USER and EMAIL_HOST_PASSWORD):
+if OFFLINE_MODE or DEBUG:
     ACCOUNT_EMAIL_VERIFICATION = 'none'
     # Don't set deprecated settings in new django-allauth version
     # ACCOUNT_LOGIN_METHODS already set above
@@ -293,13 +296,10 @@ CSRF_TRUSTED_ORIGINS = [
 # Default Primary Key Field Type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ✅ EMAIL SETTINGS (using Brevo / Sendinblue)
-# When offline/local, log emails to console; otherwise use SMTP
+# Transactional email
+# Render Free blocks outbound SMTP ports, so production sends through Brevo's HTTPS API.
 if OFFLINE_MODE or DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = 'smtp-relay.brevo.com'
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
+    EMAIL_BACKEND = 'accounts.email_backend.BrevoAPIEmailBackend'
 SITE_NAME = "InfiniAI"
