@@ -7,6 +7,8 @@ from allauth.account.models import EmailAddress
 from django.core.exceptions import ValidationError
 from django.conf import settings
 
+from .verification import is_disposable_address, normalize_email
+
 # -------------------------------
 # SIGN-UP FORM
 # -------------------------------
@@ -18,9 +20,10 @@ class SignUpForm(UserCreationForm):
         fields = ("email", "password1", "password2")
     
     def clean_email(self):
-        """Ensure email is unique"""
-        email = self.cleaned_data.get('email')
-        if User.objects.filter(email=email).exists():
+        email = normalize_email(self.cleaned_data.get("email"))
+        if is_disposable_address(email):
+            raise ValidationError("Use a permanent email address.")
+        if User.objects.filter(email__iexact=email).exists():
             raise ValidationError("A user with this email already exists.")
         return email
     
