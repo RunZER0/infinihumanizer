@@ -195,6 +195,8 @@ def restore_sentence(candidate: str, literals: tuple[tuple[str, str], ...]) -> s
         if token not in candidate:
             raise ValueError(f"missing {token}")
         candidate = candidate.replace(token, original)
+        if len(original) >= 2 and original[-1] in "\"'”’" and original[-2] in ".!?":
+            candidate = candidate.replace(original + original[-2], original)
     if _PLACEHOLDER.search(candidate):
         raise ValueError("unexpected protected token")
     return candidate.strip()
@@ -255,6 +257,11 @@ def few_shots(profile: str) -> list[dict]:
                 "Clear procedures can reduce delays while still allowing careful review.",
             ),
         ]
+
+    pairs.append((
+        "The study reported a __INF_P0__ increase in __INF_P1__.",
+        "In __INF_P1__, the study recorded an increase of __INF_P0__.",
+    ))
 
     messages = []
     for source, rewrite in pairs:
