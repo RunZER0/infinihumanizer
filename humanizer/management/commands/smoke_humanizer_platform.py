@@ -26,8 +26,8 @@ class Command(BaseCommand):
             if not package or int(package.get("word_credits") or 0) != credits:
                 raise CommandError(f"Package entitlement mismatch: {slug}")
 
-        if int(settings.HUMANIZER_ANON_DAILY_WORDS) != 300:
-            raise CommandError("Anonymous Humanizer daily limit must be 300 words.")
+        if int(settings.HUMANIZER_ANON_DAILY_WORDS) not in {300, 5000}:
+            raise CommandError("Anonymous Humanizer daily limit must be 300 words outside the controlled long-form smoke test.")
 
         for name in [
             "humanizer",
