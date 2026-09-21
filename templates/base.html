@@ -33,6 +33,15 @@
       <a href="{% url 'platformhub:pricing' %}">Pricing</a>
       <a href="{% url 'platformhub:consultation' %}">Talk to us</a>
       {% if user.is_authenticated %}<a href="{% url 'platformhub:quickpay' %}">QuickPay</a><a href="{% url 'platformhub:workspace' %}">Workspace</a>{% endif %}
+      <div class="mobile-auth-links">
+        {% if user.is_authenticated %}
+        <a class="mobile-auth-primary" href="{% url 'platformhub:workspace' %}">Workspace</a>
+        <a href="{% url 'account_logout' %}">Sign out</a>
+        {% else %}
+        <a class="mobile-auth-primary" href="{% url 'account_login' %}">Sign in</a>
+        <a href="{% url 'account_signup' %}">Create account</a>
+        {% endif %}
+      </div>
     </nav>
     <div class="nav-actions">
       {% if user.is_authenticated %}
