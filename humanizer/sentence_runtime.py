@@ -554,9 +554,9 @@ class RewriteRuntime:
     def _payload(self, batch: list[SentenceTask], repair=False) -> dict:
         messages = [{"role": "system", "content": system_prompt(self.strength)}]
         messages.extend(few_shots(self.strength))
-        instruction = "Rewrite this sentence using only information contained in this sentence."
+        instruction = "Transform this sentence using only information contained in this sentence."
         if repair:
-            instruction += " The previous output failed validation. Produce a materially different but faithful rewrite, preserve every protected token exactly, and do not add any new idea."
+            instruction += " The previous output failed structural validation. Preserve the proposition and every protected token, but do not polish the language merely because the transformed wording is awkward."
         data = {"sentences": [{"id": task.id, "text": task.protected} for task in batch]}
         messages.append({"role": "user", "content": instruction + "\n" + json.dumps(data, ensure_ascii=False)})
         words = sum(len(task.source.split()) for task in batch)
