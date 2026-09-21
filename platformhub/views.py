@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import FileResponse, Http404, JsonResponse
 from django.core.exceptions import PermissionDenied
+from django.core.mail import EmailMessage
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -196,6 +197,23 @@ def consultation(request):
             )
             request.session["consultation_reference"] = item.reference
             request.session["consultation_id"] = str(item.id)
+            try:
+                message = EmailMessage(
+                    subject=f"InfiniAI enquiry {item.reference}: {item.full_name}",
+                    body=(
+                        f"Name: {item.full_name}\n"
+                        f"Email: {item.email}\n"
+                        f"Company: {item.company or '-'}\n"
+                        f"Reference: {item.reference}\n\n"
+                        f"{item.topic}"
+                    ),
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    to=[settings.SUPPORT_EMAIL],
+                    reply_to=[item.email],
+                )
+                message.send(fail_silently=False)
+            except Exception:
+                logger.exception("Consultation %s was stored but email notification failed", item.reference)
             messages.success(request, "Thanks. We have your note and will follow up by email.")
             return redirect("platformhub:consultation")
 
