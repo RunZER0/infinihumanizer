@@ -4,6 +4,8 @@ Device tracking middleware for Kenya plans with device limits.
 import hashlib
 import logging
 from datetime import date
+from django.conf import settings
+from django.http import HttpResponsePermanentRedirect
 from django.utils import timezone
 from django.contrib import messages
 from django.shortcuts import redirect
@@ -37,6 +39,24 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
+
+
+class CanonicalHostMiddleware:
+    """Keep browser and OAuth flows on the canonical bare production host."""
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if (
+            not settings.DEBUG
+            and request.method in {"GET", "HEAD"}
+            and request.get_host().split(":", 1)[0].lower() == "www.byinfini.online"
+        ):
+            return HttpResponsePermanentRedirect(
+                f"{settings.PUBLIC_BASE_URL}{request.get_full_path()}"
+            )
+        return self.get_response(request)
 
 
 class DeviceLimitMiddleware:
