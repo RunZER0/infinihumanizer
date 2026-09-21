@@ -103,6 +103,33 @@ class HumanizerTests(TestCase):
         self.assertEqual(item.output_text, "Edited output kept here.")
         self.assertEqual(item.variation, 0.7)
 
+    @override_settings(INFINIAI_ADMIN_EMAIL="valdaceai@gmail.com")
+    @patch("humanizer.views.rewrite_text", return_value=("Admin rewrite.", "test-model"))
+    def test_admin_has_unlimited_word_balance(self, rewrite):
+        admin = User.objects.create_user(
+            username="owner",
+            email="valdaceai@gmail.com",
+            password="strong-password-123",
+        )
+        admin.profile.word_quota = 0
+        admin.profile.words_used = 999999
+        admin.profile.is_paid = False
+        admin.profile.save()
+
+        self.client.force_login(admin)
+
+        page = self.client.get(reverse("humanizer"))
+        self.assertEqual(page.status_code, 200)
+        self.assertContains(page, "Unlimited")
+
+        response = self.client.post(reverse("humanize_ajax"), {
+            "text": "This admin rewrite must work even when the stored word quota is exhausted.",
+            "strength": "8",
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["word_balance"], "Unlimited")
+        rewrite.assert_called_once()
+
     def test_api_enforces_account_word_balance(self):
         self.user.profile.word_quota = 2
         self.user.profile.words_used = 0
