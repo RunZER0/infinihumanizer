@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
 from accounts.models import Profile
@@ -27,26 +28,34 @@ def _profile_state(user):
     }
 
 
-@login_required
 def humanizer_view(request):
     storage = messages.get_messages(request)
     list(storage)
 
-    profile, state = _profile_state(request.user)
-    if not state["unlimited"] and state["remaining"] == 0:
-        messages.warning(request, "Your word balance is empty.")
+    if request.user.is_authenticated:
+        profile, state = _profile_state(request.user)
+        if not state["unlimited"] and state["remaining"] == 0:
+            messages.warning(request, "Your word balance is empty.")
+        balance_label = "Unlimited" if state["unlimited"] else f'{state["remaining"]:,}'
+    else:
+        balance_label = "Sign in"
 
     return render(request, "humanizer/humanizer.html", {
-        "balance_label": "Unlimited" if state["unlimited"] else f'{state["remaining"]:,}',
+        "balance_label": balance_label,
         "engine_configured": bool(getattr(settings, "OPENAI_API_KEY", "")),
         "max_words": MAX_INPUT_WORDS,
         "max_chars": MAX_INPUT_CHARS,
     })
 
 
-@login_required
 @require_http_methods(["POST"])
 def humanize_ajax(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({
+            "error": "Please sign in to continue.",
+            "auth_required": True,
+            "login_url": f'{reverse("account_login")}?next={reverse("humanizer")}',
+        }, status=401)
     input_text = request.POST.get("text", "").strip()
     word_count = len(input_text.split())
 
