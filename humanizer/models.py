@@ -80,3 +80,23 @@ class ClientMessage(models.Model):
 
     def __str__(self):
         return f"{self.get_sender_display()} · {self.created_at:%Y-%m-%d %H:%M}"
+
+
+
+class AnonymousHumanizerUsage(models.Model):
+    day = models.DateField()
+    fingerprint = models.CharField(max_length=64)
+    words_used = models.PositiveIntegerField(default=0)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["day", "fingerprint"],
+                name="humanizer_anon_usage_day_fingerprint",
+            ),
+        ]
+        ordering = ["-day", "-updated_at"]
+
+    def __str__(self):
+        return f"{self.day} · {self.words_used} words"
