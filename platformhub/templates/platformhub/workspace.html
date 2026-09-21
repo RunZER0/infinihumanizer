@@ -1,131 +1,76 @@
 {% extends "base.html" %}
 {% block title %}Workspace — InfiniAI{% endblock %}
 {% block content %}
-<div class="page-shell workspace-head">
-  <div>
-    <div class="eyebrow">Workspace</div>
-    <h1 class="h1">Your account.</h1>
-    <p class="lede">{{ user.email }}</p>
-  </div>
-  <div class="workspace-actions">
-    <a class="btn btn-primary" href="{% url 'platformhub:client_chat' %}">Messages{% if unread_messages %} ({{ unread_messages }}){% endif %}</a>
-    <a class="btn" href="{% url 'platformhub:quickpay' %}">QuickPay</a>
-    <a class="btn" href="{% url 'platformhub:start' %}">Start a project</a>
-  </div>
-</div>
-
-<section class="section">
-  <div class="shell workspace-grid">
+<section class="account-home">
+  <div class="shell account-home-head">
     <div>
-      <h2 class="h3" style="margin-bottom:18px">Projects</h2>
-      <div class="list-block">
-        {% for item in requests %}
-        <div class="list-item">
-          <strong>{{ item.title }}</strong>
-          <small>{{ item.reference }} · {{ item.get_status_display }} · {{ item.created_at|date:"M j, Y" }}</small>
-          <div style="margin-top:10px"><a class="btn btn-link" href="{% url 'platformhub:project_detail' item.id %}">Open project →</a></div>
-        </div>
-        {% empty %}
-        <div class="list-item"><strong>No projects yet.</strong><small>Start one when you have work to send us.</small></div>
-        {% endfor %}
-      </div>
+      <div class="eyebrow">Workspace</div>
+      <h1>What needs your attention?</h1>
+      <p>{{ user.email }}</p>
     </div>
-
-    <div>
-      <h2 class="h3" style="margin-bottom:18px">Invoices</h2>
-      <div class="list-block">
-        {% for invoice in invoices %}
-        <div class="list-item">
-          <strong>{{ invoice.number }} · {{ invoice.currency }} {{ invoice.amount_due }}</strong>
-          <small>{{ invoice.get_status_display }}{% if invoice.description %} · {{ invoice.description }}{% endif %}</small>
-          {% if invoice.status != "paid" %}
-          <div style="margin-top:12px"><a class="btn btn-link" href="{% url 'platformhub:checkout' %}?invoice={{ invoice.id }}">Pay invoice →</a></div>
-          {% endif %}
-        </div>
-        {% empty %}
-        <div class="list-item"><strong>No invoices yet.</strong></div>
-        {% endfor %}
-      </div>
-    </div>
+    <a class="btn btn-primary" href="{% url 'platformhub:start' %}">Start new work</a>
   </div>
-</section>
 
-
-<section class="section">
-  <div class="shell workspace-grid">
-    <div>
-      <div class="section-head section-head-compact">
-        <div class="eyebrow">Text Intelligence</div>
-        <div><h2 class="h3">Humanizer access.</h2></div>
+  <div class="shell account-home-body">
+    {% if next_action %}
+    <a class="account-next-card" href="{{ next_action.url }}">
+      <div>
+        <span class="micro">{{ next_action.eyebrow|upper }}</span>
+        <h2>{{ next_action.title }}</h2>
+        <p>{{ next_action.detail }}</p>
       </div>
-      <div class="list-block">
-        <div class="list-item">
-          {% if profile %}
-          <strong>{{ profile.get_account_type_display }} · {{ profile.words_used|default:0|floatformat:0 }} of {{ profile.word_quota|default:0|floatformat:0 }} words used</strong>
-          <small>Payments for Humanizer plans are applied to this account automatically after Paystack confirms the transaction.</small>
-          {% else %}
-          <strong>Free account</strong>
-          {% endif %}
-          <div style="margin-top:10px"><a class="btn btn-link" href="{% url 'humanizer' %}">Open Humanizer →</a></div>
-        </div>
+      <strong>{{ next_action.label }} <span aria-hidden="true">→</span></strong>
+    </a>
+    {% else %}
+    <div class="account-next-card account-next-clear">
+      <div>
+        <span class="micro">CLEAR</span>
+        <h2>Nothing needs action right now.</h2>
+        <p>Your workspace is up to date.</p>
       </div>
+      <a class="btn btn-quiet" href="{% url 'platformhub:start' %}">Start something</a>
     </div>
+    {% endif %}
 
-    <div>
-      <div class="section-head section-head-compact">
-        <div class="eyebrow">Saved rewrites</div>
-        <div><h2 class="h3">Recent work.</h2></div>
-      </div>
-      <div class="list-block">
-        {% for item in humanizations %}
-        <div class="list-item">
-          <strong>{{ item.output_text|truncatechars:92 }}</strong>
-          <small>{{ item.input_words }} source words · Updated {{ item.updated_at|date:"M j, Y · H:i" }}</small>
-          <div style="margin-top:10px"><a class="btn btn-link" href="{% url 'humanizer' %}?saved={{ item.id }}">Open rewrite →</a></div>
-        </div>
-        {% empty %}
-        <div class="list-item"><strong>No saved rewrites yet.</strong><small>Signed-in Humanizer rewrites appear here automatically.</small></div>
-        {% endfor %}
-      </div>
-    </div>
-  </div>
-</section>
+    <nav class="account-route-grid" aria-label="Workspace sections">
+      <a class="account-route" href="{% url 'platformhub:workspace_projects' %}">
+        <span class="micro">WORK</span>
+        <strong>Projects</strong>
+        <p>{{ project_count }} project{{ project_count|pluralize }}</p>
+        <span class="account-route-arrow">→</span>
+      </a>
+      <a class="account-route" href="{% url 'platformhub:client_chat' %}">
+        <span class="micro">CONVERSATION</span>
+        <strong>Messages</strong>
+        <p>{% if unread_messages %}{{ unread_messages }} unread{% else %}No unread messages{% endif %}</p>
+        <span class="account-route-arrow">→</span>
+      </a>
+      <a class="account-route" href="{% url 'platformhub:workspace_billing' %}">
+        <span class="micro">MONEY</span>
+        <strong>Billing</strong>
+        <p>{% if open_invoice_count %}{{ open_invoice_count }} open invoice{{ open_invoice_count|pluralize }}{% else %}No payment due{% endif %}</p>
+        <span class="account-route-arrow">→</span>
+      </a>
+      <a class="account-route" href="{% url 'humanizer' %}">
+        <span class="micro">TEXT</span>
+        <strong>Humanizer</strong>
+        <p>{{ saved_rewrite_count }} saved rewrite{{ saved_rewrite_count|pluralize }}</p>
+        <span class="account-route-arrow">→</span>
+      </a>
+    </nav>
 
-<section class="section">
-  <div class="shell">
-    <div class="section-head"><div class="eyebrow">Payments</div><div><h2 class="h2">Payment history.</h2></div></div>
-    <div class="payment-ledger">
-      {% for payment in payments %}
-      <div class="payment-row">
-        <div>
-          <strong>{{ payment.currency }} {{ payment.amount }}</strong>
-          <small>{{ payment.paid_at|default:payment.created_at|date:"M j, Y" }}</small>
-        </div>
-        <div>
-          <strong>{{ payment.original_description|default:payment.metadata.label|default:"Payment" }}</strong>
-          <small>{{ payment.reference }}</small>
-        </div>
-        <div>
-          <span class="status {% if payment.status == 'success' %}status-success{% else %}status-pending{% endif %}">{{ payment.get_status_display }}</span>
-          {% if payment.legacy %}<small>Imported</small>{% endif %}
-        </div>
+    <div class="account-quiet-row">
+      <div>
+        <span class="micro">ACCOUNT</span>
+        {% if profile %}
+        <strong>{{ profile.get_account_type_display }}</strong>
+        {% else %}
+        <strong>Free</strong>
+        {% endif %}
       </div>
-      {% empty %}
-      <div class="list-item"><strong>No payments yet.</strong></div>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="shell">
-    <div class="section-head"><div class="eyebrow">Content assurance</div><div><h2 class="h2">Checks and reports.</h2></div></div>
-    <div class="list-block">
-      {% for job in assurance_jobs %}
-      <div class="list-item"><strong>{{ job.title }}</strong><small>{{ job.reference }} · {{ job.get_status_display }} · {{ job.created_at|date:"M j, Y" }}</small><div style="margin-top:10px"><a class="btn btn-link" href="{% url 'platformhub:assurance_result' job.id %}">Open report →</a></div></div>
-      {% empty %}
-      <div class="list-item"><strong>No checks yet.</strong><div style="margin-top:10px"><a class="btn btn-link" href="{% url 'platformhub:assurance_check' %}">Start a check →</a></div></div>
-      {% endfor %}
+      {% if recent_rewrite %}
+      <a href="{% url 'humanizer' %}?saved={{ recent_rewrite.id }}">Continue latest rewrite →</a>
+      {% endif %}
     </div>
   </div>
 </section>
