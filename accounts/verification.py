@@ -42,6 +42,8 @@ def mark_session_email_verified(request, email):
     normalized = normalize_email(email)
     request.session[SESSION_VERIFIED_EMAIL] = normalized
     request.session[SESSION_VERIFIED_AT] = timezone.now().isoformat()
+    if not request.user.is_authenticated:
+        request.session.set_expiry(60 * 60 * 24 * 30)
     request.session.modified = True
     return normalized
 
