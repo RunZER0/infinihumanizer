@@ -122,8 +122,9 @@ if OFFLINE_MODE or DEBUG or not (EMAIL_HOST_USER and EMAIL_HOST_PASSWORD):
 
 # MIDDLEWARE
 MIDDLEWARE = [
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ added this
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'accounts.middleware.CanonicalHostMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
