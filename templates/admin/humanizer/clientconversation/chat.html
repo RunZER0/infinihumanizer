@@ -1,0 +1,53 @@
+{% extends "admin/base_site.html" %}
+{% block extrastyle %}
+{{ block.super }}
+<style>
+  .infini-admin-chat{max-width:980px;margin:18px 0 0}
+  .infini-admin-chat-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:18px}
+  .infini-admin-chat-head p{margin:4px 0 0;color:var(--body-quiet-color)}
+  .infini-admin-thread{display:flex;flex-direction:column;gap:12px;max-height:58vh;overflow:auto;padding:18px;background:var(--darkened-bg);border:1px solid var(--hairline-color)}
+  .infini-admin-message{max-width:76%;padding:12px 14px;border:1px solid var(--hairline-color);background:var(--body-bg)}
+  .infini-admin-message.client{align-self:flex-start}
+  .infini-admin-message.admin{align-self:flex-end;background:var(--primary);color:var(--primary-fg);border-color:var(--primary)}
+  .infini-admin-message-meta{display:flex;justify-content:space-between;gap:18px;font-size:11px;margin-bottom:6px;opacity:.75}
+  .infini-admin-message p{margin:0;white-space:pre-wrap;line-height:1.5}
+  .infini-admin-reply{margin-top:16px;display:grid;gap:10px}
+  .infini-admin-reply textarea{min-height:120px;width:100%;box-sizing:border-box}
+  .infini-admin-actions{display:flex;justify-content:space-between;gap:12px;align-items:center}
+</style>
+{% endblock %}
+{% block content %}
+<div class="infini-admin-chat">
+  <div class="infini-admin-chat-head">
+    <div>
+      <h1>{{ title }}</h1>
+      <p>{{ conversation.user.get_full_name|default:conversation.user.username }} · {{ conversation.user.email }}</p>
+    </div>
+    <a href="{% url 'infini_admin:humanizer_clientconversation_changelist' %}">All conversations</a>
+  </div>
+
+  <div class="infini-admin-thread">
+    {% for item in chat_messages %}
+    <article class="infini-admin-message {{ item.sender }}">
+      <div class="infini-admin-message-meta">
+        <strong>{% if item.sender == "client" %}Client{% else %}InfiniAI{% endif %}</strong>
+        <span>{{ item.created_at|date:"M j, Y · H:i" }}</span>
+      </div>
+      <p>{{ item.body }}</p>
+    </article>
+    {% empty %}
+    <p>No messages yet.</p>
+    {% endfor %}
+  </div>
+
+  <form method="post" class="infini-admin-reply">
+    {% csrf_token %}
+    <label for="admin-chat-message"><strong>Reply</strong></label>
+    <textarea id="admin-chat-message" name="message" maxlength="5000" required autofocus></textarea>
+    <div class="infini-admin-actions">
+      <span>Reply as InfiniAI.</span>
+      <input type="submit" value="Send reply" class="default">
+    </div>
+  </form>
+</div>
+{% endblock %}
