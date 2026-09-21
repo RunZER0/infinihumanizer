@@ -131,6 +131,28 @@
   const wordCount = (value) => (value.trim().match(/\S+/g) || []).length;
   const csrfToken = () => form.querySelector("[name=csrfmiddlewaretoken]").value;
 
+  function escapeHtml(value) {
+    return value
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  async function copyWithFormatting(value) {
+    if (navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
+      const html = '<div style="white-space: pre-wrap; tab-size: 4;">' + escapeHtml(value) + '</div>';
+      const item = new ClipboardItem({
+        "text/plain": new Blob([value], {type: "text/plain;charset=utf-8"}),
+        "text/html": new Blob([html], {type: "text/html;charset=utf-8"})
+      });
+      await navigator.clipboard.write([item]);
+      return;
+    }
+    await navigator.clipboard.writeText(value);
+  }
+
   function updateCounts() {
     inputCount.textContent = wordCount(input.value).toLocaleString() + " words";
     outputCount.textContent = wordCount(output.value).toLocaleString() + " words";
@@ -223,6 +245,22 @@
     saveResult(true);
   }
 
+  input.addEventListener("paste", function (event) {
+    const clipboard = event.clipboardData;
+    if (!clipboard) return;
+    const plain = clipboard.getData("text/plain");
+    if (plain === "") return;
+
+    // Force the editable surface to use the clipboard's plain-text structure.
+    // Tabs, indentation and line breaks are retained instead of being flattened
+    // from rich HTML pasted by Word, Google Docs, browsers or PDFs.
+    event.preventDefault();
+    const start = input.selectionStart;
+    const end = input.selectionEnd;
+    input.setRangeText(plain, start, end, "end");
+    input.dispatchEvent(new Event("input", {bubbles: true}));
+  });
+
   input.addEventListener("input", function () {
     updateCounts();
     persistLocal();
@@ -311,9 +349,13 @@
 
   copyButton.addEventListener("click", async function () {
     if (!output.value.trim()) return;
-    await navigator.clipboard.writeText(output.value);
-    copyButton.textContent = "Copied";
-    window.setTimeout(function () { copyButton.textContent = "Copy"; }, 1100);
+    try {
+      await copyWithFormatting(output.value);
+      copyButton.textContent = "Copied";
+      window.setTimeout(function () { copyButton.textContent = "Copy"; }, 1100);
+    } catch (error) {
+      status.textContent = "Copy failed";
+    }
   });
 
   downloadButton.addEventListener("click", function () {
