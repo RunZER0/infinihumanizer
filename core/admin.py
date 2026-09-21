@@ -10,7 +10,7 @@ from allauth.account.models import EmailAddress
 from allauth.socialaccount.models import SocialAccount
 
 from accounts.models import DeviceSession, EmailVerification, Profile, WhatsAppVerification
-from humanizer.models import ClientConversation, ClientMessage, Humanization
+from humanizer.models import AnonymousHumanizerUsage, ClientConversation, ClientMessage, Humanization
 from platformhub.models import (
     AssuranceJob,
     Consultation,
@@ -162,6 +162,7 @@ for model in [
     WhatsAppVerification,
     EmailAddress,
     SocialAccount,
+    AnonymousHumanizerUsage,
 ]:
     admin_site.register(model, OwnerModelAdmin)
 
