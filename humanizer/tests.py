@@ -141,7 +141,7 @@ class SentenceRuntimeTests(SimpleTestCase):
         self.assertEqual(restore_sentence(protected, literals), source)
 
     def test_document_plan_preserves_heading_and_references(self):
-        source = "Short Heading\\n\\nFirst sentence. Second sentence.\\n\\nReferences\\n\\nSmith, J. (2024). Example."
+        source = "Short Heading\n\nFirst sentence. Second sentence.\n\nReferences\n\nSmith, J. (2024). Example."
         plans, paragraph_separators, tasks = plan_document(source)
         self.assertEqual([task.source for task in tasks], ["First sentence.", "Second sentence."])
         rewritten = {tasks[0].id: "Sentence one changed.", tasks[1].id: "Sentence two changed."}
