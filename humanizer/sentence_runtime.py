@@ -225,12 +225,11 @@ def validate_candidate(source: str, candidate: str, strength: int) -> tuple[bool
 
 def remove_em_dashes(text: str) -> str:
     """Guarantee that rewritten prose never contains an em dash."""
-    text = re.sub(r"\\s*—\\s*", ", ", text or "")
-    text = re.sub(r",\\s*,+", ", ", text)
-    text = re.sub(r"\\s+,", ",", text)
-    text = re.sub(r",\\s+([.!?;:])", r"\\1", text)
+    text = re.sub(r"\s*—\s*", ", ", text or "")
+    text = re.sub(r",\s*,+", ", ", text)
+    text = re.sub(r"\s+,", ",", text)
+    text = re.sub(r",\s+([.!?;:])", r"\1", text)
     return text.strip()
-
 
 def few_shots(strength: int) -> list[dict]:
     band = strength_profile(strength)
