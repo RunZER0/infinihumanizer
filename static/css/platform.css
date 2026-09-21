@@ -1440,3 +1440,39 @@ body.modal-open{overflow:hidden}
   }
   .auth-clean-heading h1{font-size:2rem}
 }
+
+
+/* Auth modes: Google, email, and signup never compete on the same screen. */
+.auth-mode-secondary{
+  width:100%;
+  min-height:48px;
+  margin-top:10px;
+  border-color:var(--line-subtle);
+  background:transparent;
+}
+.auth-mode-links{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+  margin-top:20px;
+  padding-top:16px;
+  border-top:1px solid var(--line-subtle);
+}
+.auth-mode-links button{
+  border:0;
+  background:transparent;
+  color:var(--text-muted);
+  padding:0;
+  font-size:.78rem;
+  cursor:pointer;
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+.auth-mode-links button:hover{color:var(--text-primary)}
+@media(max-width:480px){
+  .auth-mode-links{
+    flex-direction:column;
+    gap:8px;
+  }
+}
