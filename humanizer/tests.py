@@ -200,7 +200,16 @@ class SentenceRuntimeTests(SimpleTestCase):
             8,
         )
         self.assertFalse(valid)
-        self.assertEqual(reason, "too-close")
+        self.assertEqual(reason, "unchanged")
+
+    def test_strength8_accepts_rough_fragment_like_reconstruction(self):
+        valid, reason = validate_candidate(
+            "Provenance work is therefore both historical and evidentiary.",
+            "Historical and evidentiary, hence the term provenance work.",
+            8,
+        )
+        self.assertTrue(valid)
+        self.assertEqual(reason, "ok")
 
     def test_strength8_rejects_overcompressed_developed_sentence(self):
         valid, reason = validate_candidate(
