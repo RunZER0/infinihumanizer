@@ -632,10 +632,8 @@ def verify_checkout(request):
         messages.success(request, "Payment confirmed.")
         if payment.assurance_job_id and request.user.is_authenticated:
             return redirect("platformhub:assurance_result", job_id=payment.assurance_job_id)
-        if payment.consultation_id:
-            request.session["consultation_id"] = str(payment.consultation_id)
-            request.session["consultation_reference"] = payment.consultation.reference
-            return redirect("platformhub:consultation")
+        if (payment.metadata or {}).get("package_slug", "").startswith("humanizer-"):
+            return redirect("humanizer")
         if request.user.is_authenticated:
             return redirect("platformhub:workspace")
         return redirect("platformhub:home")
