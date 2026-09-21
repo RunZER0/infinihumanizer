@@ -493,52 +493,100 @@ def start_checkout(request):
     package_slug = request.POST.get("package_slug", "").strip()
     invoice_id = request.POST.get("invoice_id", "").strip()
     job_id = request.POST.get("job_id", "").strip()
-    consultation_id = request.POST.get("consultation_id", "").strip()
     currency = request.POST.get("currency", "USD").upper()
     email = request.POST.get("email", "").strip()
+
+    invoice = None
+    assurance_job = None
+    request_id = None
+    normalized_family = ""
+    normalized_service_code = ""
+    source_type = "checkout"
 
     if invoice_id:
         invoice = get_object_or_404(Invoice, id=invoice_id)
         if not request.user.is_authenticated:
             return JsonResponse({"error": "Sign in to pay this invoice."}, status=403)
-        if invoice.user_id and invoice.user_id != request.user.id and (not request.user.email or invoice.email.lower() != request.user.email.lower()):
+        if invoice.user_id and invoice.user_id != request.user.id and (
+            not request.user.email or invoice.email.lower() != request.user.email.lower()
+        ):
             return JsonResponse({"error": "This invoice is not attached to your account."}, status=403)
         amount = invoice.amount_due - invoice.amount_paid
+        if amount <= 0:
+            return JsonResponse({"error": "This invoice is already paid."}, status=400)
         currency = invoice.currency
+        email = invoice.email
         label = invoice.description or invoice.number
         request_id = invoice.request_id
         normalized_family = invoice.request.service_family if invoice.request else ""
         normalized_service_code = invoice.request.service_code if invoice.request else ""
+        if not request_id and label.startswith("QuickPay"):
+            source_type = "quickpay"
+            normalized_family = "quickpay"
+            normalized_service_code = "quickpay"
     else:
         package = PACKAGES.get(package_slug)
         if not package:
             return JsonResponse({"error": "Unknown package."}, status=400)
+        if package_slug == "consultation":
+            return JsonResponse({"error": "Talking to us is free."}, status=400)
+        if package_slug.startswith("humanizer-") and not request.user.is_authenticated:
+            return JsonResponse({
+                "error": "Please sign in before choosing a Humanizer plan.",
+                "auth_required": True,
+                "login_url": f'{reverse("account_login")}?next={reverse("platformhub:pricing")}',
+            }, status=401)
+        if package_slug == "originality-quick":
+            if not request.user.is_authenticated:
+                return JsonResponse({"error": "Please sign in to run this check."}, status=401)
+            assurance_job = AssuranceJob.objects.filter(id=job_id, user=request.user).first()
+            if not assurance_job:
+                return JsonResponse({"error": "This assurance job is not attached to your account."}, status=403)
+
         amount = package["kes"] if currency == "KES" else package["usd"]
         label = package["name"]
-        request_id = None
         normalized_service_code = package.get("service_code", "")
-        normalized_family = (SERVICE_INDEX.get(normalized_service_code) or {}).get("family", "text-intelligence" if normalized_service_code == "text-humanize" else "")
+        normalized_family = (
+            (SERVICE_INDEX.get(normalized_service_code) or {}).get("family")
+            or ("text-intelligence" if normalized_service_code == "text-humanize" else "")
+        )
+        if request.user.is_authenticated and request.user.email:
+            email = request.user.email
 
+    if currency not in {"USD", "KES"}:
+        return JsonResponse({"error": "Unsupported currency."}, status=400)
     if not email:
         return JsonResponse({"error": "Email is required."}, status=400)
-
+    if amount <= 0:
+        return JsonResponse({"error": "Payment amount must be greater than zero."}, status=400)
     if not getattr(settings, "PAYSTACK_SECRET_KEY", None):
         return JsonResponse({"error": "Secure checkout is not connected on this deployment yet."}, status=503)
 
     reference = f"INF-{uuid.uuid4().hex[:18].upper()}"
-    callback = request.build_absolute_uri(reverse("platformhub:verify_checkout"))
+    callback = f"{settings.PUBLIC_BASE_URL}{reverse('platformhub:verify_checkout')}"
     metadata = {
         "label": label,
         "package_slug": package_slug,
         "invoice_id": invoice_id,
         "request_id": str(request_id) if request_id else "",
-        "job_id": job_id,
-        "consultation_id": consultation_id,
+        "job_id": str(assurance_job.id) if assurance_job else "",
     }
-    if invoice_id and not request_id and label.startswith("QuickPay"):
-        metadata["quickpay"] = True
-        normalized_family = "quickpay"
-        normalized_service_code = "quickpay"
+
+    payment = PaymentRecord.objects.create(
+        invoice=invoice,
+        request_id=request_id,
+        assurance_job=assurance_job,
+        user=request.user if request.user.is_authenticated else None,
+        reference=reference,
+        source_type=source_type,
+        amount=amount,
+        currency=currency,
+        status="pending",
+        email=email,
+        normalized_family=normalized_family,
+        normalized_service_code=normalized_service_code,
+        metadata=metadata,
+    )
 
     try:
         gateway = initialize_transaction(
@@ -550,38 +598,16 @@ def start_checkout(request):
             metadata=metadata,
         )
     except PaystackError as exc:
+        payment.status = "failed"
+        payment.metadata = {**payment.metadata, "initialization_error": str(exc)}
+        payment.save(update_fields=["status", "metadata"])
         logger.warning("Paystack initialize failed: %s", exc)
         return JsonResponse({"error": str(exc)}, status=502)
 
-    assurance_job = None
-    if job_id:
-        assurance_job = AssuranceJob.objects.filter(id=job_id).first()
-        if not assurance_job or not request.user.is_authenticated or assurance_job.user_id != request.user.id:
-            return JsonResponse({"error": "This assurance job is not attached to your account."}, status=403)
-
-    consultation = None
-    if consultation_id:
-        consultation = Consultation.objects.filter(id=consultation_id, email__iexact=email).first()
-        if not consultation:
-            return JsonResponse({"error": "This consultation could not be matched to the checkout."}, status=403)
-
-    PaymentRecord.objects.create(
-        invoice_id=invoice_id or None,
-        request_id=request_id,
-        consultation=consultation,
-        assurance_job=assurance_job,
-        user=request.user if request.user.is_authenticated else None,
-        reference=reference,
-        source_type="quickpay" if metadata.get("quickpay") else "checkout",
-        amount=amount,
-        currency=currency,
-        status="pending",
-        email=email,
-        normalized_family=normalized_family,
-        normalized_service_code=normalized_service_code,
-        metadata=metadata,
-    )
-    return JsonResponse({"authorization_url": gateway["authorization_url"], "reference": reference})
+    return JsonResponse({
+        "authorization_url": gateway["authorization_url"],
+        "reference": reference,
+    })
 
 
 def verify_checkout(request):
