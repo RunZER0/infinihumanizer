@@ -759,3 +759,47 @@ a.partner-logo:hover{opacity:1;transform:translateY(-2px)}
   .partner-stashi img{height:29px!important;max-width:145px!important;max-height:29px!important}
   .partner-valdace img{height:28px!important;max-width:150px!important;max-height:28px!important}
 }
+
+
+/* Humanizer: keep the action visible and the two editors usable in one viewport. */
+.humanizer-intro-compact{padding-top:44px;padding-bottom:22px;align-items:end}
+.humanizer-intro-compact .h1{font-size:clamp(2rem,4vw,4rem);margin-bottom:8px}
+.humanizer-intro-compact .lede{max-width:44rem}
+.humanizer-workspace-compact{align-items:stretch}
+.humanizer-workspace-compact .editor-card{display:flex;flex-direction:column;min-height:min(650px,68vh)}
+.humanizer-workspace-compact .editor-card-input form{display:flex;flex-direction:column;flex:1;min-height:0}
+.humanizer-workspace-compact textarea{flex:1;min-height:360px;resize:vertical}
+.rewrite-toolbar{display:grid;grid-template-columns:minmax(150px,1fr) minmax(260px,1.2fr) auto;align-items:center;gap:22px;padding:0 0 18px;border-bottom:1px solid var(--line-subtle);margin-bottom:18px}
+.editor-card-head-compact{margin:0;padding:0;border:0}
+.variation-control-inline{margin:0;display:flex;align-items:center;gap:14px}
+.variation-control-inline .variation-label{flex:0 0 auto}
+.variation-control-inline .variation-range{flex:1;min-width:180px}
+.rewrite-toolbar .rewrite-button{min-width:116px;align-self:center}
+.editor-card-output textarea{background:transparent}
+.editor-card-output textarea:focus{outline:2px solid rgba(180,55,41,.2);outline-offset:-2px}
+.output-action-buttons{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.humanizer-notes-compact{padding-top:24px}
+.tool-modal-backdrop{position:fixed;inset:0;z-index:1200;background:rgba(18,17,15,.58);display:grid;place-items:center;padding:20px}
+.tool-modal-backdrop[hidden]{display:none!important}
+.tool-modal{position:relative;width:min(520px,100%);background:var(--surface,#f5f1e8);border:1px solid var(--line);padding:30px;box-shadow:0 26px 80px rgba(0,0,0,.22)}
+.tool-modal h2{font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.8rem,5vw,2.5rem);letter-spacing:-.035em;margin:8px 0 12px}
+.tool-modal p{color:var(--text-muted);line-height:1.55}
+.tool-modal-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.tool-modal-close{position:absolute;top:12px;right:14px;border:0;background:transparent;font-size:1.65rem;line-height:1;cursor:pointer;color:var(--text-muted)}
+body.modal-open{overflow:hidden}
+@media(max-width:900px){
+  .rewrite-toolbar{grid-template-columns:1fr auto;gap:14px}
+  .variation-control-inline{grid-column:1/-1;grid-row:2}
+  .rewrite-toolbar .rewrite-button{grid-column:2;grid-row:1}
+  .humanizer-workspace-compact .editor-card{min-height:560px}
+}
+@media(max-width:640px){
+  .humanizer-intro-compact{padding-top:28px}
+  .rewrite-toolbar{grid-template-columns:1fr}
+  .rewrite-toolbar .rewrite-button,.variation-control-inline{grid-column:1;grid-row:auto;width:100%}
+  .variation-control-inline{align-items:flex-start;flex-direction:column}
+  .variation-control-inline .variation-range{width:100%;min-width:0}
+  .humanizer-workspace-compact .editor-card{min-height:500px}
+  .humanizer-workspace-compact textarea{min-height:300px}
+  .tool-modal{padding:26px 22px}
+}
