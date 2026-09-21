@@ -92,12 +92,16 @@ def humanizer_view(request):
     list(storage)
 
     recent = []
+    initial_humanization = None
     if request.user.is_authenticated:
         profile, state = _profile_state(request.user)
         if not state["unlimited"] and state["remaining"] == 0:
             messages.warning(request, "Your word balance is empty.")
         balance_label = "Unlimited" if state["unlimited"] else f'{state["remaining"]:,}'
         recent = Humanization.objects.filter(user=request.user)[:8]
+        saved_id = request.GET.get("saved", "").strip()
+        if saved_id:
+            initial_humanization = Humanization.objects.filter(user=request.user, id=saved_id).first()
         anonymous_remaining = None
     else:
         anon = _anonymous_state(request)
@@ -112,6 +116,7 @@ def humanizer_view(request):
         "anonymous_daily_limit": int(getattr(settings, "HUMANIZER_ANON_DAILY_WORDS", 300)),
         "anonymous_remaining": anonymous_remaining,
         "recent_humanizations": recent,
+        "initial_humanization": initial_humanization,
         **_auth_urls(),
     })
 
