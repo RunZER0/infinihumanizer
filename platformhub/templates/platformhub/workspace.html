@@ -8,7 +8,8 @@
     <p class="lede">{{ user.email }}</p>
   </div>
   <div class="workspace-actions">
-    <a class="btn btn-primary" href="{% url 'platformhub:quickpay' %}">QuickPay</a>
+    <a class="btn btn-primary" href="{% url 'platformhub:client_chat' %}">Messages{% if unread_messages %} ({{ unread_messages }}){% endif %}</a>
+    <a class="btn" href="{% url 'platformhub:quickpay' %}">QuickPay</a>
     <a class="btn" href="{% url 'platformhub:start' %}">Start a project</a>
   </div>
 </div>
@@ -43,6 +44,46 @@
         </div>
         {% empty %}
         <div class="list-item"><strong>No invoices yet.</strong></div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="shell workspace-grid">
+    <div>
+      <div class="section-head section-head-compact">
+        <div class="eyebrow">Text Intelligence</div>
+        <div><h2 class="h3">Humanizer access.</h2></div>
+      </div>
+      <div class="list-block">
+        <div class="list-item">
+          {% if profile %}
+          <strong>{{ profile.get_account_type_display }} · {{ profile.words_used|default:0|floatformat:0 }} of {{ profile.word_quota|default:0|floatformat:0 }} words used</strong>
+          <small>Payments for Humanizer plans are applied to this account automatically after Paystack confirms the transaction.</small>
+          {% else %}
+          <strong>Free account</strong>
+          {% endif %}
+          <div style="margin-top:10px"><a class="btn btn-link" href="{% url 'humanizer' %}">Open Humanizer →</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-head section-head-compact">
+        <div class="eyebrow">Saved rewrites</div>
+        <div><h2 class="h3">Recent work.</h2></div>
+      </div>
+      <div class="list-block">
+        {% for item in humanizations %}
+        <div class="list-item">
+          <strong>{{ item.output_text|truncatechars:92 }}</strong>
+          <small>{{ item.input_words }} source words · Updated {{ item.updated_at|date:"M j, Y · H:i" }}</small>
+        </div>
+        {% empty %}
+        <div class="list-item"><strong>No saved rewrites yet.</strong><small>Signed-in Humanizer rewrites appear here automatically.</small></div>
         {% endfor %}
       </div>
     </div>
