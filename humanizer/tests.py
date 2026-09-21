@@ -6,6 +6,8 @@ from django.urls import reverse
 
 from .models import Humanization
 from .sentence_runtime import (
+    SentenceTask,
+    RewriteRuntime,
     clamp_strength,
     model_temperature,
     plan_document,
@@ -14,6 +16,7 @@ from .sentence_runtime import (
     reassemble,
     restore_sentence,
     split_sentences,
+    validate_candidate,
 )
 
 
@@ -158,6 +161,46 @@ class SentenceRuntimeTests(SimpleTestCase):
         cleaned = remove_em_dashes(source)
         self.assertNotIn("—", cleaned)
         self.assertEqual(cleaned, "Layered safeguards, from backup systems to trained operators, reduce risk.")
+
+    @override_settings(
+        HUMANIZER_BACKEND="openrouter",
+        OPENROUTER_API_KEY="test-key",
+        HUMANIZER_MAX_CONCURRENCY=6,
+    )
+    def test_runtime_sends_exactly_one_sentence_per_model_request(self):
+        runtime = RewriteRuntime(8)
+        tasks = [
+            SentenceTask(i, text, text, ())
+            for i, text in enumerate([
+                "Accountability begins with reasons.",
+                "There is also an environmental dimension.",
+                "Remote work changes more than location.",
+            ])
+        ]
+        seen = []
+
+        def fake_rewrite(batch, repair=False):
+            seen.append([task.id for task in batch])
+            task = batch[0]
+            return {task.id: task.source + " changed"}, "test-model"
+
+        try:
+            with patch.object(runtime, "rewrite_batch", side_effect=fake_rewrite):
+                rewritten, _ = runtime.run(tasks)
+        finally:
+            runtime.close()
+
+        self.assertEqual(sorted(seen), [[0], [1], [2]])
+        self.assertEqual(len(rewritten), 3)
+
+    def test_strength8_rejects_unchanged_short_sentence(self):
+        valid, reason = validate_candidate(
+            "Accountability begins with reasons.",
+            "Accountability begins with reasons.",
+            8,
+        )
+        self.assertFalse(valid)
+        self.assertEqual(reason, "too-close")
 
     def test_sentence_splitter_handles_abbreviations_decimals_and_quotes(self):
         source = 'Dr. Smith recorded 29.5 units. The court called it "a serious problem." Another sentence followed.'
