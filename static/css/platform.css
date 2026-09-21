@@ -849,6 +849,10 @@ body.modal-open{overflow:hidden}
   flex-direction:column;
 }
 .humanizer-studio:before{display:none}
+.humanizer-studio>.shell{
+  max-width:min(1520px,calc(100vw - 64px));
+  width:100%;
+}
 .humanizer-studio-head{
   display:flex;
   align-items:flex-end;
