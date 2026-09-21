@@ -68,6 +68,7 @@
         <li><a href="{% url 'platformhub:notes' %}">Notes</a></li>
         <li><a href="{% url 'platformhub:pricing' %}">Pricing</a></li>
         <li><a href="{% url 'platformhub:consultation' %}">Talk to us</a></li>
+        {% if user.is_authenticated %}<li><a href="{% url 'platformhub:client_chat' %}">Messages</a></li>{% endif %}
         <li><a href="mailto:valdaceai@gmail.com">Contact</a></li>
       </ul>
     </div>
@@ -77,6 +78,7 @@
         <li><a href="{% url 'platformhub:privacy' %}">Privacy Policy</a></li>
         <li><a href="{% url 'platformhub:terms' %}">Terms of Service</a></li>
         <li><a href="{% url 'platformhub:disclaimer' %}">Disclaimer</a></li>
+        <li><a href="/admin/">Admin</a></li>
       </ul>
     </div>
   </div>
