@@ -33,7 +33,14 @@ def _profile_state(user):
     profile, _ = Profile.objects.get_or_create(user=user)
     quota = max(0, int(profile.word_quota or 0))
     used = max(0, int(profile.words_used or 0))
-    unlimited = bool(profile.is_kenya_plan() and profile.has_quota(1))
+    is_admin = (
+        (user.email or "").strip().lower()
+        == getattr(settings, "INFINIAI_ADMIN_EMAIL", "").strip().lower()
+    )
+    unlimited = bool(
+        is_admin
+        or (profile.is_kenya_plan() and profile.has_quota(1))
+    )
     remaining = None if unlimited else max(0, quota - used)
     return profile, {
         "quota": quota,
