@@ -43,10 +43,10 @@
           >{% if initial_humanization %}{{ initial_humanization.source_text }}{% endif %}</textarea>
 
           <div class="humanizer-actionbar">
-            <label class="humanizer-variation" for="temperature">
-              <span>Variation</span>
-              <input id="temperature" type="range" min="0.35" max="0.9" step="0.05" value="0.65" aria-label="Rewrite variation">
-              <span class="micro">Closer&nbsp;&nbsp;↔&nbsp;&nbsp;Freer</span>
+            <label class="humanizer-variation" for="strength">
+              <span>Rewrite strength <strong id="strength-value">8</strong></span>
+              <input id="strength" name="strength" type="range" min="1" max="10" step="1" value="8" aria-label="Rewrite strength">
+              <span class="micro">Balanced 4&nbsp;&nbsp;·&nbsp;&nbsp;Maximum 8 recommended</span>
             </label>
             <button class="btn btn-primary humanizer-main-action" id="humanize-button" type="submit">
               Rewrite
@@ -116,7 +116,8 @@
   const status = document.getElementById("tool-status");
   const inputCount = document.getElementById("input-count");
   const outputCount = document.getElementById("output-count");
-  const temperature = document.getElementById("temperature");
+  const strength = document.getElementById("strength");
+  const strengthValue = document.getElementById("strength-value");
   const copyButton = document.getElementById("copy-output");
   const downloadButton = document.getElementById("download-output");
   const modal = document.getElementById("auth-modal");
@@ -138,7 +139,7 @@
   function persistLocal() {
     sessionStorage.setItem("infiniai_humanizer_draft", input.value);
     sessionStorage.setItem("infiniai_humanizer_output", output.value);
-    sessionStorage.setItem("infiniai_humanizer_temperature", temperature.value);
+    sessionStorage.setItem("infiniai_humanizer_strength", strength.value);
     if (currentId) sessionStorage.setItem("infiniai_humanizer_id", currentId);
   }
 
@@ -177,7 +178,7 @@
     body.set("csrfmiddlewaretoken", csrfToken());
     body.set("source_text", input.value);
     body.set("output_text", output.value);
-    body.set("temperature", temperature.value);
+    body.set("strength", strength.value);
     if (!forceCreate && currentId) body.set("humanization_id", currentId);
 
     try {
@@ -199,7 +200,8 @@
 
   const savedDraft = sessionStorage.getItem("infiniai_humanizer_draft");
   const savedOutput = sessionStorage.getItem("infiniai_humanizer_output");
-  const savedTemperature = sessionStorage.getItem("infiniai_humanizer_temperature");
+  const savedStrength = sessionStorage.getItem("infiniai_humanizer_strength");
+  const legacyTemperature = sessionStorage.getItem("infiniai_humanizer_temperature");
 
   if (serverId) {
     setResult(output.value);
@@ -207,7 +209,12 @@
   } else {
     if (savedDraft && !input.value) input.value = savedDraft;
     if (savedOutput) setResult(savedOutput);
-    if (savedTemperature) temperature.value = savedTemperature;
+    if (savedStrength) {
+      strength.value = savedStrength;
+    } else if (legacyTemperature) {
+      strength.value = String(Math.max(1, Math.min(10, Math.round(parseFloat(legacyTemperature) * 10) || 8)));
+    }
+    strengthValue.textContent = strength.value;
   }
   updateCounts();
 
@@ -220,7 +227,10 @@
     updateCounts();
     persistLocal();
   });
-  temperature.addEventListener("input", persistLocal);
+  strength.addEventListener("input", function () {
+    strengthValue.textContent = strength.value;
+    persistLocal();
+  });
 
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
@@ -238,7 +248,7 @@
     persistLocal();
 
     const body = new FormData(form);
-    body.set("temperature", temperature.value);
+    body.set("strength", strength.value);
 
     try {
       const response = await fetch("{% url 'humanize_ajax' %}", {
