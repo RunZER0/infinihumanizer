@@ -1,114 +1,92 @@
 {% extends "base.html" %}
 {% block title %}Humanizer - InfiniAI{% endblock %}
-{% block description %}Rewrite existing text in natural, economical prose while preserving its meaning.{% endblock %}
+{% block description %}Rewrite text sentence by sentence while preserving meaning.{% endblock %}
 
 {% block content %}
-<section class="humanizer-page">
-  <div class="shell humanizer-intro humanizer-intro-compact">
+<section class="humanizer-page humanizer-studio">
+  <div class="shell humanizer-studio-head">
     <div>
       <div class="eyebrow">Text Intelligence</div>
-      <h1 class="h1">Rewrite the text in natural prose.</h1>
-      <p class="lede">Keep the meaning. Improve the writing.</p>
+      <h1>Humanizer</h1>
+      <p>Sentence-level rewriting with the meaning kept intact.</p>
     </div>
-    <div class="humanizer-account">
-      <span class="micro">WORD BALANCE</span>
+    <div class="humanizer-account humanizer-account-inline">
+      <span class="micro">WORDS</span>
       <strong id="word-balance">{{ balance_label }}</strong>
       {% if user.is_authenticated %}
-      <a href="{% url 'platformhub:pricing' %}">Plans</a>
+      <a href="{% url 'platformhub:workspace' %}">Workspace</a>
       {% else %}
       <a href="{{ login_url }}">Sign in</a>
       {% endif %}
     </div>
   </div>
 
-  <div class="shell humanizer-workspace humanizer-workspace-compact">
-    <section class="editor-card editor-card-input">
-      <form id="humanize-form">
-        {% csrf_token %}
-        <div class="rewrite-toolbar">
-          <div class="editor-card-head editor-card-head-compact">
+  <div class="shell">
+    <div class="humanizer-surface">
+      <section class="humanizer-pane humanizer-source-pane">
+        <form id="humanize-form" class="humanizer-pane-form">
+          {% csrf_token %}
+          <div class="humanizer-pane-head">
             <div>
               <span class="micro">SOURCE</span>
-              <h2>Your text</h2>
+              <h2>Paste your text</h2>
             </div>
             <span class="editor-count" id="input-count">0 words</span>
           </div>
 
-          <label class="variation-control variation-control-inline" for="temperature">
-            <span class="variation-label"><strong>Variation</strong></span>
-            <span class="variation-range">
-              <span>Closer</span>
-              <input id="temperature" type="range" min="0.35" max="0.9" step="0.05" value="0.65" aria-label="Rewrite variation">
-              <span>Freer</span>
-            </span>
-          </label>
+          <textarea
+            id="input-text"
+            name="text"
+            maxlength="{{ max_chars }}"
+            placeholder="Paste or type here…"
+            aria-label="Text to rewrite"
+          >{% if initial_humanization %}{{ initial_humanization.source_text }}{% endif %}</textarea>
 
-          {% if engine_configured %}
-          <button class="btn btn-primary rewrite-button" id="humanize-button" type="submit">Rewrite</button>
-          {% else %}
-          <button class="btn rewrite-button" id="humanize-button" type="button" disabled>Service unavailable</button>
-          {% endif %}
+          <div class="humanizer-actionbar">
+            <label class="humanizer-variation" for="temperature">
+              <span>Variation</span>
+              <input id="temperature" type="range" min="0.35" max="0.9" step="0.05" value="0.65" aria-label="Rewrite variation">
+              <span class="micro">Closer&nbsp;&nbsp;↔&nbsp;&nbsp;Freer</span>
+            </label>
+            <button class="btn btn-primary humanizer-main-action" id="humanize-button" type="submit">
+              Rewrite
+              <span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section class="humanizer-pane humanizer-result-pane">
+        <div class="humanizer-pane-head">
+          <div>
+            <span class="micro">RESULT</span>
+            <h2>Rewritten text</h2>
+          </div>
+          <span class="editor-count" id="output-count">0 words</span>
         </div>
 
         <textarea
-          id="input-text"
-          name="text"
-          maxlength="{{ max_chars }}"
-          placeholder="Paste the text you want to rewrite."
-          aria-label="Text to rewrite"
-        >{% if initial_humanization %}{{ initial_humanization.source_text }}{% endif %}</textarea>
-      </form>
-    </section>
+          id="output-text"
+          placeholder="Your rewrite will appear here…"
+          aria-label="Rewritten output"
+        >{% if initial_humanization %}{{ initial_humanization.output_text }}{% endif %}</textarea>
 
-    <section class="editor-card editor-card-output">
-      <div class="editor-card-head">
-        <div>
-          <span class="micro">RESULT</span>
-          <h2>Rewritten text</h2>
+        <div class="humanizer-actionbar humanizer-result-actions">
+          <span id="tool-status" class="tool-status" aria-live="polite"></span>
+          <div class="humanizer-action-buttons">
+            <button class="btn btn-quiet" type="button" id="download-output" disabled>Download</button>
+            <button class="btn btn-ink" type="button" id="copy-output" disabled>Copy</button>
+          </div>
         </div>
-        <span class="editor-count" id="output-count">0 words</span>
-      </div>
-
-      <div class="output-wrap">
-        <textarea id="output-text" placeholder="Your rewritten text will appear here." aria-label="Rewritten output">{% if initial_humanization %}{{ initial_humanization.output_text }}{% endif %}</textarea>
-        <div class="output-empty" id="output-empty">
-          <span class="output-mark">Aa</span>
-          <p>The result will appear here.</p>
-        </div>
-      </div>
-
-      <div class="output-actions">
-        <span id="tool-status" class="tool-status" aria-live="polite">
-          {% if not engine_configured %}Add the OpenRouter API key to enable rewriting.{% endif %}
-        </span>
-        <div class="output-action-buttons">
-          {% if user.is_authenticated %}<button class="btn btn-quiet" type="button" id="save-output" disabled>Saved</button>{% endif %}
-          <button class="btn btn-quiet" type="button" id="copy-output" disabled>Copy</button>
-          <button class="btn btn-ink" type="button" id="download-output" disabled>Download</button>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <div class="shell humanizer-notes humanizer-notes-compact">
-    {% if not user.is_authenticated %}
-    <div>
-      <span class="micro">FREE USE</span>
-      <p>{{ anonymous_daily_limit }} words each day without an account.</p>
+      </section>
     </div>
-    {% else %}
-    <div>
-      <span class="micro">SAVED</span>
-      <p>Your rewrites are kept in your workspace and edited results save automatically.</p>
-    </div>
-    {% endif %}
-    <div>
-      <span class="micro">PRESERVES</span>
-      <p>Meaning, facts, quotations, citations and technical detail.</p>
-    </div>
-    <div>
-      <span class="micro">PER REWRITE</span>
-      <p>Up to {{ max_words|floatformat:0 }} words.</p>
+    <div class="humanizer-footnote">
+      {% if user.is_authenticated %}
+      <span>Rewrites and manual edits save automatically.</span>
+      {% else %}
+      <span>{{ anonymous_daily_limit }} free words per day without an account.</span>
+      {% endif %}
+      <span>Ctrl/⌘ + Enter to rewrite.</span>
     </div>
   </div>
 </section>
@@ -116,7 +94,7 @@
 <div class="tool-modal-backdrop" id="auth-modal" hidden>
   <section class="tool-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
     <button class="tool-modal-close" id="auth-modal-close" type="button" aria-label="Close">×</button>
-    <span class="micro">KEEP GOING</span>
+    <span class="micro">KEEP YOUR WORK</span>
     <h2 id="auth-modal-title">Save your rewrite.</h2>
     <p id="auth-modal-copy">Sign in to keep this rewrite in your account and continue from any device.</p>
     <div class="tool-modal-actions">
@@ -141,8 +119,6 @@
   const temperature = document.getElementById("temperature");
   const copyButton = document.getElementById("copy-output");
   const downloadButton = document.getElementById("download-output");
-  const saveButton = document.getElementById("save-output");
-  const emptyState = document.getElementById("output-empty");
   const modal = document.getElementById("auth-modal");
   const modalClose = document.getElementById("auth-modal-close");
   const modalTitle = document.getElementById("auth-modal-title");
@@ -152,10 +128,7 @@
   let saveTimer = null;
 
   const wordCount = (value) => (value.trim().match(/\S+/g) || []).length;
-
-  function csrfToken() {
-    return form.querySelector("[name=csrfmiddlewaretoken]").value;
-  }
+  const csrfToken = () => form.querySelector("[name=csrfmiddlewaretoken]").value;
 
   function updateCounts() {
     inputCount.textContent = wordCount(input.value).toLocaleString() + " words";
@@ -172,12 +145,8 @@
   function setResult(value) {
     output.value = value;
     updateCounts();
-    emptyState.hidden = Boolean(value);
-    copyButton.disabled = !value;
-    downloadButton.disabled = !value;
-    if (saveButton) saveButton.disabled = !value;
-    output.classList.toggle("has-output", Boolean(value));
-    if (value) output.scrollTop = 0;
+    copyButton.disabled = !value.trim();
+    downloadButton.disabled = !value.trim();
     persistLocal();
   }
 
@@ -191,7 +160,7 @@
       modalCopy.textContent = "Your free daily limit is used. Sign in to continue and save your progress.";
     } else {
       modalTitle.textContent = "Save your rewrite.";
-      modalCopy.textContent = "Sign in to keep this rewrite in your account. You can continue using the free daily balance without signing in.";
+      modalCopy.textContent = "Sign in to save this rewrite. Your free daily balance remains available without signing in.";
     }
   }
 
@@ -201,9 +170,37 @@
     document.body.classList.remove("modal-open");
   }
 
+  async function saveResult(forceCreate) {
+    if (!authenticated || !output.value.trim()) return;
+
+    const body = new FormData();
+    body.set("csrfmiddlewaretoken", csrfToken());
+    body.set("source_text", input.value);
+    body.set("output_text", output.value);
+    body.set("temperature", temperature.value);
+    if (!forceCreate && currentId) body.set("humanization_id", currentId);
+
+    try {
+      const response = await fetch("{% url 'save_humanization' %}", {
+        method: "POST",
+        body,
+        headers: {"X-CSRFToken": csrfToken()}
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Could not save.");
+      currentId = data.humanization_id;
+      sessionStorage.setItem("infiniai_humanizer_id", currentId);
+      sessionStorage.removeItem("infiniai_humanizer_pending_save");
+      status.textContent = "Saved";
+    } catch (error) {
+      status.textContent = "Could not save";
+    }
+  }
+
   const savedDraft = sessionStorage.getItem("infiniai_humanizer_draft");
   const savedOutput = sessionStorage.getItem("infiniai_humanizer_output");
   const savedTemperature = sessionStorage.getItem("infiniai_humanizer_temperature");
+
   if (serverId) {
     setResult(output.value);
     sessionStorage.setItem("infiniai_humanizer_id", serverId);
@@ -214,136 +211,103 @@
   }
   updateCounts();
 
+  if (authenticated && !serverId && savedOutput && sessionStorage.getItem("infiniai_humanizer_pending_save") === "true") {
+    currentId = "";
+    saveResult(true);
+  }
+
   input.addEventListener("input", function () {
     updateCounts();
     persistLocal();
   });
   temperature.addEventListener("input", persistLocal);
 
-  async function saveResult(forceCreate) {
-    if (!authenticated || !output.value.trim()) return;
-    const body = new FormData();
-    body.set("csrfmiddlewaretoken", csrfToken());
-    body.set("source_text", input.value);
-    body.set("output_text", output.value);
-    body.set("temperature", temperature.value);
-    if (!forceCreate && currentId) body.set("humanization_id", currentId);
+  form.addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-    if (saveButton) {
-      saveButton.disabled = true;
-      saveButton.textContent = "Saving…";
+    if (!input.value.trim()) {
+      status.textContent = "Paste text first";
+      input.focus();
+      return;
     }
+
+    button.disabled = true;
+    button.classList.add("is-working");
+    button.innerHTML = 'Rewriting<span aria-hidden="true">…</span>';
+    status.textContent = "Working…";
+    persistLocal();
+
+    const body = new FormData(form);
+    body.set("temperature", temperature.value);
+
     try {
-      const response = await fetch("{% url 'save_humanization' %}", {
+      const response = await fetch("{% url 'humanize_ajax' %}", {
         method: "POST",
         body,
         headers: {"X-CSRFToken": csrfToken()}
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Could not save this rewrite.");
-      currentId = data.humanization_id;
-      sessionStorage.setItem("infiniai_humanizer_id", currentId);
-      sessionStorage.removeItem("infiniai_humanizer_pending_save");
-      if (saveButton) saveButton.textContent = "Saved";
-      status.textContent = "Saved.";
-    } catch (error) {
-      if (saveButton) saveButton.textContent = "Save";
-      status.textContent = error.message;
-    } finally {
-      if (saveButton) saveButton.disabled = false;
-    }
-  }
 
-  if (authenticated && !serverId && savedOutput && sessionStorage.getItem("infiniai_humanizer_pending_save") === "true") {
-    currentId = "";
-    saveResult(true);
-  }
-
-  if (form && button && !button.disabled) {
-    form.addEventListener("submit", async function (event) {
-      event.preventDefault();
-      if (!input.value.trim()) {
-        status.textContent = "Paste some text first.";
-        input.focus();
-        return;
-      }
-
-      button.disabled = true;
-      button.classList.add("is-working");
-      button.textContent = "Rewriting…";
-      status.textContent = "Rewriting…";
-      persistLocal();
-
-      const body = new FormData(form);
-      body.set("temperature", temperature.value);
-
-      try {
-        const response = await fetch("{% url 'humanize_ajax' %}", {
-          method: "POST",
-          body,
-          headers: {"X-CSRFToken": csrfToken()}
-        });
-        const data = await response.json();
-        if (!response.ok) {
-          if (data.limit_reached) {
-            persistLocal();
-            sessionStorage.setItem("infiniai_humanizer_pending_save", "true");
-            showAuthModal(true);
-            return;
-          }
-          throw new Error(data.error || "The text could not be rewritten.");
-        }
-
-        currentId = data.humanization_id || "";
-        if (currentId) sessionStorage.setItem("infiniai_humanizer_id", currentId);
-        setResult(data.output_text || "");
-        document.getElementById("word-balance").textContent =
-          typeof data.word_balance === "number"
-            ? data.word_balance.toLocaleString()
-            : data.word_balance;
-        status.textContent = data.saved ? "Saved." : "Ready.";
-        if (!authenticated) {
+      if (!response.ok) {
+        if (data.limit_reached) {
           sessionStorage.setItem("infiniai_humanizer_pending_save", "true");
-          showAuthModal(data.anonymous_remaining === 0);
+          showAuthModal(true);
+          status.textContent = "";
+          return;
         }
-      } catch (error) {
-        status.textContent = error.message;
-      } finally {
-        button.disabled = false;
-        button.classList.remove("is-working");
-        button.textContent = "Rewrite";
+        throw new Error(data.error || "Service unavailable. Try again shortly.");
       }
-    });
-  }
+
+      currentId = data.humanization_id || "";
+      if (currentId) sessionStorage.setItem("infiniai_humanizer_id", currentId);
+      setResult(data.output_text || "");
+      document.getElementById("word-balance").textContent =
+        typeof data.word_balance === "number" ? data.word_balance.toLocaleString() : data.word_balance;
+      status.textContent = data.saved ? "Saved" : "Ready";
+
+      if (!authenticated) {
+        sessionStorage.setItem("infiniai_humanizer_pending_save", "true");
+        showAuthModal(data.anonymous_remaining === 0);
+      }
+    } catch (error) {
+      status.textContent = error.message || "Service unavailable. Try again shortly.";
+    } finally {
+      button.disabled = false;
+      button.classList.remove("is-working");
+      button.innerHTML = 'Rewrite <span aria-hidden="true">→</span>';
+    }
+  });
+
+  input.addEventListener("keydown", function (event) {
+    if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+      event.preventDefault();
+      form.requestSubmit();
+    }
+  });
 
   output.addEventListener("input", function () {
     updateCounts();
     persistLocal();
+
     if (!authenticated) {
       sessionStorage.setItem("infiniai_humanizer_pending_save", "true");
       return;
     }
-    if (saveButton) saveButton.textContent = "Unsaved";
-    window.clearTimeout(saveTimer);
-    saveTimer = window.setTimeout(function () { saveResult(false); }, 700);
-  });
 
-  if (saveButton) saveButton.addEventListener("click", function () { saveResult(false); });
-  modalClose.addEventListener("click", hideAuthModal);
-  modal.addEventListener("click", function (event) {
-    if (event.target === modal) hideAuthModal();
+    status.textContent = "Saving…";
+    window.clearTimeout(saveTimer);
+    saveTimer = window.setTimeout(function () { saveResult(false); }, 650);
   });
 
   copyButton.addEventListener("click", async function () {
-    if (!output.value) return;
+    if (!output.value.trim()) return;
     await navigator.clipboard.writeText(output.value);
-    const previous = copyButton.textContent;
     copyButton.textContent = "Copied";
-    setTimeout(() => { copyButton.textContent = previous; }, 1200);
+    window.setTimeout(function () { copyButton.textContent = "Copy"; }, 1100);
   });
 
   downloadButton.addEventListener("click", function () {
-    if (!output.value) return;
+    if (!output.value.trim()) return;
     const blob = new Blob([output.value], {type: "text/plain;charset=utf-8"});
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -351,6 +315,11 @@
     link.download = "infiniai-rewrite.txt";
     link.click();
     URL.revokeObjectURL(url);
+  });
+
+  modalClose.addEventListener("click", hideAuthModal);
+  modal.addEventListener("click", function (event) {
+    if (event.target === modal) hideAuthModal();
   });
 })();
 </script>
