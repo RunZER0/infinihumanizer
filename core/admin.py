@@ -3,8 +3,10 @@ from django.contrib import admin
 from django.contrib.auth.admin import GroupAdmin, UserAdmin
 from django.contrib.auth.models import Group, User
 from django.http import HttpResponseForbidden
-from django.shortcuts import redirect
-from django.urls import reverse
+from django.utils import timezone
+from django.utils.html import format_html
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import path, reverse
 
 from allauth.account.models import EmailAddress
 from allauth.socialaccount.models import SocialAccount
@@ -102,10 +104,72 @@ class ClientMessageInline(admin.TabularInline):
 
 
 class ClientConversationAdmin(OwnerModelAdmin):
-    list_display = ("user", "status", "updated_at")
+    list_display = ("user", "status", "updated_at", "open_chat")
     list_filter = ("status",)
     search_fields = ("user__email", "user__username", "subject")
     inlines = [ClientMessageInline]
+
+    def get_urls(self):
+        return [
+            path(
+                "<path:object_id>/chat/",
+                self.admin_site.admin_view(self.chat_view),
+                name="humanizer_clientconversation_chat",
+            ),
+        ] + super().get_urls()
+
+    @admin.display(description="Conversation")
+    def open_chat(self, obj):
+        url = reverse(
+            "infini_admin:humanizer_clientconversation_chat",
+            args=[obj.pk],
+        )
+        return format_html('<a href="{}">Open chat →</a>', url)
+
+    def chat_view(self, request, object_id):
+        conversation = get_object_or_404(ClientConversation, pk=object_id)
+
+        if request.method == "POST":
+            body = request.POST.get("message", "").strip()
+            if not body:
+                self.message_user(request, "Write a message before sending.", level="error")
+            elif len(body) > 5000:
+                self.message_user(request, "Keep the message under 5,000 characters.", level="error")
+            else:
+                ClientMessage.objects.create(
+                    conversation=conversation,
+                    author=request.user,
+                    sender="admin",
+                    body=body,
+                )
+                conversation.status = "open"
+                conversation.save(update_fields=["status", "updated_at"])
+                self.message_user(request, "Reply sent.")
+            return redirect(
+                reverse(
+                    "infini_admin:humanizer_clientconversation_chat",
+                    args=[conversation.pk],
+                )
+            )
+
+        conversation.messages.filter(
+            sender="client",
+            read_at__isnull=True,
+        ).update(read_at=timezone.now())
+
+        context = {
+            **self.admin_site.each_context(request),
+            "opts": self.model._meta,
+            "original": conversation,
+            "title": f"Chat with {conversation.user.email or conversation.user.username}",
+            "conversation": conversation,
+            "chat_messages": conversation.messages.select_related("author").all(),
+        }
+        return render(
+            request,
+            "admin/humanizer/clientconversation/chat.html",
+            context,
+        )
 
 
 class ClientMessageAdmin(OwnerModelAdmin):
