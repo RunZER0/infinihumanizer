@@ -81,6 +81,7 @@
         <div class="list-item">
           <strong>{{ item.output_text|truncatechars:92 }}</strong>
           <small>{{ item.input_words }} source words · Updated {{ item.updated_at|date:"M j, Y · H:i" }}</small>
+          <div style="margin-top:10px"><a class="btn btn-link" href="{% url 'humanizer' %}?saved={{ item.id }}">Open rewrite →</a></div>
         </div>
         {% empty %}
         <div class="list-item"><strong>No saved rewrites yet.</strong><small>Signed-in Humanizer rewrites appear here automatically.</small></div>
