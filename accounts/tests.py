@@ -14,6 +14,12 @@ class SignupViewTests(TestCase):
         response = self.client.get(self.signup_url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'account/signup.html')
+
+    def test_login_page_exposes_signup(self):
+        response = self.client.get(reverse('account_login'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, reverse('account_signup'))
+        self.assertContains(response, "Create account")
     
     def test_signup_creates_user_and_profile(self):
         """Test that signup creates both user and profile"""
@@ -25,9 +31,9 @@ class SignupViewTests(TestCase):
         
         response = self.client.post(self.signup_url, signup_data)
         
-        # Should redirect to humanizer after successful signup
+        # A real account lands in the client workspace.
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('humanizer'), fetch_redirect_response=False)
+        self.assertRedirects(response, reverse('platformhub:workspace'), fetch_redirect_response=False)
         
         # User should be created with auto-generated username
         user = User.objects.get(email='testuser@example.com')
