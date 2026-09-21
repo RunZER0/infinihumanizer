@@ -10,8 +10,8 @@ from openai import OpenAI
 MAX_INPUT_WORDS = 3000
 MAX_INPUT_CHARS = 18000
 
-DEFAULT_MODEL = "qwen/qwen3.7-flash"
-DEFAULT_FALLBACKS = ("qwen/qwen3.5-9b", "deepseek/deepseek-flash-latest")
+DEFAULT_MODEL = "deepseek/deepseek-v4-flash-0731"
+DEFAULT_FALLBACKS = ("qwen/qwen3.7-flash", "qwen/qwen3.5-9b")
 
 SYSTEM_PROMPT = """You are the InfiniAI rewriting engine.
 
@@ -96,6 +96,11 @@ def rewrite_text(text: str, temperature: float = 0.65) -> tuple[str, str]:
         extra_body={
             "models": fallbacks,
             "reasoning": {"enabled": False},
+            "provider": {
+                "sort": "throughput",
+                "data_collection": "deny",
+                "allow_fallbacks": True,
+            },
         },
     )
     content = response.choices[0].message.content if response.choices else ""
