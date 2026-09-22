@@ -203,15 +203,16 @@ class SentenceRuntimeTests(SimpleTestCase):
         self.assertFalse(valid)
         self.assertEqual(reason, "unchanged")
 
-    def test_strength8_strategy_is_stable_and_uses_lexical_anchors(self):
+    def test_strength8_strategy_is_semantic_not_mechanical(self):
         source = (
             "Judicial independence is commonly defended as a condition of the rule of law "
             "because courts must decide cases without improper pressure."
         )
-        first = transformation_instruction(source, 8)
-        second = transformation_instruction(source, 8)
-        self.assertEqual(first, second)
-        self.assertIn("exact source phrase", first)
+        instruction = transformation_instruction(source, 8)
+        self.assertIn("same semantic scope", instruction)
+        self.assertNotIn("exact source phrase", instruction)
+        self.assertNotIn("80%-130%", instruction)
+        self.assertNotIn("opening", instruction.lower())
 
     def test_strength8_rejects_colloquial_register_drift(self):
         valid, reason = validate_candidate(
@@ -221,6 +222,33 @@ class SentenceRuntimeTests(SimpleTestCase):
         )
         self.assertFalse(valid)
         self.assertEqual(reason, "register-drift")
+
+    def test_strength8_rejects_editorial_framing_not_in_source(self):
+        valid, reason = validate_candidate(
+            "Green space affects exposure to heat and opportunities for movement.",
+            "The real value of green space lies in how it affects exposure to heat and opportunities for movement.",
+            8,
+        )
+        self.assertFalse(valid)
+        self.assertEqual(reason, "editorial-framing")
+
+    def test_strength8_rejects_loss_of_modal_force(self):
+        valid, reason = validate_candidate(
+            "A person may be more likely to walk to a shop.",
+            "A person walks to a shop more often.",
+            8,
+        )
+        self.assertFalse(valid)
+        self.assertEqual(reason, "modal-drift")
+
+    def test_strength8_accepts_equivalent_modal_reconstruction(self):
+        valid, reason = validate_candidate(
+            "A person may be more likely to walk to a shop.",
+            "A person might be more inclined to walk to a shop.",
+            8,
+        )
+        self.assertTrue(valid)
+        self.assertEqual(reason, "ok")
 
     def test_strength8_accepts_rough_fragment_like_reconstruction(self):
         valid, reason = validate_candidate(
@@ -241,14 +269,15 @@ class SentenceRuntimeTests(SimpleTestCase):
         self.assertFalse(valid)
         self.assertEqual(reason, "length")
 
-    def test_strength8_strategy_does_not_force_large_expansion(self):
+    def test_strength8_strategy_does_not_force_length_or_opening(self):
         source = (
             "Public health is shaped by repeated habits, and the physical environment can "
             "either make those habits easier or place small obstacles in their way."
         )
         instruction = transformation_instruction(source, 8)
-        self.assertNotIn("145%-180%", instruction)
-        self.assertIn("80%-130%", instruction)
+        self.assertNotIn("%", instruction)
+        self.assertNotIn("opening", instruction.lower())
+        self.assertIn("same semantic scope", instruction)
 
     def test_strength8_rejects_overcompressed_developed_sentence(self):
         valid, reason = validate_candidate(
