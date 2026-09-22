@@ -707,6 +707,8 @@ Compare one source sentence with one transformed candidate.
 
 Keep the candidate unchanged when it already preserves the source proposition and has the intended rough, imperfect reconstruction style.
 
+Use the candidate as the base text. Do not move it back toward the source's original wording or word order merely to be safer. Make the smallest semantic correction needed while preserving the candidate's transformation distance.
+
 Revise only when the candidate:
 - adds information, interpretation, explanation, consequence, emphasis, or context;
 - changes certainty, modality, frequency, quantity, actor, action, object, cause, condition, contrast, or scope;
@@ -719,7 +721,8 @@ When revising:
 - preserve the candidate's non-polished, slightly awkward reconstruction style where possible;
 - do not make the sentence more elegant;
 - do not add new content;
-- do not return the source unchanged unless no genuine transformation is possible;
+- never restore the source sentence verbatim;
+- do not copy the source's original word order just to make the result safer;
 - preserve protected tokens such as __INF_P0__ exactly once;
 - never use an em dash.
 
@@ -780,7 +783,18 @@ Return exactly one transformed sentence with the same id."""
                 continue
             if item_id == task.id:
                 audited = str(item.get("text") or "").strip()
-                return audited or candidate
+                if not audited:
+                    return candidate
+                # The audit is allowed to correct semantic drift, not erase the
+                # transformation. Reject audit outputs that collapse back onto
+                # the source or become dramatically more source-like.
+                source_similarity = _similarity(task.protected, audited)
+                original_similarity = _similarity(task.protected, candidate)
+                if source_similarity >= 0.94:
+                    return candidate
+                if source_similarity - original_similarity > 0.18:
+                    return candidate
+                return audited
         return candidate
 
     def _payload(self, batch: list[SentenceTask], repair=False) -> dict:
