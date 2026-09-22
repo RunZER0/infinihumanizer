@@ -367,6 +367,81 @@ class SentenceRuntimeTests(SimpleTestCase):
         self.assertIn("do not return the source sentence verbatim", system)
         self.assertIn("explicit list items", system)
 
+    @override_settings(
+        HUMANIZER_BACKEND="openrouter",
+        OPENROUTER_API_KEY="test-key",
+    )
+    def test_forced_reconstruction_is_used_instead_of_source_fallback(self):
+        runtime = RewriteRuntime(8)
+        task = SentenceTask(
+            0,
+            "An older resident may use a shaded bench as part of a regular route.",
+            "An older resident may use a shaded bench as part of a regular route.",
+            (),
+        )
+        unchanged = {
+            "choices": [{"message": {"content": '{"rewrites":[{"id":0,"text":"An older resident may use a shaded bench as part of a regular route."}]}'}}],
+            "model": "test-model",
+        }
+        recovered = "For an older resident, a shaded bench may form part of a regular route."
+        try:
+            with patch.object(runtime, "_audit_candidate", side_effect=lambda task, value: value):
+                with patch.object(runtime, "_targeted_repair_candidate", return_value=None):
+                    with patch.object(runtime, "_forced_reconstruction", return_value=recovered) as forced:
+                        with patch.object(runtime, "_post", side_effect=[unchanged, unchanged, unchanged]):
+                            result, _ = runtime.rewrite_batch([task])
+        finally:
+            runtime.close()
+
+        forced.assert_called_once_with(task)
+        self.assertEqual(result[0], recovered)
+        self.assertNotEqual(result[0], task.source)
+
+    @override_settings(
+        HUMANIZER_BACKEND="openrouter",
+        OPENROUTER_API_KEY="test-key",
+    )
+    def test_forced_reconstruction_prompt_preserves_explicit_item_labels(self):
+        runtime = RewriteRuntime(8)
+        task = SentenceTask(
+            0,
+            "Libraries, clinics, bus stops, and community halls shape access to local services.",
+            "Libraries, clinics, bus stops, and community halls shape access to local services.",
+            (),
+        )
+        try:
+            payload = runtime._forced_reconstruction_payload(task, 1)
+        finally:
+            runtime.close()
+        system = payload["messages"][0]["content"]
+        self.assertIn("explicit list item", system)
+        self.assertIn("labels", system)
+        self.assertIn("slightly awkward", system)
+        self.assertIn("avoid polished editorial framing", system)
+
+    @override_settings(
+        HUMANIZER_BACKEND="openrouter",
+        OPENROUTER_API_KEY="test-key",
+    )
+    def test_semantic_audit_warns_against_renaming_list_categories(self):
+        runtime = RewriteRuntime(8)
+        task = SentenceTask(
+            0,
+            "Libraries, clinics, bus stops, and community halls shape access.",
+            "Libraries, clinics, bus stops, and community halls shape access.",
+            (),
+        )
+        try:
+            payload = runtime._audit_payload(
+                task,
+                "Book centres, health facilities, transit points, and public venues shape access.",
+            )
+        finally:
+            runtime.close()
+        system = payload["messages"][0]["content"]
+        self.assertIn("renames a comma-separated source item", system)
+        self.assertIn("preserve explicit item labels closely", system)
+
     def test_strength8_accepts_rough_fragment_like_reconstruction(self):
         valid, reason = validate_candidate(
             "Provenance work is therefore both historical and evidentiary.",
