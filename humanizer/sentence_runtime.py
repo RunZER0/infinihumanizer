@@ -110,7 +110,9 @@ def _lexical_anchors(source: str) -> list[str]:
         return []
 
     word_count = len(matches)
-    desired = 1 if word_count < 10 else 2 if word_count < 18 else 3
+    # The reference keeps lexical continuity, but not by freezing large pieces
+    # of every sentence. One or two anchors is enough.
+    desired = 0 if word_count < 7 else 1 if word_count < 18 else 2
     candidates = []
     for width in (3, 2):
         for i in range(0, word_count - width + 1):
@@ -146,13 +148,13 @@ def transformation_instruction(source: str, strength: int) -> str:
         return ""
 
     opening_bucket = _stable_bucket(source, "opening")
-    length_bucket = _stable_bucket(source, "length")
     anchors = _lexical_anchors(source)
+    source_words = len(source.split())
 
-    if opening_bucket < 40:
+    if opening_bucket < 35:
         opening = (
-            "Keep the original opening subject or opening phrase recognizable. "
-            "Do not invert the sentence merely to create difference."
+            "Keep the source opening subject or opening phrase recognizable. "
+            "Do not invert it merely to create difference."
         )
     else:
         opening = (
@@ -160,19 +162,23 @@ def transformation_instruction(source: str, strength: int) -> str:
             "but do not force a dramatic inversion."
         )
 
-    if length_bucket < 45:
-        length = "Keep the transformed sentence broadly similar in length to the source (roughly 90%-115%)."
-    elif length_bucket < 85:
-        length = "Allow moderate expansion rather than compression (roughly 115%-145% of source length)."
+    if source_words < 8:
+        length = (
+            "Keep the result concise. A short source may expand somewhat, but do not turn it "
+            "into an explanation or append a second restatement of the same idea."
+        )
     else:
-        length = "Allow a more noticeable expansion while preserving the same proposition (roughly 145%-180% of source length)."
+        length = (
+            "Stay close to the source's information density and overall size. Aim roughly for "
+            "80%-130% of its length; expand beyond that only when the reconstruction itself requires it."
+        )
 
     anchor_text = ""
     if anchors:
         quoted = ", ".join(json.dumps(x, ensure_ascii=False) for x in anchors)
         anchor_text = (
-            f" Retain these exact source phrases somewhere in the transformation: {quoted}. "
-            "They are lexical anchors, not a required sentence frame."
+            f" Retain these exact source phrase(s) where they fit naturally: {quoted}. "
+            "Do not repeat them elsewhere or build filler around them."
         )
 
     return opening + " " + length + anchor_text
@@ -342,7 +348,12 @@ def validate_candidate(source: str, candidate: str, strength: int) -> tuple[bool
     source_words = max(1, len(source.split()))
     ratio = len(candidate.split()) / source_words
     min_ratio = 0.55 if strength >= 7 else 0.50
-    max_ratio = 2.60 if strength >= 7 else 2.30 if source_words < 8 else 2.10
+    max_ratio = (
+        2.20 if strength >= 7 and source_words < 8
+        else 1.60 if strength >= 7
+        else 2.30 if source_words < 8
+        else 2.10
+    )
     if ratio < min_ratio or ratio > max_ratio:
         return False, "length"
     if len(split_sentences(candidate)[0]) > 1:
@@ -483,10 +494,13 @@ Transformation behavior:
 - Do not lower the register into conversational language. Prefer the same academic vocabulary level as the source.
 - Do not systematically improve vocabulary, coherence, rhythm, or academic style.
 - Do not systematically preserve or systematically replace every phrase. Retain enough source phrasing that the transformation still has lexical continuity with the original.
+- Do not append a clause that merely restates the same proposition in different words. Once the transformed sentence has carried the source meaning, stop.
+- Do not add intensifiers, evaluative framing, abstract commentary, or explanatory language that was not present in the source.
+- Prefer direct substitutions and imperfect restructuring over elaborate paraphrase.
 - Create roughness through imperfect restructuring, attachment, articles, prepositions, agreement, collocation, or clause formation rather than through slang or deliberately simplistic vocabulary.
 - At strengths 7-10, return a genuine transformation rather than the source unchanged when a plausible alternative exists.
 - A short source may become a short fragment-like reconstruction if that still conveys the proposition.
-- A developed source may expand or contract unevenly.
+- A developed source may expand or contract unevenly, but large expansion should be uncommon rather than the default.
 - Never use an em dash (—).
 
 Hard requirements:
