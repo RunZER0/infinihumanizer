@@ -1476,3 +1476,35 @@ body.modal-open{overflow:hidden}
     gap:8px;
   }
 }
+
+
+/* Quiet in-place contact flow */
+.contact-head-clean{padding-bottom:10px}
+.contact-head-clean .h1{margin-bottom:0}
+.contact-flow-shell{position:relative}
+.contact-flow-card{transition:opacity .16s ease,transform .16s ease}
+.contact-email-line{
+  margin:4px 0 24px;
+  color:var(--text-muted);
+  font-size:.86rem;
+}
+.contact-feedback{
+  margin:0 0 18px;
+  padding:10px 12px;
+  border:1px solid var(--line-subtle);
+  font-size:.8rem;
+}
+.contact-feedback.is-error{
+  border-color:rgba(180,55,41,.35);
+  color:#8e2f25;
+  background:rgba(180,55,41,.045);
+}
+.contact-feedback.is-ok{
+  color:var(--text-muted);
+  background:rgba(23,22,18,.025);
+}
+.contact-step-done{text-align:center;padding:24px 0}
+.contact-step-done h2{margin-bottom:8px}
+.contact-step-done p{margin:0;color:var(--text-muted)}
+.contact-step-form button[disabled],
+.contact-resend button[disabled]{opacity:.6;cursor:wait}
