@@ -55,11 +55,15 @@ class VerifiedEmailLoginView(LoginView):
             return super().form_valid(form)
 
         verification_required = getattr(settings, "ACCOUNT_EMAIL_VERIFICATION", "none") == "mandatory"
-        verified = EmailAddress.objects.filter(user=user, verified=True).exists()
+        verified = EmailAddress.objects.filter(
+            user=user,
+            email__iexact=(user.email or "").strip(),
+            verified=True,
+        ).exists()
 
         if verification_required and not verified:
             self.request.session["resend_email"] = user.email
-            messages.error(self.request, "Your email is not verified. Check your inbox or resend the link.")
+            messages.error(self.request, "Verify your email.")
             context = self.get_context_data(form=form)
             return render(self.request, self.template_name, context)
 
