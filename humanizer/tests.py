@@ -325,11 +325,11 @@ class SentenceRuntimeTests(SimpleTestCase):
             (),
         )
         unchanged = {
-            "choices": [{"message": {"content": '{"rewrites":[{"id":0,"text":"A person may use a safe route."}]'}}],
+            "choices": [{"message": {"content": '{"rewrites":[{"id":0,"text":"A person may use a safe route."}]}'}}],
             "model": "test-model",
         }
         recovered = {
-            "choices": [{"message": {"content": '{"rewrites":[{"id":0,"text":"A safe route may be used by a person."}]'}}],
+            "choices": [{"message": {"content": '{"rewrites":[{"id":0,"text":"A safe route may be used by a person."}]}'}}],
             "model": "test-model",
         }
         try:
