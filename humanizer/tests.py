@@ -225,8 +225,8 @@ class SentenceRuntimeTests(SimpleTestCase):
 
     def test_strength8_rejects_editorial_framing_not_in_source(self):
         valid, reason = validate_candidate(
-            "Green space affects exposure to heat and opportunities for movement.",
-            "The real value of green space lies in how it affects exposure to heat and opportunities for movement.",
+            "Green space affects heat exposure and opportunities for movement in cities.",
+            "The real value of green space lies in heat exposure and movement opportunities.",
             8,
         )
         self.assertFalse(valid)
