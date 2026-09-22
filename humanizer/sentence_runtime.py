@@ -108,7 +108,12 @@ _EDITORIAL_FRAMING = re.compile(
     r"it is essential to recognize)\b",
     re.I,
 )
-_MODAL_WORDS = {"may", "might", "can", "could", "should", "would", "must"}
+_MODAL_GROUPS = {
+    "possibility": {"may", "might", "could"},
+    "ability": {"can", "could"},
+    "obligation": {"should", "must"},
+    "conditional": {"would"},
+}
 
 
 def _stable_bucket(source: str, salt: str) -> int:
@@ -327,11 +332,12 @@ def _similarity(a: str, b: str) -> float:
     return SequenceMatcher(None, norm(a), norm(b)).ratio()
 
 
-def _modal_set(text: str) -> set[str]:
+def _modal_groups(text: str) -> set[str]:
+    tokens = {token.lower() for token in re.findall(r"\b[A-Za-z]+\b", text)}
     return {
-        token.lower()
-        for token in re.findall(r"\b[A-Za-z]+\b", text)
-        if token.lower() in _MODAL_WORDS
+        group
+        for group, words in _MODAL_GROUPS.items()
+        if tokens & words
     }
 
 
@@ -341,11 +347,10 @@ def _semantic_style_reason(source: str, candidate: str, strength: int) -> str | 
     if _EDITORIAL_FRAMING.search(candidate) and not _EDITORIAL_FRAMING.search(source):
         return "editorial-framing"
 
-    source_modals = _modal_set(source)
-    candidate_modals = _modal_set(candidate)
-    # Do not silently harden or soften an explicit modal claim. A transformed
-    # sentence can move the modal, but should normally keep its force visible.
-    if source_modals and not (source_modals & candidate_modals):
+    source_groups = _modal_groups(source)
+    candidate_groups = _modal_groups(candidate)
+    # Preserve semantic force rather than exact modal wording.
+    if source_groups and not (source_groups & candidate_groups):
         return "modal-drift"
     return None
 
