@@ -1,0 +1,16 @@
+name: Green Space Held-out Benchmark
+on:
+  push:
+    branches:
+      - benchmark/green-space-heldout-20260922
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - name: Run held-out benchmark against production
+        run: python .github/scripts/green_space_heldout.py
