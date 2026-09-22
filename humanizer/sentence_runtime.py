@@ -815,7 +815,11 @@ Return only the JSON inventory."""
         if cached is not None:
             return cached
 
-        raw = self._post(self._semantic_anchor_payload(task))
+        try:
+            raw = self._post(self._semantic_anchor_payload(task))
+        except Exception as exc:
+            logger.warning("Semantic inventory unavailable; continuing without anchors: %s", exc)
+            raw = {}
         choices = raw.get("choices") or []
         anchors: list[str] = []
         if choices:
