@@ -714,12 +714,15 @@ Revise only when the candidate:
 - changes certainty, modality, frequency, quantity, actor, action, object, cause, condition, contrast, or scope;
 - narrows a broad concept into a more specific one or replaces a concrete source item with a different category;
 - changes an explicit list item instead of only changing the grammar around the list;
+- renames a comma-separated source item into a related but different category; preserve explicit item labels closely;
+- compresses plain source wording into slick or editorially improved phrasing when the reference style would remain more literal or awkward;
 - introduces polished editorial framing or turns the sentence into a cleaner thesis;
 - changes the relationship between ideas.
 
 When revising:
 - keep exactly the source's semantic inventory;
 - preserve the candidate's non-polished, slightly awkward reconstruction style where possible;
+- if the candidate is unusually neat, idiomatic, compressed, or polished, make it more literal and reconstruction-like without adding errors on purpose;
 - do not make the sentence more elegant;
 - do not add new content;
 - never restore the source sentence verbatim;
@@ -763,6 +766,28 @@ Return exactly one transformed sentence with the same id."""
             {
                 "role": "assistant",
                 "content": json.dumps({"rewrites": [{"id": 0, "text": "Quality, availability, and maintenance affect access."}]}),
+            },
+            {
+                "role": "user",
+                "content": json.dumps({
+                    "source": {"id": 0, "text": "Libraries, clinics, bus stops, and community halls shape access to local services."},
+                    "candidate": {"id": 0, "text": "Book centres, health facilities, transit points, and public venues determine service access."},
+                }),
+            },
+            {
+                "role": "assistant",
+                "content": json.dumps({"rewrites": [{"id": 0, "text": "Libraries, clinics, bus stops, and community halls influence how local services are accessed."}]}),
+            },
+            {
+                "role": "user",
+                "content": json.dumps({
+                    "source": {"id": 0, "text": "The benefits of remote work depend on reliable communication, access, and support."},
+                    "candidate": {"id": 0, "text": "Remote-work benefits hinge on communication, access, and support."},
+                }),
+            },
+            {
+                "role": "assistant",
+                "content": json.dumps({"rewrites": [{"id": 0, "text": "The benefits of remote work will depend on communication that is reliable, access, and support."}]}),
             },
             {
                 "role": "user",
@@ -839,9 +864,10 @@ The source meaning is the authority. The candidate is useful only as evidence of
 Requirements:
 - preserve the source proposition, actors, actions, objects, causes, conditions, contrasts, lists, scope, and certainty;
 - preserve explicit broad categories instead of narrowing them;
-- preserve explicit list items as concepts, even if you rearrange them;
+- preserve explicit list items closely by their source labels; rearrange the list or grammar instead of renaming the items into related categories;
 - keep a real transformation in wording or clause arrangement;
-- ordinary or slightly awkward English is acceptable;
+- ordinary or slightly awkward English is acceptable and often preferable to a neat compressed paraphrase;
+- avoid slick idiomatic compression such as "hinge on", "stands as", or other editorial shorthand when a more literal reconstruction can express the same idea;
 - do not improve the argument, explain it, or add context;
 - do not return the source sentence verbatim;
 - do not introduce polished editorial framing;
@@ -927,6 +953,115 @@ Return exactly one sentence with the same id."""
                 text_value = str(item.get("text") or "").strip()
                 return text_value or None
         return None
+
+    def _forced_reconstruction_payload(self, task: SentenceTask, attempt: int) -> dict:
+        system = """Reconstruct one sentence from its meaning.
+
+This is a last-stage recovery for a transformation that failed earlier checks. Produce a genuine rewrite rather than the source sentence.
+
+Target writing behavior:
+- preserve the source proposition, semantic scope, certainty, relationships, and every explicit list item;
+- preserve the labels of explicit comma-separated items closely instead of replacing them with related categories;
+- say the same idea again in ordinary academic English without improving the argument;
+- allow slightly awkward, literal, uneven grammar when it arises naturally;
+- avoid polished editorial framing, slick compression, explanation, added context, and inferred consequences;
+- change wording or clause arrangement substantially enough that the result is not the source copied back;
+- do not deliberately add spelling mistakes or nonsense;
+- preserve protected tokens exactly once;
+- never use an em dash.
+
+Return exactly one transformed sentence with the same id."""
+
+        examples = [
+            (
+                "The policy covers equipment, software, and training.",
+                "Equipment, software, and training are all included under the policy.",
+            ),
+            (
+                "The social value of the program is difficult to measure, but it remains important.",
+                "The social benefit of the program is more difficult to measure, though it is still important.",
+            ),
+            (
+                "A tenant may use a shared entrance when the main gate is closed.",
+                "When the main gate is closed, the shared entrance may be used by a tenant.",
+            ),
+        ]
+        messages = [{"role": "system", "content": system}]
+        for source, rewrite in examples:
+            messages.append({
+                "role": "user",
+                "content": json.dumps({"sentences": [{"id": 0, "text": source}]}, ensure_ascii=False),
+            })
+            messages.append({
+                "role": "assistant",
+                "content": json.dumps({"rewrites": [{"id": 0, "text": rewrite}]}, ensure_ascii=False),
+            })
+        messages.append({
+            "role": "user",
+            "content": json.dumps(
+                {"sentences": [{"id": task.id, "text": task.protected}], "attempt": attempt},
+                ensure_ascii=False,
+            ),
+        })
+        payload = {
+            "model": self.model,
+            "messages": messages,
+            "temperature": min(0.62, 0.40 + 0.06 * attempt),
+            "top_p": 0.91,
+            "max_tokens": min(700, max(120, int(len(task.source.split()) * 2.4))),
+            "response_format": response_schema(),
+        }
+        if self.backend == "openrouter":
+            payload["provider"] = {
+                "sort": self.provider_sort,
+                "allow_fallbacks": True,
+                "require_parameters": True,
+                "data_collection": "deny",
+            }
+            if self.fallback_models:
+                payload["models"] = self.fallback_models
+        return payload
+
+    def _forced_reconstruction(self, task: SentenceTask) -> str:
+        last_reason = "recovery-failed"
+        for attempt in range(1, 4):
+            raw = self._post(self._forced_reconstruction_payload(task, attempt))
+            choices = raw.get("choices") or []
+            if not choices:
+                continue
+            content = ((choices[0].get("message") or {}).get("content") or "").strip()
+            try:
+                items = parse_json(content).get("rewrites")
+            except Exception:
+                continue
+            if not isinstance(items, list):
+                continue
+            for item in items:
+                if not isinstance(item, dict):
+                    continue
+                try:
+                    item_id = int(item.get("id"))
+                except (TypeError, ValueError):
+                    continue
+                if item_id != task.id:
+                    continue
+                protected_candidate = str(item.get("text") or "").strip()
+                if not protected_candidate:
+                    continue
+                try:
+                    protected_candidate = self._audit_candidate(task, protected_candidate)
+                except Exception as exc:
+                    logger.warning("Recovery semantic audit failed: %s", exc)
+                try:
+                    candidate = restore_sentence(protected_candidate, task.literals)
+                    candidate = remove_em_dashes(candidate)
+                except ValueError:
+                    last_reason = "protected-token"
+                    continue
+                valid, last_reason = validate_candidate(task.source, candidate, self.strength)
+                if valid:
+                    return candidate
+        raise RuntimeError(f"sentence recovery failed: {last_reason}")
 
     def _payload(self, batch: list[SentenceTask], repair=False) -> dict:
         messages = [{"role": "system", "content": system_prompt(self.strength)}]
@@ -1046,9 +1181,14 @@ Return exactly one sentence with the same id."""
                     reason = next_reason
 
         if missing:
-            for item_id in missing:
-                results[item_id] = remove_em_dashes(expected[item_id].source)
-            logger.warning("Preserved %d sentence(s) after targeted semantic repair failed.", len(missing))
+            for item_id in list(missing):
+                task = expected[item_id]
+                recovered = self._forced_reconstruction(task)
+                results[item_id] = recovered
+                missing.discard(item_id)
+                logger.info("Forced reconstruction recovered sentence id=%d", item_id)
+        if missing:
+            raise RuntimeError(f"Unable to transform {len(missing)} sentence(s) without source fallback.")
         return results, str(raw.get("model") or self.model)
 
     def run(self, tasks: list[SentenceTask]) -> tuple[dict[int, str], str]:
@@ -1065,8 +1205,13 @@ Return exactly one sentence with the same id."""
                 try:
                     task_results, model = future.result()
                 except Exception as exc:
-                    logger.warning("Rewrite sentence failed after retries: %s", exc)
-                    task_results = {task.id: remove_em_dashes(task.source)}
+                    logger.warning("Rewrite sentence failed after retries; forcing reconstruction: %s", exc)
+                    try:
+                        recovered = self._forced_reconstruction(task)
+                    except Exception as recovery_exc:
+                        logger.error("Sentence recovery failed: %s", recovery_exc)
+                        raise RuntimeError("The humanizer could not transform every sentence safely.") from recovery_exc
+                    task_results = {task.id: recovered}
                     model = self.model
                 results.update(task_results)
                 models.append(model)
