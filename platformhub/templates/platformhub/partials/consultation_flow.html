@@ -1,0 +1,102 @@
+<div class="contact-progress" aria-label="Contact progress">
+  <span class="{% if consult_step == 'name' %}is-current{% elif consult_name %}is-done{% endif %}">1</span>
+  <i></i>
+  <span class="{% if consult_step == 'email' or consult_step == 'verify' %}is-current{% elif consult_email_verified %}is-done{% endif %}">2</span>
+  <i></i>
+  <span class="{% if consult_step == 'details' or consult_step == 'done' %}is-current{% endif %}">3</span>
+</div>
+
+<div class="contact-flow-card">
+  {% if contact_feedback %}
+  <div class="contact-feedback {% if contact_feedback_level == 'error' %}is-error{% else %}is-ok{% endif %}" role="status">
+    {{ contact_feedback }}
+  </div>
+  {% endif %}
+
+  {% if consult_step == "name" %}
+  <div class="contact-step">
+    <span class="micro">NAME</span>
+    <h2>What should we call you?</h2>
+    <form method="post" class="form-stack contact-step-form" data-contact-form>
+      {% csrf_token %}
+      <input type="hidden" name="action" value="set_name">
+      <div class="field">
+        <label for="contact-name">Name</label>
+        <input id="contact-name" name="full_name" autocomplete="name" required autofocus>
+      </div>
+      <button class="btn btn-primary" type="submit">Continue</button>
+    </form>
+  </div>
+
+  {% elif consult_step == "email" %}
+  <div class="contact-step">
+    <span class="micro">EMAIL</span>
+    <h2>Your email</h2>
+    <form method="post" class="form-stack contact-step-form" data-contact-form>
+      {% csrf_token %}
+      <input type="hidden" name="action" value="set_email">
+      <div class="field">
+        <label for="contact-email">Email</label>
+        <input id="contact-email" type="email" name="email" autocomplete="email" required autofocus>
+      </div>
+      <button class="btn btn-primary" type="submit">Continue</button>
+    </form>
+  </div>
+
+  {% elif consult_step == "verify" %}
+  <div class="contact-step">
+    <span class="micro">CODE</span>
+    <h2>Enter the code</h2>
+    <div class="contact-email-line">{{ consult_email }}</div>
+    <form method="post" class="form-stack contact-step-form" data-contact-form>
+      {% csrf_token %}
+      <input type="hidden" name="action" value="verify_email">
+      <div class="field">
+        <label for="contact-code">Code</label>
+        <input id="contact-code" class="verification-code-input" name="code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required autofocus>
+      </div>
+      <button class="btn btn-primary" type="submit">Continue</button>
+    </form>
+    <form method="post" class="contact-resend" data-contact-form>
+      {% csrf_token %}
+      <input type="hidden" name="action" value="resend_code">
+      <button class="btn btn-link" type="submit">Resend code</button>
+    </form>
+  </div>
+
+  {% elif consult_step == "done" %}
+  <div class="contact-step contact-step-done">
+    <span class="micro">SENT</span>
+    <h2>Message sent.</h2>
+    {% if recent_consultation %}<p>{{ recent_consultation.reference }}</p>{% endif %}
+  </div>
+
+  {% else %}
+  <div class="contact-step contact-step-wide">
+    <div class="contact-identity">
+      <div>
+        <strong>{{ consult_name }}</strong>
+        <span>{{ consult_email }}</span>
+      </div>
+      {% if not user.is_authenticated %}
+      <a href="{% url 'account_login' %}?next={% url 'platformhub:consultation' %}">Sign in</a>
+      {% endif %}
+    </div>
+
+    <h2>Your message</h2>
+    <form method="post" class="form-stack contact-step-form" data-contact-form>
+      {% csrf_token %}
+      <input type="hidden" name="action" value="submit_note">
+      <div class="field">
+        <label for="contact-topic">Message</label>
+        <textarea id="contact-topic" name="topic" required autofocus></textarea>
+      </div>
+      <div class="field">
+        <label for="contact-company">Company or team <span class="help">(optional)</span></label>
+        <input id="contact-company" name="company" autocomplete="organization">
+      </div>
+      <button class="btn btn-primary" type="submit">Send</button>
+    </form>
+  </div>
+  {% endif %}
+</div>
