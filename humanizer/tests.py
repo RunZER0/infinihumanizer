@@ -250,6 +250,40 @@ class SentenceRuntimeTests(SimpleTestCase):
         self.assertTrue(valid)
         self.assertEqual(reason, "ok")
 
+    def test_strength8_rejects_new_quantifier(self):
+        valid, reason = validate_candidate(
+            "Dense urban districts retain heat because concrete absorbs solar energy.",
+            "In many urban districts, concrete retains heat because it absorbs solar energy.",
+            8,
+        )
+        self.assertFalse(valid)
+        self.assertEqual(reason, "quantifier-drift")
+
+    @override_settings(
+        HUMANIZER_BACKEND="openrouter",
+        OPENROUTER_API_KEY="test-key",
+    )
+    def test_semantic_audit_is_about_meaning_not_polish(self):
+        runtime = RewriteRuntime(8)
+        task = SentenceTask(
+            0,
+            "A person may use a shaded bench as part of a regular route.",
+            "A person may use a shaded bench as part of a regular route.",
+            (),
+        )
+        try:
+            payload = runtime._audit_payload(
+                task,
+                "A person might take a shaded bench as part of a usual route.",
+            )
+        finally:
+            runtime.close()
+        system = payload["messages"][0]["content"]
+        self.assertIn("semantic fidelity", system)
+        self.assertIn("do not make the sentence more elegant", system)
+        self.assertIn("certainty", system)
+        self.assertEqual(payload["temperature"], 0.20)
+
     def test_strength8_accepts_rough_fragment_like_reconstruction(self):
         valid, reason = validate_candidate(
             "Provenance work is therefore both historical and evidentiary.",

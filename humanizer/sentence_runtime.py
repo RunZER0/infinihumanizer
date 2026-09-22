@@ -114,6 +114,14 @@ _MODAL_GROUPS = {
     "obligation": {"should", "must"},
     "conditional": {"would"},
 }
+_QUANTIFIER_GROUPS = {
+    "many": {"many", "numerous", "most"},
+    "some": {"some", "several"},
+    "universal": {"all", "every", "always"},
+    "negative": {"never", "none"},
+    "frequent": {"often", "frequently", "usually", "regularly"},
+    "occasional": {"sometimes", "occasionally"},
+}
 
 
 def _stable_bucket(source: str, salt: str) -> int:
@@ -341,6 +349,15 @@ def _modal_groups(text: str) -> set[str]:
     }
 
 
+def _quantifier_groups(text: str) -> set[str]:
+    tokens = {token.lower() for token in re.findall(r"\b[A-Za-z]+\b", text)}
+    return {
+        group
+        for group, words in _QUANTIFIER_GROUPS.items()
+        if tokens & words
+    }
+
+
 def _semantic_style_reason(source: str, candidate: str, strength: int) -> str | None:
     if strength < 7:
         return None
@@ -352,6 +369,11 @@ def _semantic_style_reason(source: str, candidate: str, strength: int) -> str | 
     # Preserve semantic force rather than exact modal wording.
     if source_groups and not (source_groups & candidate_groups):
         return "modal-drift"
+
+    source_quantifiers = _quantifier_groups(source)
+    candidate_quantifiers = _quantifier_groups(candidate)
+    if candidate_quantifiers - source_quantifiers:
+        return "quantifier-drift"
     return None
 
 
@@ -678,6 +700,89 @@ class RewriteRuntime:
                 time.sleep(self._backoff(response, attempt))
         raise RuntimeError(last_error)
 
+    def _audit_payload(self, task: SentenceTask, candidate: str) -> dict:
+        system = """You are a semantic fidelity editor for a sentence transformation system.
+
+Compare one source sentence with one transformed candidate.
+
+Keep the candidate unchanged when it already preserves the source proposition and has the intended rough, imperfect reconstruction style.
+
+Revise only when the candidate:
+- adds information, interpretation, explanation, consequence, emphasis, or context;
+- changes certainty, modality, frequency, quantity, actor, action, object, cause, condition, contrast, or scope;
+- narrows a broad concept into a more specific one;
+- introduces polished editorial framing or turns the sentence into a cleaner thesis;
+- changes the relationship between ideas.
+
+When revising:
+- keep exactly the source's semantic inventory;
+- preserve the candidate's non-polished, slightly awkward reconstruction style where possible;
+- do not make the sentence more elegant;
+- do not add new content;
+- do not return the source unchanged unless no genuine transformation is possible;
+- preserve protected tokens such as __INF_P0__ exactly once;
+- never use an em dash.
+
+Return exactly one transformed sentence with the same id."""
+
+        messages = [
+            {"role": "system", "content": system},
+            {
+                "role": "user",
+                "content": json.dumps(
+                    {
+                        "source": {"id": task.id, "text": task.protected},
+                        "candidate": {"id": task.id, "text": candidate},
+                    },
+                    ensure_ascii=False,
+                ),
+            },
+        ]
+        payload = {
+            "model": self.model,
+            "messages": messages,
+            "temperature": 0.20,
+            "top_p": 0.86,
+            "max_tokens": min(700, max(120, int(len(task.source.split()) * 2.2))),
+            "response_format": response_schema(),
+        }
+        if self.backend == "openrouter":
+            payload["provider"] = {
+                "sort": self.provider_sort,
+                "allow_fallbacks": True,
+                "require_parameters": True,
+                "data_collection": "deny",
+            }
+            if self.fallback_models:
+                payload["models"] = self.fallback_models
+        return payload
+
+    def _audit_candidate(self, task: SentenceTask, candidate: str) -> str:
+        if self.strength < 7:
+            return candidate
+        raw = self._post(self._audit_payload(task, candidate))
+        choices = raw.get("choices") or []
+        if not choices:
+            return candidate
+        content = ((choices[0].get("message") or {}).get("content") or "").strip()
+        try:
+            items = parse_json(content).get("rewrites")
+        except Exception:
+            return candidate
+        if not isinstance(items, list):
+            return candidate
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            try:
+                item_id = int(item.get("id"))
+            except (TypeError, ValueError):
+                continue
+            if item_id == task.id:
+                audited = str(item.get("text") or "").strip()
+                return audited or candidate
+        return candidate
+
     def _payload(self, batch: list[SentenceTask], repair=False) -> dict:
         messages = [{"role": "system", "content": system_prompt(self.strength)}]
         messages.extend(few_shots(self.strength))
@@ -741,8 +846,14 @@ class RewriteRuntime:
             if item_id not in expected or item_id in results:
                 continue
             task = expected[item_id]
+            protected_candidate = str(item.get("text") or "").strip()
+            if self.strength >= 7 and protected_candidate:
+                try:
+                    protected_candidate = self._audit_candidate(task, protected_candidate)
+                except Exception as exc:
+                    logger.warning("Semantic audit failed; using generated candidate: %s", exc)
             try:
-                candidate = restore_sentence(str(item.get("text") or ""), task.literals)
+                candidate = restore_sentence(protected_candidate, task.literals)
                 candidate = remove_em_dashes(candidate)
             except ValueError:
                 continue
