@@ -981,6 +981,7 @@ Return exactly one sentence with the same id."""
 
         expected = {task.id: task for task in batch}
         results = {}
+        rejected = {}
         for item in items:
             if not isinstance(item, dict):
                 continue
@@ -1002,19 +1003,52 @@ Return exactly one sentence with the same id."""
                 candidate = remove_em_dashes(candidate)
             except ValueError:
                 continue
-            valid, _ = validate_candidate(task.source, candidate, self.strength)
+            valid, reason = validate_candidate(task.source, candidate, self.strength)
             if valid:
                 results[item_id] = candidate
+            else:
+                rejected[item_id] = (protected_candidate, reason)
 
         missing = set(expected) - set(results)
         if missing and not repair:
             return self.rewrite_batch(batch, repair=True)
         if missing and repair is True:
             return self.rewrite_batch(batch, repair="final")
+        if missing and repair == "final":
+            for item_id in list(missing):
+                task = expected[item_id]
+                rejected_item = rejected.get(item_id)
+                if not rejected_item:
+                    continue
+                protected_candidate, reason = rejected_item
+                for _ in range(2):
+                    try:
+                        repaired_protected = self._targeted_repair_candidate(task, protected_candidate, reason)
+                    except Exception as exc:
+                        logger.warning("Targeted semantic repair failed: %s", exc)
+                        break
+                    if not repaired_protected:
+                        break
+                    try:
+                        repaired = restore_sentence(repaired_protected, task.literals)
+                        repaired = remove_em_dashes(repaired)
+                    except ValueError:
+                        reason = "protected-token"
+                        protected_candidate = repaired_protected
+                        continue
+                    valid, next_reason = validate_candidate(task.source, repaired, self.strength)
+                    if valid:
+                        results[item_id] = repaired
+                        missing.discard(item_id)
+                        logger.info("Targeted semantic repair recovered sentence reason=%s", reason)
+                        break
+                    protected_candidate = repaired_protected
+                    reason = next_reason
+
         if missing:
             for item_id in missing:
                 results[item_id] = remove_em_dashes(expected[item_id].source)
-            logger.warning("Preserved %d sentence(s) after rewrite validation failed.", len(missing))
+            logger.warning("Preserved %d sentence(s) after targeted semantic repair failed.", len(missing))
         return results, str(raw.get("model") or self.model)
 
     def run(self, tasks: list[SentenceTask]) -> tuple[dict[int, str], str]:
