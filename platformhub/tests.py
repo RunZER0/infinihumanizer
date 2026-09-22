@@ -102,6 +102,62 @@ class PublicJourneyTests(TestCase):
         page = self.client.get(reverse("platformhub:consultation"))
         self.assertContains(page, "Check your inbox.")
 
+    @patch("platformhub.views.issue_email_code")
+    def test_contact_email_step_updates_in_place(self, issue_code):
+        issue_code.return_value = (object(), True)
+        session = self.client.session
+        session["infini_consult_name"] = "Potential client"
+        session.save()
+
+        response = self.client.post(
+            reverse("platformhub:consultation"),
+            {
+                "action": "set_email",
+                "email": "client@example.com",
+            },
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload["step"], "verify")
+        self.assertIn("Enter the code", payload["html"])
+        self.assertNotIn("We verify", payload["html"])
+        self.assertNotIn("WHY VERIFY", payload["html"])
+
+    @patch("platformhub.views.verify_email_code", return_value=(True, ""))
+    def test_contact_code_verification_does_not_reload_page(self, verify_code):
+        session = self.client.session
+        session["infini_consult_name"] = "Potential client"
+        session["infini_consult_email"] = "client@example.com"
+        session.save()
+
+        response = self.client.post(
+            reverse("platformhub:consultation"),
+            {
+                "action": "verify_email",
+                "code": "123456",
+            },
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload["step"], "details")
+        self.assertIn("Your message", payload["html"])
+        verify_code.assert_called_once_with("client@example.com", "123456")
+
+    def test_contact_page_has_no_verification_narration(self):
+        session = self.client.session
+        session["infini_consult_name"] = "Potential client"
+        session.save()
+
+        response = self.client.get(reverse("platformhub:consultation"))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, "We verify")
+        self.assertNotContains(response, "WHY VERIFY")
+        self.assertNotContains(response, "Temporary and disposable")
+
     def test_first_contact_rejects_disposable_email(self):
         session = self.client.session
         session["infini_consult_name"] = "Potential client"
