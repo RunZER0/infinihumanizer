@@ -13,6 +13,7 @@ from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.mail import EmailMessage
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
@@ -189,103 +190,232 @@ def request_success(request, request_id):
     return render(request, "platformhub/request_success.html", {"item": item})
 
 
+def _consultation_state(request, *, submitted=False, feedback="", feedback_level=""):
+    name_key = "infini_consult_name"
+    email_key = "infini_consult_email"
+
+    if request.user.is_authenticated and request.user.email:
+        account_email = request.user.email.strip().lower()
+        verified_account_email = EmailAddress.objects.filter(
+            user=request.user,
+            email__iexact=account_email,
+            verified=True,
+        ).exists()
+        if verified_account_email:
+            request.session[name_key] = (
+                request.user.get_full_name() or request.user.username
+            )
+            request.session[email_key] = account_email
+            mark_session_email_verified(request, account_email)
+
+    full_name = request.session.get(name_key, "")
+    email = request.session.get(email_key, "")
+    verified = bool(email and session_email_is_verified(request, email))
+
+    if submitted:
+        step = "done"
+    elif request.user.is_authenticated and verified:
+        step = "details"
+    elif not full_name:
+        step = "name"
+    elif not email:
+        step = "email"
+    elif not verified:
+        step = "verify"
+    else:
+        step = "details"
+
+    consultation_id = request.session.get("consultation_id")
+    recent_consultation = (
+        Consultation.objects.filter(id=consultation_id).first()
+        if consultation_id
+        else None
+    )
+
+    return {
+        "recent_consultation": recent_consultation,
+        "consult_step": step,
+        "consult_name": full_name,
+        "consult_email": email,
+        "consult_email_verified": verified,
+        "contact_feedback": feedback,
+        "contact_feedback_level": feedback_level,
+    }
+
+
+def _consultation_reply(
+    request,
+    *,
+    submitted=False,
+    feedback="",
+    feedback_level="",
+):
+    context = _consultation_state(
+        request,
+        submitted=submitted,
+        feedback=feedback,
+        feedback_level=feedback_level,
+    )
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return JsonResponse({
+            "ok": feedback_level != "error",
+            "step": context["consult_step"],
+            "submitted": submitted,
+            "html": render_to_string(
+                "platformhub/partials/consultation_flow.html",
+                context,
+                request=request,
+            ),
+        })
+
+    if feedback:
+        if feedback_level == "error":
+            messages.error(request, feedback)
+        elif feedback_level == "success":
+            messages.success(request, feedback)
+        else:
+            messages.info(request, feedback)
+    return redirect("platformhub:consultation")
+
+
 @require_http_methods(["GET", "POST"])
 def consultation(request):
     name_key = "infini_consult_name"
     email_key = "infini_consult_email"
 
-    if request.user.is_authenticated and request.user.email:
-        verified_account_email = EmailAddress.objects.filter(
-            user=request.user,
-            email__iexact=request.user.email,
-            verified=True,
-        ).exists()
-        if verified_account_email:
-            request.session[name_key] = request.user.get_full_name() or request.user.username
-            request.session[email_key] = request.user.email.lower()
-            mark_session_email_verified(request, request.user.email)
+    if request.method == "POST":
+        action = request.POST.get("action", "").strip()
 
-    action = request.POST.get("action", "").strip() if request.method == "POST" else ""
-
-    if action == "set_name":
-        full_name = request.POST.get("full_name", "").strip()
-        if len(full_name) < 2:
-            messages.error(request, "Enter your name.")
-        else:
+        if action == "set_name":
+            full_name = request.POST.get("full_name", "").strip()
+            if len(full_name) < 2:
+                return _consultation_reply(
+                    request,
+                    feedback="Enter your name.",
+                    feedback_level="error",
+                )
             request.session[name_key] = full_name
             request.session.modified = True
-            return redirect("platformhub:consultation")
+            return _consultation_reply(request)
 
-    elif action == "set_email":
-        raw_email = request.POST.get("email", "")
-        try:
-            email = normalize_email(raw_email)
-        except ValidationError:
-            messages.error(request, "Enter a valid email address.")
-        else:
-            if is_disposable_address(email):
-                messages.error(request, "Use a permanent email address.")
-            else:
-                request.session[email_key] = email
-                request.session.modified = True
-                if session_email_is_verified(request, email):
-                    return redirect("platformhub:consultation")
-                try:
-                    _, sent = issue_email_code(
-                        email,
-                        request.session.get(name_key, ""),
-                    )
-                    if sent:
-                        messages.success(request, "We sent a six-digit code to your email.")
-                    else:
-                        messages.info(request, "A code was sent recently. Check your inbox.")
-                    return redirect("platformhub:consultation")
-                except Exception:
-                    logger.exception("Could not send consultation verification code to %s", email)
-                    messages.error(request, "We could not send the verification code. Try again shortly.")
-
-    elif action == "verify_email":
-        email = request.session.get(email_key, "")
-        code = request.POST.get("code", "").strip()
-        if not email:
-            messages.error(request, "Enter your email first.")
-        else:
-            ok, error = verify_email_code(email, code)
-            if ok:
-                mark_session_email_verified(request, email)
-                messages.success(request, "Email verified.")
-                return redirect("platformhub:consultation")
-            messages.error(request, error)
-
-    elif action == "resend_code":
-        email = request.session.get(email_key, "")
-        if not email:
-            messages.error(request, "Enter your email first.")
-        else:
+        if action == "set_email":
             try:
-                _, sent = issue_email_code(email, request.session.get(name_key, ""))
-                if sent:
-                    messages.success(request, "A new code is on the way.")
-                else:
-                    messages.info(request, "A code was sent recently. Check your inbox.")
-            except Exception:
-                logger.exception("Could not resend consultation verification code to %s", email)
-                messages.error(request, "We could not send another code. Try again shortly.")
-        return redirect("platformhub:consultation")
+                email = normalize_email(request.POST.get("email", ""))
+            except ValidationError:
+                return _consultation_reply(
+                    request,
+                    feedback="Enter a valid email address.",
+                    feedback_level="error",
+                )
 
-    elif action == "submit_note":
-        full_name = request.session.get(name_key, "").strip()
-        email = request.session.get(email_key, "").strip().lower()
-        topic = request.POST.get("topic", "").strip()
-        if not full_name or not email:
-            messages.error(request, "Complete your contact details first.")
-            return redirect("platformhub:consultation")
-        if not session_email_is_verified(request, email):
-            messages.error(request, "Verify your email before sending the note.")
-            return redirect("platformhub:consultation")
-        if not topic:
-            messages.error(request, "Tell us what you are trying to work out.")
-        else:
+            if is_disposable_address(email):
+                return _consultation_reply(
+                    request,
+                    feedback="Use a permanent email address.",
+                    feedback_level="error",
+                )
+
+            request.session[email_key] = email
+            request.session.modified = True
+
+            if session_email_is_verified(request, email):
+                return _consultation_reply(request)
+
+            try:
+                issue_email_code(
+                    email,
+                    request.session.get(name_key, ""),
+                )
+            except Exception:
+                logger.exception(
+                    "Could not send consultation verification code to %s",
+                    email,
+                )
+                return _consultation_reply(
+                    request,
+                    feedback="Could not send the code. Try again.",
+                    feedback_level="error",
+                )
+            return _consultation_reply(request)
+
+        if action == "verify_email":
+            email = request.session.get(email_key, "")
+            if not email:
+                return _consultation_reply(
+                    request,
+                    feedback="Enter your email first.",
+                    feedback_level="error",
+                )
+
+            ok, error = verify_email_code(
+                email,
+                request.POST.get("code", "").strip(),
+            )
+            if not ok:
+                return _consultation_reply(
+                    request,
+                    feedback=error,
+                    feedback_level="error",
+                )
+
+            mark_session_email_verified(request, email)
+            return _consultation_reply(request)
+
+        if action == "resend_code":
+            email = request.session.get(email_key, "")
+            if not email:
+                return _consultation_reply(
+                    request,
+                    feedback="Enter your email first.",
+                    feedback_level="error",
+                )
+
+            try:
+                _, sent = issue_email_code(
+                    email,
+                    request.session.get(name_key, ""),
+                )
+            except Exception:
+                logger.exception(
+                    "Could not resend consultation verification code to %s",
+                    email,
+                )
+                return _consultation_reply(
+                    request,
+                    feedback="Could not send another code. Try again.",
+                    feedback_level="error",
+                )
+
+            return _consultation_reply(
+                request,
+                feedback="Sent." if sent else "Check your inbox.",
+                feedback_level="success",
+            )
+
+        if action == "submit_note":
+            full_name = request.session.get(name_key, "").strip()
+            email = request.session.get(email_key, "").strip().lower()
+            topic = request.POST.get("topic", "").strip()
+
+            if not full_name or not email:
+                return _consultation_reply(
+                    request,
+                    feedback="Complete your contact details.",
+                    feedback_level="error",
+                )
+            if not session_email_is_verified(request, email):
+                return _consultation_reply(
+                    request,
+                    feedback="Enter the code first.",
+                    feedback_level="error",
+                )
+            if not topic:
+                return _consultation_reply(
+                    request,
+                    feedback="Enter your message.",
+                    feedback_level="error",
+                )
+
             item = Consultation.objects.create(
                 user=request.user if request.user.is_authenticated else None,
                 full_name=full_name,
@@ -295,6 +425,7 @@ def consultation(request):
             )
             request.session["consultation_reference"] = item.reference
             request.session["consultation_id"] = str(item.id)
+
             try:
                 message = EmailMessage(
                     subject=f"InfiniAI enquiry {item.reference}: {item.full_name}",
@@ -315,37 +446,20 @@ def consultation(request):
                     "Consultation %s was stored but email notification failed",
                     item.reference,
                 )
-            messages.success(request, "Your note is in. We will follow up by email.")
-            return redirect("platformhub:consultation")
 
-    consultation_id = request.session.get("consultation_id")
-    recent_consultation = (
-        Consultation.objects.filter(id=consultation_id).first()
-        if consultation_id
-        else None
+            return _consultation_reply(request, submitted=True)
+
+        return _consultation_reply(
+            request,
+            feedback="Try again.",
+            feedback_level="error",
+        )
+
+    return render(
+        request,
+        "platformhub/consultation.html",
+        _consultation_state(request),
     )
-    full_name = request.session.get(name_key, "")
-    email = request.session.get(email_key, "")
-    verified = bool(email and session_email_is_verified(request, email))
-
-    if request.user.is_authenticated and verified:
-        step = "details"
-    elif not full_name:
-        step = "name"
-    elif not email:
-        step = "email"
-    elif not verified:
-        step = "verify"
-    else:
-        step = "details"
-
-    return render(request, "platformhub/consultation.html", {
-        "recent_consultation": recent_consultation,
-        "consult_step": step,
-        "consult_name": full_name,
-        "consult_email": email,
-        "consult_email_verified": verified,
-    })
 
 
 def _can_view_request(request, item):
