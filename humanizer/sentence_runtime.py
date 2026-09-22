@@ -112,7 +112,7 @@ def _lexical_anchors(source: str) -> list[str]:
     word_count = len(matches)
     # The reference keeps lexical continuity, but not by freezing large pieces
     # of every sentence. One or two anchors is enough.
-    desired = 0 if word_count < 7 else 1 if word_count < 18 else 2
+    desired = 0 if word_count < 7 else 1
     candidates = []
     for width in (3, 2):
         for i in range(0, word_count - width + 1):
@@ -151,14 +151,14 @@ def transformation_instruction(source: str, strength: int) -> str:
     anchors = _lexical_anchors(source)
     source_words = len(source.split())
 
-    if opening_bucket < 35:
+    if opening_bucket < 25:
         opening = (
             "Keep the source opening subject or opening phrase recognizable. "
             "Do not invert it merely to create difference."
         )
     else:
         opening = (
-            "You may change the opening or clause order if it arises naturally, "
+            "Prefer changing the opening or clause order when it can be done without adding information, "
             "but do not force a dramatic inversion."
         )
 
@@ -402,36 +402,36 @@ def few_shots(strength: int) -> list[dict]:
         ],
         "deep": [
             (
-                "That view understates its role in the daily functioning of a city.",
-                "It is a minimalistic perspective of its contribution to the workings of a city.",
+                "The most important form of judicial independence concerns the substance of decision-making.",
+                "The most fundamental of judicial independence is in substance.",
             ),
             (
-                "Their value is therefore not limited to beauty.",
-                "Beauty is not the only value of theirs.",
+                "These arrangements do not guarantee good judging, but they help create an institutional environment in which legal reasoning can take priority over personal survival.",
+                "These do not ensure good judging, but do help to establish an atmosphere that can become institutionalized so that legal reasoning can be paramount over survival.",
             ),
             (
-                "Public health is shaped by repeated habits, and the physical environment can either make those habits easier or place small obstacles in their way.",
-                "Repeated habits form public health and the physical environment either makes it easy or adds a few hurdles.",
+                "Transparency can reinforce accountability, but it has limits.",
+                "Transparency can help increase accountability, but can't do everything.",
             ),
             (
-                "Counting hectares alone can therefore produce a misleading picture.",
-                "The simple measure of hectares can therefore give misleading impression.",
+                "Culture is often described through values statements, but employees learn it through repeated practices.",
+                "Culture is usually grained on values statements, but it is delivered via repetition of practices.",
             ),
             (
-                "Street trees improve routes rather than destinations.",
-                "Street trees enhance pathways, not places.",
+                "Remote onboarding therefore requires more structure than many organizations initially expect.",
+                "There is a higher level of structure needed for remote onboarding than many organizations realize.",
             ),
             (
-                "Long-term maintenance is another test of whether green infrastructure is being treated seriously.",
-                "Another sign of commitment to green infrastructure is the long-term maintenance.",
-            ),
-            (
-                "Evaluation should also examine who actually uses a space after it is completed.",
-                "Another aspect of evaluation to consider is who really uses an area once it is finished.",
+                "The history of an object should include more than the date on which a museum acquired it.",
+                "The information about an object's history should not be limited to the date when it was acquired by a museum.",
             ),
             (
                 "Provenance work is therefore both historical and evidentiary.",
                 "Historical and evidentiary, hence the term provenance work.",
+            ),
+            (
+                "This distinction is essential.",
+                "This separation is vitally important.",
             ),
         ],
     }
@@ -486,6 +486,8 @@ Semantic boundary:
 - Use only information present in the source sentence.
 - Do not import neighboring context, examples, explanations, motivations, or consequences.
 - Do not narrow a broad concept into a specific example that the source did not provide.
+- Preserve the source's level of generality. Do not replace "organized recreation" with "organized sports", "outside" with "green space", "private interests" with "corporations", or make similar broad-to-narrow substitutions.
+- Do not import nouns or topical labels from the few-shot examples. The examples demonstrate transformation behavior only, never subject matter.
 - Preserve every item in an explicit enumeration or coordinated list.
 - Protected tokens such as __INF_P0__ must appear exactly once and unchanged.
 
@@ -495,6 +497,7 @@ Transformation behavior:
 - Do not systematically improve vocabulary, coherence, rhythm, or academic style.
 - Do not systematically preserve or systematically replace every phrase. Retain enough source phrasing that the transformation still has lexical continuity with the original.
 - Do not append a clause that merely restates the same proposition in different words. Once the transformed sentence has carried the source meaning, stop.
+- Do not repeat a source idea twice using two different phrasings in the same output.
 - Do not add intensifiers, evaluative framing, abstract commentary, or explanatory language that was not present in the source.
 - Prefer direct substitutions and imperfect restructuring over elaborate paraphrase.
 - Create roughness through imperfect restructuring, attachment, articles, prepositions, agreement, collocation, or clause formation rather than through slang or deliberately simplistic vocabulary.
@@ -680,6 +683,11 @@ class RewriteRuntime:
                 " The previous output failed structural validation. Preserve the proposition, academic register, "
                 "lexical anchors, and every protected token, but do not polish the language merely because the transformed wording is awkward."
             )
+        if repair == "final":
+            instruction += (
+                " A previous repair also failed. Do not return the source unchanged. Rebuild the sentence with a different opening "
+                "or clause arrangement while keeping exactly the same information and level of generality."
+            )
         data = {"sentences": [{"id": item.id, "text": item.protected} for item in batch]}
         messages.append({"role": "user", "content": instruction + "\n" + json.dumps(data, ensure_ascii=False)})
         words = sum(len(task.source.split()) for task in batch)
@@ -736,6 +744,8 @@ class RewriteRuntime:
         missing = set(expected) - set(results)
         if missing and not repair:
             return self.rewrite_batch(batch, repair=True)
+        if missing and repair is True:
+            return self.rewrite_batch(batch, repair="final")
         if missing:
             for item_id in missing:
                 results[item_id] = remove_em_dashes(expected[item_id].source)
