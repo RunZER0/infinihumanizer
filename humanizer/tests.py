@@ -211,7 +211,7 @@ class SentenceRuntimeTests(SimpleTestCase):
         first = transformation_instruction(source, 8)
         second = transformation_instruction(source, 8)
         self.assertEqual(first, second)
-        self.assertIn("exact source phrases", first)
+        self.assertIn("exact source phrase", first)
 
     def test_strength8_rejects_colloquial_register_drift(self):
         valid, reason = validate_candidate(
@@ -230,6 +230,25 @@ class SentenceRuntimeTests(SimpleTestCase):
         )
         self.assertTrue(valid)
         self.assertEqual(reason, "ok")
+
+    def test_strength8_rejects_padded_developed_sentence(self):
+        source = "The strongest case for urban green space is practical rather than decorative."
+        candidate = (
+            "The strongest case for urban green space is practical rather than decorative, "
+            "and this practical value is therefore the main reason why the space matters in cities today."
+        )
+        valid, reason = validate_candidate(source, candidate, 8)
+        self.assertFalse(valid)
+        self.assertEqual(reason, "length")
+
+    def test_strength8_strategy_does_not_force_large_expansion(self):
+        source = (
+            "Public health is shaped by repeated habits, and the physical environment can "
+            "either make those habits easier or place small obstacles in their way."
+        )
+        instruction = transformation_instruction(source, 8)
+        self.assertNotIn("145%-180%", instruction)
+        self.assertIn("80%-130%", instruction)
 
     def test_strength8_rejects_overcompressed_developed_sentence(self):
         valid, reason = validate_candidate(
