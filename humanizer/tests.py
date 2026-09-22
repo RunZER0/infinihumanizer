@@ -470,6 +470,96 @@ class SentenceRuntimeTests(SimpleTestCase):
         self.assertEqual(user_data["previous_failure"], "modal-drift")
         self.assertIn("may", user_data["semantic_requirements"]["required_modal_words"])
 
+    def test_strength8_rejects_markdown_artifact(self):
+        valid, reason = validate_candidate(
+            "A person may use a safe walking route.",
+            "A person **could** use a safe walking route.",
+            8,
+        )
+        self.assertFalse(valid)
+        self.assertEqual(reason, "formatting-artifact")
+
+    def test_strength8_rejects_polished_hinge_on_framing(self):
+        valid, reason = validate_candidate(
+            "The benefits depend on quality, accessibility, and maintenance.",
+            "The benefits hinge on quality, accessibility, and maintenance.",
+            8,
+        )
+        self.assertFalse(valid)
+        self.assertEqual(reason, "editorial-framing")
+
+    @override_settings(
+        HUMANIZER_BACKEND="openrouter",
+        OPENROUTER_API_KEY="test-key",
+    )
+    def test_semantic_inventory_accepts_only_exact_source_anchors_and_caches(self):
+        runtime = RewriteRuntime(8)
+        task = SentenceTask(
+            0,
+            "Libraries, clinics, bus stops, and community halls shape access.",
+            "Libraries, clinics, bus stops, and community halls shape access.",
+            (),
+        )
+        fake = {
+            "choices": [{
+                "message": {
+                    "content": json.dumps({
+                        "anchors": ["Libraries", "clinics", "bus stops", "community halls", "hospitals"]
+                    })
+                }
+            }],
+            "model": "test-model",
+        }
+        try:
+            with patch.object(runtime, "_post", return_value=fake) as post:
+                first = runtime._semantic_anchors(task)
+                second = runtime._semantic_anchors(task)
+        finally:
+            runtime.close()
+        self.assertEqual(first, ("Libraries", "clinics", "bus stops", "community halls"))
+        self.assertEqual(second, first)
+        post.assert_called_once()
+
+    @override_settings(
+        HUMANIZER_BACKEND="openrouter",
+        OPENROUTER_API_KEY="test-key",
+    )
+    def test_primary_payload_carries_semantic_inventory(self):
+        runtime = RewriteRuntime(8)
+        task = SentenceTask(
+            0,
+            "Roads, roofs, and concrete retain heat.",
+            "Roads, roofs, and concrete retain heat.",
+            (),
+        )
+        try:
+            with patch.object(runtime, "_semantic_anchors", return_value=("Roads", "roofs", "concrete")):
+                payload = runtime._payload([task])
+        finally:
+            runtime.close()
+        user_content = payload["messages"][-1]["content"]
+        self.assertIn('"semantic_anchors": ["Roads", "roofs", "concrete"]', user_content)
+
+    @override_settings(
+        HUMANIZER_BACKEND="openrouter",
+        OPENROUTER_API_KEY="test-key",
+    )
+    def test_audit_payload_carries_semantic_inventory(self):
+        runtime = RewriteRuntime(8)
+        task = SentenceTask(
+            0,
+            "Roads, roofs, and concrete retain heat.",
+            "Roads, roofs, and concrete retain heat.",
+            (),
+        )
+        try:
+            with patch.object(runtime, "_semantic_anchors", return_value=("Roads", "roofs", "concrete")):
+                payload = runtime._audit_payload(task, "Roads, buildings, and pavement hold heat.")
+        finally:
+            runtime.close()
+        user_data = json.loads(payload["messages"][-1]["content"])
+        self.assertEqual(user_data["semantic_anchors"], ["Roads", "roofs", "concrete"])
+
     def test_strength8_accepts_rough_fragment_like_reconstruction(self):
         valid, reason = validate_candidate(
             "Provenance work is therefore both historical and evidentiary.",
