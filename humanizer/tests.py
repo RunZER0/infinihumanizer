@@ -284,6 +284,34 @@ class SentenceRuntimeTests(SimpleTestCase):
         self.assertIn("certainty", system)
         self.assertEqual(payload["temperature"], 0.20)
 
+    @override_settings(
+        HUMANIZER_BACKEND="openrouter",
+        OPENROUTER_API_KEY="test-key",
+    )
+    def test_semantic_audit_cannot_collapse_candidate_back_to_source(self):
+        runtime = RewriteRuntime(8)
+        task = SentenceTask(
+            0,
+            "Public places allow weak social ties to develop through repeated contact.",
+            "Public places allow weak social ties to develop through repeated contact.",
+            (),
+        )
+        candidate = "Through repeated contact in public places, weak social ties can develop."
+        fake = {
+            "choices": [{
+                "message": {
+                    "content": '{"rewrites":[{"id":0,"text":"Public places allow weak social ties to develop through repeated contact."}]}'
+                }
+            }],
+            "model": "test-model",
+        }
+        try:
+            with patch.object(runtime, "_post", return_value=fake):
+                audited = runtime._audit_candidate(task, candidate)
+        finally:
+            runtime.close()
+        self.assertEqual(audited, candidate)
+
     def test_strength8_accepts_rough_fragment_like_reconstruction(self):
         valid, reason = validate_candidate(
             "Provenance work is therefore both historical and evidentiary.",
