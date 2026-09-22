@@ -402,36 +402,36 @@ def few_shots(strength: int) -> list[dict]:
         ],
         "deep": [
             (
-                "The most important form of judicial independence concerns the substance of decision-making.",
-                "The most fundamental of judicial independence is in substance.",
+                "That view understates its role in the daily functioning of a city.",
+                "It is a minimalistic perspective of its contribution to the workings of a city.",
             ),
             (
-                "These arrangements do not guarantee good judging, but they help create an institutional environment in which legal reasoning can take priority over personal survival.",
-                "These do not ensure good judging, but do help to establish an atmosphere that can become institutionalized so that legal reasoning can be paramount over survival.",
+                "Their value is therefore not limited to beauty.",
+                "Beauty is not the only value of theirs.",
             ),
             (
-                "Transparency can reinforce accountability, but it has limits.",
-                "Transparency can help increase accountability, but can't do everything.",
+                "Public health is shaped by repeated habits, and the physical environment can either make those habits easier or place small obstacles in their way.",
+                "Repeated habits form public health and the physical environment either makes it easy or adds a few hurdles.",
             ),
             (
-                "Culture is often described through values statements, but employees learn it through repeated practices.",
-                "Culture is usually grained on values statements, but it is delivered via repetition of practices.",
+                "Counting hectares alone can therefore produce a misleading picture.",
+                "The simple measure of hectares can therefore give misleading impression.",
             ),
             (
-                "Remote onboarding therefore requires more structure than many organizations initially expect.",
-                "There is a higher level of structure needed for remote onboarding than many organizations realize.",
+                "Street trees improve routes rather than destinations.",
+                "Street trees enhance pathways, not places.",
             ),
             (
-                "The history of an object should include more than the date on which a museum acquired it.",
-                "The information about an object's history should not be limited to the date when it was acquired by a museum.",
+                "Long-term maintenance is another test of whether green infrastructure is being treated seriously.",
+                "Another sign of commitment to green infrastructure is the long-term maintenance.",
+            ),
+            (
+                "Evaluation should also examine who actually uses a space after it is completed.",
+                "Another aspect of evaluation to consider is who really uses an area once it is finished.",
             ),
             (
                 "Provenance work is therefore both historical and evidentiary.",
                 "Historical and evidentiary, hence the term provenance work.",
-            ),
-            (
-                "These uses appear modest, but they accumulate.",
-                "These uses seem small but they add up.",
             ),
         ],
     }
