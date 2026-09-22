@@ -121,6 +121,33 @@ class SignupViewTests(TestCase):
         self.assertFalse(response.wsgi_request.user.is_authenticated)
 
     @override_settings(ACCOUNT_EMAIL_VERIFICATION="mandatory")
+    def test_verified_account_logs_in_from_new_device_without_reverification(self):
+        user = User.objects.create_user(
+            username="verified-device-user",
+            email="device@example.com",
+            password="StrongPass123!",
+        )
+        EmailAddress.objects.create(
+            user=user,
+            email=user.email,
+            primary=True,
+            verified=True,
+        )
+
+        fresh_device = Client()
+        response = fresh_device.post(reverse("account_login"), {
+            "login": user.email,
+            "password": "StrongPass123!",
+        })
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            str(fresh_device.session.get("_auth_user_id")),
+            str(user.pk),
+        )
+        self.assertNotIn("resend_email", fresh_device.session)
+
+    @override_settings(ACCOUNT_EMAIL_VERIFICATION="mandatory")
     def test_contact_verified_email_skips_second_verification(self):
         session = self.client.session
         session[SESSION_VERIFIED_EMAIL] = "verified@example.com"
