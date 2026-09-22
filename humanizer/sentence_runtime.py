@@ -358,6 +358,20 @@ def _quantifier_groups(text: str) -> set[str]:
     }
 
 
+def _semantic_requirements(source: str) -> dict:
+    modal_groups = _modal_groups(source)
+    allowed_modals = sorted({
+        word
+        for group in modal_groups
+        for word in _MODAL_GROUPS.get(group, set())
+    })
+    quantifier_groups = sorted(_quantifier_groups(source))
+    return {
+        "required_modal_words": allowed_modals,
+        "source_quantifier_groups": quantifier_groups,
+    }
+
+
 def _semantic_style_reason(source: str, candidate: str, strength: int) -> str | None:
     if strength < 7:
         return None
@@ -863,6 +877,7 @@ The source meaning is the authority. The candidate is useful only as evidence of
 
 Requirements:
 - preserve the source proposition, actors, actions, objects, causes, conditions, contrasts, lists, scope, and certainty;
+- when semantic_requirements.required_modal_words is non-empty, include at least one of those modal words in the repaired sentence;
 - preserve explicit broad categories instead of narrowing them;
 - preserve explicit list items closely by their source labels; rearrange the list or grammar instead of renaming the items into related categories;
 - keep a real transformation in wording or clause arrangement;
@@ -906,6 +921,7 @@ Return exactly one sentence with the same id."""
                 "role": "user",
                 "content": json.dumps({
                     "reason": reason,
+                    "semantic_requirements": _semantic_requirements(task.source),
                     "source": {"id": task.id, "text": task.protected},
                     "candidate": {"id": task.id, "text": candidate},
                 }, ensure_ascii=False),
@@ -954,13 +970,14 @@ Return exactly one sentence with the same id."""
                 return text_value or None
         return None
 
-    def _forced_reconstruction_payload(self, task: SentenceTask, attempt: int) -> dict:
+    def _forced_reconstruction_payload(self, task: SentenceTask, attempt: int, reason: str | None = None) -> dict:
         system = """Reconstruct one sentence from its meaning.
 
 This is a last-stage recovery for a transformation that failed earlier checks. Produce a genuine rewrite rather than the source sentence.
 
 Target writing behavior:
 - preserve the source proposition, semantic scope, certainty, relationships, and every explicit list item;
+- when semantic_requirements.required_modal_words is non-empty, the output must contain at least one of those modal words;
 - preserve the labels of explicit comma-separated items closely instead of replacing them with related categories;
 - say the same idea again in ordinary academic English without improving the argument;
 - allow slightly awkward, literal, uneven grammar when it arises naturally;
@@ -999,7 +1016,12 @@ Return exactly one transformed sentence with the same id."""
         messages.append({
             "role": "user",
             "content": json.dumps(
-                {"sentences": [{"id": task.id, "text": task.protected}], "attempt": attempt},
+                {
+                    "sentences": [{"id": task.id, "text": task.protected}],
+                    "attempt": attempt,
+                    "previous_failure": reason,
+                    "semantic_requirements": _semantic_requirements(task.source),
+                },
                 ensure_ascii=False,
             ),
         })
@@ -1025,7 +1047,7 @@ Return exactly one transformed sentence with the same id."""
     def _forced_reconstruction(self, task: SentenceTask) -> str:
         last_reason = "recovery-failed"
         for attempt in range(1, 4):
-            raw = self._post(self._forced_reconstruction_payload(task, attempt))
+            raw = self._post(self._forced_reconstruction_payload(task, attempt, last_reason))
             choices = raw.get("choices") or []
             if not choices:
                 continue
