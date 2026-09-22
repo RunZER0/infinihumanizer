@@ -262,6 +262,7 @@ class SentenceRuntimeTests(SimpleTestCase):
     @override_settings(
         HUMANIZER_BACKEND="openrouter",
         OPENROUTER_API_KEY="test-key",
+        HUMANIZER_AUDIT_MODEL_ID="openai/gpt-5-mini",
     )
     def test_semantic_audit_is_about_meaning_not_polish(self):
         runtime = RewriteRuntime(8)
@@ -283,6 +284,8 @@ class SentenceRuntimeTests(SimpleTestCase):
         self.assertIn("do not make the sentence more elegant", system)
         self.assertIn("certainty", system)
         self.assertEqual(payload["temperature"], 0.20)
+        self.assertEqual(payload["model"], "openai/gpt-5-mini")
+        self.assertEqual(runtime.model, "mistralai/ministral-3b-2512")
 
     @override_settings(
         HUMANIZER_BACKEND="openrouter",
@@ -363,6 +366,7 @@ class SentenceRuntimeTests(SimpleTestCase):
         finally:
             runtime.close()
         system = payload["messages"][0]["content"]
+        self.assertEqual(payload["model"], runtime.audit_model)
         self.assertIn("source meaning is the authority", system)
         self.assertIn("do not return the source sentence verbatim", system)
         self.assertIn("explicit list items", system)
