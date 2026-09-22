@@ -1,3 +1,4 @@
+import json
 from unittest.mock import patch
 
 from django.contrib.auth.models import User
@@ -18,6 +19,7 @@ from .sentence_runtime import (
     split_sentences,
     transformation_instruction,
     validate_candidate,
+    _semantic_requirements,
 )
 
 
@@ -441,6 +443,32 @@ class SentenceRuntimeTests(SimpleTestCase):
         system = payload["messages"][0]["content"]
         self.assertIn("renames a comma-separated source item", system)
         self.assertIn("preserve explicit item labels closely", system)
+
+    def test_semantic_requirements_expose_allowed_modal_words(self):
+        requirements = _semantic_requirements("A person may use the route.")
+        self.assertIn("may", requirements["required_modal_words"])
+        self.assertIn("might", requirements["required_modal_words"])
+        self.assertIn("could", requirements["required_modal_words"])
+
+    @override_settings(
+        HUMANIZER_BACKEND="openrouter",
+        OPENROUTER_API_KEY="test-key",
+    )
+    def test_forced_reconstruction_payload_carries_modal_requirement(self):
+        runtime = RewriteRuntime(8)
+        task = SentenceTask(
+            0,
+            "A person may use the route.",
+            "A person may use the route.",
+            (),
+        )
+        try:
+            payload = runtime._forced_reconstruction_payload(task, 2, "modal-drift")
+        finally:
+            runtime.close()
+        user_data = json.loads(payload["messages"][-1]["content"])
+        self.assertEqual(user_data["previous_failure"], "modal-drift")
+        self.assertIn("may", user_data["semantic_requirements"]["required_modal_words"])
 
     def test_strength8_accepts_rough_fragment_like_reconstruction(self):
         valid, reason = validate_candidate(
