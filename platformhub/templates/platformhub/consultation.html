@@ -1,122 +1,73 @@
 {% extends "base.html" %}
 {% block title %}Talk to us — InfiniAI{% endblock %}
-{% block description %}Tell InfiniAI what you are working on and where you are stuck.{% endblock %}
+{% block description %}Contact InfiniAI.{% endblock %}
 
 {% block content %}
-<div class="page-shell contact-head">
+<div class="page-shell contact-head contact-head-clean">
   <div class="eyebrow">Talk to us</div>
-  <h1 class="h1">Start with the part we need now.</h1>
-  <p class="lede">We will ask for the rest as it becomes relevant.</p>
+  <h1 class="h1">Talk to us</h1>
 </div>
 
-{% if recent_consultation %}
-<section class="section section-tight">
-  <div class="shell">
-    <div class="notice">We received {{ recent_consultation.reference }}. We will reply at {{ recent_consultation.email }}.</div>
-  </div>
-</section>
-{% endif %}
-
 <section class="section contact-flow-section">
-  <div class="shell contact-flow-shell">
-    <div class="contact-progress" aria-label="Contact progress">
-      <span class="{% if consult_step == 'name' %}is-current{% elif consult_name %}is-done{% endif %}">1</span>
-      <i></i>
-      <span class="{% if consult_step == 'email' or consult_step == 'verify' %}is-current{% elif consult_email_verified %}is-done{% endif %}">2</span>
-      <i></i>
-      <span class="{% if consult_step == 'details' %}is-current{% endif %}">3</span>
-    </div>
-
-    <div class="contact-flow-card">
-      {% if consult_step == "name" %}
-      <div class="contact-step">
-        <span class="micro">FIRST</span>
-        <h2>What should we call you?</h2>
-        <p>One thing at a time.</p>
-        <form method="post" class="form-stack contact-step-form">
-          {% csrf_token %}
-          <input type="hidden" name="action" value="set_name">
-          <div class="field">
-            <label for="contact-name">Your name</label>
-            <input id="contact-name" name="full_name" autocomplete="name" required autofocus>
-          </div>
-          <button class="btn btn-primary" type="submit">Continue</button>
-        </form>
-      </div>
-
-      {% elif consult_step == "email" %}
-      <div class="contact-step">
-        <span class="micro">NEXT</span>
-        <h2>Where should we reply?</h2>
-        <p>We verify the address before accepting a first enquiry.</p>
-        <form method="post" class="form-stack contact-step-form">
-          {% csrf_token %}
-          <input type="hidden" name="action" value="set_email">
-          <div class="field">
-            <label for="contact-email">Email</label>
-            <input id="contact-email" type="email" name="email" autocomplete="email" required autofocus>
-            <span class="help">Temporary and disposable addresses are not accepted.</span>
-          </div>
-          <button class="btn btn-primary" type="submit">Send verification code</button>
-        </form>
-      </div>
-
-      {% elif consult_step == "verify" %}
-      <div class="contact-step">
-        <span class="micro">VERIFY</span>
-        <h2>Check your inbox.</h2>
-        <p>Enter the six-digit code sent to <strong>{{ consult_email }}</strong>.</p>
-        <form method="post" class="form-stack contact-step-form">
-          {% csrf_token %}
-          <input type="hidden" name="action" value="verify_email">
-          <div class="field">
-            <label for="contact-code">Verification code</label>
-            <input id="contact-code" class="verification-code-input" name="code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required autofocus>
-          </div>
-          <button class="btn btn-primary" type="submit">Verify email</button>
-        </form>
-        <form method="post" class="contact-resend">
-          {% csrf_token %}
-          <input type="hidden" name="action" value="resend_code">
-          <button class="btn btn-link" type="submit">Send another code</button>
-        </form>
-      </div>
-
-      {% else %}
-      <div class="contact-step contact-step-wide">
-        <div class="contact-identity">
-          <div>
-            <span class="micro">VERIFIED</span>
-            <strong>{{ consult_name }}</strong>
-            <span>{{ consult_email }}</span>
-          </div>
-          {% if not user.is_authenticated %}
-          <a href="{% url 'account_login' %}?next={% url 'platformhub:consultation' %}">Sign in</a>
-          {% endif %}
-        </div>
-
-        <h2>What are you trying to work out?</h2>
-        <form method="post" class="form-stack contact-step-form">
-          {% csrf_token %}
-          <input type="hidden" name="action" value="submit_note">
-          <div class="field">
-            <label for="contact-topic">Your note</label>
-            <textarea id="contact-topic" name="topic" required autofocus placeholder="Tell us the problem, question or idea as it stands."></textarea>
-          </div>
-          <div class="field">
-            <label for="contact-company">Company or team <span class="help">(optional)</span></label>
-            <input id="contact-company" name="company" autocomplete="organization">
-          </div>
-          <button class="btn btn-primary" type="submit">Send note</button>
-        </form>
-      </div>
-      {% endif %}
-    </div>
-
-    <aside class="contact-flow-note">
-      <span class="micro">WHY VERIFY?</span>
-      <p>It keeps replies attached to a real inbox and means we do not ask you to prove the same address again if you create an account during this browser session.</p>
-    </aside>
+  <div class="shell contact-flow-shell" id="contact-flow-root">
+    {% include "platformhub/partials/consultation_flow.html" %}
   </div>
 </section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function () {
+  const root = document.getElementById("contact-flow-root");
+  if (!root) return;
+
+  function focusFirst() {
+    const input = root.querySelector("input[autofocus], textarea[autofocus]");
+    if (input) window.setTimeout(function () { input.focus(); }, 20);
+  }
+
+  root.addEventListener("submit", async function (event) {
+    const form = event.target.closest("[data-contact-form]");
+    if (!form) return;
+
+    event.preventDefault();
+
+    const button = form.querySelector('button[type="submit"]');
+    const original = button ? button.textContent : "";
+    if (button) {
+      button.disabled = true;
+      button.textContent = "…";
+    }
+
+    try {
+      const response = await fetch(form.action || window.location.href, {
+        method: "POST",
+        body: new FormData(form),
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+          "X-CSRFToken": form.querySelector("[name=csrfmiddlewaretoken]").value
+        }
+      });
+      const data = await response.json();
+      if (!response.ok || !data.html) throw new Error("Request failed");
+      root.innerHTML = data.html;
+      focusFirst();
+    } catch (error) {
+      if (button) {
+        button.disabled = false;
+        button.textContent = original;
+      }
+      let feedback = root.querySelector(".contact-feedback");
+      if (!feedback) {
+        feedback = document.createElement("div");
+        feedback.className = "contact-feedback is-error";
+        root.prepend(feedback);
+      }
+      feedback.textContent = "Try again.";
+    }
+  });
+
+  focusFirst();
+})();
+</script>
 {% endblock %}
