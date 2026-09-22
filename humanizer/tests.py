@@ -312,6 +312,61 @@ class SentenceRuntimeTests(SimpleTestCase):
             runtime.close()
         self.assertEqual(audited, candidate)
 
+    @override_settings(
+        HUMANIZER_BACKEND="openrouter",
+        OPENROUTER_API_KEY="test-key",
+    )
+    def test_targeted_semantic_repair_recovers_instead_of_source_fallback(self):
+        runtime = RewriteRuntime(8)
+        task = SentenceTask(
+            0,
+            "A person may use a safe route.",
+            "A person may use a safe route.",
+            (),
+        )
+        unchanged = {
+            "choices": [{"message": {"content": '{"rewrites":[{"id":0,"text":"A person may use a safe route."}]'}}],
+            "model": "test-model",
+        }
+        recovered = {
+            "choices": [{"message": {"content": '{"rewrites":[{"id":0,"text":"A safe route may be used by a person."}]'}}],
+            "model": "test-model",
+        }
+        try:
+            with patch.object(runtime, "_audit_candidate", side_effect=lambda task, value: value):
+                with patch.object(runtime, "_post", side_effect=[unchanged, unchanged, unchanged, recovered]):
+                    result, _ = runtime.rewrite_batch([task])
+        finally:
+            runtime.close()
+
+        self.assertEqual(result[0], "A safe route may be used by a person.")
+        self.assertNotEqual(result[0], task.source)
+
+    @override_settings(
+        HUMANIZER_BACKEND="openrouter",
+        OPENROUTER_API_KEY="test-key",
+    )
+    def test_targeted_repair_prompt_preserves_semantic_inventory(self):
+        runtime = RewriteRuntime(8)
+        task = SentenceTask(
+            0,
+            "The policy covers equipment, software, and training.",
+            "The policy covers equipment, software, and training.",
+            (),
+        )
+        try:
+            payload = runtime._targeted_repair_payload(
+                task,
+                "The policy covers computers, apps, and courses.",
+                "semantic-scope",
+            )
+        finally:
+            runtime.close()
+        system = payload["messages"][0]["content"]
+        self.assertIn("source meaning is the authority", system)
+        self.assertIn("do not return the source sentence verbatim", system)
+        self.assertIn("explicit list items", system)
+
     def test_strength8_accepts_rough_fragment_like_reconstruction(self):
         valid, reason = validate_candidate(
             "Provenance work is therefore both historical and evidentiary.",
