@@ -712,7 +712,8 @@ Use the candidate as the base text. Do not move it back toward the source's orig
 Revise only when the candidate:
 - adds information, interpretation, explanation, consequence, emphasis, or context;
 - changes certainty, modality, frequency, quantity, actor, action, object, cause, condition, contrast, or scope;
-- narrows a broad concept into a more specific one;
+- narrows a broad concept into a more specific one or replaces a concrete source item with a different category;
+- changes an explicit list item instead of only changing the grammar around the list;
 - introduces polished editorial framing or turns the sentence into a cleaner thesis;
 - changes the relationship between ideas.
 
@@ -730,6 +731,39 @@ Return exactly one transformed sentence with the same id."""
 
         messages = [
             {"role": "system", "content": system},
+            {
+                "role": "user",
+                "content": json.dumps({
+                    "source": {"id": 0, "text": "A worker may rely on public transport because private travel is too expensive."},
+                    "candidate": {"id": 0, "text": "Workers often take buses because driving costs too much."},
+                }),
+            },
+            {
+                "role": "assistant",
+                "content": json.dumps({"rewrites": [{"id": 0, "text": "A worker might rely on public transport because private travel is too expensive."}]}),
+            },
+            {
+                "role": "user",
+                "content": json.dumps({
+                    "source": {"id": 0, "text": "Roads, roofs, and concrete retain heat during the day."},
+                    "candidate": {"id": 0, "text": "Asphalt and buildings hold heat during the day."},
+                }),
+            },
+            {
+                "role": "assistant",
+                "content": json.dumps({"rewrites": [{"id": 0, "text": "Heat during the day is retained by roads, roofs, and concrete."}]}),
+            },
+            {
+                "role": "user",
+                "content": json.dumps({
+                    "source": {"id": 0, "text": "Access depends on quality, availability, and maintenance."},
+                    "candidate": {"id": 0, "text": "Access depends on good design, availability, and upkeep."},
+                }),
+            },
+            {
+                "role": "assistant",
+                "content": json.dumps({"rewrites": [{"id": 0, "text": "Quality, availability, and maintenance affect access."}]}),
+            },
             {
                 "role": "user",
                 "content": json.dumps(
@@ -797,6 +831,103 @@ Return exactly one transformed sentence with the same id."""
                 return audited
         return candidate
 
+    def _targeted_repair_payload(self, task: SentenceTask, candidate: str, reason: str) -> dict:
+        system = """You repair a rejected sentence transformation.
+
+The source meaning is the authority. The candidate is useful only as evidence of transformation distance and wording. Correct the specific semantic or structural defect without reverting to the source sentence.
+
+Requirements:
+- preserve the source proposition, actors, actions, objects, causes, conditions, contrasts, lists, scope, and certainty;
+- preserve explicit broad categories instead of narrowing them;
+- preserve explicit list items as concepts, even if you rearrange them;
+- keep a real transformation in wording or clause arrangement;
+- ordinary or slightly awkward English is acceptable;
+- do not improve the argument, explain it, or add context;
+- do not return the source sentence verbatim;
+- do not introduce polished editorial framing;
+- preserve protected tokens exactly once;
+- never use an em dash.
+
+Return exactly one sentence with the same id."""
+
+        messages = [
+            {"role": "system", "content": system},
+            {
+                "role": "user",
+                "content": json.dumps({
+                    "reason": "modal-drift",
+                    "source": {"id": 0, "text": "A tenant may use a shared entrance when the main gate is closed."},
+                    "candidate": {"id": 0, "text": "Tenants use the shared entrance whenever the main gate closes."},
+                }),
+            },
+            {
+                "role": "assistant",
+                "content": json.dumps({"rewrites": [{"id": 0, "text": "When the main gate is closed, a tenant may use the shared entrance."}]}),
+            },
+            {
+                "role": "user",
+                "content": json.dumps({
+                    "reason": "semantic-scope",
+                    "source": {"id": 0, "text": "The policy covers equipment, software, and training."},
+                    "candidate": {"id": 0, "text": "The policy covers computers, applications, and staff courses."},
+                }),
+            },
+            {
+                "role": "assistant",
+                "content": json.dumps({"rewrites": [{"id": 0, "text": "Equipment, software, and training are all covered by the policy."}]}),
+            },
+            {
+                "role": "user",
+                "content": json.dumps({
+                    "reason": reason,
+                    "source": {"id": task.id, "text": task.protected},
+                    "candidate": {"id": task.id, "text": candidate},
+                }, ensure_ascii=False),
+            },
+        ]
+        payload = {
+            "model": self.model,
+            "messages": messages,
+            "temperature": 0.28,
+            "top_p": 0.88,
+            "max_tokens": min(700, max(120, int(len(task.source.split()) * 2.3))),
+            "response_format": response_schema(),
+        }
+        if self.backend == "openrouter":
+            payload["provider"] = {
+                "sort": self.provider_sort,
+                "allow_fallbacks": True,
+                "require_parameters": True,
+                "data_collection": "deny",
+            }
+            if self.fallback_models:
+                payload["models"] = self.fallback_models
+        return payload
+
+    def _targeted_repair_candidate(self, task: SentenceTask, candidate: str, reason: str) -> str | None:
+        raw = self._post(self._targeted_repair_payload(task, candidate, reason))
+        choices = raw.get("choices") or []
+        if not choices:
+            return None
+        content = ((choices[0].get("message") or {}).get("content") or "").strip()
+        try:
+            items = parse_json(content).get("rewrites")
+        except Exception:
+            return None
+        if not isinstance(items, list):
+            return None
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            try:
+                item_id = int(item.get("id"))
+            except (TypeError, ValueError):
+                continue
+            if item_id == task.id:
+                text_value = str(item.get("text") or "").strip()
+                return text_value or None
+        return None
+
     def _payload(self, batch: list[SentenceTask], repair=False) -> dict:
         messages = [{"role": "system", "content": system_prompt(self.strength)}]
         messages.extend(few_shots(self.strength))
@@ -850,6 +981,7 @@ Return exactly one transformed sentence with the same id."""
 
         expected = {task.id: task for task in batch}
         results = {}
+        rejected = {}
         for item in items:
             if not isinstance(item, dict):
                 continue
@@ -871,19 +1003,52 @@ Return exactly one transformed sentence with the same id."""
                 candidate = remove_em_dashes(candidate)
             except ValueError:
                 continue
-            valid, _ = validate_candidate(task.source, candidate, self.strength)
+            valid, reason = validate_candidate(task.source, candidate, self.strength)
             if valid:
                 results[item_id] = candidate
+            else:
+                rejected[item_id] = (protected_candidate, reason)
 
         missing = set(expected) - set(results)
         if missing and not repair:
             return self.rewrite_batch(batch, repair=True)
         if missing and repair is True:
             return self.rewrite_batch(batch, repair="final")
+        if missing and repair == "final":
+            for item_id in list(missing):
+                task = expected[item_id]
+                rejected_item = rejected.get(item_id)
+                if not rejected_item:
+                    continue
+                protected_candidate, reason = rejected_item
+                for _ in range(2):
+                    try:
+                        repaired_protected = self._targeted_repair_candidate(task, protected_candidate, reason)
+                    except Exception as exc:
+                        logger.warning("Targeted semantic repair failed: %s", exc)
+                        break
+                    if not repaired_protected:
+                        break
+                    try:
+                        repaired = restore_sentence(repaired_protected, task.literals)
+                        repaired = remove_em_dashes(repaired)
+                    except ValueError:
+                        reason = "protected-token"
+                        protected_candidate = repaired_protected
+                        continue
+                    valid, next_reason = validate_candidate(task.source, repaired, self.strength)
+                    if valid:
+                        results[item_id] = repaired
+                        missing.discard(item_id)
+                        logger.info("Targeted semantic repair recovered sentence reason=%s", reason)
+                        break
+                    protected_candidate = repaired_protected
+                    reason = next_reason
+
         if missing:
             for item_id in missing:
                 results[item_id] = remove_em_dashes(expected[item_id].source)
-            logger.warning("Preserved %d sentence(s) after rewrite validation failed.", len(missing))
+            logger.warning("Preserved %d sentence(s) after targeted semantic repair failed.", len(missing))
         return results, str(raw.get("model") or self.model)
 
     def run(self, tasks: list[SentenceTask]) -> tuple[dict[int, str], str]:
