@@ -595,6 +595,10 @@ class RewriteRuntime:
         self.profile = strength_profile(self.strength)
         self.backend = str(getattr(settings, "HUMANIZER_BACKEND", "openrouter")).strip().lower()
         self.model = str(getattr(settings, "HUMANIZER_MODEL_ID", DEFAULT_MODEL) or DEFAULT_MODEL).strip()
+        configured_audit_model = str(
+            getattr(settings, "HUMANIZER_AUDIT_MODEL_ID", "openai/gpt-5-mini") or "openai/gpt-5-mini"
+        ).strip()
+        self.audit_model = configured_audit_model if self.backend == "openrouter" else self.model
         self.fallback_models = [
             item.strip()
             for item in str(getattr(settings, "HUMANIZER_FALLBACK_MODELS", "")).split(",")
@@ -776,7 +780,7 @@ Return exactly one transformed sentence with the same id."""
             },
         ]
         payload = {
-            "model": self.model,
+            "model": self.audit_model,
             "messages": messages,
             "temperature": 0.20,
             "top_p": 0.86,
@@ -790,8 +794,6 @@ Return exactly one transformed sentence with the same id."""
                 "require_parameters": True,
                 "data_collection": "deny",
             }
-            if self.fallback_models:
-                payload["models"] = self.fallback_models
         return payload
 
     def _audit_candidate(self, task: SentenceTask, candidate: str) -> str:
@@ -886,7 +888,7 @@ Return exactly one sentence with the same id."""
             },
         ]
         payload = {
-            "model": self.model,
+            "model": self.audit_model,
             "messages": messages,
             "temperature": 0.28,
             "top_p": 0.88,
@@ -900,8 +902,6 @@ Return exactly one sentence with the same id."""
                 "require_parameters": True,
                 "data_collection": "deny",
             }
-            if self.fallback_models:
-                payload["models"] = self.fallback_models
         return payload
 
     def _targeted_repair_candidate(self, task: SentenceTask, candidate: str, reason: str) -> str | None:
