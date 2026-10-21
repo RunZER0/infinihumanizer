@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 import uuid
 from decimal import Decimal, InvalidOperation
 
@@ -950,6 +951,7 @@ def _operations_sidebar_context(active_tab="inbox"):
         "total_invoices_count": Invoice.objects.exclude(status="void").count(),
         "open_invoices_count": Invoice.objects.filter(status="open").count(),
         "total_tx_count": PaymentRecord.objects.count(),
+        "total_posters_count": 20,
     }
 
 
@@ -1629,6 +1631,113 @@ def reconciliation(request):
 def posters_gallery(request):
     from platformhub.engaging_posters_data import ENGAGING_POSTERS
     return render(request, "platformhub/posters.html", {"posters": ENGAGING_POSTERS})
+
+
+def operations_posters(request):
+    from platformhub.models import SocialPoster
+    from platformhub.engaging_posters_data import sync_social_posters_db
+
+    if not SocialPoster.objects.exists():
+        sync_social_posters_db()
+
+    style_filter = request.GET.get("style", "").strip()
+    posters_qs = SocialPoster.objects.all().order_by("number")
+    if style_filter in ["photo-dark", "editorial-paper", "ink-obsidian"]:
+        posters_qs = posters_qs.filter(style=style_filter)
+
+    posters = list(posters_qs)
+    total_count = SocialPoster.objects.count()
+    photo_count = SocialPoster.objects.filter(style="photo-dark").count()
+    paper_count = SocialPoster.objects.filter(style="editorial-paper").count()
+    ink_count = SocialPoster.objects.filter(style="ink-obsidian").count()
+
+    context = {
+        **_operations_sidebar_context("posters"),
+        "posters": posters,
+        "style_filter": style_filter,
+        "total_count": total_count,
+        "photo_count": photo_count,
+        "paper_count": paper_count,
+        "ink_count": ink_count,
+    }
+    return render(request, "platformhub/operations_posters.html", context)
+
+
+def _find_poster_file(filename):
+    from pathlib import Path
+    candidate_dirs = [
+        Path(settings.BASE_DIR) / "static" / "posters",
+        Path(settings.BASE_DIR) / "staticfiles" / "posters",
+        Path(settings.BASE_DIR) / "public" / "posters",
+    ]
+    if hasattr(settings, "STATIC_ROOT") and settings.STATIC_ROOT:
+        candidate_dirs.append(Path(settings.STATIC_ROOT) / "posters")
+
+    for d in candidate_dirs:
+        p = d / filename
+        if p.exists():
+            return p
+    return None
+
+
+def operations_download_poster(request, number, format_type):
+    from django.http import FileResponse, Http404
+
+    format_type = format_type.lower()
+    if format_type not in ["png", "jpg", "svg"]:
+        raise Http404("Unsupported format.")
+
+    number_clean = str(number).zfill(2)
+    filename = f"poster_{number_clean}.{format_type}"
+    file_path = _find_poster_file(filename)
+
+    if not file_path or not file_path.exists():
+        raise Http404("Poster image not found.")
+
+    content_types = {
+        "png": "image/png",
+        "jpg": "image/jpeg",
+        "svg": "image/svg+xml",
+    }
+    response = FileResponse(open(str(file_path), "rb"), content_type=content_types[format_type])
+    response["Content-Disposition"] = f'attachment; filename="infini_story_{number_clean}.{format_type}"'
+    return response
+
+
+def operations_download_all_posters(request):
+    import io, zipfile
+    from django.http import HttpResponse
+
+    buffer = io.BytesIO()
+
+    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as zf:
+        manifest_lines = [
+            "INFINIAI SOCIAL STORY POSTERS (1080x1920 · 9:16)",
+            "Brand colors: Terracotta (#c84132), Obsidian (#11110f), Warm Paper (#faf8f2)",
+            "Direct intake URL: https://www.byinfini.online/consultation/",
+            "=" * 60,
+            "",
+        ]
+        for num in range(1, 21):
+            num_str = f"{num:02d}"
+            png_name = f"poster_{num_str}.png"
+            jpg_name = f"poster_{num_str}.jpg"
+            png_path = _find_poster_file(png_name)
+            jpg_path = _find_poster_file(jpg_name)
+
+            if png_path:
+                zf.write(str(png_path), arcname=f"png/{png_name}")
+            if jpg_path:
+                zf.write(str(jpg_path), arcname=f"jpg/{jpg_name}")
+
+            manifest_lines.append(f"Poster {num_str}: PNG & JPG included")
+
+        zf.writestr("MANIFEST.txt", "\n".join(manifest_lines))
+
+    buffer.seek(0)
+    response = HttpResponse(buffer.getvalue(), content_type="application/zip")
+    response["Content-Disposition"] = 'attachment; filename="infini_social_story_posters_20.zip"'
+    return response
 
 
 def health(request):

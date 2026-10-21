@@ -681,3 +681,107 @@ class PostersGalleryTests(TestCase):
         self.assertContains(resp, "poster_20.png")
         self.assertContains(resp, "poster_01.jpg")
         self.assertContains(resp, "poster_20.jpg")
+
+
+class AdminPostersDownloadTests(TestCase):
+    def setUp(self):
+        from platformhub.engaging_posters_data import sync_social_posters_db
+        sync_social_posters_db()
+
+    def test_operations_posters_page_renders_in_admin(self):
+        url = reverse("platformhub:operations_posters")
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(len(resp.context["posters"]), 20)
+        self.assertContains(resp, "Download All 20 Posters (.ZIP)")
+        self.assertContains(resp, "Download PNG")
+        self.assertContains(resp, "Download JPG")
+
+    def test_operations_posters_style_filtering(self):
+        url = reverse("platformhub:operations_posters") + "?style=photo-dark"
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(len(resp.context["posters"]), 8)
+
+    def test_operations_individual_poster_png_download(self):
+        url = reverse("platformhub:operations_download_poster", kwargs={"number": "01", "format_type": "png"})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp["Content-Type"], "image/png")
+        self.assertIn("attachment", resp["Content-Disposition"])
+        self.assertIn("infini_story_01.png", resp["Content-Disposition"])
+
+    def test_operations_individual_poster_jpg_download(self):
+        url = reverse("platformhub:operations_download_poster", kwargs={"number": "01", "format_type": "jpg"})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp["Content-Type"], "image/jpeg")
+        self.assertIn("attachment", resp["Content-Disposition"])
+        self.assertIn("infini_story_01.jpg", resp["Content-Disposition"])
+
+    def test_operations_download_all_zip_bundle(self):
+        url = reverse("platformhub:operations_download_all_posters")
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp["Content-Type"], "application/zip")
+        self.assertIn("infini_social_story_posters_20.zip", resp["Content-Disposition"])
+        self.assertGreater(len(resp.content), 500000)
+
+    def test_social_poster_admin_model(self):
+        from platformhub.models import SocialPoster
+
+        poster = SocialPoster.objects.first()
+        self.assertIsNotNone(poster)
+        self.assertEqual(poster.png_url, f"/static/posters/poster_{poster.number}.png")
+        self.assertEqual(poster.jpg_url, f"/static/posters/poster_{poster.number}.jpg")
+        self.assertTrue(len(poster.full_headline) > 0)
+
+    def test_django_admin_changelist_view_renders_with_download_controls(self):
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        admin_user = User.objects.create_superuser(username="admin_poster_test", email="admin@example.com", password="password123")
+        self.client.force_login(admin_user)
+
+        resp = self.client.get("/admin/platformhub/socialposter/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "Download All 20 Posters (.ZIP)")
+        self.assertContains(resp, "Visual Studio Gallery")
+        self.assertContains(resp, "Direct Downloads")
+        self.assertContains(resp, "operations/posters/download/01/png/")
+        self.assertContains(resp, "operations/posters/download/01/jpg/")
+
+    def test_django_admin_action_download_selected_zip(self):
+        from django.contrib.auth import get_user_model
+        from platformhub.models import SocialPoster
+        User = get_user_model()
+        admin_user = User.objects.create_superuser(username="admin_action_test", email="admin_action@example.com", password="password123")
+        self.client.force_login(admin_user)
+
+        posters = list(SocialPoster.objects.filter(number__in=["01", "02"]))
+        post_data = {
+            "action": "download_selected_as_zip",
+            "_selected_action": [str(p.pk) for p in posters],
+        }
+        resp = self.client.post("/admin/platformhub/socialposter/", post_data)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp["Content-Type"], "application/zip")
+        self.assertIn("infini_selected_posters.zip", resp["Content-Disposition"])
+        self.assertGreater(len(resp.content), 100000)
+
+    def test_django_admin_action_download_all_zip(self):
+        from django.contrib.auth import get_user_model
+        from platformhub.models import SocialPoster
+        User = get_user_model()
+        admin_user = User.objects.create_superuser(username="admin_all_test", email="admin_all@example.com", password="password123")
+        self.client.force_login(admin_user)
+
+        first_poster = SocialPoster.objects.first()
+        post_data = {
+            "action": "download_all_as_zip",
+            "_selected_action": [str(first_poster.pk)],
+        }
+        resp = self.client.post("/admin/platformhub/socialposter/", post_data)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp["Content-Type"], "application/zip")
+        self.assertIn("infini_all_20_social_posters.zip", resp["Content-Disposition"])
+        self.assertGreater(len(resp.content), 500000)

@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import (
     Organization, ServiceRequest, Consultation, Quote, QuoteItem,
     Invoice, PaymentRecord, Deliverable, DeliverableFeedback, AssuranceJob,
+    SocialPoster,
 )
 
 
@@ -43,5 +44,11 @@ admin.site.register(Organization)
 admin.site.register(Consultation)
 admin.site.register(Deliverable)
 admin.site.register(DeliverableFeedback)
-
 admin.site.register(AssuranceJob)
+
+
+@admin.register(SocialPoster)
+class PlatformhubSocialPosterAdmin(admin.ModelAdmin):
+    list_display = ("number", "tag_badge", "eyebrow", "style", "turnaround", "created_at")
+    list_filter = ("style",)
+    search_fields = ("number", "tag_badge", "eyebrow", "headline_pre", "headline_span", "outcome")

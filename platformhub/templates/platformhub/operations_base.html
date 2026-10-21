@@ -33,6 +33,10 @@
           <span>Transactions</span>
           <span class="ops-nav-count">{{ total_tx_count }}</span>
         </a>
+        <a href="{% url 'platformhub:operations_posters' %}" class="ops-nav-item {% if ops_tab == 'posters' %}is-active{% endif %}">
+          <span>Story Posters</span>
+          <span class="ops-nav-count">{{ total_posters_count|default:20 }}</span>
+        </a>
       </nav>
 
       <div class="ops-sidebar-foot">

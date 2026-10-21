@@ -322,3 +322,36 @@ for p in ENGAGING_POSTERS:
     p["jpg_filename"] = f"poster_{p['number']}.jpg"
     p["jpg_path"] = f"/static/posters/poster_{p['number']}.jpg"
     p["contact_url"] = "https://www.byinfini.online/consultation/"
+
+
+def sync_social_posters_db():
+    from platformhub.models import SocialPoster
+
+    created_count = 0
+    updated_count = 0
+    for p in ENGAGING_POSTERS:
+        defaults = {
+            "tag_badge": p["tag_badge"],
+            "eyebrow": p["eyebrow"],
+            "headline_pre": p.get("headline_pre", ""),
+            "headline_span": p.get("headline_span", ""),
+            "headline_post": p.get("headline_post", ""),
+            "outcome": p["outcome"],
+            "style": p.get("style", "photo-dark"),
+            "bg_image": p.get("bg_image", ""),
+            "turnaround": p["turnaround"],
+            "deliverable": p["deliverable"],
+            "service_code": p["service_code"],
+            "contact_display": p["contact_display"],
+            "png_file": p["png_filename"],
+            "jpg_file": p["jpg_filename"],
+        }
+        obj, created = SocialPoster.objects.update_or_create(
+            number=p["number"],
+            defaults=defaults,
+        )
+        if created:
+            created_count += 1
+        else:
+            updated_count += 1
+    return created_count, updated_count

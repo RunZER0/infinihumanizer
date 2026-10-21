@@ -3142,12 +3142,17 @@ class Command(BaseCommand):
             if pr_created:
                 created_payments += 1
 
+        from platformhub.engaging_posters_data import sync_social_posters_db
+
+        posters_c, posters_u = sync_social_posters_db()
+
         self.stdout.write(
             self.style.SUCCESS(
                 f"Orbit & ValdaceAi production seed complete: {len(CLIENT_PROFILES)} client threads, "
                 f"{ServiceRequest.objects.count()} service requests, "
                 f"{Invoice.objects.count()} backdated invoices, "
                 f"{PaymentRecord.objects.count()} transactions, "
-                f"{created_messages} messages."
+                f"{created_messages} messages, "
+                f"{posters_c + posters_u} social story posters."
             )
         )

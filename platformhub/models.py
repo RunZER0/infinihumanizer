@@ -242,3 +242,51 @@ class AssuranceJob(models.Model):
 
     def __str__(self):
         return f"{self.reference} — {self.title}"
+
+
+class SocialPoster(models.Model):
+    STYLE_CHOICES = [
+        ("photo-dark", "Photographic Dark"),
+        ("editorial-paper", "Editorial Paper (Light)"),
+        ("ink-obsidian", "Ink Obsidian"),
+    ]
+
+    number = models.CharField(max_length=10, unique=True)
+    tag_badge = models.CharField(max_length=120)
+    eyebrow = models.CharField(max_length=150)
+    headline_pre = models.CharField(max_length=255, blank=True)
+    headline_span = models.CharField(max_length=255, blank=True)
+    headline_post = models.CharField(max_length=255, blank=True)
+    outcome = models.TextField()
+    style = models.CharField(max_length=50, choices=STYLE_CHOICES, default="photo-dark")
+    bg_image = models.CharField(max_length=100, blank=True)
+    turnaround = models.CharField(max_length=100)
+    deliverable = models.CharField(max_length=150)
+    service_code = models.CharField(max_length=50)
+    contact_display = models.CharField(
+        max_length=255, default="Contact us via www.byinfini.online/consultation/"
+    )
+    png_file = models.CharField(max_length=255, blank=True)
+    jpg_file = models.CharField(max_length=255, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["number"]
+        verbose_name = "Story Poster"
+        verbose_name_plural = "Story Posters"
+
+    def __str__(self):
+        return f"Poster {self.number} — {self.tag_badge} ({self.eyebrow})"
+
+    @property
+    def png_url(self):
+        return f"/static/posters/poster_{self.number}.png"
+
+    @property
+    def jpg_url(self):
+        return f"/static/posters/poster_{self.number}.jpg"
+
+    @property
+    def full_headline(self):
+        return f"{self.headline_pre}{self.headline_span}{self.headline_post}".strip()
