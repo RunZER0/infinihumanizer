@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import re
 import uuid
 from decimal import Decimal, InvalidOperation
 
@@ -145,8 +146,32 @@ def request_service(request, service_code=None):
         turnaround = request.POST.get("turnaround", "standard")
         low, high = estimate_request(code, research_depth, turnaround)
 
+        User = get_user_model()
+        target_user = request.user if request.user.is_authenticated else User.objects.filter(email__iexact=required["email"]).first()
+        if not target_user:
+            names = required["full_name"].split()
+            first_name = names[0] if names else "Client"
+            last_name = " ".join(names[1:]) if len(names) > 1 else ""
+            base_username = re.sub(r"[^a-zA-Z0-9_]+", "", required["email"].split("@")[0])[:25] or "client"
+            username = base_username
+            counter = 1
+            while User.objects.filter(username=username).exists():
+                username = f"{base_username}_{counter}"
+                counter += 1
+            target_user = User.objects.create(
+                username=username,
+                email=required["email"],
+                first_name=first_name,
+                last_name=last_name,
+            )
+        elif not target_user.first_name and required["full_name"]:
+            names = required["full_name"].split()
+            target_user.first_name = names[0]
+            target_user.last_name = " ".join(names[1:]) if len(names) > 1 else ""
+            target_user.save(update_fields=["first_name", "last_name"])
+
         item = ServiceRequest.objects.create(
-            user=request.user if request.user.is_authenticated else None,
+            user=target_user,
             full_name=required["full_name"],
             email=required["email"],
             company=request.POST.get("company", "").strip(),
@@ -168,6 +193,19 @@ def request_service(request, service_code=None):
                 "family_name": service["family_name"],
                 "preferred_contact": request.POST.get("preferred_contact", "email"),
             },
+        )
+        conv, _ = ClientConversation.objects.get_or_create(
+            user=target_user,
+            defaults={"subject": f"Project · {item.reference}"},
+        )
+        conv.status = "open"
+        conv.save(update_fields=["status", "updated_at"])
+        request.session["conversation_id"] = str(conv.id)
+        ClientMessage.objects.create(
+            conversation=conv,
+            author=target_user,
+            sender="client",
+            body=f"Project Request [{item.reference}]: {item.title}\nService: {service['name']}\nScope: {item.scope}\nObjective: {item.objective}",
         )
         request.session.setdefault("infini_request_ids", [])
         ids = request.session["infini_request_ids"]
@@ -425,8 +463,32 @@ def consultation(request):
                     feedback_level="error",
                 )
 
+            User = get_user_model()
+            target_user = request.user if request.user.is_authenticated else User.objects.filter(email__iexact=email).first()
+            if not target_user:
+                names = full_name.split()
+                first_name = names[0] if names else "Client"
+                last_name = " ".join(names[1:]) if len(names) > 1 else ""
+                base_username = re.sub(r"[^a-zA-Z0-9_]+", "", email.split("@")[0])[:25] or "client"
+                username = base_username
+                counter = 1
+                while User.objects.filter(username=username).exists():
+                    username = f"{base_username}_{counter}"
+                    counter += 1
+                target_user = User.objects.create(
+                    username=username,
+                    email=email,
+                    first_name=first_name,
+                    last_name=last_name,
+                )
+            elif not target_user.first_name and full_name:
+                names = full_name.split()
+                target_user.first_name = names[0]
+                target_user.last_name = " ".join(names[1:]) if len(names) > 1 else ""
+                target_user.save(update_fields=["first_name", "last_name"])
+
             item = Consultation.objects.create(
-                user=request.user if request.user.is_authenticated else None,
+                user=target_user,
                 full_name=full_name,
                 email=email,
                 company=request.POST.get("company", "").strip(),
@@ -434,6 +496,22 @@ def consultation(request):
             )
             request.session["consultation_reference"] = item.reference
             request.session["consultation_id"] = str(item.id)
+
+            conv, _ = ClientConversation.objects.get_or_create(
+                user=target_user,
+                defaults={"subject": f"Inquiry · {item.reference}"},
+            )
+            conv.status = "open"
+            conv.save(update_fields=["status", "updated_at"])
+            request.session["conversation_id"] = str(conv.id)
+
+            company_info = f" ({item.company})" if item.company else ""
+            ClientMessage.objects.create(
+                conversation=conv,
+                author=target_user,
+                sender="client",
+                body=f"Consultation Inquiry [{item.reference}]{company_info}:\n{topic}",
+            )
 
             try:
                 message = EmailMessage(
@@ -719,7 +797,11 @@ def _ensure_demo_conversation(user):
 
 
 def _resolve_chat_user(request):
-    conv_id = request.GET.get("conversation", "").strip() or request.POST.get("conversation_id", "").strip()
+    conv_id = (
+        request.GET.get("conversation", "").strip()
+        or request.POST.get("conversation_id", "").strip()
+        or request.session.get("conversation_id", "").strip()
+    )
     if conv_id:
         try:
             conv = ClientConversation.objects.select_related("user").filter(id=conv_id).first()
@@ -727,6 +809,14 @@ def _resolve_chat_user(request):
                 return conv.user
         except (ValueError, ValidationError):
             pass
+    consult_id = request.session.get("consultation_id")
+    if consult_id:
+        consult = Consultation.objects.filter(id=consult_id).first()
+        if consult and consult.email:
+            User = get_user_model()
+            u = User.objects.filter(email__iexact=consult.email).first()
+            if u:
+                return u
     if request.user.is_authenticated:
         return request.user
     existing_conv = ClientConversation.objects.select_related("user").order_by("-updated_at").first()
@@ -831,12 +921,11 @@ def _serialize_invoice(inv):
     }
 
 
-@login_required
 @require_http_methods(["GET", "POST"])
 def client_chat(request):
     from .chat_files import save_uploaded_chat_files
 
-    chat_user = request.user
+    chat_user = request.user if request.user.is_authenticated else _resolve_chat_user(request)
     conversation, _ = ClientConversation.objects.get_or_create(user=chat_user)
     is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
 
@@ -920,7 +1009,8 @@ def client_chat_feed(request):
     elif conv_id:
         conversation = get_object_or_404(ClientConversation.objects.select_related("user"), id=conv_id)
     else:
-        return JsonResponse({"error": "Authentication required."}, status=401)
+        chat_user = _resolve_chat_user(request)
+        conversation, _ = ClientConversation.objects.get_or_create(user=chat_user)
 
     if role == "admin":
         conversation.messages.filter(sender="client", read_at__isnull=True).update(read_at=timezone.now())

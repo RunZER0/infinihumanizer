@@ -116,6 +116,22 @@
           {% if item.attachments %}
           <div class="ops-attachment-list">
             {% for att in item.attachments %}
+            {% if att.is_audio or att.kind == "AUDIO" or att.ext == "MP3" or att.ext == "WAV" or att.ext == "M4A" or att.ext == "OGG" or att.ext == "WEBM" or att.ext == "AAC" or att.ext == "FLAC" %}
+            <div class="ops-audio-card">
+              <div class="ops-audio-meta">
+                <span class="ops-audio-badge">VOICE</span>
+                <strong class="ops-audio-title">{{ att.name }}</strong>
+                <span class="ops-audio-size">{{ att.size_display }}</span>
+              </div>
+              <audio controls preload="metadata" class="ops-audio-element" src="{{ att.url }}">
+                <source src="{{ att.url }}" type="{{ att.mime|default:'audio/webm' }}">
+                Your browser does not support audio playback.
+              </audio>
+              <div class="ops-audio-foot">
+                <a class="ops-audio-dl" href="{{ att.download_url|default:att.url }}">Download audio</a>
+              </div>
+            </div>
+            {% else %}
             <a class="ops-attachment-card" href="{{ att.download_url|default:att.url }}" target="_blank" rel="noopener">
               <span class="ops-attachment-ext">{{ att.ext|default:"FILE" }}</span>
               <span class="ops-attachment-info">
@@ -124,6 +140,7 @@
               </span>
               <span class="ops-attachment-dl">Download</span>
             </a>
+            {% endif %}
             {% endfor %}
           </div>
           {% endif %}
@@ -139,13 +156,21 @@
     <form method="post" action="{% url 'platformhub:operations_desk_conversation' conversation.id %}" enctype="multipart/form-data" class="ops-composer" id="desk-reply-form">
       {% csrf_token %}
       <input type="hidden" name="action" value="reply">
-      <input type="file" id="desk-file-input" name="attachments" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.ppt,.pptx,.png,.jpg,.jpeg,.webp,.gif,.txt,.zip" hidden>
+      <input type="file" id="desk-file-input" name="attachments" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.ppt,.pptx,.png,.jpg,.jpeg,.webp,.gif,.txt,.zip,.mp3,.wav,.m4a,.ogg,.webm,.aac,.flac,audio/*" hidden>
       <label for="desk-reply-input" class="sr-only">Reply to {{ conversation.user.first_name|default:conversation.user.email }}</label>
+      <div class="ops-recording-bar" id="desk-recording-bar" hidden>
+        <span class="recording-dot"></span>
+        <span>Recording voice note…</span>
+        <span class="recording-timer" id="desk-recording-timer">00:00</span>
+        <button type="button" class="recording-action-btn recording-stop-btn" id="desk-record-stop">Stop &amp; attach</button>
+        <button type="button" class="recording-action-btn recording-cancel-btn" id="desk-record-cancel">Cancel</button>
+      </div>
       <textarea id="desk-reply-input" name="message" rows="2" maxlength="5000" placeholder="Reply to {{ conversation.user.first_name|default:conversation.user.email }}…"></textarea>
       <div class="ops-composer-files" id="desk-file-preview" hidden></div>
       <div class="ops-composer-bar">
         <div class="ops-composer-tools">
-          <button type="button" class="ops-btn ops-btn-secondary ops-btn-sm" id="desk-attach-btn">Attach file (PDF, DOCX, XLSX…)</button>
+          <button type="button" class="ops-btn ops-btn-secondary ops-btn-sm" id="desk-attach-btn">Attach file</button>
+          <button type="button" class="ops-btn ops-btn-secondary ops-btn-sm ops-record-btn" id="desk-record-btn" title="Record voice note">🎙️ Voice note</button>
           <span class="ops-composer-hint" id="desk-reply-status">Cmd+Enter to send</span>
         </div>
         <button class="ops-btn ops-btn-primary" type="submit" id="desk-reply-submit">Send reply</button>
@@ -229,6 +254,103 @@
   const fileInput = document.getElementById("desk-file-input");
   const attachBtn = document.getElementById("desk-attach-btn");
   const filePreview = document.getElementById("desk-file-preview");
+  const recordBtn = document.getElementById("desk-record-btn");
+  const recordingBar = document.getElementById("desk-recording-bar");
+  const recordingTimer = document.getElementById("desk-recording-timer");
+  const recordStopBtn = document.getElementById("desk-record-stop");
+  const recordCancelBtn = document.getElementById("desk-record-cancel");
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let recordTimerInterval = null;
+  let recordStartTime = 0;
+
+  function formatSeconds(sec) {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+  }
+
+  async function startRecording() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert("Microphone access is not supported on this browser.");
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunks = [];
+      const mimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+        ? "audio/webm;codecs=opus"
+        : (MediaRecorder.isTypeSupported("audio/webm") ? "audio/webm" : "");
+      mediaRecorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+
+      mediaRecorder.ondataavailable = function (e) {
+        if (e.data && e.data.size > 0) audioChunks.push(e.data);
+      };
+
+      mediaRecorder.onstop = function () {
+        stream.getTracks().forEach(function (track) { track.stop(); });
+        if (recordTimerInterval) clearInterval(recordTimerInterval);
+        if (recordingBar) recordingBar.hidden = true;
+        if (recordBtn) recordBtn.classList.remove("is-recording");
+        if (!audioChunks.length) return;
+
+        const blobType = mediaRecorder.mimeType || "audio/webm";
+        const audioBlob = new Blob(audioChunks, { type: blobType });
+        const ext = blobType.includes("ogg") ? "ogg" : "webm";
+        const voiceFile = new File([audioBlob], "voice-note-" + Date.now() + "." + ext, { type: blobType });
+
+        if (window.DataTransfer && fileInput) {
+          const dt = new DataTransfer();
+          Array.from(fileInput.files || []).forEach(function (f) { dt.items.add(f); });
+          dt.items.add(voiceFile);
+          fileInput.files = dt.files;
+        }
+        updateFilePreview();
+      };
+
+      mediaRecorder.start(200);
+      recordStartTime = Date.now();
+      if (recordingBar) recordingBar.hidden = false;
+      if (recordBtn) recordBtn.classList.add("is-recording");
+      if (recordingTimer) recordingTimer.textContent = "00:00";
+      recordTimerInterval = setInterval(function () {
+        const elapsed = Math.floor((Date.now() - recordStartTime) / 1000);
+        if (recordingTimer) recordingTimer.textContent = formatSeconds(elapsed);
+      }, 500);
+    } catch (err) {
+      console.error(err);
+      alert("Could not access microphone: " + (err.message || err.name));
+    }
+  }
+
+  function stopRecording(save) {
+    if (!mediaRecorder || mediaRecorder.state === "inactive") return;
+    if (!save) audioChunks = [];
+    mediaRecorder.stop();
+  }
+
+  if (recordBtn) {
+    recordBtn.addEventListener("click", function () {
+      if (mediaRecorder && mediaRecorder.state === "recording") {
+        stopRecording(true);
+      } else {
+        startRecording();
+      }
+    });
+  }
+
+  if (recordStopBtn) {
+    recordStopBtn.addEventListener("click", function () {
+      stopRecording(true);
+    });
+  }
+
+  if (recordCancelBtn) {
+    recordCancelBtn.addEventListener("click", function () {
+      stopRecording(false);
+    });
+  }
+
   const invoiceForm = document.getElementById("desk-invoice-form");
   const invoiceSubmit = document.getElementById("desk-invoice-submit");
   const invoiceFeedback = document.getElementById("desk-invoice-feedback");
@@ -310,6 +432,15 @@
     }
   }
 
+  const AUDIO_EXTS = ["MP3", "WAV", "M4A", "OGG", "WEBM", "AAC", "FLAC", "OPUS"];
+
+  function isAudioAttachment(att) {
+    if (!att) return false;
+    if (att.is_audio || att.kind === "AUDIO") return true;
+    const ext = (att.ext || "").toUpperCase().replace(".", "");
+    return AUDIO_EXTS.includes(ext);
+  }
+
   function updateFilePreview() {
     if (!fileInput || !filePreview) return;
     const files = Array.from(fileInput.files || []);
@@ -323,7 +454,9 @@
       '<div class="ops-composer-file-list">' +
       files.map(function (f) {
         const kb = Math.max(1, Math.round(f.size / 1024));
-        return '<span class="ops-composer-file-item"><strong>' + escapeHtml(f.name) + '</strong> (' + kb + ' KB)</span>';
+        const isAudio = f.type.startsWith("audio/") || AUDIO_EXTS.some(function (ext) { return f.name.toUpperCase().endsWith("." + ext); });
+        const icon = isAudio ? "🎵 " : "";
+        return '<span class="ops-composer-file-item"><strong>' + icon + escapeHtml(f.name) + '</strong> (' + kb + ' KB)</span>';
       }).join("") +
       '<button type="button" class="ops-text-action" id="desk-clear-files">Remove</button>' +
       "</div>";
@@ -349,9 +482,31 @@
       '<div class="ops-attachment-list">' +
       attachments.map(function (att) {
         const href = escapeHtml(att.download_url || att.url || "#");
+        const playUrl = escapeHtml(att.url || att.download_url || "#");
         const ext = escapeHtml(att.ext || "FILE");
         const name = escapeHtml(att.name || att.filename || "Attachment");
         const size = escapeHtml(att.size_display || "");
+        const mime = escapeHtml(att.mime || "audio/webm");
+
+        if (isAudioAttachment(att)) {
+          return (
+            '<div class="ops-audio-card">' +
+              '<div class="ops-audio-meta">' +
+                '<span class="ops-audio-badge">VOICE</span>' +
+                '<strong class="ops-audio-title">' + name + '</strong>' +
+                '<span class="ops-audio-size">' + size + '</span>' +
+              '</div>' +
+              '<audio controls preload="metadata" class="ops-audio-element" src="' + playUrl + '">' +
+                '<source src="' + playUrl + '" type="' + mime + '">' +
+                'Your browser does not support audio playback.' +
+              '</audio>' +
+              '<div class="ops-audio-foot">' +
+                '<a class="ops-audio-dl" href="' + href + '">Download audio</a>' +
+              '</div>' +
+            '</div>'
+          );
+        }
+
         return (
           '<a class="ops-attachment-card" href="' + href + '" target="_blank" rel="noopener">' +
             '<span class="ops-attachment-ext">' + ext + "</span>" +

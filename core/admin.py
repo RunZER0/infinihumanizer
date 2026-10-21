@@ -121,7 +121,7 @@ class ClientMessageInline(admin.TabularInline):
 
 
 class ClientConversationAdmin(OwnerModelAdmin):
-    list_display = ("user", "status", "updated_at", "open_chat")
+    list_display = ("user", "subject", "status", "updated_at", "open_chat")
     list_filter = ("status",)
     search_fields = ("user__email", "user__username", "subject")
     inlines = [ClientMessageInline]
@@ -229,6 +229,12 @@ class AssuranceJobAdmin(OwnerModelAdmin):
     list_display = ("reference", "user", "title", "status", "created_at")
     list_filter = ("status",)
     search_fields = ("reference", "user__email", "title")
+
+
+class ConsultationAdmin(OwnerModelAdmin):
+    list_display = ("reference", "full_name", "email", "company", "created_at")
+    list_filter = ("created_at",)
+    search_fields = ("reference", "full_name", "email", "company", "topic")
 
 
 class SocialPosterAdmin(OwnerModelAdmin):
@@ -343,7 +349,6 @@ class SocialPosterAdmin(OwnerModelAdmin):
 
 for model in [
     Organization,
-    Consultation,
     QuoteItem,
     Deliverable,
     DeliverableFeedback,
@@ -359,6 +364,7 @@ for model in [
 
 admin_site.register(User, OwnerUserAdmin)
 admin_site.register(Group, OwnerGroupAdmin)
+admin_site.register(Consultation, ConsultationAdmin)
 admin_site.register(ServiceRequest, ServiceRequestAdmin)
 admin_site.register(Quote, QuoteAdmin)
 admin_site.register(Invoice, InvoiceAdmin)

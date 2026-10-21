@@ -10,6 +10,17 @@ from xml.sax.saxutils import escape as xml_escape
 
 from django.conf import settings
 
+AUDIO_EXTENSIONS = {
+    ".mp3",
+    ".wav",
+    ".m4a",
+    ".ogg",
+    ".webm",
+    ".aac",
+    ".flac",
+    ".opus",
+}
+
 ALLOWED_EXTENSIONS = {
     ".pdf",
     ".doc",
@@ -27,7 +38,7 @@ ALLOWED_EXTENSIONS = {
     ".txt",
     ".md",
     ".zip",
-}
+} | AUDIO_EXTENSIONS
 
 MAX_UPLOAD_SIZE_BYTES = 25 * 1024 * 1024  # 25 MB
 
@@ -59,13 +70,17 @@ def build_attachment_meta(filename: str, display_name: str = "", role: str = "fi
     file_path = files_dir / filename
     size_bytes = file_path.stat().st_size if file_path.exists() else 0
     ext = Path(filename).suffix.lstrip(".").upper() or "FILE"
+    dot_ext = Path(filename).suffix.lower()
+    is_audio = dot_ext in AUDIO_EXTENSIONS
     return {
         "name": display_name or filename,
         "filename": filename,
         "url": f"/workspace/chat/files/{filename}",
         "download_url": f"/workspace/chat/files/{filename}?download=1",
         "ext": ext,
-        "kind": ext,
+        "kind": "AUDIO" if is_audio else ext,
+        "is_audio": is_audio,
+        "mime": guess_mime_type(filename),
         "size_bytes": size_bytes,
         "size_display": format_file_size(size_bytes),
         "role": role,
@@ -81,7 +96,7 @@ def save_uploaded_chat_files(uploaded_files):
         ext = Path(orig_name).suffix.lower()
         if ext not in ALLOWED_EXTENSIONS:
             raise ValueError(
-                f"Unsupported file type ({ext or 'unknown'}). Allowed: PDF, DOCX, XLSX, CSV, PPTX, PNG, JPG, TXT, ZIP."
+                f"Unsupported file type ({ext or 'unknown'}). Allowed: documents (PDF, DOCX, XLSX, CSV, PPTX, TXT), images (PNG, JPG, WEBP), audio (MP3, WAV, M4A, WEBM, OGG, AAC, FLAC), and ZIP."
             )
         if getattr(f, "size", 0) > MAX_UPLOAD_SIZE_BYTES:
             raise ValueError(f"{orig_name} exceeds the 25 MB file size limit.")
@@ -283,6 +298,14 @@ def guess_mime_type(filename: str) -> str:
         ".jpeg": "image/jpeg",
         ".webp": "image/webp",
         ".zip": "application/zip",
+        ".mp3": "audio/mpeg",
+        ".wav": "audio/wav",
+        ".m4a": "audio/mp4",
+        ".ogg": "audio/ogg",
+        ".opus": "audio/ogg",
+        ".webm": "audio/webm",
+        ".aac": "audio/aac",
+        ".flac": "audio/flac",
     }
     if ext in explicit:
         return explicit[ext]

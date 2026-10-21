@@ -3240,3 +3240,201 @@ body.modal-open{overflow:hidden}
   cursor: pointer;
   padding: 0;
 }
+
+/* Audio Player and Voice Note Recording Styling */
+.ops-audio-card,
+.cp-audio-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-top: 6px;
+  min-width: 280px;
+  max-width: 440px;
+  box-sizing: border-box;
+}
+
+.ops-msg-incoming .ops-audio-card,
+.cp-msg-team .cp-audio-card {
+  background: var(--surface-base);
+  border: 1px solid var(--line-subtle);
+  color: var(--text-primary);
+}
+
+.ops-msg-outgoing .ops-audio-card,
+.cp-msg-self .cp-audio-card {
+  background: rgba(250, 248, 242, 0.08);
+  border: 1px solid rgba(250, 248, 242, 0.22);
+  color: var(--text-inverse);
+}
+
+.ops-audio-meta,
+.cp-audio-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.ops-audio-badge,
+.cp-audio-badge {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: #2a6f97;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.ops-audio-title,
+.cp-audio-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.ops-audio-size,
+.cp-audio-size {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  opacity: 0.75;
+  flex-shrink: 0;
+}
+
+.ops-audio-element,
+.cp-audio-element {
+  width: 100%;
+  height: 38px;
+  outline: none;
+  border-radius: 20px;
+}
+
+.ops-msg-outgoing .ops-audio-element,
+.cp-msg-self .cp-audio-element {
+  filter: invert(0.9) hue-rotate(180deg);
+}
+
+.ops-audio-foot,
+.cp-audio-foot {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 11px;
+}
+
+.ops-audio-dl,
+.cp-audio-dl {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--action-primary);
+  text-decoration: none;
+}
+.ops-audio-dl:hover,
+.cp-audio-dl:hover {
+  text-decoration: underline;
+}
+.ops-msg-outgoing .ops-audio-dl,
+.cp-msg-self .cp-audio-dl {
+  color: var(--surface-paper);
+}
+
+/* Voice Note Recording UI */
+.cp-record-btn,
+.ops-record-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-control);
+  background: var(--surface-paper);
+  color: var(--text-primary);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+.ops-record-btn {
+  min-height: 32px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+.cp-record-btn:hover,
+.ops-record-btn:hover {
+  background: var(--surface-quiet);
+}
+.cp-record-btn.is-recording,
+.ops-record-btn.is-recording {
+  background: #fee2e2;
+  border-color: #ef4444;
+  color: #b91c1c;
+  animation: pulse-red 1.4s infinite;
+}
+
+@keyframes pulse-red {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+.cp-recording-bar,
+.ops-recording-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 6px;
+  color: #991b1b;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.recording-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ef4444;
+  display: inline-block;
+  animation: blink-dot 1s infinite;
+}
+
+@keyframes blink-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+.recording-timer {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 700;
+  color: #7f1d1d;
+}
+
+.recording-action-btn {
+  border: none;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.recording-stop-btn {
+  background: #ef4444;
+  color: #ffffff;
+}
+.recording-cancel-btn {
+  background: transparent;
+  color: #6b7280;
+  text-decoration: underline;
+}
+

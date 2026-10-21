@@ -54,6 +54,22 @@
           {% if item.attachments %}
           <div class="cp-attachment-list">
             {% for att in item.attachments %}
+            {% if att.is_audio or att.kind == "AUDIO" or att.ext == "MP3" or att.ext == "WAV" or att.ext == "M4A" or att.ext == "OGG" or att.ext == "WEBM" or att.ext == "AAC" or att.ext == "FLAC" %}
+            <div class="cp-audio-card">
+              <div class="cp-audio-meta">
+                <span class="cp-audio-badge">VOICE</span>
+                <strong class="cp-audio-title">{{ att.name }}</strong>
+                <span class="cp-audio-size">{{ att.size_display }}</span>
+              </div>
+              <audio controls preload="metadata" class="cp-audio-element" src="{{ att.url }}">
+                <source src="{{ att.url }}" type="{{ att.mime|default:'audio/webm' }}">
+                Your browser does not support audio playback.
+              </audio>
+              <div class="cp-audio-foot">
+                <a class="cp-audio-dl" href="{{ att.download_url|default:att.url }}">Download audio</a>
+              </div>
+            </div>
+            {% else %}
             <a class="cp-attachment-card" href="{{ att.download_url|default:att.url }}" target="_blank" rel="noopener">
               <span class="cp-attachment-ext">{{ att.ext|default:"FILE" }}</span>
               <span class="cp-attachment-info">
@@ -62,6 +78,7 @@
               </span>
               <span class="cp-attachment-dl">Download</span>
             </a>
+            {% endif %}
             {% endfor %}
           </div>
           {% endif %}
@@ -77,12 +94,20 @@
     <form method="post" action="{% url 'platformhub:client_chat' %}" enctype="multipart/form-data" class="cp-composer" id="client-chat-form">
       {% csrf_token %}
       <input type="hidden" name="conversation_id" value="{{ conversation.id }}">
-      <input type="file" id="client-file-input" name="attachments" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.ppt,.pptx,.png,.jpg,.jpeg,.webp,.gif,.txt,.zip" hidden>
+      <input type="file" id="client-file-input" name="attachments" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.ppt,.pptx,.png,.jpg,.jpeg,.webp,.gif,.txt,.zip,.mp3,.wav,.m4a,.ogg,.webm,.aac,.flac,audio/*" hidden>
       <label for="client-message" class="sr-only">Message</label>
+      <div class="cp-recording-bar" id="client-recording-bar" hidden>
+        <span class="recording-dot"></span>
+        <span>Recording voice note…</span>
+        <span class="recording-timer" id="client-recording-timer">00:00</span>
+        <button type="button" class="recording-action-btn recording-stop-btn" id="client-record-stop">Stop &amp; attach</button>
+        <button type="button" class="recording-action-btn recording-cancel-btn" id="client-record-cancel">Cancel</button>
+      </div>
       <div class="cp-composer-files" id="client-file-preview" hidden></div>
       <div class="cp-composer-row">
-        <button type="button" class="cp-attach-btn" id="client-attach-btn" title="Attach PDF, DOCX, XLSX, or image">Attach file</button>
-        <textarea id="client-message" name="message" rows="1" maxlength="5000" placeholder="Write a message…"></textarea>
+        <button type="button" class="cp-attach-btn" id="client-attach-btn" title="Attach documents, images, or audio">Attach file</button>
+        <button type="button" class="cp-record-btn" id="client-record-btn" title="Record voice note">🎙️ Voice note</button>
+        <textarea id="client-message" name="message" rows="1" maxlength="5000" placeholder="Write a message or record audio…"></textarea>
         <button class="cp-send-btn" type="submit" id="client-send-submit">Send</button>
       </div>
       <div class="cp-composer-status" id="client-send-status" aria-live="polite"></div>
@@ -144,6 +169,102 @@
   const sheet = document.getElementById("cp-invoice-sheet");
   const toggleSheetBtn = document.getElementById("cp-toggle-invoices");
   const closeSheetBtn = document.getElementById("cp-close-invoices");
+  const recordBtn = document.getElementById("client-record-btn");
+  const recordingBar = document.getElementById("client-recording-bar");
+  const recordingTimer = document.getElementById("client-recording-timer");
+  const recordStopBtn = document.getElementById("client-record-stop");
+  const recordCancelBtn = document.getElementById("client-record-cancel");
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let recordTimerInterval = null;
+  let recordStartTime = 0;
+
+  function formatSeconds(sec) {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+  }
+
+  async function startRecording() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert("Microphone access is not supported on this browser.");
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunks = [];
+      const mimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+        ? "audio/webm;codecs=opus"
+        : (MediaRecorder.isTypeSupported("audio/webm") ? "audio/webm" : "");
+      mediaRecorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+
+      mediaRecorder.ondataavailable = function (e) {
+        if (e.data && e.data.size > 0) audioChunks.push(e.data);
+      };
+
+      mediaRecorder.onstop = function () {
+        stream.getTracks().forEach(function (track) { track.stop(); });
+        if (recordTimerInterval) clearInterval(recordTimerInterval);
+        if (recordingBar) recordingBar.hidden = true;
+        if (recordBtn) recordBtn.classList.remove("is-recording");
+        if (!audioChunks.length) return;
+
+        const blobType = mediaRecorder.mimeType || "audio/webm";
+        const audioBlob = new Blob(audioChunks, { type: blobType });
+        const ext = blobType.includes("ogg") ? "ogg" : "webm";
+        const voiceFile = new File([audioBlob], "voice-note-" + Date.now() + "." + ext, { type: blobType });
+
+        if (window.DataTransfer && fileInput) {
+          const dt = new DataTransfer();
+          Array.from(fileInput.files || []).forEach(function (f) { dt.items.add(f); });
+          dt.items.add(voiceFile);
+          fileInput.files = dt.files;
+        }
+        updateFilePreview();
+      };
+
+      mediaRecorder.start(200);
+      recordStartTime = Date.now();
+      if (recordingBar) recordingBar.hidden = false;
+      if (recordBtn) recordBtn.classList.add("is-recording");
+      if (recordingTimer) recordingTimer.textContent = "00:00";
+      recordTimerInterval = setInterval(function () {
+        const elapsed = Math.floor((Date.now() - recordStartTime) / 1000);
+        if (recordingTimer) recordingTimer.textContent = formatSeconds(elapsed);
+      }, 500);
+    } catch (err) {
+      console.error(err);
+      alert("Could not access microphone: " + (err.message || err.name));
+    }
+  }
+
+  function stopRecording(save) {
+    if (!mediaRecorder || mediaRecorder.state === "inactive") return;
+    if (!save) audioChunks = [];
+    mediaRecorder.stop();
+  }
+
+  if (recordBtn) {
+    recordBtn.addEventListener("click", function () {
+      if (mediaRecorder && mediaRecorder.state === "recording") {
+        stopRecording(true);
+      } else {
+        startRecording();
+      }
+    });
+  }
+
+  if (recordStopBtn) {
+    recordStopBtn.addEventListener("click", function () {
+      stopRecording(true);
+    });
+  }
+
+  if (recordCancelBtn) {
+    recordCancelBtn.addEventListener("click", function () {
+      stopRecording(false);
+    });
+  }
 
   if (toggleSheetBtn && sheet) {
     toggleSheetBtn.addEventListener("click", function () {
@@ -177,6 +298,15 @@
     }
   }
 
+  const AUDIO_EXTS = ["MP3", "WAV", "M4A", "OGG", "WEBM", "AAC", "FLAC", "OPUS"];
+
+  function isAudioAttachment(att) {
+    if (!att) return false;
+    if (att.is_audio || att.kind === "AUDIO") return true;
+    const ext = (att.ext || "").toUpperCase().replace(".", "");
+    return AUDIO_EXTS.includes(ext);
+  }
+
   function updateFilePreview() {
     if (!fileInput || !filePreview) return;
     const files = Array.from(fileInput.files || []);
@@ -190,7 +320,9 @@
       '<div class="cp-composer-file-list">' +
       files.map(function (f) {
         const kb = Math.max(1, Math.round(f.size / 1024));
-        return '<span class="cp-composer-file-item"><strong>' + escapeHtml(f.name) + '</strong> (' + kb + ' KB)</span>';
+        const isAudio = f.type.startsWith("audio/") || AUDIO_EXTS.some(function (ext) { return f.name.toUpperCase().endsWith("." + ext); });
+        const icon = isAudio ? "🎵 " : "";
+        return '<span class="cp-composer-file-item"><strong>' + icon + escapeHtml(f.name) + '</strong> (' + kb + ' KB)</span>';
       }).join("") +
       '<button type="button" class="cp-file-clear-btn" id="client-clear-files">Remove</button>' +
       "</div>";
@@ -216,9 +348,31 @@
       '<div class="cp-attachment-list">' +
       attachments.map(function (att) {
         const href = escapeHtml(att.download_url || att.url || "#");
+        const playUrl = escapeHtml(att.url || att.download_url || "#");
         const ext = escapeHtml(att.ext || "FILE");
         const name = escapeHtml(att.name || att.filename || "Attachment");
         const size = escapeHtml(att.size_display || "");
+        const mime = escapeHtml(att.mime || "audio/webm");
+
+        if (isAudioAttachment(att)) {
+          return (
+            '<div class="cp-audio-card">' +
+              '<div class="cp-audio-meta">' +
+                '<span class="cp-audio-badge">VOICE</span>' +
+                '<strong class="cp-audio-title">' + name + '</strong>' +
+                '<span class="cp-audio-size">' + size + '</span>' +
+              '</div>' +
+              '<audio controls preload="metadata" class="cp-audio-element" src="' + playUrl + '">' +
+                '<source src="' + playUrl + '" type="' + mime + '">' +
+                'Your browser does not support audio playback.' +
+              '</audio>' +
+              '<div class="cp-audio-foot">' +
+                '<a class="cp-audio-dl" href="' + href + '">Download audio</a>' +
+              '</div>' +
+            '</div>'
+          );
+        }
+
         return (
           '<a class="cp-attachment-card" href="' + href + '" target="_blank" rel="noopener">' +
             '<span class="cp-attachment-ext">' + ext + "</span>" +

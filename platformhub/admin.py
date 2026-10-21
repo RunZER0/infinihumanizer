@@ -41,7 +41,13 @@ class PaymentRecordAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Organization)
-admin.site.register(Consultation)
+
+
+@admin.register(Consultation)
+class ConsultationAdmin(admin.ModelAdmin):
+    list_display = ("reference", "full_name", "email", "company", "created_at")
+    list_filter = ("created_at",)
+    search_fields = ("reference", "full_name", "email", "company", "topic")
 admin.site.register(Deliverable)
 admin.site.register(DeliverableFeedback)
 admin.site.register(AssuranceJob)

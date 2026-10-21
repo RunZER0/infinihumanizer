@@ -785,3 +785,183 @@ class AdminPostersDownloadTests(TestCase):
         self.assertEqual(resp["Content-Type"], "application/zip")
         self.assertIn("infini_all_20_social_posters.zip", resp["Content-Disposition"])
         self.assertGreater(len(resp.content), 500000)
+
+
+class AudioChatAndIntakeEndToEndTests(TestCase):
+    def test_consultation_intake_creates_conversation_and_surfaces_in_admin_desk(self):
+        from django.contrib.auth import get_user_model
+        from humanizer.models import ClientConversation, ClientMessage
+        from platformhub.models import Consultation
+        from accounts.verification import SESSION_VERIFIED_EMAIL
+
+        User = get_user_model()
+        client_email = "marcus.vance@executivebrief.com"
+
+        session = self.client.session
+        session["infini_consult_name"] = "Dr. Marcus Vance"
+        session["infini_consult_email"] = client_email
+        session[SESSION_VERIFIED_EMAIL] = client_email
+        session.save()
+
+        post_res = self.client.post(
+            reverse("platformhub:consultation"),
+            {
+                "action": "submit_note",
+                "topic": "We require an executive communication audit and technical reports restructuring.",
+                "company": "Vance BioAnalytics",
+            },
+        )
+        self.assertEqual(post_res.status_code, 302)
+
+        consultation = Consultation.objects.filter(email=client_email).first()
+        self.assertIsNotNone(consultation)
+        self.assertEqual(consultation.full_name, "Dr. Marcus Vance")
+        self.assertEqual(consultation.company, "Vance BioAnalytics")
+
+        user = User.objects.filter(email__iexact=client_email).first()
+        self.assertIsNotNone(user)
+        self.assertEqual(consultation.user, user)
+
+        conversation = ClientConversation.objects.filter(user=user).first()
+        self.assertIsNotNone(conversation)
+        self.assertEqual(conversation.status, "open")
+
+        initial_msg = ClientMessage.objects.filter(conversation=conversation, sender="client").first()
+        self.assertIsNotNone(initial_msg)
+        self.assertIn(consultation.reference, initial_msg.body)
+        self.assertIn("Vance BioAnalytics", initial_msg.body)
+        self.assertIn("executive communication audit", initial_msg.body)
+
+        desk_res = self.client.get(reverse("platformhub:operations_desk"))
+        self.assertEqual(desk_res.status_code, 200)
+        self.assertContains(desk_res, "Dr. Marcus Vance")
+        self.assertContains(desk_res, client_email)
+
+    def test_admin_and_client_audio_exchange_flow(self):
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from django.contrib.auth import get_user_model
+        from humanizer.models import ClientConversation, ClientMessage
+
+        User = get_user_model()
+        client_user = User.objects.create_user(
+            username="clara_client",
+            email="clara@soundstudio.io",
+            first_name="Clara",
+            last_name="Oswald",
+        )
+        conversation = ClientConversation.objects.create(
+            user=client_user,
+            subject="Studio Voice & Language Direction",
+            status="open",
+        )
+
+        admin_audio = SimpleUploadedFile(
+            "studio_briefing.mp3",
+            b"\xff\xfb\x90\x44" * 128,
+            content_type="audio/mpeg",
+        )
+        admin_post = self.client.post(
+            reverse("platformhub:operations_desk_conversation", kwargs={"conversation_id": conversation.id}),
+            {
+                "action": "reply",
+                "message": "Here is the audio voice overview for the brief.",
+                "attachments": [admin_audio],
+            },
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(admin_post.status_code, 200)
+        admin_data = admin_post.json()
+        self.assertTrue(admin_data["ok"])
+        self.assertEqual(admin_data["message"]["sender"], "admin")
+        self.assertEqual(len(admin_data["message"]["attachments"]), 1)
+        att = admin_data["message"]["attachments"][0]
+        self.assertTrue(att["is_audio"])
+        self.assertEqual(att["kind"], "AUDIO")
+        self.assertEqual(att["mime"], "audio/mpeg")
+        self.assertIn("studio_briefing", att["filename"])
+
+        audio_res = self.client.get(att["url"])
+        self.assertEqual(audio_res.status_code, 200)
+        self.assertEqual(audio_res["Content-Type"], "audio/mpeg")
+
+        feed_res = self.client.get(
+            reverse("platformhub:client_chat_feed"),
+            {"conversation": str(conversation.id), "role": "client"},
+        )
+        self.assertEqual(feed_res.status_code, 200)
+        feed_data = feed_res.json()
+        self.assertEqual(len(feed_data["messages"]), 1)
+        self.assertTrue(feed_data["messages"][0]["attachments"][0]["is_audio"])
+
+        client_voice = SimpleUploadedFile(
+            "voice_note_feedback.webm",
+            b"\x1a\x45\xdf\xa3" * 128,
+            content_type="audio/webm",
+        )
+        self.client.force_login(client_user)
+        client_post = self.client.post(
+            reverse("platformhub:client_chat"),
+            {
+                "conversation_id": str(conversation.id),
+                "message": "Recorded voice feedback on pacing.",
+                "attachments": [client_voice],
+            },
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(client_post.status_code, 200)
+        client_data = client_post.json()
+        self.assertTrue(client_data["ok"])
+        self.assertEqual(client_data["message"]["sender"], "client")
+        self.assertEqual(len(client_data["message"]["attachments"]), 1)
+        client_att = client_data["message"]["attachments"][0]
+        self.assertTrue(client_att["is_audio"])
+        self.assertEqual(client_att["kind"], "AUDIO")
+        self.assertEqual(client_att["mime"], "audio/webm")
+
+        client_audio_res = self.client.get(client_att["url"])
+        self.assertEqual(client_audio_res.status_code, 200)
+        self.assertEqual(client_audio_res["Content-Type"], "audio/webm")
+
+        admin_feed_res = self.client.get(
+            reverse("platformhub:client_chat_feed"),
+            {"conversation": str(conversation.id), "role": "admin"},
+        )
+        self.assertEqual(admin_feed_res.status_code, 200)
+        admin_feed_data = admin_feed_res.json()
+        self.assertEqual(len(admin_feed_data["messages"]), 2)
+        self.assertEqual(admin_feed_data["messages"][1]["sender"], "client")
+        self.assertTrue(admin_feed_data["messages"][1]["attachments"][0]["is_audio"])
+
+    def test_django_admin_displays_consultation_and_conversations(self):
+        from django.contrib.auth import get_user_model
+        from humanizer.models import ClientConversation
+        from platformhub.models import Consultation
+
+        User = get_user_model()
+        superuser = User.objects.create_superuser(
+            username="admin_consult_test",
+            email="admin_consult@example.com",
+            password="adminpassword123",
+        )
+        self.client.force_login(superuser)
+
+        consult = Consultation.objects.create(
+            full_name="Lady Violet",
+            email="violet@crawley.estate",
+            company="Downton",
+            topic="Need writing polished for royal correspondence.",
+        )
+        ClientConversation.objects.create(
+            user=superuser,
+            subject="Admin oversight thread",
+        )
+
+        resp_consult = self.client.get("/admin/platformhub/consultation/")
+        self.assertEqual(resp_consult.status_code, 200)
+        self.assertContains(resp_consult, "Lady Violet")
+        self.assertContains(resp_consult, consult.reference)
+
+        resp_conv = self.client.get("/admin/humanizer/clientconversation/")
+        self.assertEqual(resp_conv.status_code, 200)
+        self.assertContains(resp_conv, "Admin oversight thread")
+
