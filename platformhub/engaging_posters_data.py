@@ -1,129 +1,16 @@
 # 20 High-Converting, Emotion-Driven Social Story Posters (1080x1920)
-# No internal debug info, no database counts, no stray characters.
-# Designed for Snapchat / Instagram Stories with high visual impact.
-
-THEMES = {
-    "ember": {
-        "bg": "#09090b",
-        "glow1": "rgba(239, 68, 68, 0.32)",
-        "glow2": "rgba(249, 115, 22, 0.22)",
-        "text": "#f4f4f5",
-        "text_muted": "#a1a1aa",
-        "eyebrow": "#f87171",
-        "headline_grad": "linear-gradient(135deg, #f87171 0%, #fb923c 100%)",
-        "card_bg": "rgba(24, 24, 27, 0.78)",
-        "card_border": "rgba(255, 255, 255, 0.14)",
-        "accent": "#ef4444",
-        "badge_bg": "rgba(239, 68, 68, 0.15)",
-        "badge_border": "rgba(239, 68, 68, 0.4)",
-        "badge_text": "#fca5a5",
-        "sticker_bg": "#ffffff",
-        "sticker_text": "#09090b",
-        "sticker_accent": "#ef4444",
-        "is_dark": True,
-    },
-    "cyan": {
-        "bg": "#060d17",
-        "glow1": "rgba(6, 182, 212, 0.30)",
-        "glow2": "rgba(59, 130, 246, 0.22)",
-        "text": "#f0f9ff",
-        "text_muted": "#94a3b8",
-        "eyebrow": "#38bdf8",
-        "headline_grad": "linear-gradient(135deg, #38bdf8 0%, #818cf8 100%)",
-        "card_bg": "rgba(15, 23, 42, 0.8)",
-        "card_border": "rgba(56, 189, 248, 0.2)",
-        "accent": "#06b6d4",
-        "badge_bg": "rgba(6, 182, 212, 0.15)",
-        "badge_border": "rgba(6, 182, 212, 0.4)",
-        "badge_text": "#67e8f9",
-        "sticker_bg": "#ffffff",
-        "sticker_text": "#060d17",
-        "sticker_accent": "#0284c7",
-        "is_dark": True,
-    },
-    "emerald": {
-        "bg": "#06130e",
-        "glow1": "rgba(16, 185, 129, 0.32)",
-        "glow2": "rgba(5, 150, 105, 0.20)",
-        "text": "#f0fdf4",
-        "text_muted": "#86efac",
-        "eyebrow": "#34d399",
-        "headline_grad": "linear-gradient(135deg, #34d399 0%, #a3e635 100%)",
-        "card_bg": "rgba(6, 32, 22, 0.82)",
-        "card_border": "rgba(52, 211, 153, 0.22)",
-        "accent": "#10b981",
-        "badge_bg": "rgba(16, 185, 129, 0.15)",
-        "badge_border": "rgba(16, 185, 129, 0.4)",
-        "badge_text": "#6ee7b7",
-        "sticker_bg": "#ffffff",
-        "sticker_text": "#06130e",
-        "sticker_accent": "#059669",
-        "is_dark": True,
-    },
-    "violet": {
-        "bg": "#0f081d",
-        "glow1": "rgba(168, 85, 247, 0.32)",
-        "glow2": "rgba(236, 72, 153, 0.22)",
-        "text": "#faf5ff",
-        "text_muted": "#cbd5e1",
-        "eyebrow": "#c084fc",
-        "headline_grad": "linear-gradient(135deg, #c084fc 0%, #f472b6 100%)",
-        "card_bg": "rgba(26, 16, 48, 0.82)",
-        "card_border": "rgba(192, 132, 252, 0.25)",
-        "accent": "#a855f7",
-        "badge_bg": "rgba(168, 85, 247, 0.15)",
-        "badge_border": "rgba(168, 85, 247, 0.4)",
-        "badge_text": "#e9d5ff",
-        "sticker_bg": "#ffffff",
-        "sticker_text": "#0f081d",
-        "sticker_accent": "#9333ea",
-        "is_dark": True,
-    },
-    "amber": {
-        "bg": "#120e07",
-        "glow1": "rgba(245, 158, 11, 0.32)",
-        "glow2": "rgba(234, 88, 12, 0.22)",
-        "text": "#fffbeb",
-        "text_muted": "#d4d4d8",
-        "eyebrow": "#fbbf24",
-        "headline_grad": "linear-gradient(135deg, #fbbf24 0%, #f97316 100%)",
-        "card_bg": "rgba(33, 24, 12, 0.82)",
-        "card_border": "rgba(251, 191, 36, 0.22)",
-        "accent": "#f59e0b",
-        "badge_bg": "rgba(245, 158, 11, 0.15)",
-        "badge_border": "rgba(245, 158, 11, 0.4)",
-        "badge_text": "#fde68a",
-        "sticker_bg": "#ffffff",
-        "sticker_text": "#120e07",
-        "sticker_accent": "#d97706",
-        "is_dark": True,
-    },
-    "cream": {
-        "bg": "#faf7f2",
-        "glow1": "rgba(200, 65, 50, 0.12)",
-        "glow2": "rgba(217, 119, 6, 0.10)",
-        "text": "#18181b",
-        "text_muted": "#52525b",
-        "eyebrow": "#c84132",
-        "headline_grad": "linear-gradient(135deg, #c84132 0%, #b45309 100%)",
-        "card_bg": "rgba(255, 255, 255, 0.9)",
-        "card_border": "rgba(207, 201, 188, 0.8)",
-        "accent": "#c84132",
-        "badge_bg": "rgba(200, 65, 50, 0.1)",
-        "badge_border": "rgba(200, 65, 50, 0.3)",
-        "badge_text": "#a82d20",
-        "sticker_bg": "#18181b",
-        "sticker_text": "#ffffff",
-        "sticker_accent": "#f87171",
-        "is_dark": False,
-    },
-}
+# Strictly aligned with www.byinfini.online brand identity:
+# - Infini Terracotta (#c84132 / #e46b5d)
+# - Obsidian Ink (#11110f)
+# - Warm Ivory / Paper (#faf8f2 / #f1eee6)
+# Varied visual styles: Real photographic backgrounds, luxury editorial paper, and obsidian ink glow.
 
 ENGAGING_POSTERS = [
     {
         "id": 1,
         "number": "01",
-        "theme_key": "ember",
+        "style": "photo-dark",
+        "bg_image": "bg_executive_desk.jpg",
         "tag_badge": "24-Hour Bid Defense",
         "eyebrow": "High-Stakes Commercial Bids",
         "headline_pre": "Don't lose a contract to a ",
@@ -138,7 +25,8 @@ ENGAGING_POSTERS = [
     {
         "id": 2,
         "number": "02",
-        "theme_key": "violet",
+        "style": "photo-dark",
+        "bg_image": "bg_boardroom.jpg",
         "tag_badge": "Fundraising Accelerator",
         "eyebrow": "Investor Pitch Decks",
         "headline_pre": "Investors don't read walls of text. ",
@@ -153,7 +41,8 @@ ENGAGING_POSTERS = [
     {
         "id": 3,
         "number": "03",
-        "theme_key": "cyan",
+        "style": "photo-dark",
+        "bg_image": "bg_logistics_port.jpg",
         "tag_badge": "Profit Armor",
         "eyebrow": "SKU Landed Cost & Margins",
         "headline_pre": "Surprise freight charges are ",
@@ -168,7 +57,7 @@ ENGAGING_POSTERS = [
     {
         "id": 4,
         "number": "04",
-        "theme_key": "emerald",
+        "style": "editorial-paper",
         "tag_badge": "Revenue Conversion",
         "eyebrow": "Website Copy That Sells",
         "headline_pre": "Visitors leave your site when ",
@@ -183,7 +72,7 @@ ENGAGING_POSTERS = [
     {
         "id": 5,
         "number": "05",
-        "theme_key": "ember",
+        "style": "ink-obsidian",
         "tag_badge": "Outbound Growth",
         "eyebrow": "B2B Sales Outreach",
         "headline_pre": "Stop sending sales emails that ",
@@ -198,7 +87,7 @@ ENGAGING_POSTERS = [
     {
         "id": 6,
         "number": "06",
-        "theme_key": "amber",
+        "style": "ink-obsidian",
         "tag_badge": "Human Polish",
         "eyebrow": "AI Tone Calibration",
         "headline_pre": "Generic AI text makes your brand ",
@@ -213,7 +102,7 @@ ENGAGING_POSTERS = [
     {
         "id": 7,
         "number": "07",
-        "theme_key": "cyan",
+        "style": "editorial-paper",
         "tag_badge": "Scale Your Team",
         "eyebrow": "Operational SOPs",
         "headline_pre": "Stop answering the same question ",
@@ -228,7 +117,7 @@ ENGAGING_POSTERS = [
     {
         "id": 8,
         "number": "08",
-        "theme_key": "violet",
+        "style": "ink-obsidian",
         "tag_badge": "Fast Synthesis",
         "eyebrow": "Customer Interview Analysis",
         "headline_pre": "Staring at 10 hours of ",
@@ -243,7 +132,7 @@ ENGAGING_POSTERS = [
     {
         "id": 9,
         "number": "09",
-        "theme_key": "emerald",
+        "style": "ink-obsidian",
         "tag_badge": "Cart Conversion",
         "eyebrow": "E-Commerce Product Copy",
         "headline_pre": "Dry factory specs won't get ",
@@ -258,7 +147,7 @@ ENGAGING_POSTERS = [
     {
         "id": 10,
         "number": "10",
-        "theme_key": "cream",
+        "style": "editorial-paper",
         "tag_badge": "Local Trust",
         "eyebrow": "Trade & Contractor Services",
         "headline_pre": "Clients won't hire contractors who ",
@@ -273,7 +162,8 @@ ENGAGING_POSTERS = [
     {
         "id": 11,
         "number": "11",
-        "theme_key": "amber",
+        "style": "photo-dark",
+        "bg_image": "bg_boardroom.jpg",
         "tag_badge": "Executive Brand",
         "eyebrow": "Authority & Bio Positioning",
         "headline_pre": "An outdated bio is capping your ",
@@ -288,7 +178,7 @@ ENGAGING_POSTERS = [
     {
         "id": 12,
         "number": "12",
-        "theme_key": "cyan",
+        "style": "editorial-paper",
         "tag_badge": "Market Intelligence",
         "eyebrow": "Competitor Price Benchmarking",
         "headline_pre": "Are you secretly undercharging by ",
@@ -303,7 +193,7 @@ ENGAGING_POSTERS = [
     {
         "id": 13,
         "number": "13",
-        "theme_key": "emerald",
+        "style": "ink-obsidian",
         "tag_badge": "Churn Killer",
         "eyebrow": "Customer Support Scripts",
         "headline_pre": "Cold support replies are ",
@@ -318,7 +208,8 @@ ENGAGING_POSTERS = [
     {
         "id": 14,
         "number": "14",
-        "theme_key": "ember",
+        "style": "photo-dark",
+        "bg_image": "bg_tech_studio.jpg",
         "tag_badge": "Save Your Friday",
         "eyebrow": "Custom Financial Tools",
         "headline_pre": "Stop wasting hours matching ",
@@ -333,7 +224,7 @@ ENGAGING_POSTERS = [
     {
         "id": 15,
         "number": "15",
-        "theme_key": "violet",
+        "style": "editorial-paper",
         "tag_badge": "Instant Retention",
         "eyebrow": "Onboarding Email Sequences",
         "headline_pre": "New users sign up, hear crickets, and ",
@@ -348,7 +239,8 @@ ENGAGING_POSTERS = [
     {
         "id": 16,
         "number": "16",
-        "theme_key": "cream",
+        "style": "photo-dark",
+        "bg_image": "bg_luxury_charter.jpg",
         "tag_badge": "Luxury Booking",
         "eyebrow": "Charter & Premium Experiences",
         "headline_pre": "High-ticket clients won't book ",
@@ -363,7 +255,8 @@ ENGAGING_POSTERS = [
     {
         "id": 17,
         "number": "17",
-        "theme_key": "cyan",
+        "style": "photo-dark",
+        "bg_image": "bg_logistics_port.jpg",
         "tag_badge": "Fleet Efficiency",
         "eyebrow": "Dispatch & Expense Models",
         "headline_pre": "Unchecked driver fuel expenses are ",
@@ -378,7 +271,7 @@ ENGAGING_POSTERS = [
     {
         "id": 18,
         "number": "18",
-        "theme_key": "amber",
+        "style": "editorial-paper",
         "tag_badge": "Friction Audit",
         "eyebrow": "Intake Funnel Optimization",
         "headline_pre": "High website traffic with ",
@@ -393,7 +286,7 @@ ENGAGING_POSTERS = [
     {
         "id": 19,
         "number": "19",
-        "theme_key": "emerald",
+        "style": "ink-obsidian",
         "tag_badge": "Grounded AI",
         "eyebrow": "AI Data & Prompt Engineering",
         "headline_pre": "Your chatbot is hallucinating and ",
@@ -408,7 +301,8 @@ ENGAGING_POSTERS = [
     {
         "id": 20,
         "number": "20",
-        "theme_key": "ember",
+        "style": "photo-dark",
+        "bg_image": "bg_executive_desk.jpg",
         "tag_badge": "Emergency 24H Desk",
         "eyebrow": "Overnight Emergency Review",
         "headline_pre": "Meeting is tomorrow at 9 AM and your ",
@@ -423,7 +317,6 @@ ENGAGING_POSTERS = [
 ]
 
 for p in ENGAGING_POSTERS:
-    p["theme"] = THEMES[p["theme_key"]]
     p["png_filename"] = f"poster_{p['number']}.png"
     p["png_path"] = f"/static/posters/poster_{p['number']}.png"
     p["jpg_filename"] = f"poster_{p['number']}.jpg"
