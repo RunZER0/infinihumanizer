@@ -612,7 +612,7 @@ class WorkspaceChatTests(TestCase):
         self.assertEqual(desk.status_code, 200)
         self.assertContains(desk, "Snapchat")
 
-        first_inv = Invoice.objects.first()
+        first_inv = Invoice.objects.exclude(status="void").first()
         inv_page = self.client.get(reverse("platformhub:operations_invoices"))
         self.assertEqual(inv_page.status_code, 200)
         self.assertContains(inv_page, first_inv.number)

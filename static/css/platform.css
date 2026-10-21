@@ -2695,61 +2695,183 @@ body.modal-open{overflow:hidden}
   font-size: 14px;
 }
 
-.cp-composer {
-  padding: 12px 20px;
+.cp-composer,
+.ops-composer {
+  padding: 14px 20px 18px;
   background: var(--surface-paper);
   border-top: 1px solid var(--line-subtle);
   flex-shrink: 0;
+  box-sizing: border-box;
 }
 
-.cp-composer-row {
+/* Modern Elevated Composer Card Container */
+.cp-composer-card {
   display: flex;
-  align-items: flex-end;
-  gap: 10px;
+  flex-direction: column;
+  background: var(--surface-base);
+  border: 1.5px solid var(--line-strong);
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(17, 17, 15, 0.04);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+  overflow: hidden;
+  position: relative;
 }
 
-.cp-composer textarea {
-  flex: 1;
-  min-height: 42px;
-  max-height: 120px;
-  padding: 10px 14px;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-control);
-  background: var(--surface-base);
+.cp-composer-card:focus-within {
+  border-color: var(--action-primary);
+  box-shadow: 0 0 0 3px rgba(200, 65, 50, 0.12), 0 3px 10px rgba(17, 17, 15, 0.05);
+}
+
+.cp-composer-card.is-dragover {
+  border-color: var(--action-primary);
+  border-style: dashed;
+  background: rgba(200, 65, 50, 0.03);
+}
+
+/* Textarea input body inside card */
+.cp-composer-body {
+  padding: 10px 14px 2px;
+}
+
+.cp-composer textarea,
+.ops-composer textarea {
+  width: 100%;
+  min-height: 44px;
+  max-height: 180px;
+  padding: 2px 0;
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  resize: none;
   font-family: inherit;
   font-size: 14.5px;
-  resize: none;
+  line-height: 1.5;
+  color: var(--text-primary);
+  display: block;
+  box-sizing: border-box;
+}
+
+.cp-composer textarea::placeholder,
+.ops-composer textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 0.85;
+}
+
+/* Bottom Toolbar inside card */
+.cp-composer-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px 8px;
+  gap: 8px;
+}
+
+.cp-composer-tools {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cp-icon-action-btn {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.15s ease;
+}
+
+.cp-icon-action-btn:hover {
+  background: var(--surface-paper);
+  border-color: var(--line-subtle);
   color: var(--text-primary);
 }
 
-.cp-composer textarea:focus {
-  outline: 2px solid var(--action-primary);
-  outline-offset: -1px;
-  border-color: var(--action-primary);
+.cp-icon-action-btn.is-recording {
+  background: #fee2e2;
+  border-color: #ef4444;
+  color: #ef4444;
+  animation: pulse-red 1.4s infinite;
 }
 
-.cp-send-btn {
-  min-height: 42px;
-  padding: 0 18px;
-  border: 1px solid var(--action-primary);
-  border-radius: var(--radius-control);
+.cp-composer-hint {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: 8px;
+  letter-spacing: 0.02em;
+  opacity: 0.75;
+}
+
+@media (max-width: 640px) {
+  .cp-composer-hint {
+    display: none;
+  }
+}
+
+.cp-composer-submit-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.cp-send-action-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: var(--surface-quiet);
+  color: var(--line-strong);
+  cursor: not-allowed;
+  padding: 0;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cp-send-action-btn.is-active,
+.cp-send-action-btn:not(:disabled) {
   background: var(--action-primary);
-  color: var(--text-inverse);
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 13.5px;
-  font-weight: 600;
+  color: #ffffff;
   cursor: pointer;
-  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(200, 65, 50, 0.3);
 }
 
-.cp-send-btn:hover {
+.cp-send-action-btn.is-active:hover,
+.cp-send-action-btn:not(:disabled):hover {
   background: var(--action-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(200, 65, 50, 0.4);
+}
+
+.cp-send-action-btn:active {
+  transform: scale(0.95);
+}
+
+.ops-composer .cp-send-action-btn.is-active,
+.ops-composer .cp-send-action-btn:not(:disabled) {
+  background: var(--surface-ink);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(17, 17, 15, 0.35);
+}
+
+.ops-composer .cp-send-action-btn.is-active:hover,
+.ops-composer .cp-send-action-btn:not(:disabled):hover {
+  background: #2a2a26;
 }
 
 .cp-composer-status {
   font-size: 12px;
   color: var(--text-muted);
-  margin-top: 4px;
+  margin-top: 6px;
+  min-height: 16px;
 }
 
 /* Slide-Over Client Invoices Sheet */
@@ -3194,6 +3316,75 @@ body.modal-open{overflow:hidden}
   gap: 10px;
 }
 
+/* Staged Attachment Chips inside composer card */
+.cp-staged-files,
+.ops-staged-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 12px;
+  background: rgba(241, 238, 230, 0.5);
+  border-bottom: 1px solid var(--line-subtle);
+}
+
+.cp-file-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--surface-paper);
+  border: 1px solid var(--line-subtle);
+  border-radius: 16px;
+  font-size: 12px;
+  color: var(--text-primary);
+  box-shadow: 0 1px 2px rgba(17, 17, 15, 0.04);
+  max-width: 280px;
+  transition: border-color 0.15s ease;
+}
+
+.cp-chip-icon {
+  display: inline-flex;
+  align-items: center;
+  color: var(--action-primary);
+  flex-shrink: 0;
+}
+
+.cp-chip-name {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+.cp-chip-size {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.cp-chip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  margin-left: 2px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.cp-chip-remove:hover {
+  background: rgba(200, 65, 50, 0.12);
+  color: var(--action-primary);
+}
+
 .ops-composer-files,
 .cp-composer-files {
   margin: 6px 0;
@@ -3384,6 +3575,113 @@ body.modal-open{overflow:hidden}
   0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
   70% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
   100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+/* Modern Live Voice Recording Banner inside card */
+.cp-recording-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: #fef2f2;
+  border-bottom: 1px solid #fecaca;
+  color: #991b1b;
+  font-size: 12.5px;
+  gap: 10px;
+}
+
+.cp-recording-live {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cp-recording-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ef4444;
+  display: inline-block;
+  animation: blink-dot 1s infinite;
+  flex-shrink: 0;
+}
+
+.cp-recording-label {
+  font-weight: 600;
+  font-size: 12.5px;
+}
+
+.cp-audio-wave {
+  display: inline-flex;
+  align-items: center;
+  gap: 2.5px;
+  height: 14px;
+  margin: 0 4px;
+}
+
+.cp-wave-bar {
+  display: inline-block;
+  width: 2.5px;
+  background: #ef4444;
+  border-radius: 2px;
+  animation: sound-wave 0.8s ease-in-out infinite;
+}
+
+.cp-wave-bar:nth-child(1) { animation-delay: 0.1s; }
+.cp-wave-bar:nth-child(2) { animation-delay: 0.3s; }
+.cp-wave-bar:nth-child(3) { animation-delay: 0.2s; }
+.cp-wave-bar:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes sound-wave {
+  0%, 100% { height: 4px; }
+  50% { height: 14px; }
+}
+
+.cp-recording-timer {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 700;
+  color: #7f1d1d;
+  font-size: 12px;
+}
+
+.cp-recording-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cp-rec-btn {
+  border: none;
+  border-radius: 12px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cp-rec-stop {
+  background: #ef4444;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cp-rec-stop:hover {
+  background: #dc2626;
+}
+
+.cp-rec-cancel {
+  background: transparent;
+  color: #6b7280;
+  text-decoration: underline;
+  padding: 4px 6px;
+}
+
+.cp-rec-cancel:hover {
+  color: #1f2937;
 }
 
 .cp-recording-bar,

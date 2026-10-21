@@ -153,27 +153,60 @@
       {% endfor %}
     </div>
 
-    <form method="post" action="{% url 'platformhub:operations_desk_conversation' conversation.id %}" enctype="multipart/form-data" class="ops-composer" id="desk-reply-form">
+    <form method="post" action="{% url 'platformhub:operations_desk_conversation' conversation.id %}" enctype="multipart/form-data" class="ops-composer cp-composer" id="desk-reply-form">
       {% csrf_token %}
       <input type="hidden" name="action" value="reply">
       <input type="file" id="desk-file-input" name="attachments" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.ppt,.pptx,.png,.jpg,.jpeg,.webp,.gif,.txt,.zip,.mp3,.wav,.m4a,.ogg,.webm,.aac,.flac,audio/*" hidden>
-      <label for="desk-reply-input" class="sr-only">Reply to {{ conversation.user.first_name|default:conversation.user.email }}</label>
-      <div class="ops-recording-bar" id="desk-recording-bar" hidden>
-        <span class="recording-dot"></span>
-        <span>Recording voice note…</span>
-        <span class="recording-timer" id="desk-recording-timer">00:00</span>
-        <button type="button" class="recording-action-btn recording-stop-btn" id="desk-record-stop">Stop &amp; attach</button>
-        <button type="button" class="recording-action-btn recording-cancel-btn" id="desk-record-cancel">Cancel</button>
-      </div>
-      <textarea id="desk-reply-input" name="message" rows="2" maxlength="5000" placeholder="Reply to {{ conversation.user.first_name|default:conversation.user.email }}…"></textarea>
-      <div class="ops-composer-files" id="desk-file-preview" hidden></div>
-      <div class="ops-composer-bar">
-        <div class="ops-composer-tools">
-          <button type="button" class="ops-btn ops-btn-secondary ops-btn-sm" id="desk-attach-btn">Attach file</button>
-          <button type="button" class="ops-btn ops-btn-secondary ops-btn-sm ops-record-btn" id="desk-record-btn" title="Record voice note">🎙️ Voice note</button>
-          <span class="ops-composer-hint" id="desk-reply-status">Cmd+Enter to send</span>
+
+      <div class="cp-composer-card" id="desk-composer-card">
+        <!-- Live Voice Recording Banner inside card -->
+        <div class="cp-recording-banner" id="desk-recording-bar" hidden>
+          <div class="cp-recording-live">
+            <span class="cp-recording-dot"></span>
+            <span class="cp-recording-label">Recording voice note</span>
+            <div class="cp-audio-wave" aria-hidden="true">
+              <span class="cp-wave-bar"></span>
+              <span class="cp-wave-bar"></span>
+              <span class="cp-wave-bar"></span>
+              <span class="cp-wave-bar"></span>
+            </div>
+            <span class="cp-recording-timer" id="desk-recording-timer">00:00</span>
+          </div>
+          <div class="cp-recording-actions">
+            <button type="button" class="cp-rec-btn cp-rec-stop" id="desk-record-stop" title="Stop and attach voice note">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"></rect></svg>
+              <span>Done &amp; attach</span>
+            </button>
+            <button type="button" class="cp-rec-btn cp-rec-cancel" id="desk-record-cancel" title="Discard recording">Cancel</button>
+          </div>
         </div>
-        <button class="ops-btn ops-btn-primary" type="submit" id="desk-reply-submit">Send reply</button>
+
+        <!-- Staged Attachments (Chips list) -->
+        <div class="cp-staged-files ops-staged-files" id="desk-file-preview" hidden></div>
+
+        <!-- Textarea input body -->
+        <div class="cp-composer-body">
+          <label for="desk-reply-input" class="sr-only">Reply to {{ conversation.user.first_name|default:conversation.user.email }}</label>
+          <textarea id="desk-reply-input" name="message" rows="1" maxlength="5000" placeholder="Reply to {{ conversation.user.first_name|default:conversation.user.email }}… (Enter to send, Shift+Enter for new line)"></textarea>
+        </div>
+
+        <!-- Bottom toolbar controls -->
+        <div class="cp-composer-footer">
+          <div class="cp-composer-tools">
+            <button type="button" class="cp-icon-action-btn" id="desk-attach-btn" title="Attach documents, images, or audio" aria-label="Attach file">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l7.9-7.89"></path></svg>
+            </button>
+            <button type="button" class="cp-icon-action-btn" id="desk-record-btn" title="Record voice note" aria-label="Record voice note">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg>
+            </button>
+            <span class="cp-composer-hint" id="desk-reply-status">↵ send · ⇧↵ newline</span>
+          </div>
+          <div class="cp-composer-submit-wrap">
+            <button class="cp-send-action-btn" type="submit" id="desk-reply-submit" title="Send reply" aria-label="Send reply" disabled>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+            </button>
+          </div>
+        </div>
       </div>
     </form>
   </section>
@@ -441,32 +474,80 @@
     return AUDIO_EXTS.includes(ext);
   }
 
+  function updateSendButtonState() {
+    if (!replySubmit) return;
+    const hasText = Boolean(replyInput && replyInput.value.trim().length > 0);
+    const hasFiles = Boolean(fileInput && fileInput.files && fileInput.files.length > 0);
+    const canSend = hasText || hasFiles;
+    replySubmit.disabled = !canSend;
+    if (canSend) {
+      replySubmit.classList.add("is-active");
+    } else {
+      replySubmit.classList.remove("is-active");
+    }
+  }
+
+  function getFileIconSvg(isAudio, isImage) {
+    if (isAudio) {
+      return '<svg class="cp-chip-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>';
+    }
+    if (isImage) {
+      return '<svg class="cp-chip-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg>';
+    }
+    return '<svg class="cp-chip-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>';
+  }
+
+  function removeFileAtIndex(idx) {
+    if (!fileInput || !fileInput.files) return;
+    if (window.DataTransfer) {
+      const dt = new DataTransfer();
+      Array.from(fileInput.files).forEach(function (f, i) {
+        if (i !== idx) dt.items.add(f);
+      });
+      fileInput.files = dt.files;
+    } else {
+      fileInput.value = "";
+    }
+    updateFilePreview();
+  }
+
   function updateFilePreview() {
     if (!fileInput || !filePreview) return;
     const files = Array.from(fileInput.files || []);
     if (!files.length) {
       filePreview.hidden = true;
       filePreview.innerHTML = "";
+      updateSendButtonState();
       return;
     }
     filePreview.hidden = false;
-    filePreview.innerHTML =
-      '<div class="ops-composer-file-list">' +
-      files.map(function (f) {
-        const kb = Math.max(1, Math.round(f.size / 1024));
-        const isAudio = f.type.startsWith("audio/") || AUDIO_EXTS.some(function (ext) { return f.name.toUpperCase().endsWith("." + ext); });
-        const icon = isAudio ? "🎵 " : "";
-        return '<span class="ops-composer-file-item"><strong>' + icon + escapeHtml(f.name) + '</strong> (' + kb + ' KB)</span>';
-      }).join("") +
-      '<button type="button" class="ops-text-action" id="desk-clear-files">Remove</button>' +
-      "</div>";
-    const clearBtn = document.getElementById("desk-clear-files");
-    if (clearBtn) {
-      clearBtn.addEventListener("click", function () {
-        fileInput.value = "";
-        updateFilePreview();
+    filePreview.innerHTML = files.map(function (f, idx) {
+      const kb = Math.max(1, Math.round(f.size / 1024));
+      const sizeStr = kb >= 1024 ? (kb / 1024).toFixed(1) + " MB" : kb + " KB";
+      const isAudio = f.type.startsWith("audio/") || AUDIO_EXTS.some(function (ext) { return f.name.toUpperCase().endsWith("." + ext); });
+      const isImage = f.type.startsWith("image/");
+      const iconHtml = getFileIconSvg(isAudio, isImage);
+      return (
+        '<span class="cp-file-chip">' +
+          iconHtml +
+          '<span class="cp-chip-name" title="' + escapeHtml(f.name) + '">' + escapeHtml(f.name) + '</span>' +
+          '<span class="cp-chip-size">' + sizeStr + '</span>' +
+          '<button type="button" class="cp-chip-remove" data-file-index="' + idx + '" title="Remove ' + escapeHtml(f.name) + '" aria-label="Remove ' + escapeHtml(f.name) + '">' +
+            '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>' +
+          '</button>' +
+        '</span>'
+      );
+    }).join("");
+
+    filePreview.querySelectorAll(".cp-chip-remove").forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        const index = parseInt(btn.getAttribute("data-file-index"), 10);
+        removeFileAtIndex(index);
       });
-    }
+    });
+
+    updateSendButtonState();
   }
 
   if (attachBtn && fileInput) {
@@ -554,11 +635,79 @@
     activeThreadRow.scrollIntoView({ block: "nearest" });
   }
 
-  if (replyInput && replyForm) {
+  function autoResizeReplyTextarea() {
+    if (!replyInput) return;
+    replyInput.style.height = "auto";
+    const scrollH = replyInput.scrollHeight;
+    const newH = Math.min(Math.max(scrollH, 44), 180);
+    replyInput.style.height = newH + "px";
+    replyInput.style.overflowY = scrollH > 180 ? "auto" : "hidden";
+  }
+
+  if (replyInput) {
+    replyInput.addEventListener("input", function () {
+      autoResizeReplyTextarea();
+      updateSendButtonState();
+    });
+
     replyInput.addEventListener("keydown", function (event) {
-      if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+      if ((event.key === "Enter" && !event.shiftKey) || ((event.ctrlKey || event.metaKey) && event.key === "Enter")) {
         event.preventDefault();
-        replyForm.requestSubmit();
+        if (replyForm && !replySubmit.disabled) {
+          replyForm.requestSubmit();
+        }
+      }
+    });
+
+    replyInput.addEventListener("paste", function (e) {
+      const items = (e.clipboardData || window.clipboardData) ? (e.clipboardData || window.clipboardData).items : null;
+      if (!items) return;
+      let hasFile = false;
+      const dt = window.DataTransfer ? new DataTransfer() : null;
+      if (dt && fileInput) {
+        Array.from(fileInput.files || []).forEach(function (f) { dt.items.add(f); });
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].kind === "file") {
+            const pastedFile = items[i].getAsFile();
+            if (pastedFile) {
+              dt.items.add(pastedFile);
+              hasFile = true;
+            }
+          }
+        }
+        if (hasFile) {
+          fileInput.files = dt.files;
+          updateFilePreview();
+        }
+      }
+    });
+  }
+
+  const deskComposerCard = document.getElementById("desk-composer-card");
+  if (deskComposerCard) {
+    ["dragenter", "dragover"].forEach(function (eventName) {
+      deskComposerCard.addEventListener(eventName, function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        deskComposerCard.classList.add("is-dragover");
+      });
+    });
+    ["dragleave", "drop"].forEach(function (eventName) {
+      deskComposerCard.addEventListener(eventName, function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        deskComposerCard.classList.remove("is-dragover");
+      });
+    });
+    deskComposerCard.addEventListener("drop", function (e) {
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+        if (window.DataTransfer && fileInput) {
+          const dt = new DataTransfer();
+          Array.from(fileInput.files || []).forEach(function (f) { dt.items.add(f); });
+          Array.from(e.dataTransfer.files).forEach(function (f) { dt.items.add(f); });
+          fileInput.files = dt.files;
+        }
+        updateFilePreview();
       }
     });
   }
@@ -570,6 +719,7 @@
       const hasFiles = Boolean(fileInput && fileInput.files && fileInput.files.length > 0);
       if ((!hasText && !hasFiles) || replySubmit.disabled) return;
       replySubmit.disabled = true;
+      replySubmit.classList.remove("is-active");
       replyStatus.textContent = "Sending…";
       try {
         const response = await fetch(replyForm.action, {
@@ -582,14 +732,17 @@
           throw new Error(data.error || "Could not send reply.");
         }
         renderMessage(data.message);
-        if (replyInput) replyInput.value = "";
+        if (replyInput) {
+          replyInput.value = "";
+          autoResizeReplyTextarea();
+        }
         if (fileInput) fileInput.value = "";
         updateFilePreview();
-        replyStatus.textContent = "Sent";
+        replyStatus.textContent = "↵ send · ⇧↵ newline";
       } catch (err) {
         replyStatus.textContent = err.message || "Could not send reply.";
       } finally {
-        replySubmit.disabled = false;
+        updateSendButtonState();
       }
     });
   }
