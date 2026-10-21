@@ -19,37 +19,35 @@
 <div class="ops-data-page">
   <section class="ops-kpi-strip" aria-label="Poster assets summary">
     <div class="ops-kpi-cell">
-      <span class="ops-kpi-label">Total social posters</span>
+      <span class="ops-kpi-label">Total story posters</span>
       <strong class="ops-kpi-value ops-mono">{{ total_count }}</strong>
       <span class="ops-kpi-sub">1080×1920 portrait (9:16) for Snapchat &amp; IG stories</span>
     </div>
     <div class="ops-kpi-cell">
-      <span class="ops-kpi-label">Photographic dark</span>
-      <strong class="ops-kpi-value ops-mono">{{ photo_count }}</strong>
-      <span class="ops-kpi-sub">Executive desk, boardroom, port, charter, studio</span>
+      <span class="ops-kpi-label">Executive &amp; Strategy</span>
+      <strong class="ops-kpi-value ops-mono">6</strong>
+      <span class="ops-kpi-sub">Executive desk, boardroom, skyline twilight</span>
     </div>
     <div class="ops-kpi-cell">
-      <span class="ops-kpi-label">Editorial paper</span>
-      <strong class="ops-kpi-value ops-mono">{{ paper_count }}</strong>
-      <span class="ops-kpi-sub">Warm ivory (#faf8f2) architectural layouts</span>
+      <span class="ops-kpi-label">Creative &amp; Growth</span>
+      <strong class="ops-kpi-value ops-mono">7</strong>
+      <span class="ops-kpi-sub">Studio workspace, audio console, boutique retail</span>
     </div>
     <div class="ops-kpi-cell">
-      <span class="ops-kpi-label">Obsidian ink</span>
-      <strong class="ops-kpi-value ops-mono">{{ ink_count }}</strong>
-      <span class="ops-kpi-sub">Deep obsidian (#11110f) terracotta aura</span>
+      <span class="ops-kpi-label">Operations &amp; Tech</span>
+      <strong class="ops-kpi-value ops-mono">7</strong>
+      <span class="ops-kpi-sub">Logistics port, blueprints, AI datacenter, charter</span>
     </div>
   </section>
 
   <section class="ops-table-section" aria-label="Story posters catalog">
     <div class="ops-filter-bar">
       <div class="ops-segmented" role="tablist" aria-label="Filter posters by style">
-        <a href="{% url 'platformhub:operations_posters' %}" class="ops-segment {% if not style_filter %}is-active{% endif %}">All ({{ total_count }})</a>
-        <a href="{% url 'platformhub:operations_posters' %}?style=photo-dark" class="ops-segment {% if style_filter == 'photo-dark' %}is-active{% endif %}">Photographic ({{ photo_count }})</a>
-        <a href="{% url 'platformhub:operations_posters' %}?style=editorial-paper" class="ops-segment {% if style_filter == 'editorial-paper' %}is-active{% endif %}">Editorial Paper ({{ paper_count }})</a>
-        <a href="{% url 'platformhub:operations_posters' %}?style=ink-obsidian" class="ops-segment {% if style_filter == 'ink-obsidian' %}is-active{% endif %}">Obsidian Ink ({{ ink_count }})</a>
+        <a href="{% url 'platformhub:operations_posters' %}" class="ops-segment {% if not style_filter %}is-active{% endif %}">All Posters ({{ total_count }})</a>
+        <a href="{% url 'platformhub:operations_posters' %}?style=photo-dark" class="ops-segment {% if style_filter == 'photo-dark' %}is-active{% endif %}">Photographic Stories ({{ photo_count }})</a>
       </div>
       <div class="ops-filter-search">
-        <input type="search" id="ops-poster-search" class="ops-search-input" placeholder="Search posters by hook, badge, or deliverable…" aria-label="Search posters">
+        <input type="search" id="ops-poster-search" class="ops-search-input" placeholder="Search posters by hook, badge, background, or deliverable…" aria-label="Search posters">
       </div>
     </div>
 

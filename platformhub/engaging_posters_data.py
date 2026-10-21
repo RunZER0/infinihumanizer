@@ -57,7 +57,8 @@ ENGAGING_POSTERS = [
     {
         "id": 4,
         "number": "04",
-        "style": "editorial-paper",
+        "style": "photo-dark",
+        "bg_image": "bg_creative_studio.jpg",
         "tag_badge": "Revenue Conversion",
         "eyebrow": "Website Copy That Sells",
         "headline_pre": "Visitors leave your site when ",
@@ -72,7 +73,8 @@ ENGAGING_POSTERS = [
     {
         "id": 5,
         "number": "05",
-        "style": "ink-obsidian",
+        "style": "photo-dark",
+        "bg_image": "bg_corporate_skyline.jpg",
         "tag_badge": "Outbound Growth",
         "eyebrow": "B2B Sales Outreach",
         "headline_pre": "Stop sending sales emails that ",
@@ -87,7 +89,8 @@ ENGAGING_POSTERS = [
     {
         "id": 6,
         "number": "06",
-        "style": "ink-obsidian",
+        "style": "photo-dark",
+        "bg_image": "bg_editorial_study.jpg",
         "tag_badge": "Human Polish",
         "eyebrow": "AI Tone Calibration",
         "headline_pre": "Generic AI text makes your brand ",
@@ -102,7 +105,8 @@ ENGAGING_POSTERS = [
     {
         "id": 7,
         "number": "07",
-        "style": "editorial-paper",
+        "style": "photo-dark",
+        "bg_image": "bg_modern_architecture.jpg",
         "tag_badge": "Scale Your Team",
         "eyebrow": "Operational SOPs",
         "headline_pre": "Stop answering the same question ",
@@ -117,7 +121,8 @@ ENGAGING_POSTERS = [
     {
         "id": 8,
         "number": "08",
-        "style": "ink-obsidian",
+        "style": "photo-dark",
+        "bg_image": "bg_audio_studio.jpg",
         "tag_badge": "Fast Synthesis",
         "eyebrow": "Customer Interview Analysis",
         "headline_pre": "Staring at 10 hours of ",
@@ -132,7 +137,8 @@ ENGAGING_POSTERS = [
     {
         "id": 9,
         "number": "09",
-        "style": "ink-obsidian",
+        "style": "photo-dark",
+        "bg_image": "bg_boutique_retail.jpg",
         "tag_badge": "Cart Conversion",
         "eyebrow": "E-Commerce Product Copy",
         "headline_pre": "Dry factory specs won't get ",
@@ -147,7 +153,8 @@ ENGAGING_POSTERS = [
     {
         "id": 10,
         "number": "10",
-        "style": "editorial-paper",
+        "style": "photo-dark",
+        "bg_image": "bg_modern_architecture.jpg",
         "tag_badge": "Local Trust",
         "eyebrow": "Trade & Contractor Services",
         "headline_pre": "Clients won't hire contractors who ",
@@ -163,7 +170,7 @@ ENGAGING_POSTERS = [
         "id": 11,
         "number": "11",
         "style": "photo-dark",
-        "bg_image": "bg_boardroom.jpg",
+        "bg_image": "bg_editorial_study.jpg",
         "tag_badge": "Executive Brand",
         "eyebrow": "Authority & Bio Positioning",
         "headline_pre": "An outdated bio is capping your ",
@@ -178,7 +185,8 @@ ENGAGING_POSTERS = [
     {
         "id": 12,
         "number": "12",
-        "style": "editorial-paper",
+        "style": "photo-dark",
+        "bg_image": "bg_corporate_skyline.jpg",
         "tag_badge": "Market Intelligence",
         "eyebrow": "Competitor Price Benchmarking",
         "headline_pre": "Are you secretly undercharging by ",
@@ -193,7 +201,8 @@ ENGAGING_POSTERS = [
     {
         "id": 13,
         "number": "13",
-        "style": "ink-obsidian",
+        "style": "photo-dark",
+        "bg_image": "bg_creative_studio.jpg",
         "tag_badge": "Churn Killer",
         "eyebrow": "Customer Support Scripts",
         "headline_pre": "Cold support replies are ",
@@ -224,7 +233,8 @@ ENGAGING_POSTERS = [
     {
         "id": 15,
         "number": "15",
-        "style": "editorial-paper",
+        "style": "photo-dark",
+        "bg_image": "bg_creative_studio.jpg",
         "tag_badge": "Instant Retention",
         "eyebrow": "Onboarding Email Sequences",
         "headline_pre": "New users sign up, hear crickets, and ",
@@ -271,7 +281,8 @@ ENGAGING_POSTERS = [
     {
         "id": 18,
         "number": "18",
-        "style": "editorial-paper",
+        "style": "photo-dark",
+        "bg_image": "bg_corporate_skyline.jpg",
         "tag_badge": "Friction Audit",
         "eyebrow": "Intake Funnel Optimization",
         "headline_pre": "High website traffic with ",
@@ -286,7 +297,8 @@ ENGAGING_POSTERS = [
     {
         "id": 19,
         "number": "19",
-        "style": "ink-obsidian",
+        "style": "photo-dark",
+        "bg_image": "bg_server_datacenter.jpg",
         "tag_badge": "Grounded AI",
         "eyebrow": "AI Data & Prompt Engineering",
         "headline_pre": "Your chatbot is hallucinating and ",
@@ -314,6 +326,7 @@ ENGAGING_POSTERS = [
         "service_code": "text-rewrite",
         "contact_display": "Contact us via www.byinfini.online/consultation/",
     },
+
 ]
 
 for p in ENGAGING_POSTERS:

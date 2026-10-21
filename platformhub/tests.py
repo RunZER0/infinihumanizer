@@ -701,7 +701,7 @@ class AdminPostersDownloadTests(TestCase):
         url = reverse("platformhub:operations_posters") + "?style=photo-dark"
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(len(resp.context["posters"]), 8)
+        self.assertEqual(len(resp.context["posters"]), 20)
 
     def test_operations_individual_poster_png_download(self):
         url = reverse("platformhub:operations_download_poster", kwargs={"number": "01", "format_type": "png"})

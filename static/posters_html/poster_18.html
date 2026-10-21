@@ -11,23 +11,48 @@
     position: relative;
     overflow: hidden;
     font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-    color: #171612;
+    color: #faf8f2;
     padding: 110px 80px 110px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background: #faf8f2;
+    background: #11110f;
   }
-  .paper-frame {
+  .bg-photo {
     position: absolute;
-    inset: 40px;
-    border: 1px solid #cfc9bc;
-    pointer-events: none;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    filter: brightness(0.96) contrast(1.04);
+  }
+  .bg-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(17, 17, 15, 0.22) 0%,
+      rgba(17, 17, 15, 0.40) 28%,
+      rgba(17, 17, 15, 0.70) 62%,
+      rgba(17, 17, 15, 0.88) 100%
+    );
     z-index: 1;
+  }
+  .terracotta-glow {
+    position: absolute;
+    top: 260px;
+    right: -100px;
+    width: 650px;
+    height: 650px;
+    background: radial-gradient(circle, rgba(200, 65, 50, 0.28) 0%, rgba(0,0,0,0) 70%);
+    filter: blur(80px);
+    z-index: 2;
+    pointer-events: none;
   }
   .content-z {
     position: relative;
-    z-index: 2;
+    z-index: 3;
   }
   .top-bar {
     display: flex;
@@ -39,7 +64,8 @@
     font-size: 26px;
     font-weight: 700;
     letter-spacing: 4px;
-    color: #171612;
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.95);
     display: flex;
     align-items: center;
     gap: 12px;
@@ -49,17 +75,20 @@
     height: 14px;
     background: #c84132;
     border-radius: 50%;
+    box-shadow: 0 0 16px #c84132;
   }
   .tag-badge {
-    background: rgba(200, 65, 50, 0.1);
-    border: 1px solid rgba(200, 65, 50, 0.35);
+    background: rgba(17, 17, 15, 0.78);
+    border: 1px solid rgba(200, 65, 50, 0.6);
+    backdrop-filter: blur(20px);
     padding: 14px 26px;
     border-radius: 100px;
     font-size: 18px;
     font-weight: 700;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    color: #c84132;
+    color: #f18a7e;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
   }
   .main-block {
     display: flex;
@@ -68,63 +97,68 @@
   }
   .eyebrow {
     font-family: 'Space Grotesk', sans-serif;
-    color: #c84132;
+    color: #f18a7e;
     font-size: 24px;
     font-weight: 700;
     letter-spacing: 3px;
     text-transform: uppercase;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.95);
   }
   .headline {
     font-size: 72px;
     font-weight: 900;
     line-height: 1.08;
     letter-spacing: -0.04em;
-    color: #171612;
+    color: #ffffff;
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.95), 0 2px 6px rgba(0, 0, 0, 0.9);
   }
   .headline span {
-    color: #c84132;
+    color: #f18a7e;
+    text-shadow: 0 4px 24px rgba(200, 65, 50, 0.5), 0 2px 6px rgba(0, 0, 0, 0.9);
   }
   .outcome-card {
-    background: #ffffff;
-    border: 1px solid #cfc9bc;
+    background: rgba(17, 17, 15, 0.82);
+    border: 1px solid rgba(200, 65, 50, 0.4);
+    backdrop-filter: blur(32px);
     border-radius: 30px;
     padding: 44px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
   }
   .outcome-card p {
     font-size: 30px;
     line-height: 1.48;
-    color: #171612;
+    color: #f1eee6;
     font-weight: 500;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
   }
   .outcome-meta {
     display: flex;
     gap: 32px;
     margin-top: 28px;
     padding-top: 26px;
-    border-top: 1px solid #cfc9bc;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
   }
   .meta-pill {
     font-size: 20px;
     font-weight: 700;
-    color: #68645c;
+    color: #b5afa4;
     display: flex;
     align-items: center;
     gap: 10px;
   }
   .meta-pill b {
-    color: #171612;
+    color: #faf8f2;
   }
   .story-link-sticker {
     width: 100%;
-    background: #11110f;
-    color: #faf8f2;
+    background: #faf8f2;
+    color: #11110f;
     padding: 34px 40px;
     border-radius: 28px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.18);
+    box-shadow: 0 24px 50px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.25);
   }
   .sticker-left {
     display: flex;
@@ -148,32 +182,35 @@
     font-weight: 800;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: #9a9488;
+    color: #68645c;
   }
   .sticker-url {
     font-size: 25px;
     font-weight: 800;
-    color: #faf8f2;
+    color: #11110f;
     letter-spacing: -0.01em;
   }
   .sticker-arrow {
     font-size: 34px;
     font-weight: 900;
-    color: #e46b5d;
+    color: #c84132;
   }
   .swipe-note {
     font-size: 18px;
     letter-spacing: 2px;
     font-weight: 700;
     text-transform: uppercase;
-    color: #68645c;
+    color: #d1cbc0;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.9);
     text-align: center;
     margin-top: 18px;
   }
 </style>
 </head>
 <body>
-  <div class="paper-frame"></div>
+  <img class="bg-photo" src="file:///C:/Users/victo/Desktop/humanizer/static/posters/backgrounds/bg_corporate_skyline.jpg">
+  <div class="bg-overlay"></div>
+  <div class="terracotta-glow"></div>
 
   <div class="top-bar content-z">
     <div class="brand">
