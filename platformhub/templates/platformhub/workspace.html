@@ -1,77 +1,78 @@
-{% extends "base.html" %}
-{% block title %}Workspace — InfiniAI{% endblock %}
+{% extends "platformhub/client_portal_base.html" %}
+{% block title %}Overview — InfiniAI{% endblock %}
+{% block nav_overview %}is-active{% endblock %}
+
 {% block content %}
-<section class="account-home">
-  <div class="shell account-home-head">
+<div class="cp-container">
+  <header class="cp-page-head">
     <div>
-      <div class="eyebrow">Workspace</div>
-      <h1>What needs your attention?</h1>
-      <p>{{ user.email }}</p>
+      <h1>Account overview</h1>
+      <p>{{ user.get_full_name|default:user.username }} · {{ user.email }}</p>
     </div>
-    <a class="btn btn-primary" href="{% url 'platformhub:start' %}">Start new work</a>
-  </div>
+    <a class="cp-pay-btn" href="{% url 'platformhub:client_chat' %}">Open messages</a>
+  </header>
 
-  <div class="shell account-home-body">
-    {% if next_action %}
-    <a class="account-next-card" href="{{ next_action.url }}">
-      <div>
-        <span class="micro">{{ next_action.eyebrow|upper }}</span>
-        <h2>{{ next_action.title }}</h2>
-        <p>{{ next_action.detail }}</p>
-      </div>
-      <strong>{{ next_action.label }} <span aria-hidden="true">→</span></strong>
+  {% if next_action %}
+  <section class="cp-callout">
+    <div>
+      <span class="cp-kicker">{{ next_action.eyebrow }}</span>
+      <h2>{{ next_action.title }}</h2>
+      <p>{{ next_action.detail }}</p>
+    </div>
+    <a class="cp-pay-btn" href="{{ next_action.url }}">{{ next_action.label }}</a>
+  </section>
+  {% endif %}
+
+  <section class="cp-summary-strip" aria-label="Account summary">
+    <a class="cp-summary-cell" href="{% url 'platformhub:client_chat' %}">
+      <span class="cp-summary-label">Messages</span>
+      <strong class="cp-summary-val cp-mono">{% if unread_messages %}{{ unread_messages }} unread{% else %}Active thread{% endif %}</strong>
+      <span class="cp-summary-link">View conversation →</span>
     </a>
-    {% else %}
-    <div class="account-next-card account-next-clear">
-      <div>
-        <span class="micro">CLEAR</span>
-        <h2>Nothing needs action right now.</h2>
-        <p>Your workspace is up to date.</p>
-      </div>
-      <a class="btn btn-quiet" href="{% url 'platformhub:start' %}">Start something</a>
-    </div>
-    {% endif %}
+    <a class="cp-summary-cell" href="{% url 'platformhub:workspace_billing' %}">
+      <span class="cp-summary-label">Invoices</span>
+      <strong class="cp-summary-val cp-mono">{% if open_invoice_count %}{{ open_invoice_count }} open{% else %}All settled{% endif %}</strong>
+      <span class="cp-summary-link">Review billing →</span>
+    </a>
+    <a class="cp-summary-cell" href="{% url 'platformhub:workspace_projects' %}">
+      <span class="cp-summary-label">Projects</span>
+      <strong class="cp-summary-val cp-mono">{{ project_count }}</strong>
+      <span class="cp-summary-link">View deliverables →</span>
+    </a>
+  </section>
 
-    <nav class="account-route-grid" aria-label="Workspace sections">
-      <a class="account-route" href="{% url 'platformhub:workspace_projects' %}">
-        <span class="micro">WORK</span>
-        <strong>Projects</strong>
-        <p>{{ project_count }} project{{ project_count|pluralize }}</p>
-        <span class="account-route-arrow">→</span>
-      </a>
-      <a class="account-route" href="{% url 'platformhub:client_chat' %}">
-        <span class="micro">CONVERSATION</span>
-        <strong>Messages</strong>
-        <p>{% if unread_messages %}{{ unread_messages }} unread{% else %}No unread messages{% endif %}</p>
-        <span class="account-route-arrow">→</span>
-      </a>
-      <a class="account-route" href="{% url 'platformhub:workspace_billing' %}">
-        <span class="micro">MONEY</span>
-        <strong>Billing</strong>
-        <p>{% if open_invoice_count %}{{ open_invoice_count }} open invoice{{ open_invoice_count|pluralize }}{% else %}No payment due{% endif %}</p>
-        <span class="account-route-arrow">→</span>
-      </a>
-      <a class="account-route" href="{% url 'humanizer' %}">
-        <span class="micro">TEXT</span>
-        <strong>Humanizer</strong>
-        <p>{{ saved_rewrite_count }} saved rewrite{{ saved_rewrite_count|pluralize }}</p>
-        <span class="account-route-arrow">→</span>
-      </a>
-    </nav>
-
-    <div class="account-quiet-row">
-      <div>
-        <span class="micro">ACCOUNT</span>
-        {% if profile %}
-        <strong>{{ profile.get_account_type_display }}</strong>
-        {% else %}
-        <strong>Free</strong>
-        {% endif %}
-      </div>
-      {% if recent_rewrite %}
-      <a href="{% url 'humanizer' %}?saved={{ recent_rewrite.id }}">Continue latest rewrite →</a>
-      {% endif %}
+  {% if payments %}
+  <section class="cp-section" aria-label="Recent payments">
+    <h2 class="cp-section-title">Recent payments</h2>
+    <div class="cp-table-wrap">
+      <table class="cp-table">
+        <thead>
+          <tr>
+            <th>Reference</th>
+            <th>Date</th>
+            <th>Description</th>
+            <th class="cp-num">Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for payment in payments %}
+          <tr>
+            <td class="cp-mono"><strong>{{ payment.reference }}</strong></td>
+            <td class="cp-mono">{{ payment.paid_at|default:payment.created_at|date:"M j, Y" }}</td>
+            <td>{{ payment.original_description|default:"Payment" }}</td>
+            <td class="cp-num cp-mono"><strong>{{ payment.currency }} {{ payment.amount|floatformat:2 }}</strong></td>
+            <td>
+              <span class="{% if payment.status == 'success' %}cp-state-paid{% else %}cp-state-open{% endif %}">
+                {{ payment.get_status_display }}
+              </span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-  </div>
-</section>
+  </section>
+  {% endif %}
+</div>
 {% endblock %}

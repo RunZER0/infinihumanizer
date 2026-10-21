@@ -1,67 +1,355 @@
-{% extends "base.html" %}
+{% extends "platformhub/client_portal_base.html" %}
 {% block title %}Messages — InfiniAI{% endblock %}
+{% block body_class %}cp-body-chat{% endblock %}
+{% block main_class %}cp-main-chat{% endblock %}
+{% block nav_messages %}is-active{% endblock %}
+
 {% block content %}
-<section class="account-chat-page">
-  <div class="shell account-chat-head">
-    <div>
-      <div class="eyebrow">Workspace</div>
-      <h1>Messages</h1>
-      <p>One conversation. Everything stays attached to your account.</p>
+<div class="cp-chat-shell" data-client-chat-root data-conversation-id="{{ conversation.id }}" data-feed-url="{% url 'platformhub:client_chat_feed' %}">
+  <section class="cp-chat-column" aria-label="Direct messages">
+    <header class="cp-chat-head">
+      <div class="cp-chat-head-info">
+        <h1 class="cp-chat-subject">{{ conversation.subject }}</h1>
+        <div class="cp-chat-meta">
+          <span>{{ chat_user.get_full_name|default:chat_user.username }}</span>
+          <span aria-hidden="true">·</span>
+          <span id="client-thread-status">{{ conversation.get_status_display }}</span>
+          {% if projects.0 %}
+          <span aria-hidden="true">·</span>
+          <span class="cp-mono">{{ projects.0.reference }}</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <button type="button" class="cp-sheet-trigger" id="cp-toggle-invoices" aria-expanded="false">
+        Invoices (<span id="cp-invoice-count">{{ invoices|length }}</span>)
+      </button>
+    </header>
+
+    {% if open_invoices %}
+    <div class="cp-open-invoice-bar">
+      <div class="cp-open-invoice-text">
+        <strong class="cp-mono">{{ open_invoices.0.number }}</strong>
+        <span aria-hidden="true">·</span>
+        <span>{{ open_invoices.0.description }}</span>
+        <span aria-hidden="true">·</span>
+        <strong class="cp-mono">{{ open_invoices.0.currency }} {{ open_invoices.0.amount_due|floatformat:2 }}</strong>
+      </div>
+      <a class="cp-pay-btn" href="{% url 'platformhub:checkout' %}?invoice={{ open_invoices.0.id }}">Pay invoice</a>
     </div>
-    <a class="btn" href="{% url 'platformhub:workspace' %}">Workspace</a>
-  </div>
-
-  <div class="shell account-chat-shell">
-    <section class="client-chat-panel client-chat-panel-focused">
-      <div class="client-chat-head">
-        <div>
-          <span class="micro">INFINIAI</span>
-          <h2>Conversation</h2>
-        </div>
-        <span class="status {% if conversation.status == 'open' %}status-success{% else %}status-pending{% endif %}">{{ conversation.get_status_display }}</span>
-      </div>
-
-      <div class="client-chat-thread" aria-live="polite">
-        {% for item in chat_messages %}
-        <article class="client-message {% if item.sender == 'client' %}client-message-user{% else %}client-message-admin{% endif %}">
-          <div class="client-message-meta">
-            <strong>{% if item.sender == "client" %}You{% else %}InfiniAI{% endif %}</strong>
-            <time>{{ item.created_at|date:"M j · H:i" }}</time>
-          </div>
-          <p>{{ item.body|linebreaksbr }}</p>
-        </article>
-        {% empty %}
-        <div class="client-chat-empty">
-          <strong>Start the conversation.</strong>
-          <p>Ask about a project, payment, delivery or your account.</p>
-        </div>
-        {% endfor %}
-      </div>
-
-      <form method="post" class="client-chat-form">
-        {% csrf_token %}
-        <label for="client-message">Message</label>
-        <textarea id="client-message" name="message" maxlength="5000" required placeholder="Write a message…"></textarea>
-        <div class="client-chat-send">
-          <small>Replies appear here.</small>
-          <button class="btn btn-primary" type="submit">Send</button>
-        </div>
-      </form>
-    </section>
-
-    {% if projects %}
-    <details class="account-context-drawer">
-      <summary>Project context</summary>
-      <div class="account-context-list">
-        {% for project in projects %}
-        <a href="{% url 'platformhub:project_detail' project.id %}">
-          <div><strong>{{ project.title }}</strong><small>{{ project.reference }}</small></div>
-          <span>{{ project.get_status_display }} →</span>
-        </a>
-        {% endfor %}
-      </div>
-    </details>
     {% endif %}
-  </div>
-</section>
+
+    <div class="cp-message-stream" id="client-message-thread" aria-live="polite">
+      {% for item in chat_messages %}
+      <article class="cp-msg {% if item.sender == 'client' %}cp-msg-self{% else %}cp-msg-team{% endif %}" data-message-id="{{ item.id }}">
+        <div class="cp-msg-meta">
+          <strong>{% if item.sender == "client" %}You{% else %}InfiniAI{% endif %}</strong>
+          <span aria-hidden="true">·</span>
+          <time class="cp-mono" datetime="{{ item.created_at|date:'c' }}">{{ item.created_at|date:"M j, Y · H:i" }}</time>
+        </div>
+        <div class="cp-msg-bubble">
+          {% if item.body %}
+          <p>{{ item.body|linebreaksbr }}</p>
+          {% endif %}
+          {% if item.attachments %}
+          <div class="cp-attachment-list">
+            {% for att in item.attachments %}
+            <a class="cp-attachment-card" href="{{ att.download_url|default:att.url }}" target="_blank" rel="noopener">
+              <span class="cp-attachment-ext">{{ att.ext|default:"FILE" }}</span>
+              <span class="cp-attachment-info">
+                <strong class="cp-attachment-name">{{ att.name }}</strong>
+                <span class="cp-attachment-size">{{ att.size_display }}</span>
+              </span>
+              <span class="cp-attachment-dl">Download</span>
+            </a>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </article>
+      {% empty %}
+      <div class="cp-stream-empty" id="client-chat-empty">
+        <p>Send a message below to reach the team.</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <form method="post" action="{% url 'platformhub:client_chat' %}" enctype="multipart/form-data" class="cp-composer" id="client-chat-form">
+      {% csrf_token %}
+      <input type="hidden" name="conversation_id" value="{{ conversation.id }}">
+      <input type="file" id="client-file-input" name="attachments" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.ppt,.pptx,.png,.jpg,.jpeg,.webp,.gif,.txt,.zip" hidden>
+      <label for="client-message" class="sr-only">Message</label>
+      <div class="cp-composer-files" id="client-file-preview" hidden></div>
+      <div class="cp-composer-row">
+        <button type="button" class="cp-attach-btn" id="client-attach-btn" title="Attach PDF, DOCX, XLSX, or image">Attach file</button>
+        <textarea id="client-message" name="message" rows="1" maxlength="5000" placeholder="Write a message…"></textarea>
+        <button class="cp-send-btn" type="submit" id="client-send-submit">Send</button>
+      </div>
+      <div class="cp-composer-status" id="client-send-status" aria-live="polite"></div>
+    </form>
+  </section>
+
+  <!-- Slide-over sheet for client invoices -->
+  <aside class="cp-invoice-sheet" id="cp-invoice-sheet" hidden aria-label="Account invoices">
+    <div class="cp-sheet-head">
+      <h2>Invoices</h2>
+      <button type="button" class="cp-sheet-close" id="cp-close-invoices">Close</button>
+    </div>
+
+    <div class="cp-sheet-list" id="client-invoice-list">
+      {% for inv in invoices %}
+      <div class="cp-inv-row" data-invoice-id="{{ inv.id }}">
+        <div class="cp-inv-top">
+          <strong class="cp-mono">{{ inv.number }}</strong>
+          <strong class="cp-mono">{{ inv.currency }} {{ inv.amount_due|floatformat:2 }}</strong>
+        </div>
+        <p class="cp-inv-desc">{{ inv.description|default:inv.number }}</p>
+        <div class="cp-inv-meta">
+          <span class="{% if inv.status == 'paid' %}cp-state-paid{% else %}cp-state-open{% endif %}">{{ inv.get_status_display }}</span>
+          <span aria-hidden="true">·</span>
+          <time class="cp-mono" datetime="{{ inv.created_at|date:'c' }}">{{ inv.created_at|date:"M j, Y" }}</time>
+        </div>
+        {% if inv.status == "open" or inv.status == "part_paid" %}
+        <div class="cp-inv-actions">
+          <a class="cp-pay-btn cp-pay-btn-sm" href="{% url 'platformhub:checkout' %}?invoice={{ inv.id }}">Pay invoice</a>
+        </div>
+        {% endif %}
+      </div>
+      {% empty %}
+      <p class="cp-sheet-empty" id="client-invoice-empty">No invoices on this account.</p>
+      {% endfor %}
+    </div>
+  </aside>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function () {
+  const root = document.querySelector("[data-client-chat-root]");
+  if (!root) return;
+
+  const conversationId = root.dataset.conversationId;
+  const feedUrl = root.dataset.feedUrl;
+  const thread = document.getElementById("client-message-thread");
+  const form = document.getElementById("client-chat-form");
+  const input = document.getElementById("client-message");
+  const fileInput = document.getElementById("client-file-input");
+  const attachBtn = document.getElementById("client-attach-btn");
+  const filePreview = document.getElementById("client-file-preview");
+  const submitBtn = document.getElementById("client-send-submit");
+  const statusEl = document.getElementById("client-send-status");
+  const invoiceList = document.getElementById("client-invoice-list");
+  const invoiceCount = document.getElementById("cp-invoice-count");
+  const sheet = document.getElementById("cp-invoice-sheet");
+  const toggleSheetBtn = document.getElementById("cp-toggle-invoices");
+  const closeSheetBtn = document.getElementById("cp-close-invoices");
+
+  if (toggleSheetBtn && sheet) {
+    toggleSheetBtn.addEventListener("click", function () {
+      const willOpen = sheet.hasAttribute("hidden");
+      if (willOpen) {
+        sheet.removeAttribute("hidden");
+        toggleSheetBtn.setAttribute("aria-expanded", "true");
+      } else {
+        sheet.setAttribute("hidden", "");
+        toggleSheetBtn.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+
+  if (closeSheetBtn && sheet) {
+    closeSheetBtn.addEventListener("click", function () {
+      sheet.setAttribute("hidden", "");
+      if (toggleSheetBtn) toggleSheetBtn.setAttribute("aria-expanded", "false");
+    });
+  }
+
+  function escapeHtml(value) {
+    const div = document.createElement("div");
+    div.textContent = value || "";
+    return div.innerHTML;
+  }
+
+  function scrollThreadToEnd() {
+    if (thread) {
+      thread.scrollTop = thread.scrollHeight;
+    }
+  }
+
+  function updateFilePreview() {
+    if (!fileInput || !filePreview) return;
+    const files = Array.from(fileInput.files || []);
+    if (!files.length) {
+      filePreview.hidden = true;
+      filePreview.innerHTML = "";
+      return;
+    }
+    filePreview.hidden = false;
+    filePreview.innerHTML =
+      '<div class="cp-composer-file-list">' +
+      files.map(function (f) {
+        const kb = Math.max(1, Math.round(f.size / 1024));
+        return '<span class="cp-composer-file-item"><strong>' + escapeHtml(f.name) + '</strong> (' + kb + ' KB)</span>';
+      }).join("") +
+      '<button type="button" class="cp-file-clear-btn" id="client-clear-files">Remove</button>' +
+      "</div>";
+    const clearBtn = document.getElementById("client-clear-files");
+    if (clearBtn) {
+      clearBtn.addEventListener("click", function () {
+        fileInput.value = "";
+        updateFilePreview();
+      });
+    }
+  }
+
+  if (attachBtn && fileInput) {
+    attachBtn.addEventListener("click", function () {
+      fileInput.click();
+    });
+    fileInput.addEventListener("change", updateFilePreview);
+  }
+
+  function renderAttachmentsHtml(attachments) {
+    if (!Array.isArray(attachments) || !attachments.length) return "";
+    return (
+      '<div class="cp-attachment-list">' +
+      attachments.map(function (att) {
+        const href = escapeHtml(att.download_url || att.url || "#");
+        const ext = escapeHtml(att.ext || "FILE");
+        const name = escapeHtml(att.name || att.filename || "Attachment");
+        const size = escapeHtml(att.size_display || "");
+        return (
+          '<a class="cp-attachment-card" href="' + href + '" target="_blank" rel="noopener">' +
+            '<span class="cp-attachment-ext">' + ext + "</span>" +
+            '<span class="cp-attachment-info">' +
+              '<strong class="cp-attachment-name">' + name + "</strong>" +
+              '<span class="cp-attachment-size">' + size + "</span>" +
+            "</span>" +
+            '<span class="cp-attachment-dl">Download</span>' +
+          "</a>"
+        );
+      }).join("") +
+      "</div>"
+    );
+  }
+
+  function renderMessage(item) {
+    if (!thread || thread.querySelector('[data-message-id="' + item.id + '"]')) return;
+    const empty = document.getElementById("client-chat-empty");
+    if (empty) empty.remove();
+
+    const article = document.createElement("article");
+    const isClient = item.sender === "client";
+    article.className = "cp-msg " + (isClient ? "cp-msg-self" : "cp-msg-team");
+    article.setAttribute("data-message-id", item.id);
+    const bodyHtml = item.body ? "<p>" + escapeHtml(item.body).replace(/\n/g, "<br>") + "</p>" : "";
+    const attHtml = renderAttachmentsHtml(item.attachments);
+    article.innerHTML =
+      '<div class="cp-msg-meta">' +
+        "<strong>" + (isClient ? "You" : "InfiniAI") + "</strong>" +
+        '<span aria-hidden="true">·</span>' +
+        '<time class="cp-mono" datetime="' + escapeHtml(item.created_at_iso) + '">' + escapeHtml(item.created_at_display) + "</time>" +
+      "</div>" +
+      '<div class="cp-msg-bubble">' + bodyHtml + attHtml + "</div>";
+    thread.appendChild(article);
+    scrollThreadToEnd();
+  }
+
+  function syncInvoices(invoices) {
+    if (!invoiceList || !Array.isArray(invoices) || invoices.length === 0) return;
+    const empty = document.getElementById("client-invoice-empty");
+    if (empty) empty.remove();
+
+    invoices.slice().reverse().forEach(function (inv) {
+      const existing = invoiceList.querySelector('[data-invoice-id="' + inv.id + '"]');
+      if (existing) existing.remove();
+      const isPaid = inv.status === "paid";
+      const isPayable = inv.status === "open" || inv.status === "part_paid";
+      const card = document.createElement("div");
+      card.className = "cp-inv-row";
+      card.setAttribute("data-invoice-id", inv.id);
+      card.innerHTML =
+        '<div class="cp-inv-top">' +
+          '<strong class="cp-mono">' + escapeHtml(inv.number) + "</strong>" +
+          '<strong class="cp-mono">' + escapeHtml(inv.currency) + " " + escapeHtml(inv.amount_due) + "</strong>" +
+        "</div>" +
+        '<p class="cp-inv-desc">' + escapeHtml(inv.description) + "</p>" +
+        '<div class="cp-inv-meta">' +
+          '<span class="' + (isPaid ? "cp-state-paid" : "cp-state-open") + '">' + escapeHtml(inv.status_display) + "</span>" +
+          '<span aria-hidden="true">·</span>' +
+          '<time class="cp-mono" datetime="' + escapeHtml(inv.created_at_iso) + '">' + escapeHtml(inv.created_at_display) + "</time>" +
+        "</div>" +
+        (isPayable ? '<div class="cp-inv-actions"><a class="cp-pay-btn cp-pay-btn-sm" href="' + escapeHtml(inv.checkout_url) + '">Pay invoice</a></div>' : "");
+      invoiceList.prepend(card);
+    });
+    if (invoiceCount) {
+      invoiceCount.textContent = String(invoiceList.querySelectorAll("[data-invoice-id]").length);
+    }
+  }
+
+  scrollThreadToEnd();
+  window.requestAnimationFrame(scrollThreadToEnd);
+  window.addEventListener("load", scrollThreadToEnd);
+
+  if (input && form) {
+    input.addEventListener("keydown", function (event) {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        form.requestSubmit();
+      }
+    });
+  }
+
+  if (form) {
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      const hasText = Boolean(input && input.value.trim());
+      const hasFiles = Boolean(fileInput && fileInput.files && fileInput.files.length > 0);
+      if ((!hasText && !hasFiles) || submitBtn.disabled) return;
+      submitBtn.disabled = true;
+      statusEl.textContent = "Sending…";
+      try {
+        const response = await fetch(form.action, {
+          method: "POST",
+          body: new FormData(form),
+          headers: {"X-Requested-With": "XMLHttpRequest"}
+        });
+        const data = await response.json();
+        if (!response.ok || !data.ok) {
+          throw new Error(data.error || "Could not send message.");
+        }
+        renderMessage(data.message);
+        if (input) input.value = "";
+        if (fileInput) fileInput.value = "";
+        updateFilePreview();
+        statusEl.textContent = "";
+      } catch (err) {
+        statusEl.textContent = err.message || "Could not send message.";
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+  }
+
+  async function pollFeed() {
+    if (!feedUrl || !conversationId) return;
+    try {
+      const response = await fetch(feedUrl + "?conversation=" + encodeURIComponent(conversationId) + "&role=client", {
+        headers: {"X-Requested-With": "XMLHttpRequest"}
+      });
+      if (!response.ok) return;
+      const data = await response.json();
+      if (Array.isArray(data.messages)) {
+        data.messages.forEach(renderMessage);
+      }
+      if (Array.isArray(data.invoices)) {
+        syncInvoices(data.invoices);
+      }
+    } catch (e) {}
+  }
+
+  window.setInterval(pollFeed, 4000);
+})();
+</script>
 {% endblock %}

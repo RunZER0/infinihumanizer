@@ -1,0 +1,227 @@
+{% extends "platformhub/operations_base.html" %}
+{% block title %}Invoices — InfiniAI Operations{% endblock %}
+
+{% block breadcrumbs %}
+<span>Operations</span>
+<span class="ops-crumb-sep" aria-hidden="true">/</span>
+<strong class="ops-crumb-current">Invoices</strong>
+{% endblock %}
+
+{% block topbar_actions %}
+<button type="button" class="ops-btn ops-btn-primary" id="ops-open-invoice-modal">
+  Issue invoice
+</button>
+{% endblock %}
+
+{% block content %}
+<div class="ops-data-page">
+  <section class="ops-kpi-strip" aria-label="Invoice summary">
+    <div class="ops-kpi-cell">
+      <span class="ops-kpi-label">Total invoices</span>
+      <strong class="ops-kpi-value ops-mono">{{ total_invoices_count }}</strong>
+      <span class="ops-kpi-sub">{{ paid_invoices_count }} settled · {{ open_invoices_count }} open</span>
+    </div>
+    <div class="ops-kpi-cell">
+      <span class="ops-kpi-label">Settled volume</span>
+      <strong class="ops-kpi-value ops-mono">USD {{ paid_invoices_usd|floatformat:2 }}</strong>
+      <span class="ops-kpi-sub">Cleared via gateway or admin confirmation</span>
+    </div>
+    <div class="ops-kpi-cell">
+      <span class="ops-kpi-label">Open balance</span>
+      <strong class="ops-kpi-value ops-mono">USD {{ open_invoices_usd|floatformat:2 }}</strong>
+      <span class="ops-kpi-sub">Awaiting client settlement</span>
+    </div>
+  </section>
+
+  <section class="ops-table-section" aria-label="Invoices ledger">
+    <div class="ops-filter-bar">
+      <div class="ops-segmented" role="tablist" aria-label="Filter invoices by status">
+        <button type="button" class="ops-segment is-active" data-inv-filter="all">All ({{ invoices|length }})</button>
+        <button type="button" class="ops-segment" data-inv-filter="paid">Paid ({{ paid_invoices_count }})</button>
+        <button type="button" class="ops-segment" data-inv-filter="open">Open ({{ open_invoices_count }})</button>
+      </div>
+      <div class="ops-filter-search">
+        <input type="search" id="ops-invoice-search" class="ops-search-input" placeholder="Filter by invoice #, client, email, or description…" aria-label="Filter invoices">
+      </div>
+    </div>
+
+    <div class="ops-table-container">
+      <table class="ops-data-table" id="ops-invoices-table">
+        <thead>
+          <tr>
+            <th>Invoice #</th>
+            <th>Issued</th>
+            <th>Client</th>
+            <th>Description</th>
+            <th class="ops-col-num">Amount</th>
+            <th>Status</th>
+            <th class="ops-col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for inv in invoices %}
+          <tr
+            data-inv-status="{% if inv.status == 'paid' %}paid{% else %}open{% endif %}"
+            data-inv-search="{{ inv.number|lower }} {% if inv.user %}{{ inv.user.get_full_name|default:''|lower }}{% endif %} {{ inv.email|lower }} {{ inv.description|lower }}"
+          >
+            <td class="ops-mono"><strong>{{ inv.number }}</strong></td>
+            <td class="ops-mono">{{ inv.created_at|date:"M j, Y · H:i" }}</td>
+            <td>
+              <strong>{% if inv.user %}{{ inv.user.get_full_name|default:inv.email }}{% else %}{{ inv.email }}{% endif %}</strong>
+              <div class="ops-cell-sub">{{ inv.email }}</div>
+            </td>
+
+            <td>
+              <strong>{{ inv.description|default:inv.number }}</strong>
+            </td>
+            <td class="ops-col-num ops-mono"><strong>{{ inv.currency }} {{ inv.amount_due|floatformat:2 }}</strong></td>
+            <td>
+              <span class="{% if inv.status == 'paid' %}ops-state-settled{% else %}ops-state-open{% endif %}">
+                {{ inv.get_status_display }}
+              </span>
+            </td>
+            <td class="ops-col-actions">
+              <div class="ops-row-actions">
+                <form method="post" action="{% url 'platformhub:admin_invoice_status' inv.id %}" class="ops-inline-form">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="{% url 'platformhub:operations_invoices' %}">
+                  {% if inv.status != "paid" %}
+                  <button type="submit" name="status" value="paid" class="ops-text-action">Mark paid</button>
+                  {% else %}
+                  <button type="submit" name="status" value="open" class="ops-text-action">Reopen</button>
+                  {% endif %}
+                </form>
+                <span aria-hidden="true">·</span>
+                <a href="{% url 'platformhub:checkout' %}?invoice={{ inv.id }}" class="ops-text-action">Checkout</a>
+                {% if inv.user and inv.user.client_conversation %}
+                <span aria-hidden="true">·</span>
+                <a href="{% url 'platformhub:operations_desk_conversation' inv.user.client_conversation.id %}" class="ops-text-action">Thread</a>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" class="ops-table-empty">No invoices issued yet.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<!-- Modal: Issue Invoice -->
+<div class="ops-modal-backdrop" id="ops-invoice-modal" hidden>
+  <div class="ops-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="ops-invoice-modal-title">
+    <div class="ops-modal-head">
+      <h2 id="ops-invoice-modal-title">Issue invoice</h2>
+      <button type="button" class="ops-modal-close" id="ops-close-invoice-modal">Close</button>
+    </div>
+
+    <form method="post" action="{% url 'platformhub:admin_create_invoice' %}" class="ops-form">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{% url 'platformhub:operations_invoices' %}">
+
+      <div class="ops-field">
+        <label for="invoice-email">Client email</label>
+        <input id="invoice-email" type="email" name="email" list="ops-client-emails" required placeholder="client@email.com" class="ops-input">
+        <datalist id="ops-client-emails">
+          {% for conv in conversations %}
+          <option value="{{ conv.user.email }}">{{ conv.user.get_full_name|default:conv.user.email }}</option>
+          {% endfor %}
+        </datalist>
+      </div>
+
+      <div class="ops-field">
+        <label for="invoice-description">Description</label>
+        <input id="invoice-description" type="text" name="description" maxlength="255" required placeholder="Website copy rewrite" class="ops-input">
+      </div>
+
+      <div class="ops-field-grid">
+        <div class="ops-field">
+          <label for="invoice-currency">Currency</label>
+          <select id="invoice-currency" name="currency" class="ops-input">
+            <option value="USD">USD</option>
+            <option value="KES">KES</option>
+          </select>
+        </div>
+        <div class="ops-field">
+          <label for="invoice-amount">Amount</label>
+          <input id="invoice-amount" type="number" name="amount_due" step="0.01" min="0.01" required placeholder="60.00" class="ops-input ops-mono">
+        </div>
+      </div>
+
+      <div class="ops-field-grid">
+        <div class="ops-field">
+          <label for="invoice-status">Status</label>
+          <select id="invoice-status" name="status" class="ops-input">
+            <option value="open">Open</option>
+            <option value="paid">Paid</option>
+          </select>
+        </div>
+        <div class="ops-field">
+          <label for="invoice-date">Issue date</label>
+          <input id="invoice-date" type="date" name="issued_date" class="ops-input ops-mono">
+        </div>
+      </div>
+
+      <div class="ops-modal-foot">
+        <span></span>
+        <button class="ops-btn ops-btn-primary" type="submit">Generate invoice</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function () {
+  const modal = document.getElementById("ops-invoice-modal");
+  const openBtn = document.getElementById("ops-open-invoice-modal");
+  const closeBtn = document.getElementById("ops-close-invoice-modal");
+  const searchInput = document.getElementById("ops-invoice-search");
+  const filterBtns = document.querySelectorAll("[data-inv-filter]");
+  const rows = document.querySelectorAll("#ops-invoices-table tbody tr[data-inv-status]");
+  let activeFilter = "all";
+
+  function applyFilters() {
+    const q = (searchInput ? searchInput.value : "").trim().toLowerCase();
+    rows.forEach(function (row) {
+      const st = row.getAttribute("data-inv-status");
+      const text = row.getAttribute("data-inv-search") || "";
+      const okStatus = activeFilter === "all" || st === activeFilter;
+      const okSearch = !q || text.indexOf(q) !== -1;
+      row.hidden = !(okStatus && okSearch);
+    });
+  }
+
+  if (searchInput) searchInput.addEventListener("input", applyFilters);
+  filterBtns.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      filterBtns.forEach(function (b) { b.classList.remove("is-active"); });
+      btn.classList.add("is-active");
+      activeFilter = btn.getAttribute("data-inv-filter") || "all";
+      applyFilters();
+    });
+  });
+
+  if (openBtn && modal) {
+    openBtn.addEventListener("click", function () {
+      modal.hidden = false;
+      const emailField = document.getElementById("invoice-email");
+      if (emailField) emailField.focus();
+    });
+  }
+  if (closeBtn && modal) {
+    closeBtn.addEventListener("click", function () { modal.hidden = true; });
+  }
+  if (modal) {
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) modal.hidden = true;
+    });
+  }
+})();
+</script>
+{% endblock %}

@@ -23,11 +23,18 @@ except Exception:
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+def _clean_env(name: str, default: str = "") -> str:
+    value = (os.getenv(name) or "").strip()
+    if not value or value.lower().startswith("your-"):
+        return default
+    return value
+
+
 # SECURITY
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "unsafe-dev-key")
-PAYSTACK_PUBLIC_KEY = os.getenv("PAYSTACK_PUBLIC_KEY")
-PAYSTACK_SECRET_KEY = os.getenv("PAYSTACK_SECRET_KEY")
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
+SECRET_KEY = _clean_env("DJANGO_SECRET_KEY", "unsafe-dev-key")
+PAYSTACK_PUBLIC_KEY = _clean_env("PAYSTACK_PUBLIC_KEY") or None
+PAYSTACK_SECRET_KEY = _clean_env("PAYSTACK_SECRET_KEY") or None
+OPENROUTER_API_KEY = _clean_env("OPENROUTER_API_KEY", "")
 HUMANIZER_BACKEND = os.getenv("HUMANIZER_BACKEND", "openrouter").strip().lower()
 HUMANIZER_MODEL_ID = os.getenv("HUMANIZER_MODEL_ID", "mistralai/ministral-3b-2512")
 HUMANIZER_FALLBACK_MODELS = os.getenv("HUMANIZER_FALLBACK_MODELS", "")
@@ -39,19 +46,20 @@ HUMANIZER_PROVIDER_SORT = os.getenv("HUMANIZER_PROVIDER_SORT", "throughput").str
 HUMANIZER_DEFAULT_STRENGTH = int(os.getenv("HUMANIZER_DEFAULT_STRENGTH", "8"))
 HUMANIZER_ANON_DAILY_WORDS = int(os.getenv("HUMANIZER_ANON_DAILY_WORDS", "300"))
 INFINIAI_ADMIN_EMAIL = os.getenv("INFINIAI_ADMIN_EMAIL", "valdaceai@gmail.com").strip().lower()
-GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
-GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
-PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", "https://byinfini.online").rstrip("/")
+GOOGLE_CLIENT_ID = _clean_env("GOOGLE_CLIENT_ID", "")
+GOOGLE_CLIENT_SECRET = _clean_env("GOOGLE_CLIENT_SECRET", "")
+PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", os.getenv("APP_URL", "https://byinfini.online")).rstrip("/")
 SUPPORT_EMAIL = os.getenv("SUPPORT_EMAIL", "valdaceai@gmail.com")
-BREVO_API_KEY = os.getenv("BREVO_API_KEY", "")
-BREVO_SENDER_EMAIL = os.getenv("BREVO_SENDER_EMAIL", "")
+BREVO_API_KEY = _clean_env("BREVO_API_KEY", "")
+BREVO_SENDER_EMAIL = _clean_env("BREVO_SENDER_EMAIL", "")
 BREVO_SENDER_NAME = os.getenv("BREVO_SENDER_NAME", "InfiniAI")
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_HOST_USER = _clean_env("EMAIL_HOST_USER") or None
+EMAIL_HOST_PASSWORD = _clean_env("EMAIL_HOST_PASSWORD") or None
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", f"{BREVO_SENDER_NAME} <{BREVO_SENDER_EMAIL or SUPPORT_EMAIL}>")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 OFFLINE_MODE = os.getenv("OFFLINE_MODE", "False") == "True"
 ALLOWED_HOSTS = [
+    '*',
     'infinihumanizer.onrender.com',
     'infiniaihumanizer.live',
     'www.infiniaihumanizer.live',
@@ -59,7 +67,9 @@ ALLOWED_HOSTS = [
     'www.byinfini.online',
     '127.0.0.1',
     'localhost',
+    '0.0.0.0',
     '.onrender.com',
+    '.run.app',
     '192.168.0.105',
 ]
 
@@ -250,10 +260,11 @@ USE_TZ = True
 # STATIC FILES
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+WHITENOISE_USE_FINDERS = True
 if DEBUG:
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 else:
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 STATICFILES_DIRS = [ BASE_DIR / 'static' ]
 
 # AUTH REDIRECTS
@@ -262,31 +273,40 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 ACCOUNT_ADAPTER = 'accounts.adapters.CustomAccountAdapter'
 
 # CUSTOM ENV VARS - AI Engine API Keys
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
-DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", "")
+OPENAI_API_KEY = _clean_env("OPENAI_API_KEY", "")
+ANTHROPIC_API_KEY = _clean_env("ANTHROPIC_API_KEY", "")
+DEEPSEEK_API_KEY = _clean_env("DEEPSEEK_API_KEY", "")
 
 # SECURITY OPTIONS
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-USE_X_FORWARDED_HOST = False
-SECURE_SSL_REDIRECT = True
+USE_X_FORWARDED_HOST = True
+X_FRAME_OPTIONS = 'ALLOWALL'
+SECURE_SSL_REDIRECT = bool(os.getenv("RENDER")) and not (DEBUG or OFFLINE_MODE)
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SAMESITE = 'None'
 
 # Override for local development / offline testing
 if socket.gethostname() == 'localhost' or DEBUG or OFFLINE_MODE:
     SECURE_SSL_REDIRECT = False
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SAMESITE = 'Lax'
+    CSRF_COOKIE_SAMESITE = 'Lax'
 
 # CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = [
     'https://infinihumanizer.onrender.com',
     'https://*.onrender.com',
+    'https://*.run.app',
+    'https://*.google.com',
     'https://infiniaihumanizer.live',
     'https://www.infiniaihumanizer.live',
     'https://byinfini.online',
     'https://www.byinfini.online',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
     'http://localhost:8001',

@@ -1,57 +1,95 @@
-{% extends "base.html" %}
+{% extends "platformhub/client_portal_base.html" %}
 {% block title %}Billing — InfiniAI{% endblock %}
+{% block nav_billing %}is-active{% endblock %}
+
 {% block content %}
-<div class="page-shell account-section-head">
-  <div>
-    <div class="eyebrow">Workspace</div>
-    <h1 class="h1">Billing</h1>
-    <p class="lede">Invoices first. History stays out of the way until you need it.</p>
-  </div>
-  <div class="workspace-actions">
-    <a class="btn" href="{% url 'platformhub:workspace' %}">Workspace</a>
-    <a class="btn btn-primary" href="{% url 'platformhub:quickpay' %}">QuickPay</a>
-  </div>
-</div>
-
-<section class="section account-list-section">
-  <div class="shell">
-    <div class="eyebrow" style="margin-bottom:16px">Invoices</div>
-    <div class="account-list">
-      {% for invoice in invoices %}
-      <div class="account-list-row account-list-row-static">
-        <div>
-          <strong>{{ invoice.number }}</strong>
-          <small>{{ invoice.description|default:"Invoice" }} · {{ invoice.created_at|date:"M j, Y" }}</small>
-        </div>
-        <div class="account-money">{{ invoice.currency }} {{ invoice.amount_due }}</div>
-        {% if invoice.status != "paid" %}
-        <a class="btn btn-primary" href="{% url 'platformhub:checkout' %}?invoice={{ invoice.id }}">Pay</a>
-        {% else %}
-        <span class="status status-success">Paid</span>
-        {% endif %}
-      </div>
-      {% empty %}
-      <div class="account-empty"><strong>No invoices.</strong></div>
-      {% endfor %}
+<div class="cp-container">
+  <header class="cp-page-head">
+    <div>
+      <h1>Billing &amp; invoices</h1>
+      <p>{{ request.user.email }}</p>
     </div>
+    <a class="cp-btn-outline" href="{% url 'platformhub:quickpay' %}">QuickPay</a>
+  </header>
 
-    <details class="account-secondary-list">
-      <summary>Payment history</summary>
-      <div class="account-list">
-        {% for payment in payments %}
-        <div class="account-list-row account-list-row-static">
-          <div>
-            <strong>{{ payment.original_description|default:payment.metadata.label|default:"Payment" }}</strong>
-            <small>{{ payment.reference }} · {{ payment.paid_at|default:payment.created_at|date:"M j, Y" }}</small>
-          </div>
-          <div class="account-money">{{ payment.currency }} {{ payment.amount }}</div>
-          <span class="status {% if payment.status == 'success' %}status-success{% else %}status-pending{% endif %}">{{ payment.get_status_display }}</span>
-        </div>
-        {% empty %}
-        <div class="account-empty"><strong>No payments yet.</strong></div>
-        {% endfor %}
-      </div>
-    </details>
-  </div>
-</section>
+  <section class="cp-section" aria-label="Account invoices">
+    <h2 class="cp-section-title">Invoices</h2>
+    <div class="cp-table-wrap">
+      <table class="cp-table">
+        <thead>
+          <tr>
+            <th>Invoice</th>
+            <th>Date</th>
+            <th>Description</th>
+            <th class="cp-num">Amount</th>
+            <th>Status</th>
+            <th class="cp-actions">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for invoice in invoices %}
+          <tr>
+            <td class="cp-mono"><strong>{{ invoice.number }}</strong></td>
+            <td class="cp-mono">{{ invoice.created_at|date:"M j, Y" }}</td>
+            <td>{{ invoice.description|default:"Invoice" }}</td>
+            <td class="cp-num cp-mono"><strong>{{ invoice.currency }} {{ invoice.amount_due|floatformat:2 }}</strong></td>
+            <td>
+              <span class="{% if invoice.status == 'paid' %}cp-state-paid{% else %}cp-state-open{% endif %}">
+                {{ invoice.get_status_display }}
+              </span>
+            </td>
+            <td class="cp-actions">
+              {% if invoice.status != "paid" %}
+              <a class="cp-pay-btn cp-pay-btn-sm" href="{% url 'platformhub:checkout' %}?invoice={{ invoice.id }}">Pay</a>
+              {% else %}
+              <span class="cp-muted">Settled</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" class="cp-empty-cell">No invoices on your account.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="cp-section" aria-label="Payment receipts">
+    <h2 class="cp-section-title">Payment history</h2>
+    <div class="cp-table-wrap">
+      <table class="cp-table">
+        <thead>
+          <tr>
+            <th>Reference</th>
+            <th>Date</th>
+            <th>Description</th>
+            <th class="cp-num">Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for payment in payments %}
+          <tr>
+            <td class="cp-mono"><strong>{{ payment.reference }}</strong></td>
+            <td class="cp-mono">{{ payment.paid_at|default:payment.created_at|date:"M j, Y · H:i" }}</td>
+            <td>{{ payment.original_description|default:payment.metadata.label|default:"Payment" }}</td>
+            <td class="cp-num cp-mono"><strong>{{ payment.currency }} {{ payment.amount|floatformat:2 }}</strong></td>
+            <td>
+              <span class="{% if payment.status == 'success' %}cp-state-paid{% else %}cp-state-open{% endif %}">
+                {{ payment.get_status_display }}
+              </span>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="cp-empty-cell">No payment records yet.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
 {% endblock %}

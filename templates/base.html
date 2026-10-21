@@ -21,21 +21,21 @@
 {% endif %}
 <header class="site-header">
   <div class="nav-wrap">
-    <a class="brand" href="{% url 'platformhub:home' %}" aria-label="InfiniAI home">
-      <span class="brand-mark" aria-hidden="true"></span>
-      <span>InfiniAI</span>
-    </a>
+    <a class="brand" href="{% url 'platformhub:home' %}" aria-label="InfiniAI home">InfiniAI</a>
     <nav class="site-nav" data-nav aria-label="Primary navigation">
       <a href="{% url 'platformhub:services' %}">Services</a>
-      <a href="{% url 'platformhub:about' %}">About</a>
-      <a href="{% url 'platformhub:notes' %}">Notes</a>
-      <a href="{% url 'humanizer' %}">Text tool</a>
       <a href="{% url 'platformhub:pricing' %}">Pricing</a>
-      <a href="{% url 'platformhub:consultation' %}">Talk to us</a>
-      {% if user.is_authenticated %}<a href="{% url 'platformhub:quickpay' %}">QuickPay</a><a href="{% url 'platformhub:workspace' %}">Workspace</a>{% endif %}
+      <a href="{% url 'humanizer' %}">Text tool</a>
+      <a href="{% url 'platformhub:operations_desk' %}">Admin</a>
+      {% if user.is_authenticated %}
+      <a href="{% url 'platformhub:client_chat' %}">Messages</a>
+      {% else %}
+      <a href="{% url 'account_login' %}">Sign in</a>
+      {% endif %}
       <div class="mobile-auth-links">
         {% if user.is_authenticated %}
-        <a class="mobile-auth-primary" href="{% url 'platformhub:workspace' %}">Workspace</a>
+        <a class="mobile-auth-primary" href="{% url 'platformhub:client_chat' %}">Messages</a>
+        <a href="{% url 'platformhub:workspace' %}">Workspace</a>
         <a href="{% url 'account_logout' %}">Sign out</a>
         {% else %}
         <a class="mobile-auth-primary" href="{% url 'account_login' %}">Sign in</a>
@@ -45,11 +45,10 @@
     </nav>
     <div class="nav-actions">
       {% if user.is_authenticated %}
-      <a class="btn btn-quiet" href="{% url 'account_logout' %}">Sign out</a>
+      <a class="btn btn-primary" href="{% url 'platformhub:workspace' %}">Workspace</a>
       {% else %}
-      <a class="btn btn-quiet" href="{% url 'account_login' %}">Sign in</a>
-      {% endif %}
       <a class="btn btn-primary" href="{% url 'platformhub:start' %}">Start work</a>
+      {% endif %}
       <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-label="Open navigation">Menu</button>
     </div>
   </div>
@@ -77,7 +76,8 @@
         <li><a href="{% url 'platformhub:notes' %}">Notes</a></li>
         <li><a href="{% url 'platformhub:pricing' %}">Pricing</a></li>
         <li><a href="{% url 'platformhub:consultation' %}">Talk to us</a></li>
-        {% if user.is_authenticated %}<li><a href="{% url 'platformhub:client_chat' %}">Messages</a></li>{% endif %}
+        <li><a href="{% url 'platformhub:client_chat' %}">Client messages</a></li>
+        <li><a href="{% url 'platformhub:operations_desk' %}">Admin desk</a></li>
         <li><a href="mailto:valdaceai@gmail.com">Contact</a></li>
       </ul>
     </div>

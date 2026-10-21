@@ -1,0 +1,492 @@
+{% extends "platformhub/operations_base.html" %}
+{% block title %}Inbox · {{ conversation.user.get_full_name|default:conversation.user.email }} — InfiniAI Operations{% endblock %}
+{% block body_class %}ops-body-locked{% endblock %}
+{% block viewport_class %}ops-viewport-locked{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'platformhub:operations_desk' %}" class="ops-crumb-link">Inbox</a>
+<span class="ops-crumb-sep" aria-hidden="true">/</span>
+<strong class="ops-crumb-current">{{ conversation.user.get_full_name|default:conversation.user.email }}</strong>
+{% endblock %}
+
+{% block topbar_actions %}
+<button type="button" class="ops-btn ops-btn-primary" id="ops-open-invoice-modal">
+  Issue invoice
+</button>
+{% endblock %}
+
+{% block content %}
+<div class="ops-inbox-workspace" data-desk-root data-conversation-id="{{ conversation.id }}" data-feed-url="{% url 'platformhub:client_chat_feed' %}">
+  <!-- Pane 1: Incoming Chats List -->
+  <aside class="ops-thread-pane" aria-label="Client conversations">
+    <div class="ops-thread-toolbar">
+      <div class="ops-search-row">
+        <input type="search" id="ops-thread-search" class="ops-search-input" placeholder="Search client or email…" aria-label="Search client or email">
+        <button type="button" class="ops-btn ops-btn-secondary ops-btn-sm" id="ops-toggle-new-client" title="Open thread by email">New</button>
+      </div>
+
+      <form method="post" action="{% url 'platformhub:operations_desk' %}" class="ops-new-client-form" id="ops-new-client-form" hidden>
+        {% csrf_token %}
+        <input type="hidden" name="action" value="open_client">
+        <input id="desk-client-email" type="email" name="client_email" required placeholder="client@email.com" class="ops-input ops-input-sm">
+        <button class="ops-btn ops-btn-primary ops-btn-sm" type="submit">Open</button>
+      </form>
+
+      <div class="ops-segmented" role="tablist" aria-label="Filter conversations">
+        <button type="button" class="ops-segment is-active" data-thread-filter="all">All ({{ conversations|length }})</button>
+        <button type="button" class="ops-segment" data-thread-filter="open">Open</button>
+        <button type="button" class="ops-segment" data-thread-filter="closed">Closed</button>
+      </div>
+    </div>
+
+    <div class="ops-thread-list" id="ops-thread-list">
+      {% for item in conversations %}
+      <a
+        class="ops-thread-row {% if item.id == conversation.id %}is-active{% endif %}"
+        href="{% url 'platformhub:operations_desk_conversation' item.id %}"
+        data-thread-status="{{ item.status }}"
+        data-thread-search="{{ item.user.get_full_name|default:''|lower }} {{ item.user.email|lower }} {{ item.subject|lower }} {{ item.channel }}"
+      >
+        <div class="ops-thread-row-top">
+          <strong class="ops-thread-name">{{ item.user.get_full_name|default:item.user.email }}</strong>
+          <time class="ops-thread-time" datetime="{{ item.updated_at|date:'c' }}">{{ item.updated_at|date:"M j, Y" }}</time>
+        </div>
+        {% if item.last_message %}
+        <p class="ops-thread-preview">
+          <span class="ops-thread-sender">{% if item.last_message.sender == "client" %}{{ item.user.first_name|default:"Client" }}:{% else %}You:{% endif %}</span>
+          {% if item.last_message.body %}
+            {{ item.last_message.body|truncatechars:68 }}
+          {% elif item.last_message.attachments %}
+            Attached {{ item.last_message.attachments.0.name }}
+          {% endif %}
+        </p>
+        {% else %}
+        <p class="ops-thread-preview">No messages</p>
+        {% endif %}
+        <div class="ops-thread-meta">
+          <span>{{ item.user.email }}</span>
+          <span aria-hidden="true">·</span>
+          <span class="{% if item.status == 'open' %}ops-state-open{% else %}ops-state-settled{% endif %}">{{ item.get_status_display }}</span>
+          {% if item.unread_client_count %}
+          <span aria-hidden="true">·</span>
+          <strong class="ops-unread-text">{{ item.unread_client_count }} new</strong>
+          {% endif %}
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </aside>
+
+  <!-- Pane 2: Active Chat Interface -->
+  <section class="ops-chat-pane" aria-label="Active conversation">
+    <header class="ops-chat-header">
+      <div class="ops-chat-header-main">
+        <h1 class="ops-chat-title">{{ conversation.user.get_full_name|default:conversation.user.email }}</h1>
+        <div class="ops-chat-submeta">
+          <span>{{ conversation.user.email }}</span>
+        </div>
+      </div>
+
+      <div class="ops-chat-header-actions">
+        <span class="ops-status-text {% if conversation.status == 'open' %}ops-state-open{% else %}ops-state-settled{% endif %}" id="desk-thread-status">
+          {{ conversation.get_status_display }}
+        </span>
+        <form method="post" action="{% url 'platformhub:operations_desk_conversation' conversation.id %}" class="ops-inline-form">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="toggle_status">
+          <button class="ops-btn ops-btn-secondary ops-btn-sm" type="submit">
+            {% if conversation.status == "open" %}Close thread{% else %}Reopen{% endif %}
+          </button>
+        </form>
+      </div>
+    </header>
+
+    <div class="ops-message-stream" id="desk-message-thread" aria-live="polite">
+      {% for item in chat_messages %}
+      <article class="ops-msg {% if item.sender == 'client' %}ops-msg-incoming{% else %}ops-msg-outgoing{% endif %}" data-message-id="{{ item.id }}">
+        <div class="ops-msg-meta">
+          <strong>{% if item.sender == "client" %}{{ conversation.user.get_full_name|default:conversation.user.email }}{% else %}You{% endif %}</strong>
+          <span aria-hidden="true">·</span>
+          <time datetime="{{ item.created_at|date:'c' }}">{{ item.created_at|date:"M j, Y · H:i" }}</time>
+        </div>
+        <div class="ops-msg-bubble">
+          {% if item.body %}
+          <p>{{ item.body|linebreaksbr }}</p>
+          {% endif %}
+          {% if item.attachments %}
+          <div class="ops-attachment-list">
+            {% for att in item.attachments %}
+            <a class="ops-attachment-card" href="{{ att.download_url|default:att.url }}" target="_blank" rel="noopener">
+              <span class="ops-attachment-ext">{{ att.ext|default:"FILE" }}</span>
+              <span class="ops-attachment-info">
+                <strong class="ops-attachment-name">{{ att.name }}</strong>
+                <span class="ops-attachment-size">{{ att.size_display }}</span>
+              </span>
+              <span class="ops-attachment-dl">Download</span>
+            </a>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </article>
+      {% empty %}
+      <div class="ops-stream-empty" id="desk-chat-empty">
+        <p>No messages in this thread yet.</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <form method="post" action="{% url 'platformhub:operations_desk_conversation' conversation.id %}" enctype="multipart/form-data" class="ops-composer" id="desk-reply-form">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="reply">
+      <input type="file" id="desk-file-input" name="attachments" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.ppt,.pptx,.png,.jpg,.jpeg,.webp,.gif,.txt,.zip" hidden>
+      <label for="desk-reply-input" class="sr-only">Reply to {{ conversation.user.first_name|default:conversation.user.email }}</label>
+      <textarea id="desk-reply-input" name="message" rows="2" maxlength="5000" placeholder="Reply to {{ conversation.user.first_name|default:conversation.user.email }}…"></textarea>
+      <div class="ops-composer-files" id="desk-file-preview" hidden></div>
+      <div class="ops-composer-bar">
+        <div class="ops-composer-tools">
+          <button type="button" class="ops-btn ops-btn-secondary ops-btn-sm" id="desk-attach-btn">Attach file (PDF, DOCX, XLSX…)</button>
+          <span class="ops-composer-hint" id="desk-reply-status">Cmd+Enter to send</span>
+        </div>
+        <button class="ops-btn ops-btn-primary" type="submit" id="desk-reply-submit">Send reply</button>
+      </div>
+    </form>
+  </section>
+</div>
+
+<!-- Modal Dialog: Issue Invoice -->
+<div class="ops-modal-backdrop" id="ops-invoice-modal" hidden>
+  <div class="ops-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="ops-invoice-modal-title">
+    <div class="ops-modal-head">
+      <h2 id="ops-invoice-modal-title">Issue invoice</h2>
+      <button type="button" class="ops-modal-close" id="ops-close-invoice-modal" aria-label="Close">Close</button>
+    </div>
+
+    <form method="post" action="{% url 'platformhub:admin_create_invoice' %}" class="ops-form" id="desk-invoice-form">
+      {% csrf_token %}
+      <input type="hidden" name="conversation_id" value="{{ conversation.id }}">
+
+      <div class="ops-field">
+        <label for="invoice-email">Client email</label>
+        <input id="invoice-email" type="email" name="email" required value="{{ conversation.user.email }}" class="ops-input">
+      </div>
+
+      <div class="ops-field">
+        <label for="invoice-description">Description</label>
+        <input id="invoice-description" type="text" name="description" maxlength="255" required placeholder="Website copy rewrite" class="ops-input">
+      </div>
+
+      <div class="ops-field-grid">
+        <div class="ops-field">
+          <label for="invoice-currency">Currency</label>
+          <select id="invoice-currency" name="currency" class="ops-input">
+            <option value="USD">USD</option>
+            <option value="KES">KES</option>
+          </select>
+        </div>
+        <div class="ops-field">
+          <label for="invoice-amount">Amount</label>
+          <input id="invoice-amount" type="number" name="amount_due" step="0.01" min="0.01" required placeholder="60.00" class="ops-input ops-mono">
+        </div>
+      </div>
+
+      <div class="ops-field-grid">
+        <div class="ops-field">
+          <label for="invoice-status">Status</label>
+          <select id="invoice-status" name="status" class="ops-input">
+            <option value="open">Open</option>
+            <option value="paid">Paid</option>
+          </select>
+        </div>
+        <div class="ops-field">
+          <label for="invoice-date">Issue date</label>
+          <input id="invoice-date" type="date" name="issued_date" class="ops-input ops-mono">
+        </div>
+      </div>
+
+      <div class="ops-modal-foot">
+        <span class="ops-form-feedback" id="desk-invoice-feedback" aria-live="polite"></span>
+        <button class="ops-btn ops-btn-primary" type="submit" id="desk-invoice-submit">Generate invoice</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function () {
+  const root = document.querySelector("[data-desk-root]");
+  if (!root) return;
+
+  const conversationId = root.dataset.conversationId;
+  const feedUrl = root.dataset.feedUrl;
+  const thread = document.getElementById("desk-message-thread");
+  const replyForm = document.getElementById("desk-reply-form");
+  const replyInput = document.getElementById("desk-reply-input");
+  const replySubmit = document.getElementById("desk-reply-submit");
+  const replyStatus = document.getElementById("desk-reply-status");
+  const fileInput = document.getElementById("desk-file-input");
+  const attachBtn = document.getElementById("desk-attach-btn");
+  const filePreview = document.getElementById("desk-file-preview");
+  const invoiceForm = document.getElementById("desk-invoice-form");
+  const invoiceSubmit = document.getElementById("desk-invoice-submit");
+  const invoiceFeedback = document.getElementById("desk-invoice-feedback");
+  const modal = document.getElementById("ops-invoice-modal");
+  const openModalBtn = document.getElementById("ops-open-invoice-modal");
+  const closeModalBtn = document.getElementById("ops-close-invoice-modal");
+  const toggleNewClientBtn = document.getElementById("ops-toggle-new-client");
+  const newClientForm = document.getElementById("ops-new-client-form");
+  const searchInput = document.getElementById("ops-thread-search");
+  const filterBtns = document.querySelectorAll("[data-thread-filter]");
+  const threadRows = document.querySelectorAll(".ops-thread-row");
+  const clientLabel = "{{ conversation.user.get_full_name|default:conversation.user.email|escapejs }}";
+
+  let activeFilter = "all";
+
+  function applyThreadFilters() {
+    const query = (searchInput ? searchInput.value : "").trim().toLowerCase();
+    threadRows.forEach(function (row) {
+      const status = row.getAttribute("data-thread-status");
+      const haystack = (row.getAttribute("data-thread-search") || "").toLowerCase();
+      const matchesStatus = activeFilter === "all" || status === activeFilter;
+      const matchesQuery = !query || haystack.indexOf(query) !== -1;
+      row.hidden = !(matchesStatus && matchesQuery);
+    });
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("input", applyThreadFilters);
+  }
+
+  filterBtns.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      filterBtns.forEach(function (b) { b.classList.remove("is-active"); });
+      btn.classList.add("is-active");
+      activeFilter = btn.getAttribute("data-thread-filter") || "all";
+      applyThreadFilters();
+    });
+  });
+
+  if (toggleNewClientBtn && newClientForm) {
+    toggleNewClientBtn.addEventListener("click", function () {
+      newClientForm.hidden = !newClientForm.hidden;
+      if (!newClientForm.hidden) {
+        const emailField = document.getElementById("desk-client-email");
+        if (emailField) emailField.focus();
+      }
+    });
+  }
+
+  if (openModalBtn && modal) {
+    openModalBtn.addEventListener("click", function () {
+      modal.hidden = false;
+      const descInput = document.getElementById("invoice-description");
+      if (descInput) descInput.focus();
+    });
+  }
+
+  if (closeModalBtn && modal) {
+    closeModalBtn.addEventListener("click", function () {
+      modal.hidden = true;
+    });
+  }
+
+  if (modal) {
+    modal.addEventListener("click", function (event) {
+      if (event.target === modal) modal.hidden = true;
+    });
+  }
+
+  function escapeHtml(value) {
+    const div = document.createElement("div");
+    div.textContent = value || "";
+    return div.innerHTML;
+  }
+
+  function scrollThreadToEnd() {
+    if (thread) {
+      thread.scrollTop = thread.scrollHeight;
+    }
+  }
+
+  function updateFilePreview() {
+    if (!fileInput || !filePreview) return;
+    const files = Array.from(fileInput.files || []);
+    if (!files.length) {
+      filePreview.hidden = true;
+      filePreview.innerHTML = "";
+      return;
+    }
+    filePreview.hidden = false;
+    filePreview.innerHTML =
+      '<div class="ops-composer-file-list">' +
+      files.map(function (f) {
+        const kb = Math.max(1, Math.round(f.size / 1024));
+        return '<span class="ops-composer-file-item"><strong>' + escapeHtml(f.name) + '</strong> (' + kb + ' KB)</span>';
+      }).join("") +
+      '<button type="button" class="ops-text-action" id="desk-clear-files">Remove</button>' +
+      "</div>";
+    const clearBtn = document.getElementById("desk-clear-files");
+    if (clearBtn) {
+      clearBtn.addEventListener("click", function () {
+        fileInput.value = "";
+        updateFilePreview();
+      });
+    }
+  }
+
+  if (attachBtn && fileInput) {
+    attachBtn.addEventListener("click", function () {
+      fileInput.click();
+    });
+    fileInput.addEventListener("change", updateFilePreview);
+  }
+
+  function renderAttachmentsHtml(attachments) {
+    if (!Array.isArray(attachments) || !attachments.length) return "";
+    return (
+      '<div class="ops-attachment-list">' +
+      attachments.map(function (att) {
+        const href = escapeHtml(att.download_url || att.url || "#");
+        const ext = escapeHtml(att.ext || "FILE");
+        const name = escapeHtml(att.name || att.filename || "Attachment");
+        const size = escapeHtml(att.size_display || "");
+        return (
+          '<a class="ops-attachment-card" href="' + href + '" target="_blank" rel="noopener">' +
+            '<span class="ops-attachment-ext">' + ext + "</span>" +
+            '<span class="ops-attachment-info">' +
+              '<strong class="ops-attachment-name">' + name + "</strong>" +
+              '<span class="ops-attachment-size">' + size + "</span>" +
+            "</span>" +
+            '<span class="ops-attachment-dl">Download</span>' +
+          "</a>"
+        );
+      }).join("") +
+      "</div>"
+    );
+  }
+
+  function renderMessage(item) {
+    if (!thread || thread.querySelector('[data-message-id="' + item.id + '"]')) return;
+    const empty = document.getElementById("desk-chat-empty");
+    if (empty) empty.remove();
+
+    const article = document.createElement("article");
+    const isClient = item.sender === "client";
+    article.className = "ops-msg " + (isClient ? "ops-msg-incoming" : "ops-msg-outgoing");
+    article.setAttribute("data-message-id", item.id);
+    const label = isClient ? clientLabel : "You";
+    const bodyHtml = item.body ? "<p>" + escapeHtml(item.body).replace(/\n/g, "<br>") + "</p>" : "";
+    const attHtml = renderAttachmentsHtml(item.attachments);
+    article.innerHTML =
+      '<div class="ops-msg-meta">' +
+        "<strong>" + escapeHtml(label) + "</strong>" +
+        '<span aria-hidden="true">·</span>' +
+        '<time datetime="' + escapeHtml(item.created_at_iso) + '">' + escapeHtml(item.created_at_display) + "</time>" +
+      "</div>" +
+      '<div class="ops-msg-bubble">' + bodyHtml + attHtml + "</div>";
+    thread.appendChild(article);
+    scrollThreadToEnd();
+  }
+
+  scrollThreadToEnd();
+  window.requestAnimationFrame(scrollThreadToEnd);
+  window.addEventListener("load", scrollThreadToEnd);
+
+  const activeThreadRow = document.querySelector(".ops-thread-row.is-active");
+  if (activeThreadRow && activeThreadRow.scrollIntoView) {
+    activeThreadRow.scrollIntoView({ block: "nearest" });
+  }
+
+  if (replyInput && replyForm) {
+    replyInput.addEventListener("keydown", function (event) {
+      if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+        event.preventDefault();
+        replyForm.requestSubmit();
+      }
+    });
+  }
+
+  if (replyForm) {
+    replyForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      const hasText = Boolean(replyInput && replyInput.value.trim());
+      const hasFiles = Boolean(fileInput && fileInput.files && fileInput.files.length > 0);
+      if ((!hasText && !hasFiles) || replySubmit.disabled) return;
+      replySubmit.disabled = true;
+      replyStatus.textContent = "Sending…";
+      try {
+        const response = await fetch(replyForm.action, {
+          method: "POST",
+          body: new FormData(replyForm),
+          headers: {"X-Requested-With": "XMLHttpRequest"}
+        });
+        const data = await response.json();
+        if (!response.ok || !data.ok) {
+          throw new Error(data.error || "Could not send reply.");
+        }
+        renderMessage(data.message);
+        if (replyInput) replyInput.value = "";
+        if (fileInput) fileInput.value = "";
+        updateFilePreview();
+        replyStatus.textContent = "Sent";
+      } catch (err) {
+        replyStatus.textContent = err.message || "Could not send reply.";
+      } finally {
+        replySubmit.disabled = false;
+      }
+    });
+  }
+
+  if (invoiceForm) {
+    invoiceForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      if (invoiceSubmit.disabled) return;
+      invoiceSubmit.disabled = true;
+      invoiceFeedback.textContent = "Generating…";
+      try {
+        const response = await fetch(invoiceForm.action, {
+          method: "POST",
+          body: new FormData(invoiceForm),
+          headers: {"X-Requested-With": "XMLHttpRequest"}
+        });
+        const data = await response.json();
+        if (!response.ok || !data.ok) {
+          throw new Error(data.error || "Could not create invoice.");
+        }
+        if (data.message) {
+          renderMessage(data.message);
+        }
+        invoiceForm.querySelector("#invoice-description").value = "";
+        invoiceForm.querySelector("#invoice-amount").value = "";
+        invoiceFeedback.textContent = data.invoice.number + " created.";
+        if (modal) {
+          window.setTimeout(function () { modal.hidden = true; invoiceFeedback.textContent = ""; }, 400);
+        }
+      } catch (err) {
+        invoiceFeedback.textContent = err.message || "Could not create invoice.";
+      } finally {
+        invoiceSubmit.disabled = false;
+      }
+    });
+  }
+
+  async function pollFeed() {
+    if (!feedUrl || !conversationId) return;
+    try {
+      const response = await fetch(feedUrl + "?conversation=" + encodeURIComponent(conversationId) + "&role=admin", {
+        headers: {"X-Requested-With": "XMLHttpRequest"}
+      });
+      if (!response.ok) return;
+      const data = await response.json();
+      if (Array.isArray(data.messages)) {
+        data.messages.forEach(renderMessage);
+      }
+    } catch (e) {}
+  }
+
+  window.setInterval(pollFeed, 4000);
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}Operations Console — InfiniAI{% endblock %}</title>
+  <link rel="icon" href="{% static 'favicon.ico' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/platform.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="ops-body {% block body_class %}{% endblock %}">
+  <div class="ops-shell">
+    <aside class="ops-sidebar" aria-label="Operations navigation">
+      <div class="ops-sidebar-brand">
+        <a href="{% url 'platformhub:operations_desk' %}" class="ops-brand-link">InfiniAI</a>
+        <span class="ops-brand-sub">Operations</span>
+      </div>
+
+      <nav class="ops-sidebar-nav">
+        <a href="{% url 'platformhub:operations_desk' %}" class="ops-nav-item {% if ops_tab == 'inbox' %}is-active{% endif %}">
+          <span>Inbox</span>
+          <span class="ops-nav-count">{% if unread_threads_count %}{{ unread_threads_count }} unread{% else %}{{ total_conversations_count }}{% endif %}</span>
+        </a>
+        <a href="{% url 'platformhub:operations_invoices' %}" class="ops-nav-item {% if ops_tab == 'invoices' %}is-active{% endif %}">
+          <span>Invoices</span>
+          <span class="ops-nav-count">{{ total_invoices_count }}</span>
+        </a>
+        <a href="{% url 'platformhub:operations_transactions' %}" class="ops-nav-item {% if ops_tab == 'transactions' %}is-active{% endif %}">
+          <span>Transactions</span>
+          <span class="ops-nav-count">{{ total_tx_count }}</span>
+        </a>
+      </nav>
+
+      <div class="ops-sidebar-foot">
+        <a href="{% url 'platformhub:home' %}" class="ops-foot-link">Public site</a>
+        {% if user.is_authenticated %}
+        <span class="ops-foot-sep" aria-hidden="true">·</span>
+        <a href="{% url 'account_logout' %}" class="ops-foot-link">Sign out</a>
+        {% endif %}
+      </div>
+    </aside>
+
+    <div class="ops-main">
+      <header class="ops-topbar">
+        <div class="ops-breadcrumbs">
+          {% block breadcrumbs %}
+          <span>Operations</span>
+          {% endblock %}
+        </div>
+        <div class="ops-topbar-actions">
+          {% block topbar_actions %}{% endblock %}
+        </div>
+      </header>
+
+      {% if messages %}
+      <div class="ops-flash-list" aria-live="polite">
+        {% for message in messages %}
+        <div class="ops-flash">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <main class="ops-viewport {% block viewport_class %}{% endblock %}">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

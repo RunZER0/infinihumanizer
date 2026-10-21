@@ -1,0 +1,224 @@
+{% extends "platformhub/operations_base.html" %}
+{% block title %}Transactions — InfiniAI Operations{% endblock %}
+
+{% block breadcrumbs %}
+<span>Operations</span>
+<span class="ops-crumb-sep" aria-hidden="true">/</span>
+<strong class="ops-crumb-current">Transactions</strong>
+{% endblock %}
+
+{% block topbar_actions %}
+<button type="button" class="ops-btn ops-btn-secondary" id="ops-export-csv">
+  Download CSV
+</button>
+{% endblock %}
+
+{% block content %}
+<div class="ops-data-page">
+  <section class="ops-kpi-strip" aria-label="Gateway volume metrics">
+    <div class="ops-kpi-cell">
+      <span class="ops-kpi-label">Gross settled volume</span>
+      <strong class="ops-kpi-value ops-mono">USD {{ settled_usd|floatformat:2 }}</strong>
+      <span class="ops-kpi-sub">{{ success_count }} approved of {{ total_tx_count }} attempts{% if settled_kes %} · KES {{ settled_kes|floatformat:0 }}{% endif %}</span>
+    </div>
+    <div class="ops-kpi-cell">
+      <span class="ops-kpi-label">Gateway fees</span>
+      <strong class="ops-kpi-value ops-mono">USD {{ total_fees_usd|floatformat:2 }}</strong>
+      <span class="ops-kpi-sub">Processor settlement deduction</span>
+    </div>
+    <div class="ops-kpi-cell">
+      <span class="ops-kpi-label">Net settled volume</span>
+      <strong class="ops-kpi-value ops-mono">USD {{ net_settled_usd|floatformat:2 }}</strong>
+      <span class="ops-kpi-sub">{{ declined_count }} declined attempts excluded</span>
+    </div>
+  </section>
+
+  <section class="ops-table-section" aria-label="Gateway transaction ledger">
+    <div class="ops-filter-bar">
+      <div class="ops-segmented" role="tablist" aria-label="Filter transactions by status">
+        <button type="button" class="ops-segment is-active" data-tx-filter="all">All ({{ total_tx_count }})</button>
+        <button type="button" class="ops-segment" data-tx-filter="success">Approved ({{ success_count }})</button>
+        <button type="button" class="ops-segment" data-tx-filter="failed">Declined ({{ declined_count }})</button>
+      </div>
+      <div class="ops-segmented" role="tablist" aria-label="Filter transactions by channel">
+        <button type="button" class="ops-segment is-active" data-channel-filter="all">All channels</button>
+        <button type="button" class="ops-segment" data-channel-filter="apple_pay">Apple Pay</button>
+        <button type="button" class="ops-segment" data-channel-filter="card">Card</button>
+        <button type="button" class="ops-segment" data-channel-filter="mobile_money">Mobile money</button>
+      </div>
+      <div class="ops-filter-search">
+        <input type="search" id="ops-tx-search" class="ops-search-input" placeholder="Search reference, receipt, client, email, or bank…" aria-label="Search transactions">
+      </div>
+    </div>
+
+    <div class="ops-table-container">
+      <table class="ops-data-table" id="ops-tx-table">
+        <thead>
+          <tr>
+            <th>Reference</th>
+            <th>Timestamp</th>
+            <th>Client</th>
+            <th>Description</th>
+            <th>Channel &amp; Bank</th>
+            <th>Gateway Response</th>
+            <th class="ops-col-num">Gross</th>
+            <th class="ops-col-num">Fee</th>
+            <th class="ops-col-num">Net</th>
+            <th>Status</th>
+            <th class="ops-col-actions">Thread</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for tx in all_payments %}
+          <tr
+            data-tx-status="{{ tx.status }}"
+            data-tx-channel="{{ tx.metadata.channel|default:'card' }}"
+            data-tx-search="{{ tx.reference|lower }} {{ tx.metadata.receipt_number|default:''|lower }} {{ tx.metadata.customer_fullname|default:''|lower }} {{ tx.email|lower }} {{ tx.metadata.card_bank|default:''|lower }} {{ tx.metadata.gateway_response|default:''|lower }}"
+          >
+            <td class="ops-mono">
+              <strong>{{ tx.reference }}</strong>
+              {% if tx.metadata.receipt_number %}
+              <div class="ops-cell-sub">Receipt {{ tx.metadata.receipt_number }}</div>
+              {% endif %}
+            </td>
+            <td class="ops-mono">{{ tx.created_at|date:"M j, Y · H:i:s" }}</td>
+            <td>
+              <strong>{% if tx.metadata.customer_fullname %}{{ tx.metadata.customer_fullname }}{% elif tx.user %}{{ tx.user.get_full_name|default:tx.email }}{% else %}{{ tx.email }}{% endif %}</strong>
+              <div class="ops-cell-sub">{{ tx.email }}</div>
+            </td>
+
+            <td>
+              {% if tx.invoice %}
+              <strong>{{ tx.invoice.description|truncatechars:42 }}</strong>
+              <div class="ops-cell-sub ops-mono">{{ tx.invoice.number }}</div>
+              {% else %}
+              <strong>{{ tx.original_description|truncatechars:42 }}</strong>
+              {% endif %}
+            </td>
+            <td>
+              <strong>{{ tx.metadata.channel|default:"card" }}</strong>
+              {% if tx.metadata.card_type or tx.metadata.card_bank %}
+              <div class="ops-cell-sub">{{ tx.metadata.card_type }}{% if tx.metadata.card_bank %} · {{ tx.metadata.card_bank|truncatechars:22 }}{% endif %}</div>
+              {% endif %}
+            </td>
+            <td>{{ tx.metadata.gateway_response|default:tx.get_status_display }}</td>
+            <td class="ops-col-num ops-mono"><strong>{{ tx.currency }} {{ tx.amount|floatformat:2 }}</strong></td>
+            <td class="ops-col-num ops-mono">
+              {% if tx.metadata.paystack_fees and tx.metadata.paystack_fees != "0" %}
+              {{ tx.currency }} {{ tx.metadata.paystack_fees }}
+              {% else %}
+              —
+              {% endif %}
+            </td>
+            <td class="ops-col-num ops-mono">
+              {% if tx.metadata.net_amount and tx.status == "success" %}
+              {{ tx.currency }} {{ tx.metadata.net_amount }}
+              {% else %}
+              —
+              {% endif %}
+            </td>
+            <td>
+              <span class="{% if tx.status == 'success' %}ops-state-settled{% else %}ops-state-declined{% endif %}">
+                {{ tx.get_status_display }}
+              </span>
+            </td>
+            <td class="ops-col-actions">
+              {% if tx.user and tx.user.client_conversation %}
+              <a class="ops-text-action" href="{% url 'platformhub:operations_desk_conversation' tx.user.client_conversation.id %}">Open</a>
+              {% else %}
+              —
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function () {
+  const searchInput = document.getElementById("ops-tx-search");
+  const statusBtns = document.querySelectorAll("[data-tx-filter]");
+  const channelBtns = document.querySelectorAll("[data-channel-filter]");
+  const rows = document.querySelectorAll("#ops-tx-table tbody tr[data-tx-status]");
+  const exportBtn = document.getElementById("ops-export-csv");
+  let activeStatus = "all";
+  let activeChannel = "all";
+
+  function applyFilters() {
+    const q = (searchInput ? searchInput.value : "").trim().toLowerCase();
+    rows.forEach(function (row) {
+      const st = row.getAttribute("data-tx-status");
+      const ch = row.getAttribute("data-tx-channel");
+      const text = row.getAttribute("data-tx-search") || "";
+      const okStatus = activeStatus === "all" || (activeStatus === "failed" ? st !== "success" : st === activeStatus);
+      const okChannel = activeChannel === "all" || ch === activeChannel;
+      const okSearch = !q || text.indexOf(q) !== -1;
+      row.hidden = !(okStatus && okChannel && okSearch);
+    });
+  }
+
+  if (searchInput) searchInput.addEventListener("input", applyFilters);
+
+  statusBtns.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      statusBtns.forEach(function (b) { b.classList.remove("is-active"); });
+      btn.classList.add("is-active");
+      activeStatus = btn.getAttribute("data-tx-filter") || "all";
+      applyFilters();
+    });
+  });
+
+  channelBtns.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      channelBtns.forEach(function (b) { b.classList.remove("is-active"); });
+      btn.classList.add("is-active");
+      activeChannel = btn.getAttribute("data-channel-filter") || "all";
+      applyFilters();
+    });
+  });
+
+  if (exportBtn) {
+    exportBtn.addEventListener("click", function () {
+      const csvRows = [["Reference", "Timestamp", "Client", "Service", "Channel", "Gateway Response", "Gross", "Fee", "Net", "Status"]];
+      rows.forEach(function (row) {
+        if (row.hidden) return;
+        const cells = row.querySelectorAll("td");
+        if (cells.length >= 10) {
+          csvRows.push([
+            cells[0].innerText.replace(/\s+/g, " ").trim(),
+            cells[1].innerText.trim(),
+            cells[2].innerText.replace(/\s+/g, " ").trim(),
+            cells[3].innerText.replace(/\s+/g, " ").trim(),
+            cells[4].innerText.replace(/\s+/g, " ").trim(),
+            cells[5].innerText.trim(),
+            cells[6].innerText.trim(),
+            cells[7].innerText.trim(),
+            cells[8].innerText.trim(),
+            cells[9].innerText.trim()
+          ]);
+        }
+      });
+      const csvContent = csvRows.map(function (r) {
+        return r.map(function (field) {
+          return '"' + String(field).replace(/"/g, '""') + '"';
+        }).join(",");
+      }).join("\n");
+      const blob = new Blob([csvContent], {type: "text/csv;charset=utf-8;"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "infiniai-transactions.csv";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  }
+})();
+</script>
+{% endblock %}

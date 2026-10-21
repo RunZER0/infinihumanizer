@@ -1,0 +1,10 @@
+{
+  "name": "infiniai-platform",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "python3 app.py",
+    "build": "python3 -c \"import app; app.ensure_dependencies()\" && python3 manage.py check",
+    "start": "python3 app.py"
+  }
+}

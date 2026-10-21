@@ -100,7 +100,8 @@ class PublicJourneyTests(TestCase):
         issue_code.assert_called_once_with("client@example.com", "Potential client")
 
         page = self.client.get(reverse("platformhub:consultation"))
-        self.assertContains(page, "Check your inbox.")
+        self.assertContains(page, "Enter the code")
+
 
     @patch("platformhub.views.issue_email_code")
     def test_contact_email_step_updates_in_place(self, issue_code):
@@ -482,6 +483,150 @@ class WorkspaceChatTests(TestCase):
     def test_workspace_links_to_messages(self):
         response = self.client.get(reverse("platformhub:workspace"))
         self.assertContains(response, reverse("platformhub:client_chat"))
+
+    def test_two_way_chat_and_admin_invoice_workflow(self):
+        from humanizer.models import ClientConversation, ClientMessage
+
+        client_post = self.client.post(
+            reverse("platformhub:client_chat"),
+            {"message": "Can you issue the invoice for phase one?"},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(client_post.status_code, 200)
+        client_payload = client_post.json()
+        self.assertTrue(client_payload["ok"])
+        self.assertEqual(client_payload["message"]["sender"], "client")
+        self.assertTrue(client_payload["message"]["created_at_display"])
+
+        conv = ClientConversation.objects.get(user=self.user)
+
+        admin_post = self.client.post(
+            reverse("platformhub:operations_desk_conversation", kwargs={"conversation_id": conv.id}),
+            {"action": "reply", "message": "Sending the phase one invoice now."},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(admin_post.status_code, 200)
+        admin_payload = admin_post.json()
+        self.assertTrue(admin_payload["ok"])
+        self.assertEqual(admin_payload["message"]["sender"], "admin")
+        self.assertTrue(admin_payload["message"]["created_at_display"])
+
+        inv_post = self.client.post(
+            reverse("platformhub:admin_create_invoice"),
+            {
+                "conversation_id": str(conv.id),
+                "email": self.user.email,
+                "description": "Phase one architecture brief",
+                "currency": "USD",
+                "amount_due": "450.00",
+            },
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(inv_post.status_code, 200)
+        inv_payload = inv_post.json()
+        self.assertTrue(inv_payload["ok"])
+        self.assertEqual(inv_payload["invoice"]["amount_due"], "450.00")
+        self.assertEqual(inv_payload["invoice"]["description"], "Phase one architecture brief")
+
+        feed_res = self.client.get(
+            reverse("platformhub:client_chat_feed"),
+            {"conversation": str(conv.id), "role": "client"},
+        )
+        self.assertEqual(feed_res.status_code, 200)
+        feed_data = feed_res.json()
+        self.assertEqual(len(feed_data["messages"]), 3)
+        self.assertEqual(feed_data["messages"][0]["sender"], "client")
+        self.assertEqual(feed_data["messages"][1]["sender"], "admin")
+        self.assertEqual(len(feed_data["invoices"]), 1)
+
+        client_page = self.client.get(reverse("platformhub:client_chat"))
+        self.assertContains(client_page, "Can you issue the invoice for phase one?")
+        self.assertContains(client_page, "Sending the phase one invoice now.")
+        self.assertContains(client_page, "Phase one architecture brief")
+        self.assertEqual(ClientMessage.objects.filter(conversation=conv).count(), 3)
+
+    def test_client_and_admin_can_upload_chat_attachments(self):
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from humanizer.models import ClientConversation
+
+        sample_pdf = SimpleUploadedFile(
+            "vendor_notes.pdf",
+            b"%PDF-1.4\n1 0 obj\n<< /Type /Catalog >>\nendobj\n%%EOF\n",
+            content_type="application/pdf",
+        )
+        res = self.client.post(
+            reverse("platformhub:client_chat"),
+            {"message": "Here is the PDF.", "attachments": [sample_pdf]},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(res.status_code, 200)
+        payload = res.json()
+        self.assertTrue(payload["ok"])
+        self.assertEqual(len(payload["message"]["attachments"]), 1)
+        att = payload["message"]["attachments"][0]
+        self.assertEqual(att["name"], "vendor_notes.pdf")
+        self.assertEqual(att["kind"], "PDF")
+
+        dl_res = self.client.get(att["url"])
+        self.assertEqual(dl_res.status_code, 200)
+
+        conv = ClientConversation.objects.get(user=self.user)
+        sample_docx = SimpleUploadedFile(
+            "deliverable_v1.docx",
+            b"PK\x03\x04fake-docx-payload",
+            content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        )
+        admin_res = self.client.post(
+            reverse("platformhub:operations_desk_conversation", kwargs={"conversation_id": conv.id}),
+            {"action": "reply", "message": "Attached the clean draft.", "attachments": [sample_docx]},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(admin_res.status_code, 200)
+        admin_payload = admin_res.json()
+        self.assertTrue(admin_payload["ok"])
+        self.assertEqual(len(admin_payload["message"]["attachments"]), 1)
+        self.assertEqual(admin_payload["message"]["attachments"][0]["kind"], "DOCX")
+
+    def test_seed_orbit_production_populates_threads_invoices_and_ledger(self):
+        from django.core.management import call_command
+        from humanizer.models import ClientConversation, ClientMessage
+
+        call_command("seed_orbit_production", reset=True)
+        self.assertEqual(PaymentRecord.objects.count(), 195)
+        self.assertEqual(Invoice.objects.count(), 38)
+        self.assertEqual(ClientConversation.objects.count(), 17)
+
+
+
+
+        messages_with_files = [
+            m for m in ClientMessage.objects.all() if m.attachments
+        ]
+        self.assertGreaterEqual(len(messages_with_files), 30)
+
+        sample_att = messages_with_files[0].attachments[0]
+        dl = self.client.get(sample_att["url"])
+        self.assertEqual(dl.status_code, 200)
+
+        desk = self.client.get(reverse("platformhub:operations_desk"))
+        self.assertEqual(desk.status_code, 200)
+        self.assertContains(desk, "Snapchat")
+
+        first_inv = Invoice.objects.first()
+        inv_page = self.client.get(reverse("platformhub:operations_invoices"))
+        self.assertEqual(inv_page.status_code, 200)
+        self.assertContains(inv_page, first_inv.number)
+
+        tx_page = self.client.get(reverse("platformhub:operations_transactions"))
+        self.assertEqual(tx_page.status_code, 200)
+        self.assertContains(tx_page, "T850856961040908")
+        self.assertContains(tx_page, "T493259790266047")
+        self.assertContains(tx_page, "QP-MOL7PPPC2N24")
+        self.assertContains(tx_page, "QP-MQWYNHW6NBYG")
+
+
+
+
 
 
 class HumanizerEntitlementTests(TestCase):

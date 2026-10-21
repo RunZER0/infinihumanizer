@@ -1,0 +1,46 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}Client Portal — InfiniAI{% endblock %}</title>
+  <link rel="icon" href="{% static 'favicon.ico' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/platform.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="cp-body {% block body_class %}{% endblock %}">
+  <header class="cp-topbar">
+    <a href="{% url 'platformhub:workspace' %}" class="cp-brand">InfiniAI</a>
+
+    <nav class="cp-nav" aria-label="Client portal navigation">
+      <a href="{% url 'platformhub:client_chat' %}" class="cp-nav-link {% block nav_messages %}{% endblock %}">Messages</a>
+      <a href="{% url 'platformhub:workspace_billing' %}" class="cp-nav-link {% block nav_billing %}{% endblock %}">Billing</a>
+      <a href="{% url 'platformhub:workspace' %}" class="cp-nav-link {% block nav_overview %}{% endblock %}">Overview</a>
+      <a href="{% url 'platformhub:workspace_projects' %}" class="cp-nav-link {% block nav_projects %}{% endblock %}">Projects</a>
+    </nav>
+
+    <div class="cp-account">
+      <span class="cp-account-email">{{ user.email }}</span>
+      <a href="{% url 'account_logout' %}" class="cp-signout">Sign out</a>
+    </div>
+  </header>
+
+  {% if messages %}
+  <div class="cp-flash-wrap" aria-live="polite">
+    {% for message in messages %}
+    <div class="cp-flash">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <main class="cp-main {% block main_class %}{% endblock %}">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

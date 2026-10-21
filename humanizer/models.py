@@ -71,7 +71,8 @@ class ClientMessage(models.Model):
         related_name="infini_chat_messages",
     )
     sender = models.CharField(max_length=20, choices=SENDER_CHOICES)
-    body = models.TextField()
+    body = models.TextField(blank=True)
+    attachments = models.JSONField(default=list, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     read_at = models.DateTimeField(null=True, blank=True)
 

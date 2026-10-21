@@ -6,6 +6,7 @@ from decimal import Decimal, InvalidOperation
 import requests
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import FileResponse, Http404, JsonResponse
@@ -652,6 +653,7 @@ def workspace(request):
         "saved_rewrite_count": Humanization.objects.filter(user=request.user).count(),
         "next_action": next_action,
         "recent_rewrite": recent_rewrite,
+        "payments": payments[:10],
     })
 
 
@@ -675,43 +677,661 @@ def workspace_billing(request):
     })
 
 
+def _ensure_demo_conversation(user):
+    conv, created = ClientConversation.objects.get_or_create(
+        user=user,
+        defaults={"subject": "Q4 market architecture brief"},
+    )
+    if created and not conv.messages.exists():
+        now = timezone.now()
+        m1 = ClientMessage.objects.create(
+            conversation=conv,
+            author=user,
+            sender="client",
+            body="We finalized the scope for the Q4 market architecture brief. Please send the invoice for the first milestone so finance can clear it today.",
+            read_at=now,
+        )
+        ClientMessage.objects.filter(id=m1.id).update(created_at=now - timezone.timedelta(minutes=18))
+        inv = Invoice.objects.create(
+            user=user,
+            email=user.email,
+            currency="USD",
+            amount_due=Decimal("1250.00"),
+            description="Q4 market architecture brief — Milestone 1",
+            status="open",
+        )
+        m2 = ClientMessage.objects.create(
+            conversation=conv,
+            author=None,
+            sender="admin",
+            body=f"Invoice {inv.number} for USD 1250.00 is ready in your billing rail. Production starts as soon as settlement clears.",
+        )
+        ClientMessage.objects.filter(id=m2.id).update(created_at=now - timezone.timedelta(minutes=12))
+    return conv
+
+
+def _resolve_chat_user(request):
+    conv_id = request.GET.get("conversation", "").strip() or request.POST.get("conversation_id", "").strip()
+    if conv_id:
+        try:
+            conv = ClientConversation.objects.select_related("user").filter(id=conv_id).first()
+            if conv and conv.user:
+                return conv.user
+        except (ValueError, ValidationError):
+            pass
+    if request.user.is_authenticated:
+        return request.user
+    existing_conv = ClientConversation.objects.select_related("user").order_by("-updated_at").first()
+    if existing_conv and existing_conv.user:
+        return existing_conv.user
+    User = get_user_model()
+    user, _ = User.objects.get_or_create(
+        username="client_workspace",
+        defaults={
+            "email": "client@infiniai.local",
+            "first_name": "Elena",
+            "last_name": "Rostova",
+        },
+    )
+    if not user.email:
+        user.email = "client@infiniai.local"
+        user.save(update_fields=["email"])
+    _ensure_demo_conversation(user)
+    return user
+
+
+def _client_invoices(user=None, email="", include_void=False):
+    target_email = (email or (user.email if user else "") or "").strip()
+    if user and target_email:
+        qs = Invoice.objects.filter(Q(user=user) | Q(email__iexact=target_email)).distinct()
+    elif user:
+        qs = Invoice.objects.filter(user=user)
+    elif target_email:
+        qs = Invoice.objects.filter(email__iexact=target_email)
+    else:
+        return Invoice.objects.none()
+    if not include_void:
+        qs = qs.exclude(status="void")
+    return qs.select_related("request").order_by("-created_at")
+
+
+def _client_payments(user=None, email=""):
+    target_email = (email or (user.email if user else "") or "").strip()
+    if user and target_email:
+        qs = PaymentRecord.objects.filter(Q(user=user) | Q(email__iexact=target_email)).distinct()
+    elif user:
+        qs = PaymentRecord.objects.filter(user=user)
+    elif target_email:
+        qs = PaymentRecord.objects.filter(email__iexact=target_email)
+    else:
+        return PaymentRecord.objects.none()
+    return qs.select_related("invoice", "request").order_by("-created_at")
+
+
+def _serialize_message(item):
+    created_local = timezone.localtime(item.created_at)
+    read_local = timezone.localtime(item.read_at) if item.read_at else None
+    return {
+        "id": str(item.id),
+        "sender": item.sender,
+        "sender_label": "Client" if item.sender == "client" else "InfiniAI",
+        "body": item.body or "",
+        "attachments": item.attachments or [],
+        "created_at_iso": created_local.isoformat(),
+        "created_at_display": created_local.strftime("%b %d, %Y · %H:%M").replace(" 0", " "),
+        "read_at_iso": read_local.isoformat() if read_local else None,
+        "read_at_display": read_local.strftime("%H:%M") if read_local else None,
+    }
+
+
+@require_http_methods(["GET"])
+def chat_file_download(request, filename):
+    from .chat_files import get_chat_files_dir, guess_mime_type, sanitize_filename
+
+    safe_name = sanitize_filename(filename)
+    file_path = get_chat_files_dir() / safe_name
+    if not file_path.exists() or not file_path.is_file():
+        raise Http404("Attachment not found.")
+
+    as_attachment = request.GET.get("download") == "1"
+    response = FileResponse(
+        file_path.open("rb"),
+        content_type=guess_mime_type(safe_name),
+        as_attachment=as_attachment,
+        filename=safe_name,
+    )
+    return response
+
+
+def _serialize_invoice(inv):
+    created_local = timezone.localtime(inv.created_at)
+    balance = max(Decimal("0.00"), inv.amount_due - inv.amount_paid)
+    return {
+        "id": str(inv.id),
+        "number": inv.number,
+        "email": inv.email,
+        "description": inv.description or inv.number,
+        "currency": inv.currency,
+        "amount_due": f"{inv.amount_due:.2f}",
+        "amount_paid": f"{inv.amount_paid:.2f}",
+        "balance_due": f"{balance:.2f}",
+        "status": inv.status,
+        "status_display": inv.get_status_display(),
+        "created_at_iso": created_local.isoformat(),
+        "created_at_display": created_local.strftime("%b %d, %Y · %H:%M").replace(" 0", " "),
+        "checkout_url": f"{reverse('platformhub:checkout')}?invoice={inv.id}",
+    }
+
+
 @login_required
 @require_http_methods(["GET", "POST"])
 def client_chat(request):
-    conversation, _ = ClientConversation.objects.get_or_create(user=request.user)
+    from .chat_files import save_uploaded_chat_files
+
+    chat_user = request.user
+    conversation, _ = ClientConversation.objects.get_or_create(user=chat_user)
+    is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
 
     if request.method == "POST":
         body = request.POST.get("message", "").strip()
-        if not body:
-            messages.error(request, "Write a message before sending.")
+        uploaded_files = request.FILES.getlist("attachments")
+        if not body and not uploaded_files:
+            if is_ajax:
+                return JsonResponse({"error": "Write a message or attach a file before sending."}, status=400)
+            messages.error(request, "Write a message or attach a file before sending.")
         elif len(body) > 5000:
+            if is_ajax:
+                return JsonResponse({"error": "Keep each message under 5,000 characters."}, status=400)
             messages.error(request, "Keep each message under 5,000 characters.")
         else:
-            ClientMessage.objects.create(
+            try:
+                saved_attachments = save_uploaded_chat_files(uploaded_files) if uploaded_files else []
+            except ValueError as exc:
+                if is_ajax:
+                    return JsonResponse({"error": str(exc)}, status=400)
+                messages.error(request, str(exc))
+                return redirect("platformhub:client_chat")
+
+            msg = ClientMessage.objects.create(
                 conversation=conversation,
-                author=request.user,
+                author=chat_user,
                 sender="client",
                 body=body,
+                attachments=saved_attachments,
             )
             conversation.status = "open"
             conversation.save(update_fields=["status", "updated_at"])
+            if is_ajax:
+                return JsonResponse({
+                    "ok": True,
+                    "message": _serialize_message(msg),
+                })
             messages.success(request, "Message sent.")
         return redirect("platformhub:client_chat")
 
     conversation.messages.filter(sender="admin", read_at__isnull=True).update(read_at=timezone.now())
 
-    project_qs = ServiceRequest.objects.filter(user=request.user)
-    if request.user.email:
+    project_qs = ServiceRequest.objects.filter(user=chat_user)
+    if chat_user.email:
         project_qs = ServiceRequest.objects.filter(
-            Q(user=request.user) | Q(email__iexact=request.user.email)
+            Q(user=chat_user) | Q(email__iexact=chat_user.email)
         ).distinct()
 
-    projects = project_qs.prefetch_related("deliverables").order_by("-updated_at")[:4]
+    projects = project_qs.prefetch_related("deliverables").order_by("-created_at")[:8]
+    invoices = _client_invoices(user=chat_user, email=chat_user.email, include_void=False)
+    open_invoices = [inv for inv in invoices if inv.status not in {"paid", "void"}]
+    client_payments = _client_payments(user=chat_user, email=chat_user.email)
+
     return render(request, "platformhub/client_chat.html", {
+        "chat_user": chat_user,
         "conversation": conversation,
         "chat_messages": conversation.messages.select_related("author").all(),
         "projects": projects,
+        "invoices": invoices[:16],
+        "open_invoices": open_invoices,
+        "client_payments": client_payments[:20],
     })
+
+
+@require_http_methods(["GET"])
+def client_chat_feed(request):
+    conv_id = request.GET.get("conversation", "").strip()
+    role = request.GET.get("role", "client").strip().lower()
+
+    if role == "admin" and conv_id:
+        conversation = get_object_or_404(ClientConversation.objects.select_related("user"), id=conv_id)
+    elif request.user.is_authenticated:
+        if conv_id:
+            conversation = get_object_or_404(
+                ClientConversation.objects.select_related("user"),
+                id=conv_id,
+                user=request.user,
+            )
+        else:
+            conversation, _ = ClientConversation.objects.get_or_create(user=request.user)
+    elif conv_id:
+        conversation = get_object_or_404(ClientConversation.objects.select_related("user"), id=conv_id)
+    else:
+        return JsonResponse({"error": "Authentication required."}, status=401)
+
+    if role == "admin":
+        conversation.messages.filter(sender="client", read_at__isnull=True).update(read_at=timezone.now())
+    else:
+        conversation.messages.filter(sender="admin", read_at__isnull=True).update(read_at=timezone.now())
+
+    invoices = _client_invoices(user=conversation.user, email=conversation.user.email, include_void=(role == "admin"))
+    return JsonResponse({
+        "conversation_id": str(conversation.id),
+        "status": conversation.status,
+        "status_display": conversation.get_status_display(),
+        "client_email": conversation.user.email or conversation.user.username,
+        "messages": [_serialize_message(m) for m in conversation.messages.select_related("author").all()],
+        "invoices": [_serialize_invoice(inv) for inv in invoices[:16]],
+    })
+
+
+def _operations_sidebar_context(active_tab="inbox"):
+    unread_threads_count = (
+        ClientConversation.objects.filter(messages__sender="client", messages__read_at__isnull=True)
+        .distinct()
+        .count()
+    )
+    return {
+        "ops_tab": active_tab,
+        "unread_threads_count": unread_threads_count,
+        "total_conversations_count": ClientConversation.objects.count(),
+        "total_invoices_count": Invoice.objects.exclude(status="void").count(),
+        "open_invoices_count": Invoice.objects.filter(status="open").count(),
+        "total_tx_count": PaymentRecord.objects.count(),
+    }
+
+
+@require_http_methods(["GET", "POST"])
+def operations_desk(request, conversation_id=None):
+    from .chat_files import save_uploaded_chat_files
+
+    User = get_user_model()
+    is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
+
+    if request.method == "POST" and request.POST.get("action") == "open_client":
+        target_email = request.POST.get("client_email", "").strip().lower()
+        if not target_email or "@" not in target_email:
+            messages.error(request, "Enter a valid client email address.")
+            return redirect("platformhub:operations_desk")
+        target_user = User.objects.filter(email__iexact=target_email).first()
+        if not target_user:
+            base_username = target_email.split("@")[0][:30] or "client"
+            username = base_username
+            counter = 1
+            while User.objects.filter(username=username).exists():
+                username = f"{base_username}{counter}"
+                counter += 1
+            target_user = User.objects.create(username=username, email=target_email)
+        conv, _ = ClientConversation.objects.get_or_create(user=target_user)
+        return redirect("platformhub:operations_desk_conversation", conversation_id=conv.id)
+
+    if not ClientConversation.objects.exists():
+        default_user = _resolve_chat_user(request)
+        ClientConversation.objects.get_or_create(user=default_user)
+
+    conversations = list(
+        ClientConversation.objects.select_related("user").prefetch_related("messages").order_by("-updated_at")[:80]
+    )
+
+    if conversation_id:
+        active_conversation = get_object_or_404(
+            ClientConversation.objects.select_related("user"),
+            id=conversation_id,
+        )
+    else:
+        q_conv = request.GET.get("conversation", "").strip()
+        active_conversation = None
+        if q_conv:
+            try:
+                active_conversation = ClientConversation.objects.select_related("user").filter(id=q_conv).first()
+            except (ValueError, ValidationError):
+                active_conversation = None
+        if not active_conversation:
+            active_conversation = conversations[0]
+
+    if request.method == "POST":
+        action = request.POST.get("action", "reply").strip()
+        if action == "toggle_status":
+            active_conversation.status = "closed" if active_conversation.status == "open" else "open"
+            active_conversation.save(update_fields=["status", "updated_at"])
+            return redirect("platformhub:operations_desk_conversation", conversation_id=active_conversation.id)
+
+        body = request.POST.get("message", "").strip()
+        uploaded_files = request.FILES.getlist("attachments")
+        if not body and not uploaded_files:
+            if is_ajax:
+                return JsonResponse({"error": "Write a reply or attach a file before sending."}, status=400)
+            messages.error(request, "Write a reply or attach a file before sending.")
+        elif len(body) > 5000:
+            if is_ajax:
+                return JsonResponse({"error": "Keep each message under 5,000 characters."}, status=400)
+            messages.error(request, "Keep each message under 5,000 characters.")
+        else:
+            try:
+                saved_attachments = save_uploaded_chat_files(uploaded_files) if uploaded_files else []
+            except ValueError as exc:
+                if is_ajax:
+                    return JsonResponse({"error": str(exc)}, status=400)
+                messages.error(request, str(exc))
+                return redirect("platformhub:operations_desk_conversation", conversation_id=active_conversation.id)
+
+            author = request.user if request.user.is_authenticated else None
+            msg = ClientMessage.objects.create(
+                conversation=active_conversation,
+                author=author,
+                sender="admin",
+                body=body,
+                attachments=saved_attachments,
+            )
+            active_conversation.status = "open"
+            active_conversation.save(update_fields=["status", "updated_at"])
+            if is_ajax:
+                return JsonResponse({
+                    "ok": True,
+                    "message": _serialize_message(msg),
+                })
+            messages.success(request, "Reply sent.")
+        return redirect("platformhub:operations_desk_conversation", conversation_id=active_conversation.id)
+
+    active_conversation.messages.filter(sender="client", read_at__isnull=True).update(read_at=timezone.now())
+
+    # Map acquisition channel per user for clean thread directory metadata
+    all_requests = list(ServiceRequest.objects.select_related("user").order_by("-created_at"))
+    channel_by_email = {}
+    channel_by_user_id = {}
+    for req in all_requests:
+        ch = (req.metadata or {}).get("acquisition_channel")
+        if ch:
+            if req.user_id and req.user_id not in channel_by_user_id:
+                channel_by_user_id[req.user_id] = ch
+            if req.email and req.email.lower() not in channel_by_email:
+                channel_by_email[req.email.lower()] = ch
+
+    for conv in conversations:
+        conv_msgs = list(conv.messages.all())
+        conv.unread_client_count = sum(1 for m in conv_msgs if m.sender == "client" and m.read_at is None)
+        conv.last_message = conv_msgs[-1] if conv_msgs else None
+        conv.channel = (
+            channel_by_user_id.get(conv.user_id)
+            or channel_by_email.get((conv.user.email or "").lower())
+            or "Direct"
+        )
+
+    client_invoices = _client_invoices(
+        user=active_conversation.user,
+        email=active_conversation.user.email,
+        include_void=True,
+    )
+    client_payments = _client_payments(
+        user=active_conversation.user,
+        email=active_conversation.user.email,
+    )
+    client_requests = ServiceRequest.objects.filter(
+        Q(user=active_conversation.user) | Q(email__iexact=active_conversation.user.email or "")
+    ).prefetch_related("deliverables").distinct().order_by("-created_at")
+
+    service_choices = [
+        (code, f'{item["family_name"]} — {item["name"]}')
+        for code, item in SERVICE_INDEX.items()
+    ]
+
+    context = {
+        **_operations_sidebar_context("inbox"),
+        "conversations": conversations,
+        "conversation": active_conversation,
+        "chat_messages": active_conversation.messages.select_related("author").all(),
+        "client_invoices": client_invoices[:20],
+        "client_payments": client_payments[:20],
+        "client_requests": client_requests[:10],
+        "service_choices": service_choices,
+    }
+    return render(request, "platformhub/operations_desk.html", context)
+
+
+@require_http_methods(["GET"])
+def operations_invoices(request):
+    invoices = list(
+        Invoice.objects.select_related("request", "user", "user__client_conversation")
+        .exclude(status="void")
+        .order_by("-created_at")
+    )
+    paid_invoices_usd = sum(
+        (inv.amount_paid for inv in invoices if inv.status == "paid" and inv.currency == "USD"),
+        Decimal("0.00"),
+    )
+    open_invoices_usd = sum(
+        (max(Decimal("0.00"), inv.amount_due - inv.amount_paid) for inv in invoices if inv.status != "paid" and inv.currency == "USD"),
+        Decimal("0.00"),
+    )
+    paid_invoices_count = sum(1 for inv in invoices if inv.status == "paid")
+    open_invoices_count = sum(1 for inv in invoices if inv.status != "paid")
+
+    service_choices = [
+        (code, f'{item["family_name"]} — {item["name"]}')
+        for code, item in SERVICE_INDEX.items()
+    ]
+    conversations = list(
+        ClientConversation.objects.select_related("user").order_by("-updated_at")[:80]
+    )
+
+    context = {
+        **_operations_sidebar_context("invoices"),
+        "invoices": invoices,
+        "paid_invoices_usd": paid_invoices_usd,
+        "open_invoices_usd": open_invoices_usd,
+        "paid_invoices_count": paid_invoices_count,
+        "open_invoices_count": open_invoices_count,
+        "service_choices": service_choices,
+        "conversations": conversations,
+    }
+    return render(request, "platformhub/operations_invoices.html", context)
+
+
+@require_http_methods(["GET"])
+def operations_transactions(request):
+    all_payments = list(
+        PaymentRecord.objects.select_related("invoice", "request", "user", "user__client_conversation").order_by("-created_at")
+    )
+    settled_usd = sum(
+        (p.amount for p in all_payments if p.status == "success" and p.currency == "USD"),
+        Decimal("0.00"),
+    )
+    settled_kes = sum(
+        (p.amount for p in all_payments if p.status == "success" and p.currency == "KES"),
+        Decimal("0.00"),
+    )
+    total_fees_usd = Decimal("0.00")
+    for p in all_payments:
+        if p.status == "success" and p.currency == "USD":
+            raw_fee = (p.metadata or {}).get("paystack_fees", "0") or "0"
+            try:
+                total_fees_usd += Decimal(str(raw_fee))
+            except (InvalidOperation, TypeError, ValueError):
+                pass
+    net_settled_usd = max(Decimal("0.00"), settled_usd - total_fees_usd)
+    success_count = sum(1 for p in all_payments if p.status == "success")
+    declined_count = sum(1 for p in all_payments if p.status != "success")
+
+    context = {
+        **_operations_sidebar_context("transactions"),
+        "all_payments": all_payments,
+        "settled_usd": settled_usd,
+        "settled_kes": settled_kes,
+        "total_fees_usd": total_fees_usd,
+        "net_settled_usd": net_settled_usd,
+        "success_count": success_count,
+        "declined_count": declined_count,
+    }
+    return render(request, "platformhub/operations_transactions.html", context)
+
+
+@require_http_methods(["POST"])
+def admin_create_invoice(request):
+    is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
+    conversation_id = request.POST.get("conversation_id", "").strip()
+    email = request.POST.get("email", "").strip().lower()
+    description = request.POST.get("description", "").strip()
+    service_code = request.POST.get("service_code", "").strip()
+    currency = request.POST.get("currency", "USD").strip().upper()
+    raw_amount = request.POST.get("amount_due", "").strip()
+    raw_status = request.POST.get("status", "open").strip().lower()
+    raw_issued_date = request.POST.get("issued_date", "").strip()
+
+    try:
+        amount_due = Decimal(raw_amount).quantize(Decimal("0.01"))
+    except (InvalidOperation, TypeError, ValueError):
+        amount_due = Decimal("0.00")
+
+    if not email or "@" not in email:
+        error = "Enter the client email address."
+    elif not description:
+        error = "Enter the invoice item or scope."
+    elif currency not in {"USD", "KES"}:
+        error = "Choose USD or KES."
+    elif amount_due <= 0:
+        error = "Enter an amount greater than zero."
+    else:
+        error = ""
+
+    if error:
+        if is_ajax:
+            return JsonResponse({"error": error}, status=400)
+        messages.error(request, error)
+        if conversation_id:
+            return redirect("platformhub:operations_desk_conversation", conversation_id=conversation_id)
+        return redirect("platformhub:operations_invoices")
+
+    User = get_user_model()
+    conversation = None
+    if conversation_id:
+        try:
+            conversation = ClientConversation.objects.select_related("user").filter(id=conversation_id).first()
+        except (ValueError, ValidationError):
+            conversation = None
+
+    target_user = User.objects.filter(email__iexact=email).first()
+    if not target_user and conversation and (conversation.user.email or "").lower() == email:
+        target_user = conversation.user
+    if not target_user:
+        base_username = email.split("@")[0][:30] or "client"
+        username = base_username
+        counter = 1
+        while User.objects.filter(username=username).exists():
+            username = f"{base_username}{counter}"
+            counter += 1
+        target_user = User.objects.create(username=username, email=email)
+
+    if not conversation:
+        conversation, _ = ClientConversation.objects.get_or_create(user=target_user)
+
+    linked_request = (
+        ServiceRequest.objects.filter(Q(user=target_user) | Q(email__iexact=email))
+        .order_by("-created_at")
+        .first()
+    )
+    if service_code and service_code in SERVICE_INDEX and not linked_request:
+        svc = SERVICE_INDEX[service_code]
+        linked_request = ServiceRequest.objects.create(
+            user=target_user,
+            full_name=target_user.get_full_name() or target_user.username,
+            email=email,
+            service_family=svc["family"],
+            service_code=service_code,
+            title=description[:220],
+            objective=description,
+            scope=description,
+            deliverable=description[:220],
+            status="quoted",
+            currency=currency,
+            estimate_low=amount_due,
+            estimate_high=amount_due,
+        )
+
+    inv_status = "paid" if raw_status == "paid" else "open"
+    amount_paid = amount_due if inv_status == "paid" else Decimal("0.00")
+
+    invoice = Invoice.objects.create(
+        request=linked_request,
+        user=target_user,
+        email=email,
+        currency=currency,
+        amount_due=amount_due,
+        amount_paid=amount_paid,
+        description=description[:255],
+        status=inv_status,
+    )
+
+    if raw_issued_date:
+        try:
+            from datetime import datetime as dt_cls
+
+            parsed_date = dt_cls.strptime(raw_issued_date, "%Y-%m-%d")
+            issued_dt = timezone.make_aware(parsed_date.replace(hour=12, minute=0, second=0))
+            Invoice.objects.filter(pk=invoice.pk).update(created_at=issued_dt)
+            invoice.refresh_from_db()
+        except ValueError:
+            pass
+
+    author = request.user if request.user.is_authenticated else None
+    notice_msg = ClientMessage.objects.create(
+        conversation=conversation,
+        author=author,
+        sender="admin",
+        body=f"Invoice {invoice.number} ({invoice.currency} {invoice.amount_due:.2f}) — {invoice.description}",
+    )
+    conversation.status = "open"
+    conversation.save(update_fields=["status", "updated_at"])
+
+    if is_ajax:
+        return JsonResponse({
+            "ok": True,
+            "invoice": _serialize_invoice(invoice),
+            "message": _serialize_message(notice_msg),
+        })
+
+    messages.success(request, f"Invoice {invoice.number} created.")
+    next_url = request.POST.get("next", "").strip()
+    if next_url and next_url.startswith("/"):
+        return redirect(next_url)
+    return redirect("platformhub:operations_desk_conversation", conversation_id=conversation.id)
+
+
+@require_http_methods(["POST"])
+def admin_invoice_status(request, invoice_id):
+    is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
+    invoice = get_object_or_404(Invoice, id=invoice_id)
+    new_status = request.POST.get("status", "").strip().lower()
+    conversation_id = request.POST.get("conversation_id", "").strip()
+    next_url = request.POST.get("next", "").strip()
+
+    if new_status == "paid":
+        invoice.amount_paid = invoice.amount_due
+        invoice.status = "paid"
+        invoice.save(update_fields=["amount_paid", "status"])
+    elif new_status == "void":
+        invoice.status = "void"
+        invoice.save(update_fields=["status"])
+    elif new_status == "open":
+        invoice.amount_paid = Decimal("0.00")
+        invoice.status = "open"
+        invoice.save(update_fields=["amount_paid", "status"])
+
+    if is_ajax:
+        return JsonResponse({
+            "ok": True,
+            "invoice": _serialize_invoice(invoice),
+        })
+
+    if next_url and next_url.startswith("/"):
+        return redirect(next_url)
+    if conversation_id:
+        return redirect("platformhub:operations_desk_conversation", conversation_id=conversation_id)
+    return redirect("platformhub:operations_invoices")
 
 
 @login_required
@@ -795,9 +1415,8 @@ def _checkout_context(request):
 
     if invoice_id:
         invoice = get_object_or_404(Invoice, id=invoice_id)
-        if not request.user.is_authenticated:
-            raise PermissionDenied("Sign in to pay this invoice.")
-        if invoice.user_id and invoice.user_id != request.user.id and (not request.user.email or invoice.email.lower() != request.user.email.lower()):
+        active_user = request.user if request.user.is_authenticated else _resolve_chat_user(request)
+        if invoice.user_id and invoice.user_id != active_user.id and (not active_user.email or invoice.email.lower() != active_user.email.lower()):
             raise PermissionDenied("This invoice is not attached to your account.")
         return {
             "kind": "invoice",
