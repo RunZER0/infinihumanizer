@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Service Posters — InfiniAI{% endblock %}
+{% block description %}20 formal, minimalist service posters specifying InfiniAI deliverables, turnaround schedules, base rates, and direct intake channels.{% endblock %}
+
+{% block content %}
+<div class="page-shell">
+  <div class="eyebrow">Service Specifications · 20 Plates</div>
+  <h1 class="h1">Direct specifications for language, research, and technical deliverables.</h1>
+  <p class="lede">Each poster details exact scope requirements, turnaround timelines, deliverable formats, and starting rates. All projects begin with consultation review and advance through direct workspace chat.</p>
+  <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
+    <a class="btn btn-primary" href="{% url 'platformhub:consultation' %}">Talk to us (/consultation/) →</a>
+    <a class="btn" href="{% url 'platformhub:services' %}">Browse full catalog</a>
+  </div>
+</div>
+
+<section class="section" style="padding-top:0">
+  <div class="shell">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:36px;align-items:start">
+      {% for p in posters %}
+      <article class="poster-card" style="background:var(--surface-paper);border:1px solid var(--line-strong);padding:24px;display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--line-subtle);padding-bottom:12px">
+          <span class="eyebrow" style="margin:0">{{ p.family }} · {{ p.service_name }}</span>
+          <span class="micro" style="font-weight:700">{{ p.number }} / 20</span>
+        </div>
+
+        <a href="{% static 'posters/poster_' %}{{ p.number }}.svg" target="_blank" rel="noopener" style="display:block;background:var(--surface-base);border:1px solid var(--line-subtle);overflow:hidden;border-radius:2px" aria-label="Open poster {{ p.number }} full size">
+          <img src="{% static 'posters/poster_' %}{{ p.number }}.svg" alt="{{ p.headline }}" loading="lazy" style="width:100%;height:auto;display:block;aspect-ratio:9/16;object-fit:contain" />
+        </a>
+
+        <div>
+          <h2 style="font-size:1.15rem;letter-spacing:-.025em;line-height:1.35;margin:0 0 10px;font-weight:800">{{ p.headline }}</h2>
+          <p style="font-size:.88rem;color:var(--text-muted);margin:0;line-height:1.5">{{ p.body }}</p>
+        </div>
+
+        <div style="background:var(--surface-base);padding:14px;border:1px solid var(--line-subtle);display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;text-align:left">
+          <div>
+            <span class="micro" style="display:block;letter-spacing:.08em">TURNAROUND</span>
+            <strong style="font-size:.92rem">{{ p.turnaround }}</strong>
+          </div>
+          <div>
+            <span class="micro" style="display:block;letter-spacing:.08em">FORMAT</span>
+            <strong style="font-size:.92rem">{{ p.format }}</strong>
+          </div>
+          <div>
+            <span class="micro" style="display:block;letter-spacing:.08em">BASE RATE</span>
+            <strong style="font-size:.92rem;color:var(--action-primary)">{{ p.base_rate }}</strong>
+          </div>
+        </div>
+
+        <div style="border-top:1px solid var(--line-subtle);padding-top:16px;display:flex;flex-direction:column;gap:10px">
+          <a class="btn btn-primary" href="{% url 'platformhub:consultation' %}" style="text-align:center;font-size:.82rem;padding:10px 12px;letter-spacing:-.01em">
+            Contact us via www.byinfini.online/consultation/
+          </a>
+          <div style="display:flex;justify-content:space-between;gap:10px">
+            <a class="btn btn-quiet" href="{% url 'platformhub:request_service_code' p.service_code %}" style="font-size:.8rem;padding:8px 10px;flex:1;text-align:center">Start request</a>
+            <a class="btn btn-quiet" href="{% static 'posters/poster_' %}{{ p.number }}.svg" target="_blank" rel="noopener" download="infini_poster_{{ p.number }}.svg" style="font-size:.8rem;padding:8px 10px;text-align:center">SVG</a>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

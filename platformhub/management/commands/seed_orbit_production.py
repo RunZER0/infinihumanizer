@@ -80,8 +80,9 @@ def build_seed_attachments() -> dict[str, dict]:
             "COMPANY PROFILE: Cruz Metro Freight provides direct, asset-based box-truck and sprinter van freight across DFW without broker markups.",
             "EMAIL 1 — Subject: Open Tue/Thu liftgate capacity in DFW",
             "EMAIL 2 — Subject: Same-day DFW pallet backup",
-            "EMAIL 3 — Subject: Flat metro pallet rates + 2hr free dock time",
-            "All three templates formatted with merge tags and short mobile-friendly subject lines.",
+            "EMAIL 3 — Subject: Flat metro rates (Effective Nov 1, 2026)",
+            "Rates effective November 1, 2026. Includes 2-hour free dock window and flat metro zone pricing within 40 miles.",
+            "Templates formatted with short mobile-friendly subject lines and clear dispatcher contact info.",
         ],
         role="deliverable",
     )
@@ -839,19 +840,19 @@ CLIENT_PROFILES = {
             (
                 "client",
                 dt_utc(2026, 10, 18, 21, 41, 20),
-                "just paid the $24 on apple pay, receipt 629121983101. looks super clean, can I get the editable word version too?",
+                "just paid the $24 on apple pay. looks super clean, can I get the editable word version too?",
                 [],
             ),
             (
                 "client",
                 dt_utc(2026, 10, 19, 13, 18, 40),
-                "hey quick thing—when I pasted email 2 into Gmail on my phone the subject line looked a little long. can we make the subject lines shorter so they don't cut off on mobile?",
+                "hey quick thing—when I pasted email 2 into Gmail on my phone the subject line looked a little long. also could you add 'Rates effective November 1, 2026' to Email 3 so dispatchers know the new quote starts next month?",
                 [],
             ),
             (
                 "admin",
                 dt_utc(2026, 10, 19, 13, 42, 10),
-                "Sure thing, shortened all three subject lines to under 40 characters so they fit cleanly on phone screens. Here's the updated Word file.",
+                "Shortened all three subject lines to under 40 characters for mobile and added the November 1, 2026 effective date to Email 3. Here is the final Word file.",
                 ["cruz_bio_and_outreach_final.docx"],
             ),
             (
@@ -995,19 +996,19 @@ CLIENT_PROFILES = {
             (
                 "client",
                 dt_utc(2026, 10, 15, 8, 42, 12),
-                "Ugh idk why the $270 won't go through. I tried Apple Pay twice and then typed my Citizens National debit card in directly and it keeps declining.",
+                "ugh my card keeps declining on checkout. tried twice on apple pay and once typing it in.",
                 [],
             ),
             (
                 "admin",
                 dt_utc(2026, 10, 15, 8, 49, 0),
-                "I see those three attempts in the gateway—your bank's fraud filter is blocking the charge automatically. Don't stress about the delay, we're already starting on the three pages today while you sort out the card.",
+                "Your bank is blocking the charge on their end. Don't stress about it today, we're already drafting the three pages while you sort out the card.",
                 [],
             ),
             (
                 "client",
                 dt_utc(2026, 10, 15, 19, 24, 10),
-                "I tried my other card at 7:20 pm too and that one got blocked right away. I initiated a transfer to my main Mastercard so I'll run it as soon as the transfer settles tomorrow night.",
+                "tried the debit card again tonight and it blocked that one too. initiated a transfer to my mastercard so i'll run it as soon as it clears tomorrow.",
                 [],
             ),
             (
@@ -1019,7 +1020,7 @@ CLIENT_PROFILES = {
             (
                 "client",
                 dt_utc(2026, 10, 17, 1, 8, 30),
-                "Okay the $270 finally went through on my Mastercard with Apple Pay just now! Also we read through v1—could we rename the 3 tiers on the Services page to 'Essential', 'Studio Session', and 'Full Day Campaign', and take out the note about weekend consultation calls on the Booking page?",
+                "okay the payment finally went through on my mastercard just now. we read through v1—could we rename the 3 tiers on the Services page to 'Essential', 'Studio Session', and 'Full Day Campaign', and take out the note about weekend calls on the Booking page?",
                 [],
             ),
             (
@@ -1586,7 +1587,7 @@ CLIENT_PROFILES = {
             (
                 "client",
                 dt_utc(2026, 10, 13, 10, 26, 20),
-                "Just paid the $120 with Apple Pay (receipt 628610178591). The regular card checkout froze on my phone browser twice so I switched to Apple Pay.",
+                "Just paid the $120 on Apple Pay. The regular card screen was sticking on my browser so I switched to Apple Pay.",
                 [],
             ),
             (
@@ -1742,13 +1743,13 @@ CLIENT_PROFILES = {
             (
                 "client",
                 dt_utc(2026, 10, 8, 17, 58, 10),
-                "Hey my Visa debit card just declined on the checkout screen, idk why it didn't go through. I'm flying out for a site walk right now so I'll pay it with my Visa credit card on Sunday when I'm back.",
+                "my debit card just declined on the checkout screen, not sure why. flying out for a site walk now so i'll pay it with my credit card on sunday when i'm back.",
                 [],
             ),
             (
                 "client",
                 dt_utc(2026, 10, 11, 18, 28, 30),
-                "Back home! Just paid the $50 with my Visa credit card, receipt 628418069984.",
+                "Back home. Just put the $50 through on my credit card.",
                 [],
             ),
             (
@@ -1989,7 +1990,7 @@ CLIENT_PROFILES = {
             (
                 "client",
                 dt_utc(2026, 10, 10, 19, 5, 15),
-                "Paid the $80! (my phone autofilled my old estellawilliams06@gmail.com email on the first tab so I closed it and paid under stellarae147@gmail.com, receipt 628319211165).",
+                "Paid the $80. My phone autofilled an old email address on the first screen so I backed out and re-entered it, went through fine.",
                 [],
             ),
             (
@@ -2096,7 +2097,7 @@ CLIENT_PROFILES = {
             (
                 "client",
                 dt_utc(2026, 10, 5, 23, 14, 40),
-                "ugh my credit union Visa just declined twice (tried Apple Pay first, receipt 627823050738, and then typed the card number). I have to call them in the morning to lift the international block.",
+                "ugh my credit union card declined twice, tried apple pay and manual entry. i'll call them in the morning to lift the block.",
                 [],
             ),
             (
@@ -2173,7 +2174,7 @@ CLIENT_PROFILES = {
             (
                 "admin",
                 dt_utc(2026, 10, 5, 5, 18, 0),
-                "Hey Dennis, saw two unfinished checkout sessions on Oct 2 and this morning. Did the payment screen give you an error?",
+                "Hey Dennis, just checking in on the cash-flow tracker. Let me know if you ran into any issues with the payment link.",
                 [],
             ),
             (
@@ -2637,7 +2638,7 @@ CLIENT_PROFILES = {
             (
                 "client",
                 dt_utc(2026, 6, 27, 22, 59, 0),
-                "Sorry about the failed $40 try earlier, forgot to move funds from my savings into my TD checking account. Just paid the full $90 now.",
+                "sorry about the decline earlier, forgot to move funds over from savings. just cleared the $90 on apple pay.",
                 [],
             ),
             (

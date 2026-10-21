@@ -668,3 +668,14 @@ class HumanizerEntitlementTests(TestCase):
         self.user.profile.refresh_from_db()
         self.assertEqual(self.user.profile.word_quota, starting_quota + 500000)
         self.assertEqual(second.metadata["fulfillment"]["account_type"], "PRO")
+
+
+class PostersGalleryTests(TestCase):
+    def test_posters_gallery_renders_20_posters_and_contact_ctas(self):
+        url = reverse("platformhub:posters")
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(len(resp.context["posters"]), 20)
+        self.assertContains(resp, "Contact us via www.byinfini.online/consultation/")
+        self.assertContains(resp, "poster_01.svg")
+        self.assertContains(resp, "poster_20.svg")

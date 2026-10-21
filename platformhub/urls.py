@@ -19,6 +19,7 @@ urlpatterns = [
     path("request/<str:service_code>/", views.request_service, name="request_service_code"),
     path("request/success/<uuid:request_id>/", views.request_success, name="request_success"),
     path("consultation/", views.consultation, name="consultation"),
+    path("posters/", views.posters_gallery, name="posters"),
     path("workspace/", views.workspace, name="workspace"),
     path("workspace/projects/", views.workspace_projects, name="workspace_projects"),
     path("workspace/billing/", views.workspace_billing, name="workspace_billing"),

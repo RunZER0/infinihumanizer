@@ -100,6 +100,13 @@ def start(request):
     return render(request, "platformhub/start.html", {"families": SERVICE_FAMILIES})
 
 
+def posters_gallery(request):
+    from .posters_data import POSTERS
+    return render(request, "platformhub/posters.html", {
+        "posters": POSTERS,
+    })
+
+
 @require_http_methods(["GET", "POST"])
 def request_service(request, service_code=None):
     selected = service_by_code(service_code) if service_code else None
@@ -1617,6 +1624,11 @@ def reconciliation(request):
         "summary": LEGACY_LEDGER_SUMMARY,
         "bands": LEGACY_RECONCILIATION_BANDS,
     })
+
+
+def posters_gallery(request):
+    from platformhub.posters_data import POSTERS
+    return render(request, "platformhub/posters.html", {"posters": POSTERS})
 
 
 def health(request):
