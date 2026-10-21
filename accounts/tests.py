@@ -18,7 +18,7 @@ class SignupViewTests(TestCase):
         response = self.client.get(self.signup_url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "account/login.html")
-        self.assertContains(response, "Create an account")
+        self.assertContains(response, "Create account")
 
     def test_login_defaults_to_social_mode_with_separate_email_and_signup_panels(self):
         response = self.client.get(reverse("account_login"))

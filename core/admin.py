@@ -42,6 +42,18 @@ class OwnerAdminSite(admin.AdminSite):
     def has_permission(self, request):
         return self._is_owner(request.user)
 
+    def admin_view(self, view, cacheable=False):
+        parent_wrapper = super().admin_view(view, cacheable=cacheable)
+
+        def inner(request, *args, **kwargs):
+            if not self.has_permission(request) and request.user.is_authenticated:
+                return HttpResponseForbidden(
+                    "Administrator access is restricted to the authorized Google account."
+                )
+            return parent_wrapper(request, *args, **kwargs)
+
+        return inner
+
     def login(self, request, extra_context=None):
         if not request.user.is_authenticated:
             return redirect(f'{reverse("account_login")}?next={request.path}')

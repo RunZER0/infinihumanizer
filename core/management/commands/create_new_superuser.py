@@ -92,11 +92,11 @@ class Command(BaseCommand):
                         user.is_active = True
                         user.save()
                         
-                        self.stdout.write(self.style.SUCCESS('\n✓ Superuser password updated successfully!\n'))
+                        self.stdout.write(self.style.SUCCESS('\n[OK] Superuser password updated successfully!\n'))
                     else:
                         self.stdout.write(
                             self.style.ERROR(
-                                f'\n✗ Error: User "{username}" already exists.\n'
+                                f'\n[!] Error: User "{username}" already exists.\n'
                                 f'  Use --update-existing to update the password, or\n'
                                 f'  Use --username to specify a different username.\n'
                             )
@@ -110,7 +110,7 @@ class Command(BaseCommand):
                         email=email,
                         password=password
                     )
-                    self.stdout.write(self.style.SUCCESS('\n✓ New superuser created successfully!\n'))
+                    self.stdout.write(self.style.SUCCESS('\n[OK] New superuser created successfully!\n'))
                 
                 # Display credentials
                 self.stdout.write(self.style.WARNING('='*70))
@@ -123,7 +123,7 @@ class Command(BaseCommand):
                 
                 self.stdout.write(
                     self.style.WARNING(
-                        '\n⚠️  IMPORTANT: Save these credentials in a secure location!\n'
+                        '\n[!] IMPORTANT: Save these credentials in a secure location!\n'
                         '   This password will not be shown again.\n'
                     )
                 )
