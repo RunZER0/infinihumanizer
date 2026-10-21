@@ -1627,8 +1627,8 @@ def reconciliation(request):
 
 
 def posters_gallery(request):
-    from platformhub.posters_data import POSTERS
-    return render(request, "platformhub/posters.html", {"posters": POSTERS})
+    from platformhub.engaging_posters_data import ENGAGING_POSTERS
+    return render(request, "platformhub/posters.html", {"posters": ENGAGING_POSTERS})
 
 
 def health(request):

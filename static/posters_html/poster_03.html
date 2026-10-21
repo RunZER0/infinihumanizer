@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@600;700&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1080px;
+    height: 1920px;
+    background: #060d17;
+    color: #f0f9ff;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    position: relative;
+    overflow: hidden;
+    padding: 110px 80px 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .glow-1 {
+    position: absolute;
+    top: -160px;
+    right: -160px;
+    width: 750px;
+    height: 750px;
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.30) 0%, rgba(0,0,0,0) 70%);
+    filter: blur(85px);
+    pointer-events: none;
+  }
+  .glow-2 {
+    position: absolute;
+    bottom: 260px;
+    left: -200px;
+    width: 820px;
+    height: 820px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.22) 0%, rgba(0,0,0,0) 70%);
+    filter: blur(95px);
+    pointer-events: none;
+  }
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+  .brand {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: #f0f9ff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand-dot {
+    width: 14px;
+    height: 14px;
+    background: #06b6d4;
+    border-radius: 50%;
+    box-shadow: 0 0 16px #06b6d4;
+  }
+  .tag-badge {
+    background: rgba(6, 182, 212, 0.15);
+    border: 1px solid rgba(6, 182, 212, 0.4);
+    backdrop-filter: blur(16px);
+    padding: 14px 26px;
+    border-radius: 100px;
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #67e8f9;
+  }
+  .main-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+  .eyebrow-hook {
+    font-family: 'Space Grotesk', sans-serif;
+    color: #38bdf8;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  .headline {
+    font-size: 70px;
+    font-weight: 900;
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+    color: #f0f9ff;
+  }
+  .headline span {
+    background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .outcome-card {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    backdrop-filter: blur(32px);
+    border-radius: 32px;
+    padding: 48px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+  }
+  .outcome-card p {
+    font-size: 31px;
+    line-height: 1.48;
+    color: #f0f9ff;
+    font-weight: 500;
+  }
+  .outcome-meta {
+    display: flex;
+    gap: 28px;
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    flex-wrap: wrap;
+  }
+  .meta-pill {
+    font-size: 21px;
+    font-weight: 700;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .meta-pill b {
+    color: #f0f9ff;
+  }
+  .bottom-cta {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+  .story-link-sticker {
+    width: 100%;
+    background: #ffffff;
+    color: #060d17;
+    padding: 34px 40px;
+    border-radius: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 24px 50px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.2);
+  }
+  .sticker-left {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+  .sticker-icon {
+    width: 56px;
+    height: 56px;
+    background: #0284c7;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  .sticker-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .sticker-label {
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  .sticker-url {
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+  .sticker-arrow {
+    font-size: 36px;
+    font-weight: 900;
+    color: #0284c7;
+  }
+  .swipe-note {
+    font-size: 19px;
+    letter-spacing: 2px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #71717a;
+  }
+</style>
+</head>
+<body>
+  <div class="glow-1"></div>
+  <div class="glow-2"></div>
+
+  <div class="top-bar">
+    <div class="brand">
+      <div class="brand-dot"></div>
+      INFINIAI
+    </div>
+    <div class="tag-badge">Profit Armor</div>
+  </div>
+
+  <div class="main-content">
+    <div class="eyebrow-hook">SKU Landed Cost &amp; Margins</div>
+    <h1 class="headline">Surprise freight charges are <span>eating your profit.</span></h1>
+
+    <div class="outcome-card">
+      <p>Stop guessing your true unit margins. We build locked, automated cost calculators incorporating port fees, tariffs, and true shipping allocations.</p>
+      <div class="outcome-meta">
+        <div class="meta-pill">Turnaround: <b>48 Hours</b></div>
+        <div class="meta-pill">Deliverable: <b>Interactive Excel Model</b></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-cta">
+    <div class="story-link-sticker">
+      <div class="sticker-left">
+        <div class="sticker-icon">↗</div>
+        <div class="sticker-text">
+          <span class="sticker-label">Direct Intake &amp; Scoping</span>
+          <span class="sticker-url">Contact us via www.byinfini.online/consultation/</span>
+        </div>
+      </div>
+      <div class="sticker-arrow">→</div>
+    </div>
+    <div class="swipe-note">Tap link or visit site to submit project</div>
+  </div>
+</body>
+</html>

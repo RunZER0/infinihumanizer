@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Service Posters — InfiniAI{% endblock %}
-{% block description %}20 formal, minimalist 1080x1920 image posters specifying InfiniAI deliverables, turnaround schedules, base rates, and direct intake channels.{% endblock %}
+{% block title %}Client Story Posters — InfiniAI{% endblock %}
+{% block description %}High-converting, results-driven social story image posters for InfiniAI deliverables and client engagements.{% endblock %}
 
 {% block content %}
 <div class="page-shell">
-  <div class="eyebrow">Service Specifications · 20 Image Plates</div>
-  <h1 class="h1">Direct specifications for language, research, and technical deliverables.</h1>
-  <p class="lede">Each poster is rendered as a standalone 1080×1920 high-resolution image designed for mobile stories and direct client circulation. All projects initiate directly through the consultation intake desk.</p>
+  <div class="eyebrow">Social Story Assets · 1080×1920 (9:16)</div>
+  <h1 class="h1">Client results, outcome guarantees, and commercial deliverables.</h1>
+  <p class="lede">Each image is rendered at full 1080×1920 mobile resolution for direct upload to Snapchat and Instagram stories. All inquiries lead directly into the studio consultation desk.</p>
   <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
     <a class="btn btn-primary" href="{% url 'platformhub:consultation' %}">Talk to us (/consultation/) →</a>
     <a class="btn" href="{% url 'platformhub:services' %}">Browse full catalog</a>
@@ -20,33 +20,29 @@
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:36px;align-items:start">
       {% for p in posters %}
       <article class="poster-card" style="background:var(--surface-paper);border:1px solid var(--line-strong);padding:24px;display:flex;flex-direction:column;gap:18px">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--line-subtle);padding-bottom:12px">
-          <span class="eyebrow" style="margin:0">{{ p.family }} · {{ p.service_name }}</span>
-          <span class="micro" style="font-weight:700">{{ p.number }} / 20</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line-subtle);padding-bottom:12px">
+          <span class="eyebrow" style="margin:0">{{ p.eyebrow }}</span>
+          <span class="micro" style="font-weight:700;color:var(--action-primary);letter-spacing:1px">{{ p.tag_badge }}</span>
         </div>
 
         <!-- High-Resolution 1080x1920 PNG Image -->
-        <a href="{% static 'posters/poster_' %}{{ p.number }}.png" target="_blank" rel="noopener" style="display:block;background:var(--surface-base);border:1px solid var(--line-subtle);overflow:hidden;border-radius:2px" aria-label="Open poster {{ p.number }} full image">
-          <img src="{% static 'posters/poster_' %}{{ p.number }}.png" alt="{{ p.headline }}" loading="lazy" style="width:100%;height:auto;display:block;aspect-ratio:9/16;object-fit:contain" />
+        <a href="{% static 'posters/poster_' %}{{ p.number }}.png" target="_blank" rel="noopener" style="display:block;background:var(--surface-base);border:1px solid var(--line-subtle);overflow:hidden;border-radius:4px" aria-label="Open poster {{ p.number }} full image">
+          <img src="{% static 'posters/poster_' %}{{ p.number }}.png" alt="{{ p.headline_pre }}{{ p.headline_span }}" loading="lazy" style="width:100%;height:auto;display:block;aspect-ratio:9/16;object-fit:contain" />
         </a>
 
         <div>
-          <h2 style="font-size:1.15rem;letter-spacing:-.025em;line-height:1.35;margin:0 0 10px;font-weight:800">{{ p.headline }}</h2>
-          <p style="font-size:.88rem;color:var(--text-muted);margin:0;line-height:1.5">{{ p.body }}</p>
+          <h2 style="font-size:1.18rem;letter-spacing:-.025em;line-height:1.35;margin:0 0 10px;font-weight:800">{{ p.headline_pre }}<span style="color:var(--action-primary)">{{ p.headline_span }}</span>{{ p.headline_post }}</h2>
+          <p style="font-size:.9rem;color:var(--text-muted);margin:0;line-height:1.5">{{ p.outcome }}</p>
         </div>
 
-        <div style="background:var(--surface-base);padding:14px;border:1px solid var(--line-subtle);display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;text-align:left">
+        <div style="background:var(--surface-base);padding:14px;border:1px solid var(--line-subtle);display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:left">
           <div>
-            <span class="micro" style="display:block;letter-spacing:.08em">TURNAROUND</span>
+            <span class="micro" style="display:block;letter-spacing:.08em">SPEED</span>
             <strong style="font-size:.92rem">{{ p.turnaround }}</strong>
           </div>
           <div>
-            <span class="micro" style="display:block;letter-spacing:.08em">FORMAT</span>
-            <strong style="font-size:.92rem">{{ p.format }}</strong>
-          </div>
-          <div>
-            <span class="micro" style="display:block;letter-spacing:.08em">BASE RATE</span>
-            <strong style="font-size:.92rem;color:var(--action-primary)">{{ p.base_rate }}</strong>
+            <span class="micro" style="display:block;letter-spacing:.08em">DELIVERABLE</span>
+            <strong style="font-size:.92rem">{{ p.deliverable }}</strong>
           </div>
         </div>
 
@@ -56,8 +52,8 @@
           </a>
           <div style="display:flex;justify-content:space-between;gap:8px">
             <a class="btn btn-quiet" href="{% url 'platformhub:request_service_code' p.service_code %}" style="font-size:.8rem;padding:8px 10px;flex:1;text-align:center">Start request</a>
-            <a class="btn btn-quiet" href="{% static 'posters/poster_' %}{{ p.number }}.png" target="_blank" rel="noopener" download="infini_poster_{{ p.number }}.png" style="font-size:.8rem;padding:8px 10px;text-align:center">PNG (1080×1920)</a>
-            <a class="btn btn-quiet" href="{% static 'posters/poster_' %}{{ p.number }}.jpg" target="_blank" rel="noopener" download="infini_poster_{{ p.number }}.jpg" style="font-size:.8rem;padding:8px 10px;text-align:center">JPG</a>
+            <a class="btn btn-quiet" href="{% static 'posters/poster_' %}{{ p.number }}.png" target="_blank" rel="noopener" download="infini_story_{{ p.number }}.png" style="font-size:.8rem;padding:8px 10px;text-align:center">PNG (1080×1920)</a>
+            <a class="btn btn-quiet" href="{% static 'posters/poster_' %}{{ p.number }}.jpg" target="_blank" rel="noopener" download="infini_story_{{ p.number }}.jpg" style="font-size:.8rem;padding:8px 10px;text-align:center">JPG</a>
           </div>
         </div>
       </article>
