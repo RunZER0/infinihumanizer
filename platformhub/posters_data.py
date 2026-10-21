@@ -320,3 +320,11 @@ POSTERS = [
         "theme": "light",
     },
 ]
+
+for p in POSTERS:
+    p["svg_filename"] = f"poster_{p['number']}.svg"
+    p["svg_path"] = f"/static/posters/poster_{p['number']}.svg"
+    p["png_filename"] = f"poster_{p['number']}.png"
+    p["png_path"] = f"/static/posters/poster_{p['number']}.png"
+    p["jpg_filename"] = f"poster_{p['number']}.jpg"
+    p["jpg_path"] = f"/static/posters/poster_{p['number']}.jpg"

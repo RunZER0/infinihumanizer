@@ -2,13 +2,13 @@
 {% load static %}
 
 {% block title %}Service Posters — InfiniAI{% endblock %}
-{% block description %}20 formal, minimalist service posters specifying InfiniAI deliverables, turnaround schedules, base rates, and direct intake channels.{% endblock %}
+{% block description %}20 formal, minimalist 1080x1920 image posters specifying InfiniAI deliverables, turnaround schedules, base rates, and direct intake channels.{% endblock %}
 
 {% block content %}
 <div class="page-shell">
-  <div class="eyebrow">Service Specifications · 20 Plates</div>
+  <div class="eyebrow">Service Specifications · 20 Image Plates</div>
   <h1 class="h1">Direct specifications for language, research, and technical deliverables.</h1>
-  <p class="lede">Each poster details exact scope requirements, turnaround timelines, deliverable formats, and starting rates. All projects begin with consultation review and advance through direct workspace chat.</p>
+  <p class="lede">Each poster is rendered as a standalone 1080×1920 high-resolution image designed for mobile stories and direct client circulation. All projects initiate directly through the consultation intake desk.</p>
   <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
     <a class="btn btn-primary" href="{% url 'platformhub:consultation' %}">Talk to us (/consultation/) →</a>
     <a class="btn" href="{% url 'platformhub:services' %}">Browse full catalog</a>
@@ -25,8 +25,9 @@
           <span class="micro" style="font-weight:700">{{ p.number }} / 20</span>
         </div>
 
-        <a href="{% static 'posters/poster_' %}{{ p.number }}.svg" target="_blank" rel="noopener" style="display:block;background:var(--surface-base);border:1px solid var(--line-subtle);overflow:hidden;border-radius:2px" aria-label="Open poster {{ p.number }} full size">
-          <img src="{% static 'posters/poster_' %}{{ p.number }}.svg" alt="{{ p.headline }}" loading="lazy" style="width:100%;height:auto;display:block;aspect-ratio:9/16;object-fit:contain" />
+        <!-- High-Resolution 1080x1920 PNG Image -->
+        <a href="{% static 'posters/poster_' %}{{ p.number }}.png" target="_blank" rel="noopener" style="display:block;background:var(--surface-base);border:1px solid var(--line-subtle);overflow:hidden;border-radius:2px" aria-label="Open poster {{ p.number }} full image">
+          <img src="{% static 'posters/poster_' %}{{ p.number }}.png" alt="{{ p.headline }}" loading="lazy" style="width:100%;height:auto;display:block;aspect-ratio:9/16;object-fit:contain" />
         </a>
 
         <div>
@@ -53,9 +54,10 @@
           <a class="btn btn-primary" href="{% url 'platformhub:consultation' %}" style="text-align:center;font-size:.82rem;padding:10px 12px;letter-spacing:-.01em">
             Contact us via www.byinfini.online/consultation/
           </a>
-          <div style="display:flex;justify-content:space-between;gap:10px">
+          <div style="display:flex;justify-content:space-between;gap:8px">
             <a class="btn btn-quiet" href="{% url 'platformhub:request_service_code' p.service_code %}" style="font-size:.8rem;padding:8px 10px;flex:1;text-align:center">Start request</a>
-            <a class="btn btn-quiet" href="{% static 'posters/poster_' %}{{ p.number }}.svg" target="_blank" rel="noopener" download="infini_poster_{{ p.number }}.svg" style="font-size:.8rem;padding:8px 10px;text-align:center">SVG</a>
+            <a class="btn btn-quiet" href="{% static 'posters/poster_' %}{{ p.number }}.png" target="_blank" rel="noopener" download="infini_poster_{{ p.number }}.png" style="font-size:.8rem;padding:8px 10px;text-align:center">PNG (1080×1920)</a>
+            <a class="btn btn-quiet" href="{% static 'posters/poster_' %}{{ p.number }}.jpg" target="_blank" rel="noopener" download="infini_poster_{{ p.number }}.jpg" style="font-size:.8rem;padding:8px 10px;text-align:center">JPG</a>
           </div>
         </div>
       </article>

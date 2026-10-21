@@ -1,5 +1,8 @@
 import html
 import os
+import shutil
+from PIL import Image
+from playwright.sync_api import sync_playwright
 from platformhub.posters_data import POSTERS
 
 
@@ -135,20 +138,46 @@ def build_svg(p: dict) -> str:
 
 
 def generate_all():
-    os.makedirs("static/posters", exist_ok=True)
-    os.makedirs("public/posters", exist_ok=True)
+    static_dir = os.path.abspath("static/posters")
+    public_dir = os.path.abspath("public/posters")
+    os.makedirs(static_dir, exist_ok=True)
+    os.makedirs(public_dir, exist_ok=True)
 
+    print(f"Generating {len(POSTERS)} SVG templates...")
     for p in POSTERS:
         svg = build_svg(p)
         filename = f"poster_{p['number']}.svg"
-        with open(os.path.join("static", "posters", filename), "w", encoding="utf-8") as f:
+        with open(os.path.join(static_dir, filename), "w", encoding="utf-8") as f:
             f.write(svg)
-        with open(os.path.join("public", "posters", filename), "w", encoding="utf-8") as f:
+        with open(os.path.join(public_dir, filename), "w", encoding="utf-8") as f:
             f.write(svg)
-        p["svg_filename"] = filename
-        p["svg_path"] = f"/static/posters/{filename}"
 
-    print(f"Generated {len(POSTERS)} minimalist SVG posters.")
+    print("Launching Chromium to render 1080x1920 PNG and JPG images...")
+    with sync_playwright() as playwright:
+        browser = playwright.chromium.launch()
+        page = browser.new_page(viewport={"width": 1080, "height": 1920}, device_scale_factor=1)
+        for p in POSTERS:
+            num = p["number"]
+            svg_path = os.path.join(static_dir, f"poster_{num}.svg").replace("\\", "/")
+            png_static = os.path.join(static_dir, f"poster_{num}.png")
+            png_public = os.path.join(public_dir, f"poster_{num}.png")
+            jpg_static = os.path.join(static_dir, f"poster_{num}.jpg")
+            jpg_public = os.path.join(public_dir, f"poster_{num}.jpg")
+
+            page.goto(f"file:///{svg_path}")
+            page.screenshot(path=png_static)
+            shutil.copyfile(png_static, png_public)
+
+            with Image.open(png_static) as img:
+                rgb_im = img.convert("RGB")
+                rgb_im.save(jpg_static, format="JPEG", quality=95)
+                rgb_im.save(jpg_public, format="JPEG", quality=95)
+
+            print(f"Rendered poster_{num}.png and poster_{num}.jpg")
+
+        browser.close()
+
+    print(f"Successfully generated all {len(POSTERS)} image posters (PNG and JPG).")
 
 
 if __name__ == "__main__":
