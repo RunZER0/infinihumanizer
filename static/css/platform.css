@@ -2689,6 +2689,25 @@ body.modal-open{overflow:hidden}
   margin: 0;
 }
 
+.cp-msg-bubble a,
+.ops-msg-bubble a {
+  color: var(--accent, #c84132);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  word-break: break-all;
+  font-weight: 500;
+  transition: opacity 0.15s ease;
+}
+
+.cp-msg-bubble a:hover,
+.ops-msg-bubble a:hover {
+  opacity: 0.8;
+}
+
+.cp-msg-self .cp-msg-bubble a {
+  color: #ff8c7a;
+}
+
 .cp-stream-empty {
   margin: auto;
   color: var(--text-muted);

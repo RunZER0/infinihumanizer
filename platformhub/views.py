@@ -3,6 +3,7 @@ import logging
 import os
 import re
 import uuid
+from datetime import datetime, timedelta
 from decimal import Decimal, InvalidOperation
 
 import requests
@@ -1354,7 +1355,36 @@ def admin_create_invoice(request):
     inv_status = "paid" if raw_status == "paid" else "open"
     amount_paid = amount_due if inv_status == "paid" else Decimal("0.00")
 
+    custom_number = request.POST.get("number", "").strip().upper()
+    issued_dt = None
+    if raw_issued_date:
+        try:
+            parsed_date = datetime.strptime(raw_issued_date, "%Y-%m-%d")
+            issued_dt = timezone.make_aware(parsed_date.replace(hour=12, minute=0, second=0))
+        except ValueError:
+            issued_dt = None
+
+    if not custom_number:
+        ref_dt = issued_dt or timezone.now()
+        date_str = ref_dt.strftime("%y%m%d")
+        initials = (
+            ((target_user.first_name[:1] or "") + (target_user.last_name[:1] or "")).upper()
+            or (target_user.username[:2] or "CL").upper()
+        )
+        base_num = f"INV-{date_str}-{initials}"
+        cand_num = f"{base_num}01"
+        ctr = 1
+        while Invoice.objects.filter(number=cand_num).exists():
+            ctr += 1
+            cand_num = f"{base_num}{ctr:02d}"
+        invoice_number = cand_num
+    else:
+        invoice_number = custom_number
+
+    due_dt = (issued_dt or timezone.now()) + timedelta(days=7 if inv_status != "paid" else 0)
+
     invoice = Invoice.objects.create(
+        number=invoice_number,
         request=linked_request,
         user=target_user,
         email=email,
@@ -1363,26 +1393,31 @@ def admin_create_invoice(request):
         amount_paid=amount_paid,
         description=description[:255],
         status=inv_status,
+        due_at=due_dt,
     )
 
-    if raw_issued_date:
-        try:
-            from datetime import datetime as dt_cls
+    if issued_dt:
+        Invoice.objects.filter(pk=invoice.pk).update(created_at=issued_dt)
+        invoice.refresh_from_db()
 
-            parsed_date = dt_cls.strptime(raw_issued_date, "%Y-%m-%d")
-            issued_dt = timezone.make_aware(parsed_date.replace(hour=12, minute=0, second=0))
-            Invoice.objects.filter(pk=invoice.pk).update(created_at=issued_dt)
-            invoice.refresh_from_db()
-        except ValueError:
-            pass
+    checkout_url = reverse("platformhub:checkout") + f"?invoice={invoice.id}"
+    full_checkout_url = f"https://www.byinfini.online{checkout_url}"
 
     author = request.user if request.user.is_authenticated else None
+    notice_body = (
+        f"Invoice {invoice.number} ({invoice.currency} {invoice.amount_due:.2f}) — {invoice.description}\n\n"
+        f"Review and pay on your account: {full_checkout_url}"
+    )
     notice_msg = ClientMessage.objects.create(
         conversation=conversation,
         author=author,
         sender="admin",
-        body=f"Invoice {invoice.number} ({invoice.currency} {invoice.amount_due:.2f}) — {invoice.description}",
+        body=notice_body,
     )
+    if issued_dt:
+        ClientMessage.objects.filter(pk=notice_msg.pk).update(created_at=issued_dt)
+        notice_msg.refresh_from_db()
+
     conversation.status = "open"
     conversation.save(update_fields=["status", "updated_at"])
 

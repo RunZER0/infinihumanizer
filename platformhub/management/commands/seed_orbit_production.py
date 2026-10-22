@@ -810,13 +810,13 @@ CLIENT_PROFILES = {
             (
                 "client",
                 dt_utc(2026, 10, 18, 19, 28, 0),
-                "sorry for the late reply, was out on a delivery route in Fort Worth all morning. here's the word doc with what I typed so far. also I'm using my Cash App Visa on Apple Pay and sometimes it acts weird on new sites—can we do $1 first just to make sure it goes through, then the $24?",
+                "sorry for the late reply, was out on a delivery route in Fort Worth all morning. here's the word doc with what I typed so far. where do I pay? also I'm using my Cash App Visa on Apple Pay and sometimes it acts weird on new sites—can we do $1 first just to make sure it goes through, then the $24?",
                 ["cruz_old_bio_draft.docx"],
             ),
             (
                 "admin",
                 dt_utc(2026, 10, 18, 19, 40, 10),
-                "No problem at all. I just put INV-261018-JC01 ($1.00) on your account so you can test the card. Also I opened your Word file—Email #3 cuts off right at 'Here is our standard per-mile and flat metro rate—'. What did you want after that?",
+                "No problem at all. I just put INV-261018-JC01 ($1.00) on your account so you can test the card. You can also pay directly using this link: https://paystack.shop/pay/4q5iounn6s. Also I opened your Word file—Email #3 cuts off right at 'Here is our standard per-mile and flat metro rate—'. What did you want after that?",
                 [],
             ),
             (
@@ -836,6 +836,18 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 18, 21, 32, 15),
                 "Here's the PDF preview of the bio and all three emails, and I posted INV-261018-JC02 for the remaining $24.00.",
                 ["cruz_bio_and_emails_v1_preview.pdf"],
+            ),
+            (
+                "client",
+                dt_utc(2026, 10, 18, 21, 35, 10),
+                "where do I pay?",
+                [],
+            ),
+            (
+                "admin",
+                dt_utc(2026, 10, 18, 21, 36, 0),
+                "Here is the payment link to settle the balance: https://paystack.shop/pay/4q5iounn6s",
+                [],
             ),
             (
                 "client",
@@ -3064,7 +3076,7 @@ class Command(BaseCommand):
             if raw_email.endswith(".edu"):
                 raw_email = raw_email.replace("@crimson.us.edu", "@gmail.com")
             primary_email = EMAIL_ALIAS_TO_PRIMARY.get(raw_email, raw_email)
-            linked_user = user_by_email.get(primary_email)
+            linked_user = user_by_email.get(primary_email.lower()) if primary_email else None
 
             try:
                 amount_val = Decimal(str(row.get("Amount Paid") or "0"))
@@ -3084,6 +3096,39 @@ class Command(BaseCommand):
                 elif linked_user:
                     fullname = linked_user.get_full_name()
 
+            if primary_email and not linked_user:
+                clean_email = primary_email.strip().lower()
+                linked_user = User.objects.filter(email__iexact=clean_email).first()
+                if not linked_user:
+                    base_u = clean_email.split("@")[0][:25].replace(".", "_").replace("-", "_") or "client"
+                    u_cand = base_u
+                    ctr = 1
+                    while User.objects.filter(username=u_cand).exists():
+                        u_cand = f"{base_u}{ctr}"
+                        ctr += 1
+                    first_n = fullname.split()[0] if fullname else ""
+                    last_n = " ".join(fullname.split()[1:]) if fullname and len(fullname.split()) > 1 else ""
+                    linked_user = User.objects.create(
+                        username=u_cand,
+                        email=clean_email,
+                        first_name=first_n,
+                        last_name=last_n,
+                    )
+                    linked_user.set_password("OrbitClient2026!")
+                    linked_user.save()
+                    created_users += 1
+                    try:
+                        from allauth.account.models import EmailAddress
+
+                        EmailAddress.objects.update_or_create(
+                            user=linked_user,
+                            email=clean_email,
+                            defaults={"primary": True, "verified": True},
+                        )
+                    except Exception:
+                        pass
+                user_by_email[clean_email] = linked_user
+
             inv_obj = None
             csv_inv_num = (row.get("Invoice") or "").strip()
             if ref in ADDITIONAL_TX_DESCRIPTIONS and raw_status == "success":
@@ -3101,7 +3146,12 @@ class Command(BaseCommand):
                         "due_at": tx_dt + timedelta(days=2),
                     },
                 )
-                Invoice.objects.filter(pk=inv_obj.pk).update(created_at=tx_dt - timedelta(minutes=15), status="paid")
+                Invoice.objects.filter(pk=inv_obj.pk).update(
+                    created_at=tx_dt - timedelta(minutes=15),
+                    status="paid",
+                    user=linked_user,
+                    email=primary_email,
+                )
                 if inv_created:
                     created_invoices += 1
 
@@ -3138,7 +3188,7 @@ class Command(BaseCommand):
                     },
                 },
             )
-            PaymentRecord.objects.filter(pk=pr.pk).update(created_at=tx_dt)
+            PaymentRecord.objects.filter(pk=pr.pk).update(created_at=tx_dt, user=linked_user)
             if pr_created:
                 created_payments += 1
 

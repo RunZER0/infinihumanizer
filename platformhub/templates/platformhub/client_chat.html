@@ -49,7 +49,7 @@
         </div>
         <div class="cp-msg-bubble">
           {% if item.body %}
-          <p>{{ item.body|linebreaksbr }}</p>
+          <p>{{ item.body|urlize|linebreaksbr }}</p>
           {% endif %}
           {% if item.attachments %}
           <div class="cp-attachment-list">
@@ -472,6 +472,11 @@
     );
   }
 
+  function linkify(text) {
+    const escaped = escapeHtml(text);
+    return escaped.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+  }
+
   function renderMessage(item) {
     if (!thread || thread.querySelector('[data-message-id="' + item.id + '"]')) return;
     const empty = document.getElementById("client-chat-empty");
@@ -481,7 +486,7 @@
     const isClient = item.sender === "client";
     article.className = "cp-msg " + (isClient ? "cp-msg-self" : "cp-msg-team");
     article.setAttribute("data-message-id", item.id);
-    const bodyHtml = item.body ? "<p>" + escapeHtml(item.body).replace(/\n/g, "<br>") + "</p>" : "";
+    const bodyHtml = item.body ? "<p>" + linkify(item.body).replace(/\n/g, "<br>") + "</p>" : "";
     const attHtml = renderAttachmentsHtml(item.attachments);
     article.innerHTML =
       '<div class="cp-msg-meta">' +
