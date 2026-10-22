@@ -387,7 +387,7 @@ def build_seed_attachments() -> dict[str, dict]:
     )
 
     # =========================================================================
-    # 6. Estella Williams (stellarae147@gmail.com)
+    # 6. Estella Williams (estellawilliams06@gmail.com)
     # =========================================================================
     files["estella_october_newsletter_draft.docx"] = write_docx_file(
         "estella_october_newsletter_draft.docx",
@@ -1171,7 +1171,7 @@ CLIENT_PROFILES = {
         'first_name': 'Jose',
         'last_name': 'Cruz',
         'channel': 'Snapchat',
-        'subject': 'Dallas Metro Freight — Company Bio & 3 Cold Outreach Emails ($120)',
+        'subject': 'Dallas Metro Freight — Company Bio & 3 Cold Outreach Emails ($25)',
         'status': 'closed',
         'requests': [
             {
@@ -1247,7 +1247,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 17, 21, 26, 48),
-                "Hey Jose! Good to connect. Asset-based carriers have a huge edge right now because shippers are fed up with brokers dropping loads. We can turn your rough notes into a punchy executive capability bio plus 3 cold outreach emails targeting warehouse dock managers and shipping supervisors across DFW. We'll also throw in a clean digital rate card graphic. Total package is $120.00 flat. We typically do an 80% kickoff deposit ($96.00) with the remaining $24.00 on final approval.",
+                "Hey Jose! Good to connect. Asset-based carriers have a huge edge right now because shippers are fed up with brokers dropping loads. We can turn your rough notes into a punchy executive capability bio plus 3 cold outreach emails targeting warehouse dock managers and shipping supervisors across DFW. We'll also throw in a clean digital rate card graphic. Total package is $25.00 flat. We typically do an initial $1.00 card test deposit to clear fraud filters with your bank, with the remaining $24.00 on final approval.",
                 [],
             ),
             (
@@ -1259,30 +1259,30 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 18, 19, 41, 33),
-                'Posted deposit invoice INV-261017-JC01 for $96.00. You can also use our direct verified checkout store here: https://paystack.shop/pay/4q5iounn6s',
+                'Posted the $1.00 card test deposit invoice INV-261018-JC01. You can clear it directly here: https://paystack.shop/pay/4q5iounn6s',
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 18, 19, 46, 19),
+                dt_utc(2026, 10, 18, 19, 43, 19),
                 'wait where do I pay? is it the link above or inside the portal?',
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 18, 19, 48, 47),
+                dt_utc(2026, 10, 18, 19, 44, 10),
                 'You can tap that direct link right on your phone: https://paystack.shop/pay/4q5iounn6s. It supports Apple Pay or standard debit card and syncs straight to this ticket.',
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 18, 21, 31, 8),
-                'alright that direct link worked smooth! paid the 96 bucks on apple pay. send over the preview when you have it.',
+                dt_utc(2026, 10, 18, 19, 45, 28),
+                'alright that direct link worked smooth! paid the $1 test deposit on apple pay. send over the preview when you have it.',
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 18, 21, 34, 52),
+                dt_utc(2026, 10, 18, 21, 28, 52),
                 'Payment received, thank you Jose! Here is the v1 draft preview of your capability bio and the first 2 outreach emails.',
                 [
                     'cruz_bio_and_emails_v1_preview.pdf',
@@ -1290,20 +1290,20 @@ CLIENT_PROFILES = {
             ),
             (
                 'client',
-                dt_utc(2026, 10, 18, 21, 37, 19),
+                dt_utc(2026, 10, 18, 21, 31, 19),
                 'man this reads way better than what i had. can we add a line in email 2 about our liftgates having 3500lb capacity? some of these warehouse managers have heavy palletized machinery and ask about that right away. also ready to pay the $24 balance.',
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 18, 21, 42, 4),
-                'Spot on—highlighting 3,500-lb tuck-under liftgate capacity proves you can handle heavy machinery without relying on their dock equipment. Added to Email 2 and posted the remaining $24 balance invoice (INV-261018-JC02).',
+                dt_utc(2026, 10, 18, 21, 33, 40),
+                'Spot on—highlighting 3,500-lb tuck-under liftgate capacity proves you can handle heavy machinery without relying on their dock equipment. Added to Email 2 and posted the remaining $24 balance invoice (INV-261018-JC02). You can use the same direct link: https://paystack.shop/pay/4q5iounn6s',
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 19, 13, 17, 41),
-                'done! cleared the 24 balance just now.',
+                dt_utc(2026, 10, 18, 21, 41, 55),
+                'done! cleared the $24 balance on apple pay just now.',
                 [],
             ),
             (
@@ -2492,12 +2492,12 @@ CLIENT_PROFILES = {
             ),
         ],
     },
-    'stellarae147@gmail.com': {
+    'estellawilliams06@gmail.com': {
         'username': 'estella_williams',
         'first_name': 'Estella',
         'last_name': 'Williams',
         'channel': 'Web search',
-        'subject': 'Q4 Executive Board Presentation & 4-Role Onboarding SOPs ($330)',
+        'subject': 'Executive Newsletter, 4-Role Onboarding SOPs & Q4 Board Presentation ($255)',
         'status': 'closed',
         'requests': [
             {
@@ -2520,13 +2520,6 @@ CLIENT_PROFILES = {
                         'status': 'delivered',
                         'version': 1,
                         'notes': 'Settled Oct 5, 2026 (T531967564396668) and delivered Oct 5, 2026.',
-                    },
-                    {
-                        'title': 'Estella Williams — Executive Board Governance & Asset Pack.zip',
-                        'kind': 'ZIP Archive',
-                        'status': 'delivered',
-                        'version': 1,
-                        'notes': 'Full executive board governance kit.',
                     },
                 ],
             },
@@ -2565,7 +2558,7 @@ CLIENT_PROFILES = {
                 'status': 'delivered',
                 'estimate_low': Decimal('150.00'),
                 'estimate_high': Decimal('150.00'),
-                'created_at': dt_utc(2026, 10, 7, 10, 20, 0),
+                'created_at': dt_utc(2026, 10, 20, 19, 10, 0),
                 'deliverables': [
                     {
                         'title': 'Q4 Executive Investor Update Deck (16 Slides) — Final (v2)',
@@ -2580,6 +2573,13 @@ CLIENT_PROFILES = {
                         'status': 'delivered',
                         'version': 1,
                         'notes': 'Delivered Oct 21, 2026.',
+                    },
+                    {
+                        'title': 'Estella Williams — Executive Board Governance & Asset Pack.zip',
+                        'kind': 'ZIP Archive',
+                        'status': 'delivered',
+                        'version': 1,
+                        'notes': 'Full executive board governance kit.',
                     },
                 ],
             },
@@ -2632,61 +2632,95 @@ CLIENT_PROFILES = {
         'messages': [
             (
                 'client',
-                dt_utc(2026, 10, 12, 11, 22, 48),
-                "Hi team, jumping in quickly between investor prep calls. We are onboarding 4 key operational roles over the next 45 days and I don't have the bandwidth to write 4 separate SOP manuals from scratch. Attached my rough notes on expectations—need structured 30-60-90 day benchmarks for each position.",
+                dt_utc(2026, 10, 4, 22, 48, 19),
+                "hi guys, hope someone is around. i'm the managing partner at an ops tech firm and our monthly investor/client newsletter is going out in 36 hours. problem is, the current draft is written like an SEC 10-K filing... completely lifeless and robotic. attached the 1,800-word draft. can you guys give it a humanize & tone refinement pass so our LPs and clients actually enjoy reading it? how much would that run?",
+                [
+                    'estella_october_newsletter_draft.docx',
+                ],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 10, 5, 4, 58, 32),
+                'Morning Estella! Yes, absolutely—executive communication should sound like an authentic leader speaking directly to partners, not compliance disclaimers. We can do a comprehensive humanize & refine pass on the 1,800 words for $25.00 flat (posted invoice INV-261005-EW01). We will preserve all your underlying growth metrics while giving the prose energy and flow.',
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 5, 5, 9, 41),
+                'perfect, just paid the $25 invoice with our company card. looking forward to seeing how you reshape it.',
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 10, 5, 11, 34, 15),
+                'Here is your refined October leadership memo! We restructured the opening hooks, trimmed passive clauses, and framed your Q3 milestones with clear narrative momentum.',
+                [
+                    'estella_october_newsletter_refined.docx',
+                ],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 5, 14, 12, 8),
+                'this reads ten times better than the draft my ops lead wrote. sent it to our email list this morning and already got 4 positive replies from LPs. saving your contact info for our next sprints!',
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 10, 18, 34, 22),
+                "Hey team, back again and need your brainpower. We're hiring 4 key operational roles over the next 45 days (Lead Dispatcher, Customer Ops, Billing Specialist, Account Exec) and I don't have the hours to build 4 separate SOP ramp manuals from scratch. Attached my rough notes on role expectations. Can you turn these into structured 30-60-90 day benchmarks and daily workflow checklists for each role?",
                 [
                     'estella_rough_role_notes.docx',
                 ],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 12, 11, 43, 19),
-                'Hi Estella! We can build a comprehensive operations manual covering Lead Dispatcher, Customer Ops, Billing Specialist, and Account Exec with concrete ramp rubrics for $180.00.',
+                dt_utc(2026, 10, 10, 18, 52, 14),
+                'Welcome back Estella! Great timing as your team scales. We can build the full 4-role onboarding package with concrete 30-60-90 ramp rubrics and daily checklists for $80.00 ($20 per role). Posted invoice INV-261010-EW02.',
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 12, 12, 8, 37),
-                'sounds great, please proceed.',
+                dt_utc(2026, 10, 10, 19, 1, 45),
+                'trying to pay the $80 on my phone right now while waiting for a flight at DFW, but the page keeps spinning on the card field. do you have a direct link?',
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 13, 14, 31, 54),
-                'Here is the draft v1 of the 4-role onboarding framework.',
+                dt_utc(2026, 10, 10, 19, 2, 50),
+                'Yes! You can clear it directly here on mobile: https://paystack.shop/pay/tx0ipp9eg4. It accepts card or Apple Pay and routes straight to your invoice.',
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 10, 19, 4, 12),
+                'ugh the first attempt lagged out on cellular, but that direct link went right through with my card. $80 paid. boarding now, talk tomorrow!',
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 10, 11, 14, 31, 54),
+                'Here is the draft v1 of the 4-role onboarding framework covering Lead Dispatcher, Customer Ops, Billing Specialist, and Account Exec.',
                 [
                     'estella_4role_onboarding_sops_v1.docx',
                 ],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 14, 9, 18, 22),
-                'Reviewed v1 over coffee. Outstanding structure. Send the invoice over.',
+                dt_utc(2026, 10, 12, 9, 18, 22),
+                'Reviewed v1 over coffee. Outstanding structure. The 60-day ramp milestones for the billing specialist are exactly what we were missing. Ready for the final PDF whenever it is wrapped.',
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 14, 9, 39, 46),
-                'Posted invoice INV-261014-EW01 ($180.00).',
-                [],
-            ),
-            (
-                'client',
-                dt_utc(2026, 10, 14, 9, 53, 11),
-                'paid with visa corporate.',
-                [],
-            ),
-            (
-                'admin',
-                dt_utc(2026, 10, 15, 17, 16, 39),
-                'Payment confirmed, thank you Estella! Here is the final executive onboarding manual PDF.',
+                dt_utc(2026, 10, 12, 15, 16, 39),
+                'Here is the finalized executive onboarding manual PDF with all ramp rubrics and role sign-off checklists locked in.',
                 [
                     'estella_4role_onboarding_sops_final.pdf',
                 ],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 16, 10, 27, 14),
+                dt_utc(2026, 10, 12, 17, 27, 14),
                 'The hiring managers love the rubrics, thank you!',
                 [],
             ),
@@ -2701,24 +2735,24 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 20, 19, 38, 21),
-                'We can turn this into an executive 16-slide presentation, briefing memo, and financial schedule for $150.00.',
+                'We can turn this into an executive 16-slide presentation, briefing memo, and financial schedule for $150.00 flat.',
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 20, 21, 13, 38),
-                'Posted invoice INV-261021-EW03 ($150.00). Drafting the board pack now.',
+                'Posted invoice INV-261021-EW03 ($150.00). Drafting the board pack now. You can clear the invoice via our direct checkout store here: https://paystack.shop/pay/tx0ipp9eg4',
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 20, 21, 38, 21),
-                'paid the $150 invoice just now.',
+                dt_utc(2026, 10, 21, 2, 46, 15),
+                "paid the $150 invoice just now via that link. pulling an all-nighter finalizing our cap table, send over the deck files as soon as they're ready.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 21, 1, 17, 49),
+                dt_utc(2026, 10, 21, 4, 17, 49),
                 'Here is the final deliverable package: your executive briefing memo, slide copy layouts, and the full downloadable board pack ZIP bundle containing deck, financial CSV, and memos.',
                 [
                     'estella_q4_board_briefing_memo_final.docx',
@@ -2728,7 +2762,7 @@ CLIENT_PROFILES = {
             ),
             (
                 'client',
-                dt_utc(2026, 10, 21, 3, 4, 12),
+                dt_utc(2026, 10, 21, 7, 4, 12),
                 "Downloaded the ZIP and walked through the briefing memo with our chairman. He said it was the clearest narrative we've ever presented. You guys are lifesavers!",
                 [],
             ),
@@ -3761,7 +3795,7 @@ CLIENT_PROFILES = {
 
 
 EMAIL_ALIAS_TO_PRIMARY = {
-    "estellawilliams06@gmail.com": "stellarae147@gmail.com",
+    "stellarae147@gmail.com": "estellawilliams06@gmail.com",
     "luca_carollo05@yahoo.com": "lucacaro@hawaii.edu",
     "uoiyengumwena@crimson.us.edu": "iyenuware@gmail.com",
     "victormawira00@gmail.com": "valdaceai@gmail.com",
