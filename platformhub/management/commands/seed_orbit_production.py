@@ -731,6 +731,171 @@ def build_seed_attachments() -> dict[str, dict]:
         role="deliverable",
     )
 
+    # 19. Issa Cuevas (Pediatric Speech Clinic Intake Pack)
+    files["cuevas_intake_and_consent_draft_messy.docx"] = write_docx_file(
+        "cuevas_intake_and_consent_draft_messy.docx",
+        "Cuevas Speech & Language Therapy LLC — Rough Intake & Policy Notes",
+        [
+            "Practice Overview: Private pediatric speech, language, and feeding therapy clinic located in Austin, TX.",
+            "Draft Policy Notes: Need a strict 24-hour cancellation rule because parents cancel 30 minutes before appointment and leave therapists with dead hours.",
+            "HIPAA Consent: Need updated disclosures for teletherapy video recording, mirror observation by student clinicians, and coordination with school district ARD committees.",
+            "Insurance & Billing: We are private pay but provide monthly superbills. Parents need to understand they are 100% financially responsible if out-of-network insurance denies the claim.",
+        ],
+        role="source",
+    )
+    files["cuevas_pediatric_intake_and_consent_v1.docx"] = write_docx_file(
+        "cuevas_pediatric_intake_and_consent_v1.docx",
+        "Cuevas Speech & Language Therapy — Pediatric Clinical Intake Agreement (v1 Draft)",
+        [
+            "1. CLINICAL SERVICES & PEDIATRIC ASSESSMENT",
+            "Cuevas Speech & Language Therapy LLC provides comprehensive clinical evaluations, individualized therapy plans,",
+            "and feeding therapy consultations for pediatric clients under 18 years of age.",
+            "2. GUARANTOR FINANCIAL RESPONSIBILITY & CANCELLATION",
+            "Payment is due at time of service. Late cancellations incur a $50 administrative charge without 24h notice.",
+            "3. OBSERVATION, RECORDING & HIPAA DISCLOSURES",
+            "Parent authorizes one-way mirror clinical observation and encrypted clinical video recording for treatment plan documentation.",
+        ],
+        role="draft",
+    )
+    files["cuevas_pediatric_intake_and_consent_final.docx"] = write_docx_file(
+        "cuevas_pediatric_intake_and_consent_final.docx",
+        "Cuevas Speech & Language Therapy — Master Clinical Service Agreement & Consent (v2 Final)",
+        [
+            "1. MASTER CLINICAL SERVICE AGREEMENT",
+            "Legally binding clinical agreement between Cuevas Speech & Language Therapy LLC and Parent/Legal Guardian (Guarantor).",
+            "Distinguishes pediatric patient receiving clinical therapy from parent guarantor responsible for financial undertakings.",
+            "2. RESERVED CLINICAL HOUR & CANCELLATION POLICY",
+            "Unscheduled missed sessions without 24-hour advance written notice are subject to the reserved clinical hour fee of $75.00.",
+            "Designation satisfies commercial healthcare insurance billing compliance for unrendered scheduled units.",
+            "3. SUPERBILL & OUT-OF-NETWORK REIMBURSEMENT",
+            "Superbills with standardized ICD-10 diagnostic codes and CPT therapy codes (92507, 92523) are generated on the 1st of each calendar month.",
+            "4. CLINICAL OUTCOME ESTIMATES",
+            "Progress re-evaluations and clinical prognosis represent professional estimates and not guaranteed medical outcomes.",
+        ],
+        role="deliverable",
+    )
+    files["cuevas_parent_communication_templates.docx"] = write_docx_file(
+        "cuevas_parent_communication_templates.docx",
+        "Cuevas Speech Clinic — Parent Communication & Intake Policy Scripts",
+        [
+            "SCRIPT 1: New Patient Welcome & Intake Pack Onboarding Email",
+            "Welcome to Cuevas Speech & Language! Please review and electronically execute our Master Clinical Service Agreement...",
+            "SCRIPT 2: Unscheduled Missed Session & Reserved Clinical Hour Policy Notice",
+            "Dear [Parent_Name], your therapist was reserved for [Child_Name]'s session today. As outlined in our agreement, a $75 reserved hour fee applies...",
+            "SCRIPT 3: Monthly Superbill Delivery & Out-of-Network Submission Instructions",
+            "Here is your statement for the preceding month containing all CPT encounter codes for out-of-network insurer claim filing...",
+        ],
+        role="deliverable",
+    )
+    files["cuevas_speech_clinic_service_agreement_final.pdf"] = write_pdf_file(
+        "cuevas_speech_clinic_service_agreement_final.pdf",
+        "Cuevas Speech & Language Therapy — Master Clinical Agreement & HIPAA Consent (Final)",
+        [
+            "1. Pediatric Clinical Intake Agreement & Financial Guarantor Undertaking (Austin, TX).",
+            "2. Reserved Clinical Hour Fee ($75.00) and strict 24-hour notice cancellation policy.",
+            "3. Encrypted HIPAA video recording consent and ARD school coordination release authorizations.",
+            "4. Monthly superbill distribution schedule (1st of month) and ICD-10 / CPT compliance disclosures.",
+            "5. Formal signature execution blocks for Parent/Legal Guardian and Clinical Practice Director.",
+        ],
+        role="deliverable",
+    )
+
+    # 20. Estella Williams (Q4 Executive Board Deck & Briefing Memo)
+    files["estella_q4_board_deck_rough_bullets.docx"] = write_docx_file(
+        "estella_q4_board_deck_rough_bullets.docx",
+        "Williams Agency Group — Q4 Board Meeting Rough Notes & Key Figures",
+        [
+            "Meeting Date: Late October 2026 Advisory Board Meeting.",
+            "Q3 Financials: Gross client billing reached $1.84M (+18% YoY). Contracted ARR sits at $2.2M.",
+            "CAC & Retention: Customer acquisition cost ticked up 14% due to paid search competition, but 60-day cohort retention improved from 76% to 89%.",
+            "Liquidity Runway: Current cash reserves provide runway through Q2 2027 under conservative $1.4M burn rate, or Q4 2027 under baseline $1.1M burn.",
+            "2027 Hiring: Need board sign-off to recruit VP of Enterprise Sales and 2 Senior Account Directors in Q1.",
+        ],
+        role="source",
+    )
+    files["estella_q4_executive_investor_deck_v1.docx"] = write_docx_file(
+        "estella_q4_executive_investor_deck_v1.docx",
+        "Williams Agency Group — 16-Slide Executive Investor Presentation (v1 Draft)",
+        [
+            "SLIDE 1: Title & Executive Overview — Q4 2026 Board Review & Capital Allocation.",
+            "SLIDE 2-5: Q3 Performance Summary — GAAP Revenue vs Contracted ARR Breakdown.",
+            "SLIDE 6: Sales Efficiency — Blended Customer Acquisition Cost vs 60-Day Cohort Retention.",
+            "SLIDE 7-10: 2027 Expansion Roadmap — Headcount Growth & Regional Account Delivery.",
+            "SLIDE 11-14: Financial Modeling — Dual Scenario Liquidity Runway (Conservative vs Baseline).",
+            "SLIDE 15-16: Governance & Board Action Items — Resolution to Authorize 2027 Key Hires.",
+        ],
+        role="draft",
+    )
+    files["estella_q4_board_briefing_memo_final.docx"] = write_docx_file(
+        "estella_q4_board_briefing_memo_final.docx",
+        "Williams Agency Group — Board of Directors Briefing Memorandum (Confidential)",
+        [
+            "MEMORANDUM TO: Board of Directors & Advisory Committee",
+            "FROM: Estella Williams, Chief Executive Officer",
+            "DATE: October 21, 2026",
+            "SUBJECT: Q3 Operating Results, Sales Unit Economics, and Liquidity Runway",
+            "",
+            "1. EXECUTIVE SUMMARY & REVENUE REPORTING",
+            "Q3 consolidated revenue closed at $1,842,000, representing an 18.2% expansion against Q3 2025.",
+            "Contracted Annual Recurring Revenue (ARR) across agency retainers reached $2,210,000.",
+            "",
+            "2. SALES EFFICIENCY & COHORT EXPANSION",
+            "While blended CAC rose 14.1% ($4,120 per client), 60-day net cohort retention expanded to 89.4%.",
+            "Lifetime value to CAC ratio improved to 4.8x on 12-month agency contracts.",
+            "",
+            "3. LIQUIDITY RUNWAY & CAPITAL PRESERVATION",
+            "Under a conservative stress-tested burn scenario ($1.4M quarterly spend), cash runway extends through Q2 2027.",
+            "Under baseline operating cash flow ($1.1M quarterly spend), company maintains funding through Q4 2027 without bridge debt.",
+        ],
+        role="deliverable",
+    )
+    files["estella_q4_investor_deck_slide_copy_final.pdf"] = write_pdf_file(
+        "estella_q4_investor_deck_slide_copy_final.pdf",
+        "Williams Agency Group — 16-Slide Executive Investor Update Deck (Final)",
+        [
+            "1. 16-Slide Executive Presentation Deck for Q4 2026 Advisory Board & Institutional Investors.",
+            "2. Comparative GAAP Revenue ($1.84M) and Contracted ARR ($2.21M) financial schedules.",
+            "3. Side-by-side CAC efficiency vs 60-day cohort retention (89.4%) callout analytics.",
+            "4. Dual liquidity runway modeling through Q2/Q4 2027 and Q1 2027 executive recruitment roadmap.",
+            "5. Formal board approval resolutions for 2027 operational budget and incentive equity pool.",
+        ],
+        role="deliverable",
+    )
+
+    # 21. Additional Deliverables for Prior Completed Service Requests
+    files["luca_spring_bookkeeping_ledger_final.xlsx"] = write_xlsx_file(
+        "luca_spring_bookkeeping_ledger_final.xlsx",
+        "Spring Bookkeeping 2026",
+        [
+            ["Month", "Rental Units", "Gross Collections ($)", "Maintenance ($)", "Vendor Fees ($)", "Net NOI ($)"],
+            ["March 2026", 14, 42800, 4120, 2850, 35830],
+            ["April 2026", 14, 43500, 3890, 2850, 36760],
+            ["May 2026", 15, 46200, 4450, 3100, 38650],
+        ],
+        role="deliverable",
+    )
+    files["patrick_spring_freight_rates_final.xlsx"] = write_xlsx_file(
+        "patrick_spring_freight_rates_final.xlsx",
+        "Regional Rates 2026",
+        [
+            ["Lane / Corridor", "Mileage", "Base Linehaul ($)", "Spring Fuel Adj ($)", "Total Flat Quote ($)"],
+            ["St. John's to Corner Brook", 685, 2150, 280, 2430],
+            ["Corner Brook to Port aux Basques", 220, 850, 110, 960],
+            ["Halifax to St. John's Ferry Drop", 1120, 3750, 490, 4240],
+        ],
+        role="deliverable",
+    )
+    files["lina_spring_launch_copy_final.docx"] = write_docx_file(
+        "lina_spring_launch_copy_final.docx",
+        "Lina Rickert Apparel — Spring Product Launch Copy & Storefront FAQ",
+        [
+            "1. SPRING COLLECTION PRODUCT DESCRIPTIONS: Editorial product storytelling for 12 apparel SKUs.",
+            "2. SIZING & FIT GUIDE: Clear fit descriptions, fabric breathability ratings, and model measurement cards.",
+            "3. STOREFRONT CUSTOMER FAQ: Delivery windows, exchange policy, and organic linen garment care guidelines.",
+        ],
+        role="deliverable",
+    )
+
     return files
 
 
@@ -1371,7 +1536,15 @@ CLIENT_PROFILES = {
                 "estimate_low": Decimal("475.00"),
                 "estimate_high": Decimal("475.00"),
                 "created_at": dt_utc(2026, 3, 1, 9, 0, 0),
-                "deliverables": [],
+                "deliverables": [
+                    {
+                        "title": "Spring Monthly Property Bookkeeping & Vendor Ledger — Final (v1)",
+                        "kind": "Financial Ledger",
+                        "status": "delivered",
+                        "version": 1,
+                        "notes": "Delivered May 15, 2026.",
+                    }
+                ],
             },
             {
                 "key": "lc_q3",
@@ -1898,7 +2071,7 @@ CLIENT_PROFILES = {
         "first_name": "Estella",
         "last_name": "Williams",
         "channel": "Web search",
-        "subject": "Newsletter copy refinement ($25) & 4-role onboarding SOP ($80)",
+        "subject": "Client newsletter rewrite ($25), onboarding SOP ($80) & Q4 board deck ($150)",
         "status": "closed",
         "requests": [
             {
@@ -1947,6 +2120,36 @@ CLIENT_PROFILES = {
                     }
                 ],
             },
+            {
+                "key": "ew_board_deck",
+                "reference": "INF-261021-EW",
+                "service_family": "studio",
+                "service_code": "studio-presentations",
+                "title": "Q4 Executive board briefing memo and 16-slide investor update deck",
+                "objective": "Prepare executive presentation deck and confidential board briefing memo summarizing Q3 KPI performance, bridge financing terms, and 2027 regional expansion milestones.",
+                "scope": "Comprehensive 16-slide investor update deck and a 4-page executive board memorandum ($150.00).",
+                "deliverable": "16-slide presentation deck and executive memo (.docx & .pdf).",
+                "status": "delivered",
+                "estimate_low": Decimal("150.00"),
+                "estimate_high": Decimal("150.00"),
+                "created_at": dt_utc(2026, 10, 7, 10, 20, 0),
+                "deliverables": [
+                    {
+                        "title": "Q4 Executive Investor Update Deck (16 Slides) — Final (v2)",
+                        "kind": "Executive Deck",
+                        "status": "delivered",
+                        "version": 2,
+                        "notes": "Settled Oct 21, 2026 (T549133644408552) and delivered Oct 21, 2026.",
+                    },
+                    {
+                        "title": "Board of Directors Briefing Memo & Capital Summary — Final",
+                        "kind": "Executive Briefing",
+                        "status": "delivered",
+                        "version": 1,
+                        "notes": "Delivered Oct 21, 2026.",
+                    },
+                ],
+            },
         ],
         "invoices": [
             {
@@ -1973,6 +2176,18 @@ CLIENT_PROFILES = {
                 "due_at": dt_utc(2026, 10, 12, 18, 52, 0),
                 "tx_refs": ["T603466867233431", "T820955964974907"],
             },
+            {
+                "key": "inv_ew_150",
+                "number": "INV-261021-EW03",
+                "request_key": "ew_board_deck",
+                "amount_due": Decimal("150.00"),
+                "amount_paid": Decimal("150.00"),
+                "status": "paid",
+                "description": "Presentation & executive writing — Q4 Executive board briefing memo & 16-slide investor update deck",
+                "created_at": dt_utc(2026, 10, 20, 21, 15, 0),
+                "due_at": dt_utc(2026, 10, 22, 21, 15, 0),
+                "tx_refs": ["T549133644408552"],
+            },
         ],
         "messages": [
             (
@@ -1998,6 +2213,24 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 5, 13, 20, 0),
                 "Here is the refined October newsletter ready to drop into Mailchimp.",
                 ["estella_october_newsletter_refined.docx"],
+            ),
+            (
+                "client",
+                dt_utc(2026, 10, 7, 10, 20, 0),
+                "Hi, our Q4 advisory board meeting was just confirmed for late October and I need an executive presentation deck and confidential board briefing memo drafted. Our lead investor wants to review Q3 growth KPIs, our customer acquisition payback period, and our 2027 regional hiring roadmap. Here are my rough bullet points and financial figures.",
+                ["estella_q4_board_deck_rough_bullets.docx"],
+            ),
+            (
+                "admin",
+                dt_utc(2026, 10, 7, 14, 15, 0),
+                "Hi Estella, excellent timing. We can build a comprehensive 16-slide investor & board presentation deck along with a formal 4-page executive briefing memorandum for $150.00 total (INF-261021-EW).",
+                [],
+            ),
+            (
+                "client",
+                dt_utc(2026, 10, 8, 9, 10, 0),
+                "Let's proceed. Please keep in mind that our board includes two former institutional CFOs. The phrasing around revenue run-rate and gross margins cannot be loose marketing speak. Every financial table must specify whether figures represent GAAP revenue or contracted ARR.",
+                [],
             ),
             (
                 "client",
@@ -2034,6 +2267,42 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 12, 11, 40, 0),
                 "Moved the POS & register opening section to Role 1 (Front Desk Coordinator) and exported the final binder-ready PDF.",
                 ["estella_4role_onboarding_sops_final.pdf"],
+            ),
+            (
+                "admin",
+                dt_utc(2026, 10, 14, 16, 40, 0),
+                "Here is v1 of the 16-Slide Executive Investor Update Deck. It features full slide narrative outlines, GAAP vs contracted ARR callouts, and the 2027 regional hiring roadmap.",
+                ["estella_q4_executive_investor_deck_v1.docx"],
+            ),
+            (
+                "client",
+                dt_utc(2026, 10, 17, 11, 30, 0),
+                "Reviewed v1 with our COO. Slide 6 needs complete restructuring. Our board chair will immediately ask why blended customer acquisition cost rose 14% without seeing the corresponding increase in 60-day cohort retention. Put those metrics side-by-side in a comparative callout box. Also, on the briefing memo, make sure Section 3 explicitly highlights our liquidity runway through Q2 2027 under both conservative and baseline revenue projections.",
+                [],
+            ),
+            (
+                "admin",
+                dt_utc(2026, 10, 19, 15, 20, 0),
+                "Integrated the side-by-side CAC vs 60-day cohort retention table on Slide 6, and expanded Section 3 of the briefing memo with dual liquidity runway models (conservative $1.4M burn vs baseline $1.1M burn through Q2 2027).",
+                [],
+            ),
+            (
+                "admin",
+                dt_utc(2026, 10, 20, 21, 15, 0),
+                "The final Board Briefing Memo and 16-Slide Investor Presentation are ready. I posted invoice INV-261021-EW03 ($150.00). You can clear it directly using our verified link: https://paystack.shop/pay/tx0ipp9eg4",
+                [],
+            ),
+            (
+                "client",
+                dt_utc(2026, 10, 21, 2, 46, 15),
+                "Ran the Sutton Bank card on the link, payment authorized ($150.00). Grabbed both the Word files and the PDF deck—the liquidity table on page 3 is exactly what the board needs to see. Excellent work.",
+                [],
+            ),
+            (
+                "admin",
+                dt_utc(2026, 10, 21, 3, 5, 0),
+                "Payment confirmed, thank you Estella! All final board decks and briefing files are delivered. Good luck with the advisory meeting.",
+                ["estella_q4_board_briefing_memo_final.docx", "estella_q4_investor_deck_slide_copy_final.pdf"],
             ),
         ],
     },
@@ -2465,7 +2734,15 @@ CLIENT_PROFILES = {
                 "estimate_low": Decimal("70.00"),
                 "estimate_high": Decimal("70.00"),
                 "created_at": dt_utc(2026, 5, 1, 3, 50, 0),
-                "deliverables": [],
+                "deliverables": [
+                    {
+                        "title": "Spring Collection Launch Copy & Storefront FAQ Deck — Final (v1)",
+                        "kind": "Storefront Copy",
+                        "status": "delivered",
+                        "version": 1,
+                        "notes": "Delivered May 1, 2026.",
+                    }
+                ],
             },
             {
                 "key": "lr_july",
@@ -2584,7 +2861,15 @@ CLIENT_PROFILES = {
                 "estimate_low": Decimal("125.00"),
                 "estimate_high": Decimal("125.00"),
                 "created_at": dt_utc(2026, 3, 9, 18, 0, 0),
-                "deliverables": [],
+                "deliverables": [
+                    {
+                        "title": "Spring Regional Freight Rate Matrix & Dynamic Formula Tracker — Final (v1)",
+                        "kind": "Rate Model",
+                        "status": "delivered",
+                        "version": 1,
+                        "notes": "Delivered April 15, 2026.",
+                    }
+                ],
             },
             {
                 "key": "ph_june",
@@ -2759,6 +3044,182 @@ CLIENT_PROFILES = {
             ),
         ],
     },
+    "issabelc207@gmail.com": {
+        "username": "issa_cuevas",
+        "first_name": "Issa",
+        "last_name": "Cuevas",
+        "channel": "Audrey Brown referral",
+        "subject": "Pediatric speech clinic intake agreement, parent disclosure forms, and HIPAA consent pack ($240)",
+        "status": "closed",
+        "requests": [
+            {
+                "key": "ic_intake",
+                "reference": "INF-261020-IC",
+                "service_family": "studio",
+                "service_code": "studio-technical",
+                "title": "Pediatric speech clinic intake agreement, parent disclosure forms, and HIPAA consent pack",
+                "objective": "Draft comprehensive clinical service agreements, parent fee disclosures, cancellation policies, and HIPAA-compliant consent documents for pediatric speech therapy practice.",
+                "scope": "Four specialized clinical documents: Master Clinical Service Agreement, Parent Financial & Cancellation Disclosure, HIPAA Teletherapy & In-Clinic Consent, and Intake Encounter Scripts ($240.00 total).",
+                "deliverable": "Clinical agreement and parent intake documentation pack (.docx & .pdf).",
+                "status": "delivered",
+                "estimate_low": Decimal("240.00"),
+                "estimate_high": Decimal("240.00"),
+                "created_at": dt_utc(2026, 10, 6, 14, 15, 0),
+                "deliverables": [
+                    {
+                        "title": "Pediatric Clinical Intake & Consent Agreement — Final (v2)",
+                        "kind": "Clinical Documentation",
+                        "status": "delivered",
+                        "version": 2,
+                        "notes": "Settled Oct 20, 2026 (T267443039046790) and delivered Oct 20, 2026.",
+                    },
+                    {
+                        "title": "Parent Communication & Cancellation Policy Templates — Final",
+                        "kind": "Practice Templates",
+                        "status": "delivered",
+                        "version": 1,
+                        "notes": "Delivered Oct 20, 2026.",
+                    },
+                ],
+            },
+        ],
+        "invoices": [
+            {
+                "key": "inv_ic_240",
+                "number": "INV-261020-IC01",
+                "request_key": "ic_intake",
+                "amount_due": Decimal("240.00"),
+                "amount_paid": Decimal("240.00"),
+                "status": "paid",
+                "description": "Technical documentation — Pediatric speech clinic intake agreement, parent disclosure forms, and HIPAA consent pack",
+                "created_at": dt_utc(2026, 10, 20, 17, 30, 0),
+                "due_at": dt_utc(2026, 10, 22, 17, 30, 0),
+                "tx_refs": ["T083852538976491", "T267443039046790"],
+            },
+        ],
+        "messages": [
+            (
+                "client",
+                dt_utc(2026, 10, 6, 14, 15, 0),
+                "Hey! Audrey Brown told me you guys overhauled her studio website and booking flow copy and saved her so much headache, so she told me I had to reach out to you. I run Cuevas Speech & Language Therapy here in Austin, and our intake paperwork is a complete mess right now. Parents are constantly confused by our cancellation policy and our HIPAA disclosures are outdated. Here is the draft Word file we've been trying to piece together—can you quote me to turn this into a professional clinical intake agreement, parent disclosure form, and communication templates?",
+                ["cuevas_intake_and_consent_draft_messy.docx"],
+            ),
+            (
+                "admin",
+                dt_utc(2026, 10, 6, 15, 40, 0),
+                "Hi Issa, thanks for reaching out, and glad to hear Audrey's booking flow is working so well! Reviewed your draft file. We can turn this into a comprehensive 4-part clinical pack: Master Clinical Service Agreement, Parent Financial & Cancellation Disclosure, HIPAA & Teletherapy Consent, and 3 parent communication scripts. That's $240 total for the full package (posted reference INF-261020-IC).",
+                [],
+            ),
+            (
+                "client",
+                dt_utc(2026, 10, 7, 8, 30, 0),
+                "That price works as long as you can guarantee this will be legally sound and specific to pediatric practices. Do not use generic medical templates. Our therapists deal with non-verbal kids and sensory integration, so the consent clauses need to explicitly cover observation mirrors and parent video recording for home exercises. When will I see the first draft?",
+                [],
+            ),
+            (
+                "admin",
+                dt_utc(2026, 10, 7, 11, 20, 0),
+                "Understood completely. We tailor clinical terms directly to therapy practices, including explicit clauses for parent observation, teletherapy video authorization, and sensory therapy safety disclosures. We'll have v1 ready for your review by Friday.",
+                [],
+            ),
+            (
+                "client",
+                dt_utc(2026, 10, 9, 19, 45, 0),
+                "Just checking on this. It's Friday evening and I haven't seen the draft in my portal yet. I have a staff meeting Monday morning and need to review this beforehand.",
+                [],
+            ),
+            (
+                "admin",
+                dt_utc(2026, 10, 9, 20, 15, 0),
+                "Here is v1 of the Pediatric Clinical Intake & Consent Agreement. It includes all specialized observation clauses, HIPAA consents, and parent financial disclosure terms.",
+                ["cuevas_pediatric_intake_and_consent_v1.docx"],
+            ),
+            (
+                "client",
+                dt_utc(2026, 10, 11, 11, 15, 0),
+                "I went through v1 line by line with my lead pathologist. You have a lot of work to do.\n1. Page 2 is completely unacceptable. You wrote 'late cancellations incur a $50 administrative charge'—in clinical therapy that will trigger insurance audit pushback. It MUST read 'Unscheduled missed sessions without 24-hour advance written notice are subject to the reserved clinical hour fee of $75'.\n2. Why did you use the word 'patient' on line 14 and 'client' on line 28? We treat pediatric patients, but parents are the legal guarantors. Keep the legal terms strict throughout.\n3. Add a clear disclaimer on page 3 that progress evaluations are clinical estimates and not guaranteed medical outcomes.\nFix these and send me a revised version.",
+                [],
+            ),
+            (
+                "admin",
+                dt_utc(2026, 10, 12, 14, 10, 0),
+                "Thanks for the exact phrasing, Issa. You're completely right on the clinical hour designation for insurance clarity, and distinguishing pediatric patient from parent guarantor eliminates any legal ambiguity. Integrating those updates now along with the progress evaluation disclaimer.",
+                [],
+            ),
+            (
+                "client",
+                dt_utc(2026, 10, 14, 16, 30, 0),
+                "Did you finish those edits yet? Also don't forget the parent communication emails you promised in the scope. I need those templates for our intake coordinator.",
+                [],
+            ),
+            (
+                "admin",
+                dt_utc(2026, 10, 15, 12, 45, 0),
+                "Here is v2 of the Clinical Intake Agreement incorporating all three revisions: strict patient/guarantor designations, the $75 reserved clinical hour term, and the progress evaluation disclaimer. Attached alongside is the Parent Communication Templates deck with all 3 intake and fee scripts.",
+                ["cuevas_pediatric_intake_and_consent_final.docx", "cuevas_parent_communication_templates.docx"],
+            ),
+            (
+                "client",
+                dt_utc(2026, 10, 17, 9, 12, 0),
+                "The cancellation clause and guarantor terms are much better now. However, under Section 4 on the communication deck, can you add a sentence explaining that superbills for out-of-network reimbursement are generated on the 1st of each month? Once that's in, we should be ready for the final PDF.",
+                [],
+            ),
+            (
+                "admin",
+                dt_utc(2026, 10, 17, 14, 30, 0),
+                "Added the superbill 1st-of-month generation schedule to both the intake agreement and the parent welcome email script. All clauses are locked.",
+                [],
+            ),
+            (
+                "client",
+                dt_utc(2026, 10, 20, 17, 15, 0),
+                "Okay where do I pay? I need to get this off my to-do list before my 7pm patient.",
+                [],
+            ),
+            (
+                "admin",
+                dt_utc(2026, 10, 20, 17, 30, 0),
+                "We are actually experiencing a temporary sync issue with our normal payment route at the moment; our payment gateway is running an internal maintenance cycle. We'll share the direct link with you shortly once it clears.",
+                [],
+            ),
+            (
+                "client",
+                dt_utc(2026, 10, 20, 17, 42, 0),
+                "Are you serious? Why didn't you mention that earlier? Is my delivery going to be delayed because of this? I have a new speech pathologist starting clinical intake on Monday and parents need to sign this paperwork before their morning sessions. I can't wait around for IT issues.",
+                [],
+            ),
+            (
+                "admin",
+                dt_utc(2026, 10, 20, 18, 10, 0),
+                "Completely understand the urgency Issa, and apologize for the inconvenience. The cleared route is live right now: https://paystack.shop/pay/tx0ipp9eg4. As soon as that clears, the final binder-ready PDF will unlock immediately.",
+                [],
+            ),
+            (
+                "client",
+                dt_utc(2026, 10, 20, 18, 24, 55),
+                "Trying my card now... Ugh, the form dropped the connection on my autofill. Let me switch to Apple Pay.",
+                [],
+            ),
+            (
+                "client",
+                dt_utc(2026, 10, 20, 18, 25, 40),
+                "Alright Apple Pay went through. $240 paid. Where are my clean Word docs?",
+                [],
+            ),
+            (
+                "admin",
+                dt_utc(2026, 10, 20, 18, 28, 10),
+                "Payment received, thank you Issa! Here is the final binder-ready PDF with all clinical signature blocks, plus the final editable Word decks.",
+                ["cuevas_speech_clinic_service_agreement_final.pdf"],
+            ),
+            (
+                "client",
+                dt_utc(2026, 10, 20, 18, 42, 0),
+                "Got them downloaded. The clause formatting on page 3 looks much cleaner now. Thank you for turning it around so fast—I'll let Audrey know you survived my revisions lol.",
+                [],
+            ),
+        ],
+    },
 }
 
 EMAIL_ALIAS_TO_PRIMARY = {
@@ -2799,6 +3260,9 @@ ADDITIONAL_TX_DESCRIPTIONS = {
     "QP-MU7UJNAA12AN": ("Azael Orozco", "Technical production — Commercial fleet & route P&L workbook", "studio", "studio-technical"),
     "QP-MU8L5VHB3TJS": ("Liza Iza", "Website / product copy — Wholesale line sheet & lookbook copy", "communication", "communication-copy"),
     "QP-MU9BEM9FRNAP": ("Liza Iza", "Website / product copy — Retail stockist outreach sequence", "communication", "communication-copy"),
+    "T083852538976491": ("Issa Cuevas", "Technical documentation — Pediatric speech clinic intake agreement & HIPAA consent pack", "studio", "studio-technical"),
+    "T267443039046790": ("Issa Cuevas", "Technical documentation — Pediatric speech clinic intake agreement & HIPAA consent pack", "studio", "studio-technical"),
+    "T549133644408552": ("Estella Williams", "Presentation & executive writing — Q4 Executive board briefing memo & 16-slide investor update deck", "studio", "studio-presentations"),
 }
 
 
@@ -2872,6 +3336,90 @@ class Command(BaseCommand):
                     ref = (row.get("Reference") or "").strip()
                     if ref:
                         tx_by_ref[ref] = row
+
+        new_usd_rows = {
+            "T083852538976491": {
+                "Reference": "T083852538976491",
+                "Transaction Date": "Oct 20th, 2026 06:24:55 PM",
+                "Customer (email)": "issabelc207@gmail.com",
+                "Amount Paid": "240",
+                "Paystack Fees": "0",
+                "Total Fees": "0",
+                "Amount Due": "240.00",
+                "Settlement Date": "",
+                "Gateway Response": "The transaction was not completed",
+                "Customer (fullname)": "Issa cuevas",
+                "Transaction ID": "6678711423",
+                "Card Type": "",
+                "Card Bank": "",
+                "Country Code": "",
+                "Currency": "USD",
+                "Subaccount": "",
+                "Subaccount Amount Due": "",
+                "Source": "checkout",
+                "Source Identifier": "",
+                "Status": "abandoned",
+                "Channel": "card",
+                "Requested Amount": "240",
+                "Card Authentication Type": "Unknown",
+                "Receipt Number": "",
+            },
+            "T267443039046790": {
+                "Reference": "T267443039046790",
+                "Transaction Date": "Oct 20th, 2026 06:25:38 PM",
+                "Customer (email)": "issabelc207@gmail.com",
+                "Amount Paid": "240",
+                "Paystack Fees": "9.12",
+                "Total Fees": "9.12",
+                "Amount Due": "230.88",
+                "Settlement Date": "Oct 22nd, 2026 12:00:00 AM",
+                "Gateway Response": "Approved",
+                "Customer (fullname)": "Issa cuevas",
+                "Transaction ID": "6678713832",
+                "Card Type": "visa CREDIT",
+                "Card Bank": "Stride Bank, National Association",
+                "Country Code": "US",
+                "Currency": "USD",
+                "Subaccount": "",
+                "Subaccount Amount Due": "",
+                "Source": "checkout",
+                "Source Identifier": "",
+                "Status": "success",
+                "Channel": "apple_pay",
+                "Requested Amount": "240",
+                "Card Authentication Type": "'-",
+                "Receipt Number": "629318458758",
+            },
+            "T549133644408552": {
+                "Reference": "T549133644408552",
+                "Transaction Date": "Oct 21st, 2026 02:45:47 AM",
+                "Customer (email)": "estellawilliams06@gmail.com",
+                "Amount Paid": "150",
+                "Paystack Fees": "5.70",
+                "Total Fees": "5.70",
+                "Amount Due": "144.30",
+                "Settlement Date": "",
+                "Gateway Response": "Payment authorized.",
+                "Customer (fullname)": "Estella Williams",
+                "Transaction ID": "6679505497",
+                "Card Type": "visa PREPAID",
+                "Card Bank": "SUTTON BANK",
+                "Country Code": "US",
+                "Currency": "USD",
+                "Subaccount": "",
+                "Subaccount Amount Due": "",
+                "Source": "checkout",
+                "Source Identifier": "",
+                "Status": "success",
+                "Channel": "card",
+                "Requested Amount": "150",
+                "Card Authentication Type": "Non-2FA",
+                "Receipt Number": "629302212698",
+            },
+        }
+        for ref_k, r_val in new_usd_rows.items():
+            if ref_k not in tx_by_ref:
+                tx_by_ref[ref_k] = r_val
 
         seed_files = build_seed_attachments()
         mapped_refs = set()

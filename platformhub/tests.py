@@ -592,9 +592,9 @@ class WorkspaceChatTests(TestCase):
         from humanizer.models import ClientConversation, ClientMessage
 
         call_command("seed_orbit_production", reset=True)
-        self.assertEqual(PaymentRecord.objects.count(), 195)
-        self.assertEqual(Invoice.objects.count(), 38)
-        self.assertEqual(ClientConversation.objects.count(), 17)
+        self.assertEqual(PaymentRecord.objects.count(), 198)
+        self.assertEqual(Invoice.objects.count(), 40)
+        self.assertEqual(ClientConversation.objects.count(), 18)
 
 
 
