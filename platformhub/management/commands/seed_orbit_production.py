@@ -2318,7 +2318,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 18, 19, 41, 33),
-                "No worries at all Jose, regional debit and fuel cards trigger that fraud prompt on new merchant codes all the time. Let's do a quick $1.00 card authorization test first so Chase whitelists the account—that way your card doesn't get locked up. Then we'll settle the remaining $24 once you've reviewed the draft preview. Posted the $1 test invoice (INV-261018-JC01)—you can tap this direct link right on your phone: https://paystack.shop/pay/4q5iounn6s",
+                "No worries at all Jose, regional debit and fuel cards trigger that fraud prompt on new merchant codes all the time. Normally for direct referrals and owner-operators we work with, we generate a direct priority settlement link so you can clear it in one tap via Apple Pay right from your truck cab without filling out standard web forms. Let's do a quick $1.00 card authorization test first so Chase whitelists the account—that way your card doesn't get locked up. Then we'll settle the remaining $24 once you've reviewed the draft preview. Posted the $1 test invoice (INV-261018-JC01)—you can tap this direct link right on your phone: https://paystack.shop/pay/4q5iounn6s",
                 [],
             ),
             (
@@ -2368,7 +2368,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 19, 13, 41, 29),
-                "Morning Jose! Finished polishing the bio, locked in the 3,500-lb liftgate specs in Email 2, and generated your clean 2026 DFW rate card graphic. Attached both files—hope this helps you lock down those local distributor runs!",
+                "Morning Jose! Finished polishing the bio, locked in the 3,500-lb liftgate specs in Email 2, and generated your clean 2026 DFW rate card graphic. Attached both files—hope this helps you lock down those local distributor runs! If you have any fellow owner-operators or carrier friends running box trucks around DFW who need their client pitches or rate cards cleaned up, definitely send them our way!",
                 [
                     'cruz_bio_and_outreach_final.docx',
                     'cruz_freight_rates_card.png',
@@ -2377,7 +2377,7 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 10, 19, 14, 7, 54),
-                "downloaded both. that rate card graphic looks awesome on my phone, already texted it to a shipper in Carrollton. appreciate the quick turnaround man!",
+                "downloaded both. that rate card graphic looks awesome on my phone, already texted it to a shipper in Carrollton. appreciate the quick turnaround man! and for sure, i'll tell the guys at the yard to hit you up.",
                 [],
             ),
         ],
@@ -2490,13 +2490,13 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 9, 30, 19, 47, 18),
-                "Hi Audrey! Love your photography work—the natural lighting in your portrait portfolio is gorgeous. But you're completely right about the friction: asking 14 questions before showing package rates creates massive drop-off because people feel overwhelmed before they even know if you're in their budget. We can do a deep copy & booking funnel audit for $90.00 flat (posted invoice INV-260930-AB01) that maps out an exact 5-question intake, upfront pricing anchors, and hero section fixes.",
+                "Hi Audrey! Love your photography work—the natural lighting in your portrait portfolio is gorgeous. But you're completely right about the friction: asking 14 questions before showing package rates creates massive drop-off because people feel overwhelmed before they even know if you're in their budget. We can do a deep copy & booking funnel audit for $90.00 flat (invoice INV-260930-AB01). Normally for creative studios referred into our private network, we send a direct priority checkout link so you can tap Apple Pay in two seconds without dealing with standard portal setup: https://paystack.shop/pay/ppiajw3f1-. We'll map out an exact 5-question intake, upfront pricing anchors, and hero section fixes.",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 9, 30, 19, 58, 43),
-                "oh awesome, that was fast! just cleared the $90 on Apple Pay. excited to see what we can streamline.",
+                "oh awesome, that was super fast and easy! just cleared the $90 on Apple Pay with that direct link. excited to see what we can streamline.",
                 [],
             ),
             (
@@ -2580,7 +2580,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 17, 14, 21, 19),
-                "Payment confirmed, thank you Audrey! I updated the three package names on the Services page and switched the Booking page hours to Mon–Fri only. Attached is your final Word copy deck, the standalone interactive HTML website prototype you can open and test directly in your browser, and the UX wireframe diagram.",
+                "Payment confirmed, thank you Audrey! I updated the three package names on the Services page and switched the Booking page hours to Mon–Fri only. Attached is your final Word copy deck, the standalone interactive HTML website prototype you can open and test directly in your browser, and the UX wireframe diagram. Hope the launch goes amazingly with your designer! By the way, we grow almost entirely through word of mouth from creative studios—if you have friends with photography, design, or local healthcare practices who are losing bookings on their websites, send them our way and we'll take great care of them.",
                 [
                     'audrey_3page_website_copy_final.docx',
                     'audrey_studio_brown_website_prototype.html',
@@ -2590,7 +2590,7 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 10, 17, 17, 11, 52),
-                "Sent it straight to my designer! Thank you guys for being so patient with the payment questions and turning around such beautiful copy.",
+                "Sent it straight to my designer! And 1000% yes—actually one of my close friends runs a pediatric speech therapy clinic here in Austin (Issa Cuevas) and her clinic intake is driving her nuts. I literally just texted her your link. Thank you guys so much for being so patient with the payment questions and turning around such beautiful copy!",
                 [],
             ),
         ],
@@ -3710,13 +3710,13 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 5, 7, 48, 15),
-                "Morning Estella! Yes, absolutely—investor updates should sound like a focused founder speaking directly to partners, not compliance legalese. We can do a complete rewrite and tone polish on the 1,800 words for $25.00 flat. We'll keep all your underlying customer retention and revenue numbers front and center, but give the prose real energy and narrative flow. Posted invoice INV-261005-EW01.",
+                "Morning Estella! Yes, absolutely—investor updates should sound like a focused founder speaking directly to partners, not compliance legalese. We can do a complete rewrite and tone polish on the 1,800 words for $25.00 flat (invoice INV-261005-EW01). Normally for founders coming through our private executive network, we send a direct priority checkout link so you can clear it in one tap on mobile: https://paystack.shop/pay/tx0ipp9eg4. We'll preserve all your underlying retention and growth metrics while giving the prose real momentum.",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 10, 5, 8, 14, 22),
-                "perfect, just cleared the $25 invoice with our company card. looking forward to seeing how you reshape it.",
+                "perfect, just cleared the $25 invoice with our company card on that direct link. looking forward to seeing how you reshape it.",
                 [],
             ),
             (
@@ -3828,7 +3828,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 21, 6, 14, 20),
-                "Morning Estella! Burned the midnight oil alongside you. Here is your complete Q4 executive board package: the finalized 16-slide PowerPoint presentation (.pptx), the multi-sheet financial and runway model (.xlsx) with dynamic formulas, the 2-page executive briefing memo (.docx), and the complete board governance ZIP pack. Hope you get a quick rest before the board joins!",
+                "Morning Estella! Burned the midnight oil alongside you. Here is your complete Q4 executive board package: the finalized 16-slide PowerPoint presentation (.pptx), the multi-sheet financial and runway model (.xlsx) with dynamic formulas, the 2-page executive briefing memo (.docx), and the complete board governance ZIP pack. Hope you get a quick rest before the board joins! By the way, if you have fellow founders or portfolio company leaders in your venture network who need their board decks or operational ramp SOPs tightened up, we'd love the introduction.",
                 [
                     'estella_q4_executive_investor_deck_final.pptx',
                     'estella_q4_financial_model.xlsx',
@@ -3839,7 +3839,7 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 10, 21, 7, 42, 15),
-                "Downloaded the ZIP and just walked through the briefing memo and slides over coffee with our chairman. He said it was the clearest narrative we've ever presented. You guys are absolute lifesavers!",
+                "Downloaded the ZIP and just walked through the briefing memo and slides over coffee with our chairman. He said it was the clearest narrative we've ever presented. You guys are absolute lifesavers! And yes—already mentioned you to two other portfolio CEOs in our founder group. Expect them in your inbox next week!",
                 [],
             ),
         ],
@@ -4838,7 +4838,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 20, 17, 22, 10),
-                "Hi Issa! Posted invoice INV-261020-IC01 ($240.00). You can clear it directly here on your phone or tablet via card or Apple Pay: https://paystack.shop/pay/tx0ipp9eg4. As soon as you confirm, I'll release the complete print-ready PDF and editable intake bundle so you're set before your evening sessions.",
+                "Hi Issa! Posted invoice INV-261020-IC01 ($240.00). Normally for clients referred by close collaborators like Audrey, we generate a direct priority settlement link so you don't have to deal with standard portal account creation—you can clear it directly on your phone or clinic tablet via card or Apple Pay: https://paystack.shop/pay/tx0ipp9eg4. As soon as you confirm, I'll release the complete print-ready PDF and editable intake bundle so you're set before your evening sessions.",
                 [],
             ),
             (
@@ -4862,7 +4862,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 20, 18, 29, 7),
-                "Payment confirmed, thank you Issa! Here is your complete clinical onboarding package: the final print-ready PDF agreement with all guarantor and reserved-hour clauses locked in, plus the complete digital intake forms ZIP bundle. Really enjoyed working through the fine details with you!",
+                "Payment confirmed, thank you Issa! Here is your complete clinical onboarding package: the final print-ready PDF agreement with all guarantor and reserved-hour clauses locked in, plus the complete digital intake forms ZIP bundle. Really enjoyed working through the fine details with you! If other clinic directors or pediatric practices in your Austin healthcare network are struggling with parent onboarding or compliance policies, definitely feel free to send them our way!",
                 [
                     'cuevas_speech_clinic_service_agreement_final.pdf',
                     'cuevas_pediatric_intake_forms_bundle.zip',
@@ -4871,7 +4871,7 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 10, 20, 18, 41, 35),
-                "Got everything downloaded to the office drive and printed the master copies for Monday. The clause formatting on page 3 looks so sharp and professional now. Really appreciate the patience and fast turnaround—I'll make sure to let Audrey know you survived my revisions lol.",
+                "Got everything downloaded to the office drive and printed the master copies for Monday. The clause formatting on page 3 looks so sharp and professional now. Really appreciate the patience and fast turnaround—I'll make sure to let Audrey know you survived my revisions lol, and I will 100% send other pediatric clinic directors your way.",
                 [],
             ),
         ],
