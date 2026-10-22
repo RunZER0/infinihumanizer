@@ -1,4 +1,31 @@
-Date,Unit,Payee / Memo,Category,Amount (USD)
-2026-07-03,Unit 4B - Waikiki,Oahu Plumbing & Drain,Repairs,-485.0
-2026-07-05,Unit 4B - Waikiki,Tenant ACH Rent,Rental Income,3400.0
-08/14/2026,Unit 12A - Ala Moana,[MISSING VENDOR],Maintenance,-620.0
+Transaction Date,Account,Payee / Merchant,Category,Amount (USD),Balance (USD)
+2026-07-15,First Hawaiian Business Checking,Pacific Split-AC Services,Repairs,-620.00,17830.00
+2026-07-15,First Hawaiian Business Checking,Hawaiian Electric (HECO),Utilities,-245.50,17584.50
+2026-07-15,First Hawaiian Business Checking,Board of Water Supply,Utilities,-118.20,17466.30
+2026-07-15,First Hawaiian Business Checking,Kakaako Lock & Hardware,Maintenance,-185.00,17281.30
+2026-07-15,First Hawaiian Business Checking,Waikiki Banyan HOA,HOA Assessment,-690.00,16591.30
+2026-07-15,First Hawaiian Business Checking,Ala Moana Pacific HOA,HOA Assessment,-810.00,15781.30
+2026-07-15,First Hawaiian Business Checking,Tenant ACH Rent - Unit 4B,Rental Income,3400.00,19181.30
+2026-07-15,First Hawaiian Business Checking,Tenant ACH Rent - Unit 12A,Rental Income,4100.00,23281.30
+2026-07-15,First Hawaiian Business Checking,CleanTeam Hawaii,Turnover Cleaning,-280.00,23001.30
+2026-07-15,First Hawaiian Business Checking,Island Pest Solutions,Preventive Pest,-95.00,22906.30
+2026-08-15,First Hawaiian Business Checking,Pacific Split-AC Services,Repairs,-620.00,22286.30
+2026-08-15,First Hawaiian Business Checking,Hawaiian Electric (HECO),Utilities,-245.50,22040.80
+2026-08-15,First Hawaiian Business Checking,Board of Water Supply,Utilities,-118.20,21922.60
+2026-08-15,First Hawaiian Business Checking,Kakaako Lock & Hardware,Maintenance,-185.00,21737.60
+2026-08-15,First Hawaiian Business Checking,Waikiki Banyan HOA,HOA Assessment,-690.00,21047.60
+2026-08-15,First Hawaiian Business Checking,Ala Moana Pacific HOA,HOA Assessment,-810.00,20237.60
+2026-08-15,First Hawaiian Business Checking,Tenant ACH Rent - Unit 4B,Rental Income,3400.00,23637.60
+2026-08-15,First Hawaiian Business Checking,Tenant ACH Rent - Unit 12A,Rental Income,4100.00,27737.60
+2026-08-15,First Hawaiian Business Checking,CleanTeam Hawaii,Turnover Cleaning,-280.00,27457.60
+2026-08-15,First Hawaiian Business Checking,Island Pest Solutions,Preventive Pest,-95.00,27362.60
+2026-09-15,First Hawaiian Business Checking,Pacific Split-AC Services,Repairs,-620.00,26742.60
+2026-09-15,First Hawaiian Business Checking,Hawaiian Electric (HECO),Utilities,-245.50,26497.10
+2026-09-15,First Hawaiian Business Checking,Board of Water Supply,Utilities,-118.20,26378.90
+2026-09-15,First Hawaiian Business Checking,Kakaako Lock & Hardware,Maintenance,-185.00,26193.90
+2026-09-15,First Hawaiian Business Checking,Waikiki Banyan HOA,HOA Assessment,-690.00,25503.90
+2026-09-15,First Hawaiian Business Checking,Ala Moana Pacific HOA,HOA Assessment,-810.00,24693.90
+2026-09-15,First Hawaiian Business Checking,Tenant ACH Rent - Unit 4B,Rental Income,3400.00,28093.90
+2026-09-15,First Hawaiian Business Checking,Tenant ACH Rent - Unit 12A,Rental Income,4100.00,32193.90
+2026-09-15,First Hawaiian Business Checking,CleanTeam Hawaii,Turnover Cleaning,-280.00,31913.90
+2026-09-15,First Hawaiian Business Checking,Island Pest Solutions,Preventive Pest,-95.00,31818.90

@@ -12,17 +12,21 @@ endobj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
 endobj
 5 0 obj
-<< /Length 290 >>
+<< /Length 506 >>
 stream
 BT
 /F1 13 Tf
 54 740 Td
-(Lemburg Supply ? Storefront Copy & Launch QA Checklist \(Final\)) Tj
+(Carter Lemburg ? Storefront Launch & Performance Checklist \(Final\)) Tj
 /F1 10 Tf
 0 -22 Td
-(1. Collection page copy for Workwear, Footwear, and Field Gear.) Tj
+(1. CHECKOUT FUNNEL OPTIMIZATION: One-click express checkout enabled on mobile.) Tj
 0 -15 Td
-(2. 28-point pre-launch Shopify checkout, tax, and shipping zone verification sheet.) Tj
+(2. TRUST PROOF: 30-Day Money Back Guarantee and 2-Year Warranty badges on product cards.) Tj
+0 -15 Td
+(3. PAGE SPEED METRICS: Compressed WebP asset delivery with under 1.2s First Contentful Paint.) Tj
+0 -15 Td
+(4. EMAIL CAPTURE: 10% VIP reservation popup with exit-intent trigger.) Tj
 0 -15 Td
 ET
 endstream
@@ -38,5 +42,5 @@ xref
 trailer
 << /Size 6 /Root 1 0 R >>
 startxref
-652
+868
 %%EOF

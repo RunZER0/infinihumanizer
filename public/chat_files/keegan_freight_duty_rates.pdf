@@ -12,21 +12,23 @@ endobj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
 endobj
 5 0 obj
-<< /Length 407 >>
+<< /Length 570 >>
 stream
 BT
 /F1 13 Tf
 54 740 Td
-(Customs BrokerHTS Duty & Ocean LCL Rates) Tj
+(Trans-Pacific LCL Ocean Freight & Customs Broker Rate Sheet) Tj
 /F1 10 Tf
 0 -22 Td
-(HTS 7323.93 \(Stainless kitchenware\): 3.4% duty + 7.5% Section 301 tariff) Tj
+(Port of Origin: Shenzhen / Yantian to Port of Los Angeles \(POLA\).) Tj
 0 -15 Td
-(HTS 8210.00 \(Mechanical hand grinders\): 3.7% duty) Tj
+(Ocean Freight Rate: $185.00 per CBM \(includes bunker adjustment and terminal handling\).) Tj
 0 -15 Td
-(HTS 7013.42 \(Borosilicate glassware\): 6.0% duty) Tj
+(Port Drayage & Deconsolidation: $140.00 flat entry fee + $18.50 per pallet.) Tj
 0 -15 Td
-(LCL Ocean + Drayage to LA warehouse: $185.00 per CBM + $140 flat customs entry fee.) Tj
+(Customs Clearance Broker Fee: $125.00 flat per entry filing.) Tj
+0 -15 Td
+(Tariff Notes: Section 301 List 3 tariffs apply to HTS 7323 stainless items \(7.5% additional\).) Tj
 0 -15 Td
 ET
 endstream
@@ -42,5 +44,5 @@ xref
 trailer
 << /Size 6 /Root 1 0 R >>
 startxref
-769
+932
 %%EOF

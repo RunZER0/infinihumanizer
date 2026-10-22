@@ -12,21 +12,23 @@ endobj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
 endobj
 5 0 obj
-<< /Length 475 >>
+<< /Length 608 >>
 stream
 BT
 /F1 13 Tf
 54 740 Td
-(Studio Brown ? Current Homepage & Booking Funnel Captures) Tj
+(Studio Brown ? Current Squarespace Booking Funnel Audit) Tj
 /F1 10 Tf
 0 -22 Td
-(Captured mobile and desktop views of current Squarespace homepage.) Tj
+(Audit capture of current Squarespace homepage and intake flow.) Tj
 0 -15 Td
-(Issue 1: Above-the-fold headline doesn't mention location or core service packages.) Tj
+(Problem 1: Headline is generic \('Visual storytelling for modern life'\) with no location context.) Tj
 0 -15 Td
-(Issue 2: Booking button opens a 14-field intake form before showing base pricing.) Tj
+(Problem 2: Booking button routes to a 14-question form before showing any package rates.) Tj
 0 -15 Td
-(Issue 3: Services page mixes add-ons with full packages in one long paragraph.) Tj
+(Problem 3: Dropdown selection mixes commercial day rates with personal portrait sessions.) Tj
+0 -15 Td
+(Recommendation: Separate commercial inquiries from studio sessions; cut intake to 5 fields.) Tj
 0 -15 Td
 ET
 endstream
@@ -42,5 +44,5 @@ xref
 trailer
 << /Size 6 /Root 1 0 R >>
 startxref
-837
+970
 %%EOF

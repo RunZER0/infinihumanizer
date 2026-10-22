@@ -1,5 +1,6 @@
 import csv
 import io
+import json
 import mimetypes
 import os
 import re
@@ -38,6 +39,8 @@ ALLOWED_EXTENSIONS = {
     ".txt",
     ".md",
     ".zip",
+    ".json",
+    ".html",
 } | AUDIO_EXTENSIONS
 
 MAX_UPLOAD_SIZE_BYTES = 25 * 1024 * 1024  # 25 MB
@@ -282,6 +285,255 @@ def write_csv_file(filename: str, rows: list[list], role: str = "file") -> dict:
     return build_attachment_meta(filename=filename, display_name=filename, role=role)
 
 
+def write_zip_file(filename: str, files_map: dict[str, str | bytes], role: str = "file") -> dict:
+    files_dir = get_chat_files_dir()
+    dest = files_dir / filename
+    with zipfile.ZipFile(dest, "w", zipfile.ZIP_DEFLATED) as zf:
+        for inner_name, content in files_map.items():
+            if isinstance(content, str):
+                zf.writestr(inner_name, content.encode("utf-8"))
+            elif isinstance(content, bytes):
+                zf.writestr(inner_name, content)
+    return build_attachment_meta(filename=filename, display_name=filename, role=role)
+
+
+def write_pptx_file(filename: str, title: str, slides: list[dict], role: str = "file") -> dict:
+    files_dir = get_chat_files_dir()
+    dest = files_dir / filename
+
+    content_types = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+  <Default Extension="xml" ContentType="application/xml"/>
+  <Override PartName="/ppt/presentation.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml"/>
+  <Override PartName="/ppt/slideMasters/slideMaster1.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slideMaster+xml"/>
+  <Override PartName="/ppt/slideLayouts/slideLayout1.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slideLayout+xml"/>
+"""
+    for i in range(1, len(slides) + 1):
+        content_types += f'  <Override PartName="/ppt/slides/slide{i}.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/>\n'
+    content_types += "</Types>"
+
+    rels = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="ppt/presentation.xml"/>
+</Relationships>"""
+
+    pres_rels = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rIdMaster1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster" Target="slideMasters/slideMaster1.xml"/>
+"""
+    for i in range(1, len(slides) + 1):
+        pres_rels += f'  <Relationship Id="rIdSlide{i}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide{i}.xml"/>\n'
+    pres_rels += "</Relationships>"
+
+    slide_ids = ""
+    for i in range(1, len(slides) + 1):
+        slide_ids += f'    <p:sldId id="{255 + i}" r:id="rIdSlide{i}"/>\n'
+
+    pres_xml = f"""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<p:presentation xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
+                xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+                xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
+  <p:sldMasterIdLst>
+    <p:sldMasterId id="2147483648" r:id="rIdMaster1"/>
+  </p:sldMasterIdLst>
+  <p:sldIdLst>
+{slide_ids}  </p:sldIdLst>
+  <p:sldSz cx="9144000" cy="5143500"/>
+  <p:notesSz cx="6858000" cy="9144000"/>
+</p:presentation>"""
+
+    master_xml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<p:sldMaster xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
+             xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+             xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
+  <p:cSld>
+    <p:spTree>
+      <p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr>
+      <p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>
+    </p:spTree>
+  </p:cSld>
+  <p:clrMap bg1="lt1" tx1="dk1" bg2="lt2" tx2="dk2" accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" hlink="hlink" folHlink="folHlink"/>
+  <p:sldLayoutIdLst>
+    <p:sldLayoutId id="2147483649" r:id="rIdLayout1"/>
+  </p:sldLayoutIdLst>
+</p:sldMaster>"""
+
+    master_rels = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rIdLayout1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout" Target="../slideLayouts/slideLayout1.xml"/>
+</Relationships>"""
+
+    layout_xml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<p:sldLayout xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
+             xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+             xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"
+             type="blank">
+  <p:cSld>
+    <p:spTree>
+      <p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr>
+      <p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>
+    </p:spTree>
+  </p:cSld>
+</p:sldLayout>"""
+
+    layout_rels = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rIdMaster" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster" Target="../slideMasters/slideMaster1.xml"/>
+</Relationships>"""
+
+    with zipfile.ZipFile(dest, "w", zipfile.ZIP_DEFLATED) as zf:
+        zf.writestr("[Content_Types].xml", content_types)
+        zf.writestr("_rels/.rels", rels)
+        zf.writestr("ppt/presentation.xml", pres_xml)
+        zf.writestr("ppt/_rels/presentation.xml.rels", pres_rels)
+        zf.writestr("ppt/slideMasters/slideMaster1.xml", master_xml)
+        zf.writestr("ppt/slideMasters/_rels/slideMaster1.xml.rels", master_rels)
+        zf.writestr("ppt/slideLayouts/slideLayout1.xml", layout_xml)
+        zf.writestr("ppt/slideLayouts/_rels/slideLayout1.xml.rels", layout_rels)
+
+        for i, s in enumerate(slides, start=1):
+            s_title = xml_escape(s.get("title", f"Slide {i}"))
+            bullets = s.get("bullets", [])
+            body_xml = ""
+            for b in bullets:
+                body_xml += f"""
+        <a:p>
+          <a:pPr lvl="0"/>
+          <a:r>
+            <a:rPr lang="en-US" sz="1600"/>
+            <a:t>{xml_escape(b)}</a:t>
+          </a:r>
+        </a:p>"""
+
+            slide_xml = f"""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
+       xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+       xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
+  <p:cSld>
+    <p:spTree>
+      <p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr>
+      <p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="2" name="Title"/>
+          <p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr>
+          <p:nvPr><p:ph type="title"/></p:nvPr>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm><a:off x="685800" y="457200"/><a:ext cx="7772400" cy="914400"/></a:xfrm>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr/>
+          <a:lstStyle/>
+          <a:p>
+            <a:r>
+              <a:rPr lang="en-US" sz="2800" b="1"/>
+              <a:t>{s_title}</a:t>
+            </a:r>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="3" name="Content"/>
+          <p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr>
+          <p:nvPr><p:ph idx="1"/></p:nvPr>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm><a:off x="685800" y="1524000"/><a:ext cx="7772400" cy="3200400"/></a:xfrm>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr/>
+          <a:lstStyle/>
+{body_xml}
+        </p:txBody>
+      </p:sp>
+    </p:spTree>
+  </p:cSld>
+</p:sld>"""
+            zf.writestr(f"ppt/slides/slide{i}.xml", slide_xml)
+            slide_rels = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rIdLayout" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout" Target="../slideLayouts/slideLayout1.xml"/>
+</Relationships>"""
+            zf.writestr(f"ppt/slides/_rels/slide{i}.xml.rels", slide_rels)
+
+    return build_attachment_meta(filename=filename, display_name=filename, role=role)
+
+
+def write_json_file(filename: str, data: dict | list, role: str = "file") -> dict:
+    files_dir = get_chat_files_dir()
+    dest = files_dir / filename
+    with dest.open("w", encoding="utf-8") as handle:
+        json.dump(data, handle, indent=2, ensure_ascii=False)
+    return build_attachment_meta(filename=filename, display_name=filename, role=role)
+
+
+def write_html_file(filename: str, title: str, html_body: str, role: str = "file") -> dict:
+    files_dir = get_chat_files_dir()
+    dest = files_dir / filename
+    full_html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{xml_escape(title)}</title>
+  <style>
+    body {{
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      margin: 0; padding: 40px; background: #0c0b09; color: #f7f4ec; line-height: 1.6;
+    }}
+    .container {{ max-width: 860px; margin: 0 auto; background: #171612; border: 1px solid #36342e; border-radius: 8px; padding: 36px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }}
+    h1 {{ color: #ffffff; border-bottom: 2px solid #cc4b2c; padding-bottom: 12px; margin-top: 0; font-size: 26px; }}
+    h2 {{ color: #e8e3d6; margin-top: 28px; font-size: 19px; }}
+    p, li {{ color: #c4beb1; font-size: 15px; }}
+    code, pre {{ background: #0c0b09; border: 1px solid #36342e; border-radius: 4px; font-family: monospace; padding: 2px 6px; color: #ff8a65; }}
+    pre {{ padding: 16px; overflow-x: auto; }}
+    .badge {{ display: inline-block; background: #cc4b2c; color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; margin-bottom: 16px; }}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <span class="badge">Verified Client Deliverable</span>
+    <h1>{xml_escape(title)}</h1>
+    {html_body}
+  </div>
+</body>
+</html>"""
+    dest.write_text(full_html, encoding="utf-8")
+    return build_attachment_meta(filename=filename, display_name=filename, role=role)
+
+
+def write_png_file(filename: str, title: str, bullets: list[str], subtitle: str = "", role: str = "file") -> dict:
+    files_dir = get_chat_files_dir()
+    dest = files_dir / filename
+    try:
+        from PIL import Image, ImageDraw
+        w, h = 1200, 750
+        img = Image.new("RGB", (w, h), color=(17, 17, 15))
+        draw = ImageDraw.Draw(img)
+        draw.rectangle([0, 0, w, 8], fill=(204, 75, 44))
+        draw.rectangle([40, 40, w - 40, h - 40], fill=(26, 26, 23), outline=(55, 53, 47), width=1)
+        draw.rectangle([80, 80, 260, 110], fill=(204, 75, 44))
+        draw.text((95, 87), "INFINIAI PRODUCTION", fill=(255, 255, 255))
+        draw.text((80, 130), title[:60], fill=(247, 244, 236))
+        if subtitle:
+            draw.text((80, 180), subtitle[:80], fill=(160, 156, 145))
+        y = 230
+        for b in bullets[:9]:
+            draw.rectangle([80, y + 4, 90, y + 14], fill=(204, 75, 44))
+            draw.text((105, y), b[:90], fill=(230, 226, 218))
+            y += 45
+        draw.line([80, h - 90, w - 80, h - 90], fill=(55, 53, 47), width=1)
+        draw.text((80, h - 75), "CONFIDENTIAL & PROPRIETARY · CLIENT DELIVERABLE", fill=(120, 116, 107))
+        draw.text((w - 280, h - 75), "VERIFIED ASSET PACK", fill=(204, 75, 44))
+        img.save(dest, "PNG", optimize=True)
+    except Exception:
+        pass
+    return build_attachment_meta(filename=filename, display_name=filename, role=role)
+
+
 def guess_mime_type(filename: str) -> str:
     ext = Path(filename).suffix.lower()
     explicit = {
@@ -298,6 +550,8 @@ def guess_mime_type(filename: str) -> str:
         ".jpeg": "image/jpeg",
         ".webp": "image/webp",
         ".zip": "application/zip",
+        ".json": "application/json",
+        ".html": "text/html; charset=utf-8",
         ".mp3": "audio/mpeg",
         ".wav": "audio/wav",
         ".m4a": "audio/mp4",
@@ -311,3 +565,4 @@ def guess_mime_type(filename: str) -> str:
         return explicit[ext]
     guessed, _ = mimetypes.guess_type(filename)
     return guessed or "application/octet-stream"
+

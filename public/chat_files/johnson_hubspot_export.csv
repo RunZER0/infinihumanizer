@@ -1,4 +1,61 @@
-Deal ID,Company,Stage,Territory,MRR (USD),Days in Stage
-DL-401,Apex Cold Logistics,Technical Scoping,Midwest,3200,14
-DL-402,Vanguard Parts Co,Proposal Sent,Southeast,4800,9
-DL-403,Harbor Marine Supply,Discovery,West,2500,21
+Deal ID,Company Name,Contact Name,Stage,Territory,MRR (USD),Days In Stage,Lead Source,Owner
+DL-101,Apex Cold Storage,Contact 101,Proposal Sent,Midwest,4050,11,Inbound Demo,Sarah Jenkins
+DL-102,Vanguard Parts Logistics,Contact 102,Technical Scoping,Southeast,5700,18,Outbound SDR,Marcus Vance
+DL-103,Harbor Marine Freight,Contact 103,Contract Sent,West Coast,3650,25,Referral,Elena Rostova
+DL-104,Redwood Distribution,Contact 104,Security & Legal Review,Northwest,5100,32,Trade Show,Dave Miller
+DL-105,Prairie Grain Transport,Contact 105,Discovery,Central,3200,4,Cold Call,Sarah Jenkins
+DL-106,Keystone 3PL Solutions,Contact 106,Proposal Sent,Northeast,6650,11,Content Download,Marcus Vance
+DL-107,Lone Star Freightways,Contact 107,Technical Scoping,Texas,5300,18,Outbound SDR,Elena Rostova
+DL-108,Buckeye Supply Chain,Contact 108,Contract Sent,Midwest,4250,25,Partner,Dave Miller
+DL-109,Chesapeake Dock Services,Contact 109,Security & Legal Review,Mid-Atlantic,3700,32,Website Form,Sarah Jenkins
+DL-110,Cascade Industrial Cargo,Contact 110,Discovery,Northwest,5900,4,Outbound SDR,Marcus Vance
+DL-111,Apex Cold Storage #2,Contact 111,Proposal Sent,Midwest,4050,11,Inbound Demo,Elena Rostova
+DL-112,Vanguard Parts Logistics #2,Contact 112,Technical Scoping,Southeast,5700,18,Outbound SDR,Dave Miller
+DL-113,Harbor Marine Freight #2,Contact 113,Contract Sent,West Coast,3650,25,Referral,Sarah Jenkins
+DL-114,Redwood Distribution #2,Contact 114,Security & Legal Review,Northwest,5100,32,Trade Show,Marcus Vance
+DL-115,Prairie Grain Transport #2,Contact 115,Discovery,Central,3200,4,Cold Call,Elena Rostova
+DL-116,Keystone 3PL Solutions #2,Contact 116,Proposal Sent,Northeast,6650,11,Content Download,Dave Miller
+DL-117,Lone Star Freightways #2,Contact 117,Technical Scoping,Texas,5300,18,Outbound SDR,Sarah Jenkins
+DL-118,Buckeye Supply Chain #2,Contact 118,Contract Sent,Midwest,4250,25,Partner,Marcus Vance
+DL-119,Chesapeake Dock Services #2,Contact 119,Security & Legal Review,Mid-Atlantic,3700,32,Website Form,Elena Rostova
+DL-120,Cascade Industrial Cargo #2,Contact 120,Discovery,Northwest,5900,4,Outbound SDR,Dave Miller
+DL-121,Apex Cold Storage #3,Contact 121,Proposal Sent,Midwest,4050,11,Inbound Demo,Sarah Jenkins
+DL-122,Vanguard Parts Logistics #3,Contact 122,Technical Scoping,Southeast,5700,18,Outbound SDR,Marcus Vance
+DL-123,Harbor Marine Freight #3,Contact 123,Contract Sent,West Coast,3650,25,Referral,Elena Rostova
+DL-124,Redwood Distribution #3,Contact 124,Security & Legal Review,Northwest,5100,32,Trade Show,Dave Miller
+DL-125,Prairie Grain Transport #3,Contact 125,Discovery,Central,3200,4,Cold Call,Sarah Jenkins
+DL-126,Keystone 3PL Solutions #3,Contact 126,Proposal Sent,Northeast,6650,11,Content Download,Marcus Vance
+DL-127,Lone Star Freightways #3,Contact 127,Technical Scoping,Texas,5300,18,Outbound SDR,Elena Rostova
+DL-128,Buckeye Supply Chain #3,Contact 128,Contract Sent,Midwest,4250,25,Partner,Dave Miller
+DL-129,Chesapeake Dock Services #3,Contact 129,Security & Legal Review,Mid-Atlantic,3700,32,Website Form,Sarah Jenkins
+DL-130,Cascade Industrial Cargo #3,Contact 130,Discovery,Northwest,5900,4,Outbound SDR,Marcus Vance
+DL-131,Apex Cold Storage #4,Contact 131,Proposal Sent,Midwest,4050,11,Inbound Demo,Elena Rostova
+DL-132,Vanguard Parts Logistics #4,Contact 132,Technical Scoping,Southeast,5700,18,Outbound SDR,Dave Miller
+DL-133,Harbor Marine Freight #4,Contact 133,Contract Sent,West Coast,3650,25,Referral,Sarah Jenkins
+DL-134,Redwood Distribution #4,Contact 134,Security & Legal Review,Northwest,5100,32,Trade Show,Marcus Vance
+DL-135,Prairie Grain Transport #4,Contact 135,Discovery,Central,3200,4,Cold Call,Elena Rostova
+DL-136,Keystone 3PL Solutions #4,Contact 136,Proposal Sent,Northeast,6650,11,Content Download,Dave Miller
+DL-137,Lone Star Freightways #4,Contact 137,Technical Scoping,Texas,5300,18,Outbound SDR,Sarah Jenkins
+DL-138,Buckeye Supply Chain #4,Contact 138,Contract Sent,Midwest,4250,25,Partner,Marcus Vance
+DL-139,Chesapeake Dock Services #4,Contact 139,Security & Legal Review,Mid-Atlantic,3700,32,Website Form,Elena Rostova
+DL-140,Cascade Industrial Cargo #4,Contact 140,Discovery,Northwest,5900,4,Outbound SDR,Dave Miller
+DL-141,Apex Cold Storage #5,Contact 141,Proposal Sent,Midwest,4050,11,Inbound Demo,Sarah Jenkins
+DL-142,Vanguard Parts Logistics #5,Contact 142,Technical Scoping,Southeast,5700,18,Outbound SDR,Marcus Vance
+DL-143,Harbor Marine Freight #5,Contact 143,Contract Sent,West Coast,3650,25,Referral,Elena Rostova
+DL-144,Redwood Distribution #5,Contact 144,Security & Legal Review,Northwest,5100,32,Trade Show,Dave Miller
+DL-145,Prairie Grain Transport #5,Contact 145,Discovery,Central,3200,4,Cold Call,Sarah Jenkins
+DL-146,Keystone 3PL Solutions #5,Contact 146,Proposal Sent,Northeast,6650,11,Content Download,Marcus Vance
+DL-147,Lone Star Freightways #5,Contact 147,Technical Scoping,Texas,5300,18,Outbound SDR,Elena Rostova
+DL-148,Buckeye Supply Chain #5,Contact 148,Contract Sent,Midwest,4250,25,Partner,Dave Miller
+DL-149,Chesapeake Dock Services #5,Contact 149,Security & Legal Review,Mid-Atlantic,3700,32,Website Form,Sarah Jenkins
+DL-150,Cascade Industrial Cargo #5,Contact 150,Discovery,Northwest,5900,4,Outbound SDR,Marcus Vance
+DL-151,Apex Cold Storage #6,Contact 151,Proposal Sent,Midwest,4050,11,Inbound Demo,Elena Rostova
+DL-152,Vanguard Parts Logistics #6,Contact 152,Technical Scoping,Southeast,5700,18,Outbound SDR,Dave Miller
+DL-153,Harbor Marine Freight #6,Contact 153,Contract Sent,West Coast,3650,25,Referral,Sarah Jenkins
+DL-154,Redwood Distribution #6,Contact 154,Security & Legal Review,Northwest,5100,32,Trade Show,Marcus Vance
+DL-155,Prairie Grain Transport #6,Contact 155,Discovery,Central,3200,4,Cold Call,Elena Rostova
+DL-156,Keystone 3PL Solutions #6,Contact 156,Proposal Sent,Northeast,6650,11,Content Download,Dave Miller
+DL-157,Lone Star Freightways #6,Contact 157,Technical Scoping,Texas,5300,18,Outbound SDR,Sarah Jenkins
+DL-158,Buckeye Supply Chain #6,Contact 158,Contract Sent,Midwest,4250,25,Partner,Marcus Vance
+DL-159,Chesapeake Dock Services #6,Contact 159,Security & Legal Review,Mid-Atlantic,3700,32,Website Form,Elena Rostova
+DL-160,Cascade Industrial Cargo #6,Contact 160,Discovery,Northwest,5900,4,Outbound SDR,Dave Miller

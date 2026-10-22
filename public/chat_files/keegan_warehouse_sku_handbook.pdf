@@ -1,0 +1,52 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length 790 >>
+stream
+BT
+/F1 13 Tf
+54 740 Td
+(Warehouse Receiving & Landed Cost Entry SOP ? Chin Specialty Goods) Tj
+/F1 10 Tf
+0 -22 Td
+(SECTION 1: RECEIVING CONTAINERS & LCL PALLETS) Tj
+0 -15 Td
+(1. Inspect ocean bills of lading against supplier pack lists before signing drayage interchange receipts.) Tj
+0 -15 Td
+(2. Count master cartons by SKU code and record broken seal exceptions within 24 hours.) Tj
+0 -15 Td
+(SECTION 2: UPDATING THE SPREADSHEET MODEL) Tj
+0 -15 Td
+(3. Enter invoice totals in cell C2 \(Ocean Freight\) and C3 \(Customs Broker Total\).) Tj
+0 -15 Td
+(4. Formulas in columns F through I dynamically distribute landed cost per item based on carton volume.) Tj
+0 -15 Td
+(5. If gross margin falls below 65%, review wholesale multiplier before publishing retail catalog changes.) Tj
+0 -15 Td
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1152
+%%EOF

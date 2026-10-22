@@ -1,0 +1,35 @@
+{
+  "engine": "InfiniAI-Humanizer-v3",
+  "version": "3.4.1",
+  "timestamp": "2026-09-29T14:28:44Z",
+  "parameters": {
+    "temperature": 0.72,
+    "top_p": 0.89,
+    "frequency_penalty": 0.35,
+    "presence_penalty": 0.28,
+    "lexical_variation_target": 0.68,
+    "sentence_length_variance": "high"
+  },
+  "heuristics": {
+    "ban_cliches": [
+      "in today's fast-paced world",
+      "delve into",
+      "testament to",
+      "revolutionize"
+    ],
+    "allow_idioms": true,
+    "human_hesitation_markers": [
+      "honestly",
+      "actually",
+      "to be fair",
+      "let me double check"
+    ],
+    "active_voice_enforcement": 0.85
+  },
+  "calibration_benchmarks": {
+    "turnitin_ai_score_max": 0.04,
+    "gptzero_ai_score_max": 0.03,
+    "copy_leaks_probability": 0.02,
+    "readability_flesch_kincaid_grade": 9.4
+  }
+}

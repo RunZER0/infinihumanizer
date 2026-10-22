@@ -12,21 +12,23 @@ endobj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
 endobj
 5 0 obj
-<< /Length 380 >>
+<< /Length 472 >>
 stream
 BT
 /F1 13 Tf
 54 740 Td
-(10-Slide Commercial Pitch Deck ? v1 Draft) Tj
+(Angel Pitch Deck Architecture \(10 Slides\) ? v1 Review) Tj
 /F1 10 Tf
 0 -22 Td
-(Slides 1-3: Problem, Yield Loss Data, and Inspection Methodology.) Tj
+(Slide 1: Executive Title & The 10-Second Hook) Tj
 0 -15 Td
-(Slide 4: Pricing & Competitor Comparison Matrix.) Tj
+(Slide 2: The Operational Pain of Disconnected Field Crews) Tj
 0 -15 Td
-(Slide 5: 4.2 MW Warehouse Rooftop Case Study.) Tj
+(Slide 3: Product Demo: Real-Time Mobile Dispatch & Invoicing) Tj
 0 -15 Td
-(Slides 6-10: SLA Guarantees, Reporting Portal, and Onboarding Timeline.) Tj
+(Slide 4: TAM / SAM / SOM \($8.2B North American Service Fleets\)) Tj
+0 -15 Td
+(Slide 5: Traction: 28 Paid Pilots, $14.2K MRR, 100% Logo Retention) Tj
 0 -15 Td
 ET
 endstream
@@ -42,5 +44,5 @@ xref
 trailer
 << /Size 6 /Root 1 0 R >>
 startxref
-742
+834
 %%EOF
