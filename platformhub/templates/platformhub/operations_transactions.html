@@ -19,7 +19,7 @@
     <div class="ops-kpi-cell">
       <span class="ops-kpi-label">Gross settled volume</span>
       <strong class="ops-kpi-value ops-mono">USD {{ settled_usd|floatformat:2 }}</strong>
-      <span class="ops-kpi-sub">{{ success_count }} approved of {{ total_tx_count }} attempts{% if settled_kes %} · KES {{ settled_kes|floatformat:0 }}{% endif %}</span>
+      <span class="ops-kpi-sub">{{ success_count }} cleared invoice payments{% if settled_kes %} · KES {{ settled_kes|floatformat:0 }}{% endif %}</span>
     </div>
     <div class="ops-kpi-cell">
       <span class="ops-kpi-label">Gateway fees</span>
@@ -29,22 +29,19 @@
     <div class="ops-kpi-cell">
       <span class="ops-kpi-label">Net settled volume</span>
       <strong class="ops-kpi-value ops-mono">USD {{ net_settled_usd|floatformat:2 }}</strong>
-      <span class="ops-kpi-sub">{{ declined_count }} declined attempts excluded</span>
+      <span class="ops-kpi-sub">All cleared through invoice settlement</span>
     </div>
   </section>
 
   <section class="ops-table-section" aria-label="Gateway transaction ledger">
     <div class="ops-filter-bar">
       <div class="ops-segmented" role="tablist" aria-label="Filter transactions by status">
-        <button type="button" class="ops-segment is-active" data-tx-filter="all">All ({{ total_tx_count }})</button>
-        <button type="button" class="ops-segment" data-tx-filter="success">Approved ({{ success_count }})</button>
-        <button type="button" class="ops-segment" data-tx-filter="failed">Declined ({{ declined_count }})</button>
+        <button type="button" class="ops-segment is-active" data-tx-filter="all">Cleared ({{ total_tx_count }})</button>
       </div>
       <div class="ops-segmented" role="tablist" aria-label="Filter transactions by channel">
         <button type="button" class="ops-segment is-active" data-channel-filter="all">All channels</button>
         <button type="button" class="ops-segment" data-channel-filter="apple_pay">Apple Pay</button>
         <button type="button" class="ops-segment" data-channel-filter="card">Card</button>
-        <button type="button" class="ops-segment" data-channel-filter="mobile_money">Mobile money</button>
       </div>
       <div class="ops-filter-search">
         <input type="search" id="ops-tx-search" class="ops-search-input" placeholder="Search reference, receipt, client, email, or bank…" aria-label="Search transactions">

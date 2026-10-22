@@ -1235,7 +1235,9 @@ def operations_invoices(request):
 @require_http_methods(["GET"])
 def operations_transactions(request):
     all_payments = list(
-        PaymentRecord.objects.select_related("invoice", "request", "user", "user__client_conversation").order_by("-created_at")
+        PaymentRecord.objects.filter(status="success", invoice__isnull=False)
+        .select_related("invoice", "request", "user", "user__client_conversation")
+        .order_by("-created_at")
     )
     settled_usd = sum(
         (p.amount for p in all_payments if p.status == "success" and p.currency == "USD"),

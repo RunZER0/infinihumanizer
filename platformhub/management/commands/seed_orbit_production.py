@@ -3543,6 +3543,8 @@ class Command(BaseCommand):
                     tx_dt = parse_csv_dt(row.get("Transaction Date", ""))
                     settlement_dt = parse_csv_dt(row.get("Settlement Date", ""))
                     raw_status = (row.get("Status") or "pending").strip().lower()
+                    if raw_status != "success":
+                        continue
                     raw_tx_email = (row.get("Customer (email)") or primary_email).strip().lower()
                     tx_email = EMAIL_ALIAS_TO_PRIMARY.get(raw_tx_email, primary_email)
                     amount_val = Decimal(str(row.get("Amount Paid") or inv_spec["amount_due"]))
@@ -3689,9 +3691,12 @@ class Command(BaseCommand):
                         pass
                 user_by_email[clean_email] = linked_user
 
+            if raw_status != "success":
+                continue
+
             inv_obj = None
             csv_inv_num = (row.get("Invoice") or "").strip()
-            if ref in ADDITIONAL_TX_DESCRIPTIONS and raw_status == "success":
+            if ref in ADDITIONAL_TX_DESCRIPTIONS:
                 inv_num = csv_inv_num or f"INV-{tx_dt.strftime('%y%m%d')}-{ref[-4:]}"
                 inv_obj, inv_created = Invoice.objects.update_or_create(
                     number=inv_num,
@@ -3714,6 +3719,9 @@ class Command(BaseCommand):
                 )
                 if inv_created:
                     created_invoices += 1
+
+            if not inv_obj:
+                continue
 
             pr, pr_created = PaymentRecord.objects.update_or_create(
                 reference=ref,
@@ -3751,6 +3759,10 @@ class Command(BaseCommand):
             PaymentRecord.objects.filter(pk=pr.pk).update(created_at=tx_dt, user=linked_user)
             if pr_created:
                 created_payments += 1
+
+        # Delete all failed/abandoned transactions and any unlinked transactions from the system
+        PaymentRecord.objects.exclude(status="success").delete()
+        PaymentRecord.objects.filter(invoice__isnull=True).delete()
 
         from platformhub.engaging_posters_data import sync_social_posters_db
 
