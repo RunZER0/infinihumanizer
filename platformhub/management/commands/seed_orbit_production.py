@@ -3094,7 +3094,7 @@ CLIENT_PROFILES = {
                 "description": "Technical documentation — Pediatric speech clinic intake agreement, parent disclosure forms, and HIPAA consent pack",
                 "created_at": dt_utc(2026, 10, 20, 17, 30, 0),
                 "due_at": dt_utc(2026, 10, 22, 17, 30, 0),
-                "tx_refs": ["T083852538976491", "T267443039046790"],
+                "tx_refs": ["T267443039046790"],
             },
         ],
         "messages": [
@@ -3338,32 +3338,6 @@ class Command(BaseCommand):
                         tx_by_ref[ref] = row
 
         new_usd_rows = {
-            "T083852538976491": {
-                "Reference": "T083852538976491",
-                "Transaction Date": "Oct 20th, 2026 06:24:55 PM",
-                "Customer (email)": "issabelc207@gmail.com",
-                "Amount Paid": "240",
-                "Paystack Fees": "0",
-                "Total Fees": "0",
-                "Amount Due": "240.00",
-                "Settlement Date": "",
-                "Gateway Response": "The transaction was not completed",
-                "Customer (fullname)": "Issa cuevas",
-                "Transaction ID": "6678711423",
-                "Card Type": "",
-                "Card Bank": "",
-                "Country Code": "",
-                "Currency": "USD",
-                "Subaccount": "",
-                "Subaccount Amount Due": "",
-                "Source": "checkout",
-                "Source Identifier": "",
-                "Status": "abandoned",
-                "Channel": "card",
-                "Requested Amount": "240",
-                "Card Authentication Type": "Unknown",
-                "Receipt Number": "",
-            },
             "T267443039046790": {
                 "Reference": "T267443039046790",
                 "Transaction Date": "Oct 20th, 2026 06:25:38 PM",
