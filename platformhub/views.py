@@ -867,6 +867,16 @@ def _client_payments(user=None, email=""):
     return qs.select_related("invoice", "request").order_by("-created_at")
 
 
+def _is_ajax_or_json(request):
+    return bool(
+        request.headers.get("X-Requested-With") == "XMLHttpRequest"
+        or "application/json" in request.headers.get("Accept", "")
+        or request.POST.get("format") == "json"
+        or request.GET.get("format") == "json"
+        or getattr(request, "content_type", "") == "application/json"
+    )
+
+
 def _serialize_message(item):
     created_local = timezone.localtime(item.created_at)
     read_local = timezone.localtime(item.read_at) if item.read_at else None
@@ -928,7 +938,7 @@ def client_chat(request):
 
     chat_user = request.user if request.user.is_authenticated else _resolve_chat_user(request)
     conversation, _ = ClientConversation.objects.get_or_create(user=chat_user)
-    is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
+    is_ajax = _is_ajax_or_json(request)
 
     if request.method == "POST":
         body = request.POST.get("message", "").strip()
@@ -937,10 +947,12 @@ def client_chat(request):
             if is_ajax:
                 return JsonResponse({"error": "Write a message or attach a file before sending."}, status=400)
             messages.error(request, "Write a message or attach a file before sending.")
+            return redirect("platformhub:client_chat")
         elif len(body) > 5000:
             if is_ajax:
                 return JsonResponse({"error": "Keep each message under 5,000 characters."}, status=400)
             messages.error(request, "Keep each message under 5,000 characters.")
+            return redirect("platformhub:client_chat")
         else:
             try:
                 saved_attachments = save_uploaded_chat_files(uploaded_files) if uploaded_files else []
@@ -965,7 +977,7 @@ def client_chat(request):
                     "message": _serialize_message(msg),
                 })
             messages.success(request, "Message sent.")
-        return redirect("platformhub:client_chat")
+            return redirect("platformhub:client_chat")
 
     conversation.messages.filter(sender="admin", read_at__isnull=True).update(read_at=timezone.now())
 
@@ -1051,11 +1063,13 @@ def operations_desk(request, conversation_id=None):
     from .chat_files import save_uploaded_chat_files
 
     User = get_user_model()
-    is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
+    is_ajax = _is_ajax_or_json(request)
 
     if request.method == "POST" and request.POST.get("action") == "open_client":
         target_email = request.POST.get("client_email", "").strip().lower()
         if not target_email or "@" not in target_email:
+            if is_ajax:
+                return JsonResponse({"error": "Enter a valid client email address."}, status=400)
             messages.error(request, "Enter a valid client email address.")
             return redirect("platformhub:operations_desk")
         target_user = User.objects.filter(email__iexact=target_email).first()
@@ -1068,6 +1082,8 @@ def operations_desk(request, conversation_id=None):
                 counter += 1
             target_user = User.objects.create(username=username, email=target_email)
         conv, _ = ClientConversation.objects.get_or_create(user=target_user)
+        if is_ajax:
+            return JsonResponse({"ok": True, "conversation_id": str(conv.id)})
         return redirect("platformhub:operations_desk_conversation", conversation_id=conv.id)
 
     if not ClientConversation.objects.exists():
@@ -1099,6 +1115,8 @@ def operations_desk(request, conversation_id=None):
         if action == "toggle_status":
             active_conversation.status = "closed" if active_conversation.status == "open" else "open"
             active_conversation.save(update_fields=["status", "updated_at"])
+            if is_ajax:
+                return JsonResponse({"ok": True, "status": active_conversation.status})
             return redirect("platformhub:operations_desk_conversation", conversation_id=active_conversation.id)
 
         body = request.POST.get("message", "").strip()
@@ -1107,10 +1125,12 @@ def operations_desk(request, conversation_id=None):
             if is_ajax:
                 return JsonResponse({"error": "Write a reply or attach a file before sending."}, status=400)
             messages.error(request, "Write a reply or attach a file before sending.")
+            return redirect("platformhub:operations_desk_conversation", conversation_id=active_conversation.id)
         elif len(body) > 5000:
             if is_ajax:
                 return JsonResponse({"error": "Keep each message under 5,000 characters."}, status=400)
             messages.error(request, "Keep each message under 5,000 characters.")
+            return redirect("platformhub:operations_desk_conversation", conversation_id=active_conversation.id)
         else:
             try:
                 saved_attachments = save_uploaded_chat_files(uploaded_files) if uploaded_files else []
@@ -1136,6 +1156,10 @@ def operations_desk(request, conversation_id=None):
                     "message": _serialize_message(msg),
                 })
             messages.success(request, "Reply sent.")
+            return redirect("platformhub:operations_desk_conversation", conversation_id=active_conversation.id)
+
+        if is_ajax:
+            return JsonResponse({"error": "Unknown action."}, status=400)
         return redirect("platformhub:operations_desk_conversation", conversation_id=active_conversation.id)
 
     active_conversation.messages.filter(sender="client", read_at__isnull=True).update(read_at=timezone.now())
@@ -1274,7 +1298,7 @@ def operations_transactions(request):
 
 @require_http_methods(["POST"])
 def admin_create_invoice(request):
-    is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
+    is_ajax = _is_ajax_or_json(request)
     conversation_id = request.POST.get("conversation_id", "").strip()
     email = request.POST.get("email", "").strip().lower()
     description = request.POST.get("description", "").strip()
@@ -1439,7 +1463,7 @@ def admin_create_invoice(request):
 
 @require_http_methods(["POST"])
 def admin_invoice_status(request, invoice_id):
-    is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
+    is_ajax = _is_ajax_or_json(request)
     invoice = get_object_or_404(Invoice, id=invoice_id)
     new_status = request.POST.get("status", "").strip().lower()
     conversation_id = request.POST.get("conversation_id", "").strip()

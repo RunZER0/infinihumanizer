@@ -156,6 +156,7 @@
     <form method="post" action="{% url 'platformhub:operations_desk_conversation' conversation.id %}" enctype="multipart/form-data" class="ops-composer cp-composer" id="desk-reply-form">
       {% csrf_token %}
       <input type="hidden" name="action" value="reply">
+      <input type="hidden" name="format" value="json">
       <input type="file" id="desk-file-input" name="attachments" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.ppt,.pptx,.png,.jpg,.jpeg,.webp,.gif,.txt,.zip,.mp3,.wav,.m4a,.ogg,.webm,.aac,.flac,audio/*" hidden>
 
       <div class="cp-composer-card" id="desk-composer-card">
@@ -223,6 +224,7 @@
     <form method="post" action="{% url 'platformhub:admin_create_invoice' %}" class="ops-form" id="desk-invoice-form">
       {% csrf_token %}
       <input type="hidden" name="conversation_id" value="{{ conversation.id }}">
+      <input type="hidden" name="format" value="json">
 
       <div class="ops-field">
         <label for="invoice-email">Client email</label>
@@ -726,13 +728,32 @@
       replySubmit.disabled = true;
       replySubmit.classList.remove("is-active");
       replyStatus.textContent = "Sending…";
+      const csrfInput = replyForm.querySelector('input[name="csrfmiddlewaretoken"]');
+      const csrfToken = csrfInput ? csrfInput.value : "";
       try {
+        const headers = {
+          "X-Requested-With": "XMLHttpRequest",
+          "Accept": "application/json"
+        };
+        if (csrfToken) {
+          headers["X-CSRFToken"] = csrfToken;
+        }
         const response = await fetch(replyForm.action, {
           method: "POST",
           body: new FormData(replyForm),
-          headers: {"X-Requested-With": "XMLHttpRequest"}
+          headers: headers
         });
-        const data = await response.json();
+        const contentType = response.headers.get("content-type") || "";
+        let data;
+        if (contentType.includes("application/json")) {
+          data = await response.json();
+        } else {
+          if (response.ok) {
+            window.location.reload();
+            return;
+          }
+          throw new Error("Server error (" + response.status + ")");
+        }
         if (!response.ok || !data.ok) {
           throw new Error(data.error || "Could not send reply.");
         }
@@ -758,13 +779,32 @@
       if (invoiceSubmit.disabled) return;
       invoiceSubmit.disabled = true;
       invoiceFeedback.textContent = "Generating…";
+      const csrfInput = invoiceForm.querySelector('input[name="csrfmiddlewaretoken"]');
+      const csrfToken = csrfInput ? csrfInput.value : "";
       try {
+        const headers = {
+          "X-Requested-With": "XMLHttpRequest",
+          "Accept": "application/json"
+        };
+        if (csrfToken) {
+          headers["X-CSRFToken"] = csrfToken;
+        }
         const response = await fetch(invoiceForm.action, {
           method: "POST",
           body: new FormData(invoiceForm),
-          headers: {"X-Requested-With": "XMLHttpRequest"}
+          headers: headers
         });
-        const data = await response.json();
+        const contentType = response.headers.get("content-type") || "";
+        let data;
+        if (contentType.includes("application/json")) {
+          data = await response.json();
+        } else {
+          if (response.ok) {
+            window.location.reload();
+            return;
+          }
+          throw new Error("Server error (" + response.status + ")");
+        }
         if (!response.ok || !data.ok) {
           throw new Error(data.error || "Could not create invoice.");
         }
