@@ -2380,6 +2380,18 @@ CLIENT_PROFILES = {
                 "downloaded both. that rate card graphic looks awesome on my phone, already texted it to a shipper in Carrollton. appreciate the quick turnaround man! and for sure, i'll tell the guys at the yard to hit you up.",
                 [],
             ),
+            (
+                'admin',
+                dt_utc(2026, 10, 19, 14, 18, 22),
+                "Appreciate that Jose! Good luck locking in that Carrollton run. Holler if you ever need any more lane sheets or flyers.",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 19, 14, 22, 5),
+                "will do man, thanks again 🚛",
+                [],
+            ),
         ],
     },
     'audreymbrown2007@gmail.com': {
@@ -2501,6 +2513,12 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
+                dt_utc(2026, 9, 30, 20, 4, 12),
+                "Payment confirmed! We'll have the full audit report mapped out for you tomorrow afternoon.",
+                [],
+            ),
+            (
+                'admin',
                 dt_utc(2026, 10, 1, 16, 11, 29),
                 "Here is your completed audit report Audrey! It breaks down the exact hero headline repositioning, package pricing anchors, and cuts your intake form from 14 questions down to 5 essentials so clients can book in under two minutes.",
                 [
@@ -2511,6 +2529,12 @@ CLIENT_PROFILES = {
                 'client',
                 dt_utc(2026, 10, 2, 11, 13, 52),
                 "this audit is brilliant! cutting those 9 redundant form questions is going to save my life. i'm having my designer mock up the new layout next week and then i definitely want you guys to write all 3 pages.",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 10, 2, 11, 45, 10),
+                "Glad it resonated! Ping us as soon as your designer has the layout notes ready and we'll dive right into the copy.",
                 [],
             ),
             (
@@ -2530,7 +2554,13 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 10, 15, 8, 41, 39),
-                "ugh my card keeps declining on checkout. tried twice on apple pay and once typing it in. is something weird going on with the payment button?",
+                "card declined :(",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 15, 8, 42, 55),
+                "tried twice on apple pay and once typing it in. is something weird going on with the payment button?",
                 [],
             ),
             (
@@ -2554,7 +2584,13 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 10, 15, 9, 26, 8),
-                "Oh okay, that makes total sense then! Thanks for explaining, was just being careful. Going to use that link later today once I get back from a client shoot.",
+                "Oh okay, that makes total sense then! Thanks for explaining, was just being careful.",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 15, 9, 27, 30),
+                "Going to use that link later today once I get back from a client shoot.",
                 [],
             ),
             (
@@ -2570,6 +2606,12 @@ CLIENT_PROFILES = {
                 [
                     'audrey_3page_website_copy_v1.docx',
                 ],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 17, 1, 5, 20),
+                "paid!",
+                [],
             ),
             (
                 'client',
@@ -2590,7 +2632,43 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 10, 17, 17, 11, 52),
-                "Sent it straight to my designer! And 1000% yes—actually one of my close friends runs a pediatric speech therapy clinic here in Austin (Issa Cuevas) and her clinic intake is driving her nuts. I literally just texted her your link. Thank you guys so much for being so patient with the payment questions and turning around such beautiful copy!",
+                "Sent it straight to my designer!",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 17, 17, 14, 25),
+                "And 1000% yes—actually one of my close friends runs a pediatric speech therapy clinic here in Austin (Issa Cuevas) and her clinic intake is driving her nuts. I literally just texted her your link. Thank you guys so much for being so patient with the payment questions and turning around such beautiful copy!",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 10, 17, 17, 28, 40),
+                "You're wonderful Audrey, thank you! Tell Issa to reach out whenever and we'll take great care of her. Definitely drop the live link in here once your designer launches the new pages!",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 17, 17, 35, 12),
+                "Will do! Have a great weekend 😊",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 19, 16, 42, 8),
+                "hey!! designer just pushed the new home and booking pages live on squarespace and the bounce rate already dropped by half. thank you guys so much again!",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 10, 19, 17, 5, 30),
+                "That is incredible news Audrey! The layout and pricing clarity look gorgeous live. Cheering on your fall wedding and portrait season!",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 19, 17, 12, 15),
+                "Couldn't have done it without you guys! 🎉",
                 [],
             ),
         ],
@@ -3842,6 +3920,18 @@ CLIENT_PROFILES = {
                 "Downloaded the ZIP and just walked through the briefing memo and slides over coffee with our chairman. He said it was the clearest narrative we've ever presented. You guys are absolute lifesavers! And yes—already mentioned you to two other portfolio CEOs in our founder group. Expect them in your inbox next week!",
                 [],
             ),
+            (
+                'admin',
+                dt_utc(2026, 10, 21, 7, 55, 12),
+                "That is fantastic news Estella! Knock that presentation out of the park today with the board. Rooting for you guys!",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 21, 8, 2, 40),
+                "Heading into the boardroom now. Thank you so much!",
+                [],
+            ),
         ],
     },
     'kayleecabreros@gmail.com': {
@@ -4872,6 +4962,18 @@ CLIENT_PROFILES = {
                 'client',
                 dt_utc(2026, 10, 20, 18, 41, 35),
                 "Got everything downloaded to the office drive and printed the master copies for Monday. The clause formatting on page 3 looks so sharp and professional now. Really appreciate the patience and fast turnaround—I'll make sure to let Audrey know you survived my revisions lol, and I will 100% send other pediatric clinic directors your way.",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 10, 20, 18, 49, 15),
+                "Haha surviving your revisions made the paperwork ten times stronger! Glad everything is printed and ready for Monday. Have a wonderful rest of your week, Issa.",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 20, 18, 53, 2),
+                "You too! Off to my 7pm patient now.",
                 [],
             ),
         ],
