@@ -1431,7 +1431,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 9, 30, 19, 47, 18),
-                "Hi Audrey! Love your photography work—the lighting in your portfolio is stunning. But you're totally right about the funnel leak: asking 14 questions before showing package rates creates massive anxiety for clients. We can do a deep copy & funnel audit for $90 (posted INV-260930-AB01) that maps out an exact 5-question intake, upfront pricing anchors, and hero copy fixes.",
+                "Hi Audrey! Love your photography work—the lighting in your portfolio is stunning. But you're totally right about the funnel leak: asking 14 questions before showing package rates creates massive anxiety for clients. We can do a deep copy & funnel audit for $90.00 (posted invoice INV-260930-AB01) that maps out an exact 5-question intake, upfront pricing anchors, and hero copy fixes.",
                 [],
             ),
             (
@@ -3759,7 +3759,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 20, 18, 9, 26),
-                'Completely understand the urgency Issa, and apologize for the inconvenience. The cleared route is live right now: https://paystack.shop/pay/tx0ipp9eg4. As soon as that clears, the final binder-ready PDF will unlock immediately.',
+                'Completely understand the urgency Issa, and apologize for the inconvenience. Posted invoice INV-261020-IC01 ($240.00). The cleared route is live right now: https://paystack.shop/pay/tx0ipp9eg4. As soon as that clears, the final binder-ready PDF will unlock immediately.',
                 [],
             ),
             (
