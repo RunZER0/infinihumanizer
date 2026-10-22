@@ -171,16 +171,34 @@ def _col_letter(idx: int) -> str:
     return result
 
 
-def write_xlsx_file(filename: str, sheet_name: str, rows: list[list], role: str = "file") -> dict:
+def write_xlsx_file(
+    filename: str,
+    sheet_name_or_dict,
+    rows: list[list] = None,
+    role: str = "file",
+) -> dict:
     files_dir = get_chat_files_dir()
     dest = files_dir / filename
 
-    content_types = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    if isinstance(sheet_name_or_dict, dict):
+        sheets_map = sheet_name_or_dict
+    else:
+        sheets_map = {str(sheet_name_or_dict or "Sheet1"): rows or []}
+
+    sheet_items = list(sheets_map.items())
+
+    # Build Content_Types
+    sheet_overrides = []
+    for idx in range(1, len(sheet_items) + 1):
+        sheet_overrides.append(
+            f'  <Override PartName="/xl/worksheets/sheet{idx}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'
+        )
+    content_types = f"""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
   <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
   <Default Extension="xml" ContentType="application/xml"/>
   <Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
-  <Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
+{chr(10).join(sheet_overrides)}
 </Types>"""
 
     rels = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -188,44 +206,57 @@ def write_xlsx_file(filename: str, sheet_name: str, rows: list[list], role: str 
   <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>
 </Relationships>"""
 
+    workbook_sheets = []
+    workbook_rels_list = []
+    for idx, (s_name, _) in enumerate(sheet_items, start=1):
+        safe_title = xml_escape(s_name[:31] or f"Sheet{idx}")
+        workbook_sheets.append(f'    <sheet name="{safe_title}" sheetId="{idx}" r:id="rId{idx}"/>')
+        workbook_rels_list.append(
+            f'  <Relationship Id="rId{idx}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet{idx}.xml"/>'
+        )
+
     workbook_xml = f"""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
           xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
   <sheets>
-    <sheet name="{xml_escape(sheet_name[:31] or 'Sheet1')}" sheetId="1" r:id="rId1"/>
+{chr(10).join(workbook_sheets)}
   </sheets>
 </workbook>"""
 
-    workbook_rels = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    workbook_rels = f"""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>
+{chr(10).join(workbook_rels_list)}
 </Relationships>"""
-
-    sheet_rows_xml = []
-    for r_idx, row in enumerate(rows, start=1):
-        cells_xml = []
-        for c_idx, val in enumerate(row):
-            cell_ref = f"{_col_letter(c_idx)}{r_idx}"
-            if isinstance(val, (int, float)) and not isinstance(val, bool):
-                cells_xml.append(f'<c r="{cell_ref}"><v>{val}</v></c>')
-            else:
-                text = xml_escape(str(val if val is not None else ""))
-                cells_xml.append(f'<c r="{cell_ref}" t="inlineStr"><is><t>{text}</t></is></c>')
-        sheet_rows_xml.append(f'<row r="{r_idx}">{"".join(cells_xml)}</row>')
-
-    sheet_xml = f"""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
-  <sheetData>
-    {"".join(sheet_rows_xml)}
-  </sheetData>
-</worksheet>"""
 
     with zipfile.ZipFile(dest, "w", zipfile.ZIP_DEFLATED) as zf:
         zf.writestr("[Content_Types].xml", content_types)
         zf.writestr("_rels/.rels", rels)
         zf.writestr("xl/workbook.xml", workbook_xml)
         zf.writestr("xl/_rels/workbook.xml.rels", workbook_rels)
-        zf.writestr("xl/worksheets/sheet1.xml", sheet_xml)
+
+        for idx, (_, sheet_rows) in enumerate(sheet_items, start=1):
+            sheet_rows_xml = []
+            for r_idx, row in enumerate(sheet_rows, start=1):
+                cells_xml = []
+                for c_idx, val in enumerate(row):
+                    cell_ref = f"{_col_letter(c_idx)}{r_idx}"
+                    if isinstance(val, (int, float)) and not isinstance(val, bool):
+                        cells_xml.append(f'<c r="{cell_ref}"><v>{val}</v></c>')
+                    elif isinstance(val, str) and val.startswith("="):
+                        formula = xml_escape(val[1:])
+                        cells_xml.append(f'<c r="{cell_ref}"><f>{formula}</f></c>')
+                    else:
+                        text = xml_escape(str(val if val is not None else ""))
+                        cells_xml.append(f'<c r="{cell_ref}" t="inlineStr"><is><t>{text}</t></is></c>')
+                sheet_rows_xml.append(f'<row r="{r_idx}">{"".join(cells_xml)}</row>')
+
+            sheet_xml = f"""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+  <sheetData>
+    {"".join(sheet_rows_xml)}
+  </sheetData>
+</worksheet>"""
+            zf.writestr(f"xl/worksheets/sheet{idx}.xml", sheet_xml)
 
     return build_attachment_meta(filename=filename, display_name=filename, role=role)
 
@@ -291,7 +322,11 @@ def write_zip_file(filename: str, files_map: dict[str, str | bytes], role: str =
     with zipfile.ZipFile(dest, "w", zipfile.ZIP_DEFLATED) as zf:
         for inner_name, content in files_map.items():
             if isinstance(content, str):
-                zf.writestr(inner_name, content.encode("utf-8"))
+                disk_file = files_dir / content
+                if disk_file.exists() and disk_file.is_file():
+                    zf.write(disk_file, inner_name)
+                else:
+                    zf.writestr(inner_name, content.encode("utf-8"))
             elif isinstance(content, bytes):
                 zf.writestr(inner_name, content)
     return build_attachment_meta(filename=filename, display_name=filename, role=role)
@@ -394,14 +429,30 @@ def write_pptx_file(filename: str, title: str, slides: list[dict], role: str = "
 
         for i, s in enumerate(slides, start=1):
             s_title = xml_escape(s.get("title", f"Slide {i}"))
+            s_sub = xml_escape(s.get("subtitle", ""))
             bullets = s.get("bullets", [])
+
+            sub_xml = ""
+            if s_sub:
+                sub_xml = f"""
+          <a:p>
+            <a:pPr lvl="0"/>
+            <a:r>
+              <a:rPr lang="en-US" sz="1200" i="1"/>
+              <a:t>{s_sub}</a:t>
+            </a:r>
+          </a:p>"""
+
             body_xml = ""
             for b in bullets:
                 body_xml += f"""
         <a:p>
-          <a:pPr lvl="0"/>
+          <a:pPr lvl="0" marL="288000" indent="-288000">
+            <a:buFont typeface="Arial"/>
+            <a:buChar char="•"/>
+          </a:pPr>
           <a:r>
-            <a:rPr lang="en-US" sz="1600"/>
+            <a:rPr lang="en-US" sz="1500"/>
             <a:t>{xml_escape(b)}</a:t>
           </a:r>
         </a:p>"""
@@ -428,10 +479,11 @@ def write_pptx_file(filename: str, title: str, slides: list[dict], role: str = "
           <a:lstStyle/>
           <a:p>
             <a:r>
-              <a:rPr lang="en-US" sz="2800" b="1"/>
+              <a:rPr lang="en-US" sz="2400" b="1"/>
               <a:t>{s_title}</a:t>
             </a:r>
           </a:p>
+{sub_xml}
         </p:txBody>
       </p:sp>
       <p:sp>
@@ -473,7 +525,11 @@ def write_json_file(filename: str, data: dict | list, role: str = "file") -> dic
 def write_html_file(filename: str, title: str, html_body: str, role: str = "file") -> dict:
     files_dir = get_chat_files_dir()
     dest = files_dir / filename
-    full_html = f"""<!DOCTYPE html>
+    body_stripped = html_body.strip()
+    if body_stripped.lower().startswith("<!doctype html") or body_stripped.lower().startswith("<html"):
+        full_html = html_body
+    else:
+        full_html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orozco Roofing · Commercial Flat Roofs & Storm Restoration</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --accent: #f97316;
+      --accent-hover: #ea580c;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; }
+    header { background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid var(--border); padding: 18px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(8px); }
+    .brand { font-size: 22px; font-weight: 800; letter-spacing: 1px; color: #fff; }
+    .brand span { color: var(--accent); }
+    nav { display: flex; gap: 8px; }
+    .nav-btn { background: transparent; border: 1px solid transparent; color: var(--text-muted); padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .nav-btn:hover { color: #fff; background: var(--card-bg); }
+    .nav-btn.active { color: #fff; background: var(--card-bg); border-color: var(--accent); }
+    .container { max-width: 1080px; margin: 0 auto; padding: 40px 24px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .emergency-bar { background: var(--accent); color: #fff; text-align: center; padding: 10px; font-weight: 700; font-size: 14px; letter-spacing: 0.5px; }
+    .hero { text-align: center; padding: 50px 0 30px; }
+    .badge { display: inline-block; background: rgba(249, 115, 22, 0.15); color: var(--accent); border: 1px solid rgba(249, 115, 22, 0.3); padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 16px; }
+    h1 { font-size: 40px; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 16px; }
+    .hero p { font-size: 18px; color: var(--text-muted); max-width: 750px; margin: 0 auto 30px; }
+    .btn-primary { background: var(--accent); color: #fff; font-weight: 700; padding: 14px 28px; border-radius: 6px; border: none; cursor: pointer; font-size: 15px; text-decoration: none; display: inline-block; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 30px; }
+    .feature-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 28px; }
+    .feature-card h3 { color: #fff; font-size: 20px; margin-bottom: 10px; }
+    .calc-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 36px; max-width: 680px; margin: 0 auto; }
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; font-size: 13px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; color: var(--text); }
+    .form-control { width: 100%; background: #0f172a; border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; color: #fff; font-size: 15px; }
+    .calc-result { background: rgba(249, 115, 22, 0.1); border: 1px solid var(--accent); border-radius: 8px; padding: 24px; margin-top: 24px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="emergency-bar">🚨 24/7 Commercial Emergency Roof Dispatch (McAllen & Brownsville): (956) 555-ROOF</div>
+  <header>
+    <div class="brand">OROZCO <span>ROOFING</span></div>
+    <nav>
+      <button class="nav-btn active" onclick="switchTab('commercial')">Commercial Systems</button>
+      <button class="nav-btn" onclick="switchTab('residential')">Residential</button>
+      <button class="nav-btn" onclick="switchTab('calculator')">Instant Bid Calculator</button>
+    </nav>
+  </header>
+  <div class="container">
+    <div id="tab-commercial" class="tab-content active">
+      <div class="hero">
+        <span class="badge">South Texas Certified Commercial Installer</span>
+        <h1>Engineered Flat Roof Systems & 20-Year NDL Manufacturer Warranties</h1>
+        <p>Specializing in single-ply TPO, EPDM, and architectural standing seam metal roofs for warehouses, distribution centers, and commercial retail plazas across the Rio Grande Valley.</p>
+        <button class="btn-primary" onclick="switchTab('calculator')">Calculate Project Estimate</button>
+      </div>
+      <div class="grid-3">
+        <div class="feature-card">
+          <h3>Single-Ply TPO Membranes</h3>
+          <p style="color: var(--text-muted); font-size: 14px;">60-mil and 80-mil heat-welded thermoplastic polyolefin. Reflects 87% of solar UV radiation, cutting warehouse HVAC cooling loads by up to 28% in South Texas heat.</p>
+        </div>
+        <div class="feature-card">
+          <h3>24-Gauge Standing Seam Metal</h3>
+          <p style="color: var(--text-muted); font-size: 14px;">Concealed-fastener architectural metal with Kynar 500 finish. Class 4 hail resistance and engineered to withstand 140+ mph coastal hurricane wind uplift.</p>
+        </div>
+        <div class="feature-card">
+          <h3>20-Year NDL Warranties</h3>
+          <p style="color: var(--text-muted); font-size: 14px;">Direct manufacturer backed No Dollar Limit warranties from Carlisle SynTec and Firestone Building Products covering 100% of material and labor.</p>
+        </div>
+      </div>
+    </div>
+    <div id="tab-residential" class="tab-content">
+      <div class="hero">
+        <span class="badge">Residential Storm Restoration</span>
+        <h1>South Texas Architectural Shingle & Metal Roof Replacements</h1>
+        <p>Comprehensive insurance claim assistance, rapid storm tarping, and complete architectural tear-offs completed in 24 to 48 hours.</p>
+      </div>
+      <div class="grid-3">
+        <div class="feature-card">
+          <h3>Wind & Hail Damage Assessments</h3>
+          <p style="color: var(--text-muted); font-size: 14px;">Drone aerial imaging and certified hail impact documentation accepted by all major Texas home insurance adjusters.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Lifetime Architectural Shingles</h3>
+          <p style="color: var(--text-muted); font-size: 14px;">130 mph wind-rated architectural laminate shingles with Scotchgard algae protection and 50-year manufacturer warranty.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Emergency 2-Hour Tarping</h3>
+          <p style="color: var(--text-muted); font-size: 14px;">Immediate weatherproofing response across Hidalgo and Cameron counties following severe Gulf storms.</p>
+        </div>
+      </div>
+    </div>
+    <div id="tab-calculator" class="tab-content">
+      <div class="calc-box">
+        <h2 style="color: #fff; margin-bottom: 8px; text-align: center;">Commercial Roof Estimate Calculator</h2>
+        <p style="color: var(--text-muted); font-size: 14px; text-align: center; margin-bottom: 24px;">Generate an instant commercial flat roof budgetary estimate based on your square footage and membrane specification.</p>
+        <div class="form-group">
+          <label class="form-label">Total Roof Footprint (Square Feet)</label>
+          <input type="number" id="sqft" class="form-control" value="18500" step="500" min="1000" oninput="runEstimate()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Membrane & System Type</label>
+          <select id="sys-type" class="form-control" onchange="runEstimate()">
+            <option value="4.40">60-mil TPO Single-Ply Membrane ($4.40 / sq ft installed)</option>
+            <option value="6.55">24-Gauge Architectural Standing Seam ($6.55 / sq ft installed)</option>
+            <option value="3.65">EPDM Ballasted Rubber Membrane ($3.65 / sq ft installed)</option>
+            <option value="5.20">80-mil Heavy Duty TPO Membrane ($5.20 / sq ft installed)</option>
+          </select>
+        </div>
+        <div class="calc-result">
+          <div style="font-size: 13px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px;">Budgetary Project Range</div>
+          <div style="font-size: 38px; font-weight: 800; color: var(--accent); margin: 8px 0;" id="est-total">$81,400.00</div>
+          <p style="font-size: 13px; color: var(--text-muted);">Includes existing tear-off, 2" polyiso insulation board, membrane, perimeter flashings, and labor.</p>
+        </div>
+        <button class="btn-primary" style="width: 100%; margin-top: 20px;" onclick="alert('Inspection requested! Our commercial estimator will call within 60 minutes.')">Request Official On-Site Core Sampling & Bid</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById('tab-' + tabId).classList.add('active');
+      const btns = document.querySelectorAll('.nav-btn');
+      if (tabId === 'commercial') btns[0].classList.add('active');
+      if (tabId === 'residential') btns[1].classList.add('active');
+      if (tabId === 'calculator') btns[2].classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function runEstimate() {
+      const sqft = parseFloat(document.getElementById('sqft').value) || 0;
+      const rate = parseFloat(document.getElementById('sys-type').value) || 4.40;
+      const total = sqft * rate;
+      document.getElementById('est-total').textContent = '$' + total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+  </script>
+</body>
+</html>

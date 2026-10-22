@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Studio Brown · Editorial & Portrait Photography (Austin, TX)</title>
+  <style>
+    :root {
+      --bg: #11100e;
+      --card-bg: #1c1a16;
+      --border: #33302a;
+      --accent: #d4a373;
+      --accent-hover: #e3b88c;
+      --text: #f7f4ec;
+      --text-muted: #a6a092;
+      --coral: #cc4b2c;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; }
+    header { border-bottom: 1px solid var(--border); padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; background: rgba(17, 16, 14, 0.95); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
+    .brand { font-size: 20px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text); }
+    .brand span { color: var(--accent); }
+    nav { display: flex; gap: 8px; }
+    .nav-btn { background: transparent; border: 1px solid transparent; color: var(--text-muted); padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .nav-btn:hover { color: var(--text); background: var(--card-bg); }
+    .nav-btn.active { color: #fff; background: var(--card-bg); border-color: var(--accent); }
+    .container { max-width: 1080px; margin: 0 auto; padding: 50px 24px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .hero { text-align: center; padding: 60px 0 40px; max-width: 780px; margin: 0 auto; }
+    .badge { display: inline-block; background: rgba(212, 163, 115, 0.15); color: var(--accent); border: 1px solid rgba(212, 163, 115, 0.3); padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
+    .hero h1 { font-size: 42px; line-height: 1.2; font-weight: 700; margin-bottom: 20px; color: #fff; }
+    .hero p { font-size: 18px; color: var(--text-muted); margin-bottom: 32px; }
+    .btn-group { display: flex; gap: 16px; justify-content: center; }
+    .btn-primary { background: var(--accent); color: #11100e; font-weight: 600; padding: 14px 28px; border-radius: 6px; border: none; cursor: pointer; text-decoration: none; font-size: 15px; transition: background 0.2s; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-secondary { background: transparent; color: var(--text); border: 1px solid var(--border); font-weight: 600; padding: 14px 28px; border-radius: 6px; cursor: pointer; text-decoration: none; font-size: 15px; }
+    .btn-secondary:hover { background: var(--card-bg); border-color: var(--accent); }
+    .trust-strip { display: flex; justify-content: center; gap: 40px; padding: 30px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin: 50px 0; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); flex-wrap: wrap; }
+    .trust-strip strong { color: var(--text); }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 30px; }
+    .pricing-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 32px; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
+    .pricing-card.featured { border-color: var(--accent); box-shadow: 0 0 30px rgba(212, 163, 115, 0.12); }
+    .featured-badge { position: absolute; top: -12px; right: 24px; background: var(--accent); color: #11100e; font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 3px 10px; border-radius: 12px; letter-spacing: 1px; }
+    .card-title { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .card-price { font-size: 36px; font-weight: 800; color: var(--accent); margin-bottom: 16px; }
+    .card-price span { font-size: 14px; font-weight: 400; color: var(--text-muted); }
+    .card-desc { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; min-height: 42px; }
+    .features-list { list-style: none; margin-bottom: 30px; }
+    .features-list li { font-size: 14px; color: var(--text); padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 10px; }
+    .features-list li::before { content: "✓"; color: var(--accent); font-weight: bold; }
+    .form-box { max-width: 640px; margin: 0 auto; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 40px; }
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; color: var(--text); }
+    .form-control { width: 100%; background: #11100e; border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; color: #fff; font-size: 15px; }
+    .form-control:focus { outline: none; border-color: var(--accent); }
+    .form-note { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+    .alert-box { background: rgba(204, 75, 44, 0.12); border: 1px solid var(--coral); border-radius: 6px; padding: 16px; margin-bottom: 24px; font-size: 13px; color: #f4c2b7; }
+    .success-modal { display: none; background: rgba(212, 163, 115, 0.15); border: 1px solid var(--accent); border-radius: 8px; padding: 24px; text-align: center; margin-top: 24px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">Studio <span>Brown</span></div>
+    <nav>
+      <button class="nav-btn active" onclick="switchTab('home')">Home</button>
+      <button class="nav-btn" onclick="switchTab('services')">Services & Packages</button>
+      <button class="nav-btn" onclick="switchTab('booking')">Booking & Availability</button>
+    </nav>
+  </header>
+  <div class="container">
+    <div id="tab-home" class="tab-content active">
+      <section class="hero">
+        <span class="badge">East Austin · Natural Light Studio</span>
+        <h1>Editorial portraits & brand campaigns that feel authentic, modern, and enduring.</h1>
+        <p>Specializing in commercial brand lookbooks, executive editorial profiles, and intimate creative portraiture. Based in Austin with worldwide travel availability.</p>
+        <div class="btn-group">
+          <button class="btn-primary" onclick="switchTab('booking')">Check Studio Availability</button>
+          <button class="btn-secondary" onclick="switchTab('services')">Explore 2026 Rates</button>
+        </div>
+      </section>
+      <div class="trust-strip">
+        <span>Featured in <strong>Austin Monthly</strong></span>
+        <span>·</span>
+        <span><strong>Kinfolk</strong> Magazine</span>
+        <span>·</span>
+        <span><strong>Rangefinder</strong> Award Winner</span>
+        <span>·</span>
+        <span><strong>Architectural Digest</strong> Features</span>
+      </div>
+      <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 32px; text-align: center;">
+        <h3 style="color: #fff; margin-bottom: 12px; font-size: 20px;">The Studio Brown Experience</h3>
+        <p style="color: var(--text-muted); max-width: 680px; margin: 0 auto;">"Working with Audrey was the easiest commercial shoot our creative agency had all year. Zero awkward posing, immaculate natural window lighting, and our gallery arrived 3 days ahead of schedule."</p>
+        <div style="margin-top: 16px; font-size: 13px; font-weight: 600; color: var(--accent);">— Sarah L., Creative Director, Kinship Goods</div>
+      </div>
+    </div>
+    <div id="tab-services" class="tab-content">
+      <div style="text-align: center; max-width: 680px; margin: 0 auto 30px;">
+        <span class="badge">Transparent Investment</span>
+        <h2 style="font-size: 32px; color: #fff; margin-bottom: 12px;">Curated Session Tiers</h2>
+        <p style="color: var(--text-muted);">Every session includes high-resolution master delivery, commercial usage rights, and private online proofing gallery with full print release.</p>
+      </div>
+      <div class="grid-3">
+        <div class="pricing-card">
+          <div>
+            <div class="card-title">Essential Session</div>
+            <div class="card-price">$450 <span>flat</span></div>
+            <div class="card-desc">Designed for artists, founders, and professionals who need a tight, editorial portfolio refresh.</div>
+            <ul class="features-list">
+              <li>60 minutes private studio time</li>
+              <li>15 hand-retouched high-res master files</li>
+              <li>1 wardrobe look in natural light</li>
+              <li>Fast 7-business-day delivery turnaround</li>
+              <li>Private online proofing gallery</li>
+            </ul>
+          </div>
+          <button class="btn-secondary" style="width: 100%; text-align: center;" onclick="selectTier('Essential Session ($450)')">Select Essential</button>
+        </div>
+        <div class="pricing-card featured">
+          <span class="featured-badge">Most Popular</span>
+          <div>
+            <div class="card-title">Studio Session</div>
+            <div class="card-price">$950 <span>flat</span></div>
+            <div class="card-desc">Our signature comprehensive session for executive portraits, brand lookbooks, and personal editorial narratives.</div>
+            <ul class="features-list">
+              <li>2.5 hours studio + courtyard space</li>
+              <li>35 hand-retouched high-res master files</li>
+              <li>Up to 3 wardrobe looks & mood transitions</li>
+              <li>Commercial & editorial licensing included</li>
+              <li>Priority 5-day delivery turnaround</li>
+              <li>Full resolution raw archive access</li>
+            </ul>
+          </div>
+          <button class="btn-primary" style="width: 100%; text-align: center;" onclick="selectTier('Studio Session ($950)')">Select Studio Session</button>
+        </div>
+        <div class="pricing-card">
+          <div>
+            <div class="card-title">Full Day Campaign</div>
+            <div class="card-price">$2,200 <span>flat</span></div>
+            <div class="card-desc">Full commercial production for brand launches, apparel lookbooks, and editorial magazine spreads.</div>
+            <ul class="features-list">
+              <li>Full 6-hour studio + on-location block</li>
+              <li>75 hand-retouched campaign hero selects</li>
+              <li>Creative direction & custom moodboarding</li>
+              <li>Unlimited wardrobe & product transitions</li>
+              <li>Full commercial buyout & billboard license</li>
+              <li>Dedicated lighting assistant on set</li>
+            </ul>
+          </div>
+          <button class="btn-secondary" style="width: 100%; text-align: center;" onclick="selectTier('Full Day Campaign ($2,200)')">Select Campaign</button>
+        </div>
+      </div>
+    </div>
+    <div id="tab-booking" class="tab-content">
+      <div class="form-box">
+        <h2 style="font-size: 26px; color: #fff; margin-bottom: 8px; text-align: center;">Reserve Your Session</h2>
+        <p style="color: var(--text-muted); font-size: 14px; text-align: center; margin-bottom: 24px;">Complete our streamlined 5-field inquiry to reserve your preferred date on our East Austin studio calendar.</p>
+        <div class="alert-box">
+          <strong>Studio Policy:</strong> A 50% deposit secures your date on the calendar. Studio sessions run Monday through Friday. Rescheduling permitted with 48 hours advance notice.
+        </div>
+        <form id="booking-form" onsubmit="handleBookingSubmit(event)">
+          <div class="form-group">
+            <label class="form-label">Full Legal Name *</label>
+            <input type="text" id="b-name" class="form-control" required placeholder="e.g. Clara Henderson">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email & Direct Phone *</label>
+            <input type="text" id="b-contact" class="form-control" required placeholder="name@example.com · (512) 555-0192">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Preferred Session Date *</label>
+            <input type="date" id="b-date" class="form-control" required min="2026-11-01">
+            <div class="form-note">Studio open Mon–Fri, 9:00 AM – 4:00 PM for optimal natural window light.</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Selected Package Tier *</label>
+            <select id="b-tier" class="form-control" required>
+              <option value="">Select a package tier...</option>
+              <option value="Essential Session ($450)">Essential Session ($450)</option>
+              <option value="Studio Session ($950)" selected>Studio Session ($950) — Most Popular</option>
+              <option value="Full Day Campaign ($2,200)">Full Day Campaign ($2,200)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Creative Vision & Wardrobe Notes</label>
+            <textarea id="b-notes" class="form-control" rows="3" placeholder="Tell us about the vibe, intended usage, and wardrobe concepts..."></textarea>
+          </div>
+          <button type="submit" class="btn-primary" style="width: 100%; font-size: 16px; padding: 16px;">Confirm Date & Request Retainer Link</button>
+        </form>
+        <div id="booking-success" class="success-modal">
+          <h3 style="color: var(--accent); margin-bottom: 8px;">🎉 Reservation Hold Requested!</h3>
+          <p style="color: var(--text); font-size: 14px;" id="success-summary">We have tentatively reserved your date on the East Austin studio calendar. A 50% deposit checkout link will be sent to your email.</p>
+          <button class="btn-secondary" style="margin-top: 16px; padding: 8px 18px; font-size: 13px;" onclick="switchTab('home')">Return to Studio Home</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(function(el) { el.classList.remove('active'); });
+      document.querySelectorAll('.nav-btn').forEach(function(el) { el.classList.remove('active'); });
+      const target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.add('active');
+      const btns = document.querySelectorAll('.nav-btn');
+      if (tabId === 'home') btns[0].classList.add('active');
+      if (tabId === 'services') btns[1].classList.add('active');
+      if (tabId === 'booking') btns[2].classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function selectTier(tierName) {
+      switchTab('booking');
+      const select = document.getElementById('b-tier');
+      if (select) select.value = tierName;
+    }
+    function handleBookingSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('b-name').value;
+      const tier = document.getElementById('b-tier').value;
+      const date = document.getElementById('b-date').value;
+      document.getElementById('booking-form').style.display = 'none';
+      const successModal = document.getElementById('booking-success');
+      successModal.style.display = 'block';
+      document.getElementById('success-summary').textContent =
+        "Thank you, " + name + "! Your calendar hold for " + tier + " on " + date + " is created. Retainer deposit link generated.";
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DockStream · Intelligent Cross-Dock Logistics & Yard Automation</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --surface: #111827;
+      --surface-2: #1e293b;
+      --border: #334155;
+      --primary: #0284c7;
+      --primary-light: #38bdf8;
+      --accent: #10b981;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; }
+    header { background: rgba(9, 13, 22, 0.95); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(8px); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; }
+    .logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .logo span { color: var(--primary-light); }
+    .nav-tabs { display: flex; gap: 8px; }
+    .nav-btn { background: none; border: none; color: var(--text-muted); font-size: 14px; font-weight: 600; padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+    .nav-btn:hover { color: #fff; background: var(--surface-2); }
+    .nav-btn.active { color: #fff; background: var(--primary); }
+    .container { max-width: 1120px; margin: 0 auto; padding: 48px 24px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .hero { text-align: center; max-width: 840px; margin: 0 auto 60px auto; }
+    .badge { display: inline-block; background: rgba(2, 132, 199, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); color: var(--primary-light); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 4px 14px; border-radius: 20px; margin-bottom: 20px; }
+    h1 { font-size: 46px; line-height: 1.15; font-weight: 800; color: #fff; margin-bottom: 20px; }
+    .hero p { font-size: 19px; color: var(--text-muted); margin-bottom: 32px; }
+    .btn-primary { background: var(--primary); color: #fff; border: none; padding: 14px 28px; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; transition: background 0.2s; text-decoration: none; display: inline-block; }
+    .btn-primary:hover { background: #0369a1; }
+    .btn-secondary { background: var(--surface-2); color: #fff; border: 1px solid var(--border); padding: 14px 28px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-left: 12px; }
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin: 40px 0; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-align: center; }
+    .stat-val { font-size: 38px; font-weight: 800; color: var(--primary-light); margin-bottom: 6px; }
+    .stat-lbl { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-top: 32px; }
+    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 32px; }
+    .feature-icon { font-size: 32px; margin-bottom: 16px; }
+    .feature-card h3 { color: #fff; font-size: 20px; margin-bottom: 10px; }
+    .feature-card p { color: var(--text-muted); font-size: 14px; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; margin-top: 40px; }
+    .pricing-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 40px; position: relative; }
+    .pricing-card.popular { border-color: var(--primary-light); }
+    .popular-tag { position: absolute; top: -12px; right: 24px; background: var(--primary); color: #fff; font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 10px; text-transform: uppercase; }
+    .price-num { font-size: 44px; font-weight: 800; color: #fff; margin: 16px 0; }
+    .price-num span { font-size: 16px; color: var(--text-muted); font-weight: 400; }
+    .calc-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 36px; margin: 40px 0; }
+    .calc-slider { width: 100%; margin: 12px 0 24px 0; accent-color: var(--primary-light); }
+    .bays-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+    .bay-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 18px; cursor: pointer; transition: transform 0.15s; }
+    .bay-card:hover { transform: translateY(-2px); }
+    .bay-tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; margin-bottom: 8px; }
+    .bay-tag.busy { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    .bay-tag.free { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    .bay-tag.docking { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; }
+    .modal-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 36px; max-width: 500px; width: 90%; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-inner">
+      <div class="logo">⚡ DOCK<span>STREAM</span></div>
+      <div class="nav-tabs">
+        <button class="nav-btn active" onclick="switchTab('home')">Home</button>
+        <button class="nav-btn" onclick="switchTab('features')">Platform</button>
+        <button class="nav-btn" onclick="switchTab('integrations')">Integrations</button>
+        <button class="nav-btn" onclick="switchTab('pricing')">Pricing & ROI</button>
+        <button class="nav-btn" onclick="openDemo()">Schedule Demo</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- TAB 1: HOME -->
+    <div id="tab-home" class="tab-content active">
+      <div class="hero">
+        <span class="badge">Intelligent Cross-Dock Operations</span>
+        <h1>Eliminate Dock Dead-Time & Driver Detention Claims.</h1>
+        <p>Automate driver check-in via mobile geofence, dynamically assign loading bays, and sync electronic bills of lading in under 30 seconds.</p>
+        <div>
+          <button class="btn-primary" onclick="openDemo()">Request Terminal Scoping Call</button>
+          <button class="btn-secondary" onclick="switchTab('features')">Explore Features →</button>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-val">38%</div>
+          <div class="stat-lbl">Faster Trailer Turn Time</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">14 hrs</div>
+          <div class="stat-lbl">Saved Per Dispatcher / Wk</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">$14,800</div>
+          <div class="stat-lbl">Avg Monthly Detention Savings</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">14 Days</div>
+          <div class="stat-lbl">Turnkey Implementation SLA</div>
+        </div>
+      </div>
+
+      <h2 style="font-size: 24px; color: #fff; margin-top: 48px; margin-bottom: 8px;">Live Facility Bay Status (Interactive Simulation)</h2>
+      <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Click any loading bay below to toggle trailer docking status and test automated SMS driver routing.</p>
+      
+      <div class="bays-grid" id="bay-grid">
+        <div class="bay-card" onclick="toggleBay(0)">
+          <span class="bay-tag busy" id="tag-0">Unloading</span>
+          <h4 style="color:#fff; font-size: 15px;">Bay 01 · Swift #4182</h4>
+          <p style="color:var(--text-muted); font-size: 12px; margin-top: 4px;">24 pallets · Ice Cream · Dock Door 1</p>
+        </div>
+        <div class="bay-card" onclick="toggleBay(1)">
+          <span class="bay-tag free" id="tag-1">Available</span>
+          <h4 style="color:#fff; font-size: 15px;">Bay 02 · Clean Dock</h4>
+          <p style="color:var(--text-muted); font-size: 12px; margin-top: 4px;">Ready for inbound assignment</p>
+        </div>
+        <div class="bay-card" onclick="toggleBay(2)">
+          <span class="bay-tag docking" id="tag-2">Check-in SMS</span>
+          <h4 style="color:#fff; font-size: 15px;">Bay 03 · Werner #9102</h4>
+          <p style="color:var(--text-muted); font-size: 12px; margin-top: 4px;">Driver arrived at geofence gate</p>
+        </div>
+        <div class="bay-card" onclick="toggleBay(3)">
+          <span class="bay-tag busy" id="tag-3">Staging</span>
+          <h4 style="color:#fff; font-size: 15px;">Bay 04 · Knight #1105</h4>
+          <p style="color:var(--text-muted); font-size: 12px; margin-top: 4px;">Forklift team active (18 min elapsed)</p>
+        </div>
+        <div class="bay-card" onclick="toggleBay(4)">
+          <span class="bay-tag free" id="tag-4">Available</span>
+          <h4 style="color:#fff; font-size: 15px;">Bay 05 · Clean Dock</h4>
+          <p style="color:var(--text-muted); font-size: 12px; margin-top: 4px;">Reserved for 2:30 PM Carrier</p>
+        </div>
+        <div class="bay-card" onclick="toggleBay(5)">
+          <span class="bay-tag busy" id="tag-5">BOL Signed</span>
+          <h4 style="color:#fff; font-size: 15px;">Bay 06 · Schneider #502</h4>
+          <p style="color:var(--text-muted); font-size: 12px; margin-top: 4px;">Trailer released · Bay clearing</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: PLATFORM FEATURES -->
+    <div id="tab-features" class="tab-content">
+      <div style="text-align: center; max-width: 700px; margin: 0 auto 40px auto;">
+        <span class="badge">Core Functionality</span>
+        <h2 style="font-size: 36px; color: #fff; margin-bottom: 12px;">Purpose-Built for Mid-Market Cross-Dock Operators</h2>
+        <p style="color: var(--text-muted);">Replace paper manifests, radio chatter, and whiteboard tracking with automated digital dispatch.</p>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📲</div>
+          <h3>Geofenced Driver Check-In</h3>
+          <p>Drivers trigger automatic check-in when entering your facility perimeter. No mobile app download required—drivers receive an SMS link with door assignment and terminal guidelines.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🚪</div>
+          <h3>Dynamic Dock Door Assignment</h3>
+          <p>Algorithms allocate bays based on trailer temperature class, liftgate requirements, forklift staging proximity, and priority dispatch schedules.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✍️</div>
+          <h3>Sign-on-Glass Electronic BOL</h3>
+          <p>Drivers inspect master carton tallies and sign digital bills of lading directly on mobile glass in under 30 seconds. PDFs instantly sync to carrier and ERP records.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⏱️</div>
+          <h3>Predictive Demurrage Warnings</h3>
+          <p>Automated visual countdown flags trailers approaching detention windows (45 minutes prior), empowering dispatchers to prioritize at-risk freight.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Shift Throughput Analytics</h3>
+          <p>Track turnaround times by carrier, driver, shift supervisor, and commodity type. Export audit-ready compliance logs with one click.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🌐</div>
+          <h3>Multilingual Driver Interface</h3>
+          <p>Instant SMS localization into English, Spanish, Polish, and Russian ensures seamless communication with long-haul regional freight drivers.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: INTEGRATIONS -->
+    <div id="tab-integrations" class="tab-content">
+      <div style="text-align: center; max-width: 700px; margin: 0 auto 40px auto;">
+        <span class="badge">Enterprise Connectivity</span>
+        <h2 style="font-size: 36px; color: #fff; margin-bottom: 12px;">Connects with Your Existing Tech Stack</h2>
+        <p style="color: var(--text-muted);">Bi-directional webhooks and native connectors eliminate dual-entry between yard management and enterprise ERPs.</p>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h3 style="color: var(--primary-light);">SAP TMS & S/4HANA</h3>
+          <p>Native IDoc and OData REST integration. Pull incoming manifest schedules and push finalized pallet receipts straight into central inventory.</p>
+        </div>
+        <div class="feature-card">
+          <h3 style="color: var(--primary-light);">Oracle Transportation Mgmt</h3>
+          <p>Real-time dock appointment synchronization with shipment milestone updates (EDI 214 and XML freight statuses).</p>
+        </div>
+        <div class="feature-card">
+          <h3 style="color: var(--primary-light);">Blue Yonder (JDA)</h3>
+          <p>Automated warehouse door reservation mapping and driver staging queue synchronization.</p>
+        </div>
+        <div class="feature-card">
+          <h3 style="color: var(--primary-light);">Standard EDI 204 / 214 / 210</h3>
+          <p>Turnkey electronic data interchange compatibility with certified clearinghouse protocols.</p>
+        </div>
+        <div class="feature-card">
+          <h3 style="color: var(--primary-light);">Manhattan Associates WMS</h3>
+          <p>Cross-dock pallet put-away routing and carton exception logging.</p>
+        </div>
+        <div class="feature-card">
+          <h3 style="color: var(--primary-light);">Custom Webhook & REST API</h3>
+          <p>Full OpenAPI 3.0 documentation for custom in-house terminal management software.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: PRICING & ROI CALCULATOR -->
+    <div id="tab-pricing" class="tab-content">
+      <div style="text-align: center; max-width: 700px; margin: 0 auto 20px auto;">
+        <span class="badge">Transparent Terminal Licensing</span>
+        <h2 style="font-size: 36px; color: #fff; margin-bottom: 12px;">Simple, Predictable Per-Facility Pricing</h2>
+        <p style="color: var(--text-muted);">No per-driver fees. Unlimited trailer transactions and dispatcher logins included.</p>
+      </div>
+
+      <div class="calc-box">
+        <h3 style="color: #fff; font-size: 22px; margin-bottom: 8px;">Interactive Detention ROI Calculator</h3>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">Estimate your facility's monthly cost savings with DockStream automated dispatch.</p>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
+          <div>
+            <label style="color:#fff; font-size: 14px; font-weight:600; display:block;">Daily Trailer Inbound Volume: <span id="val-trailers" style="color:var(--primary-light);">45</span> trailers/day</label>
+            <input type="range" min="10" max="150" value="45" class="calc-slider" id="slide-trailers" oninput="calcROI()">
+
+            <label style="color:#fff; font-size: 14px; font-weight:600; display:block; margin-top: 16px;">Current Avg Turn Time: <span id="val-dwell" style="color:var(--primary-light);">75</span> minutes</label>
+            <input type="range" min="30" max="180" value="75" class="calc-slider" id="slide-dwell" oninput="calcROI()">
+          </div>
+
+          <div style="background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 24px; text-align: center;">
+            <div style="font-size: 13px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px;">Estimated Monthly Savings</div>
+            <div style="font-size: 42px; font-weight: 800; color: #10b981; margin: 10px 0;" id="roi-savings">$15,390</div>
+            <div style="font-size: 13px; color: var(--text-muted);" id="roi-hours">Includes 182 dispatcher hours saved and 74 prevented detention claims.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <h3 style="color: #fff; font-size: 22px;">Standard Hub</h3>
+          <p style="color: var(--text-muted); font-size: 14px; margin-top: 6px;">For regional distribution terminals managing up to 20 bays.</p>
+          <div class="price-num">$1,250 <span>/ month</span></div>
+          <ul style="color: var(--text-muted); font-size: 14px; list-style: none; line-height: 2; margin-bottom: 28px;">
+            <li>✓ Up to 20 Active Loading Bays</li>
+            <li>✓ Unlimited Driver SMS Check-ins</li>
+            <li>✓ Digital BOL Generation & PDF Export</li>
+            <li>✓ Standard 99.9% Uptime SLA</li>
+            <li>✓ Email & Phone Dispatch Support</li>
+          </ul>
+          <button class="btn-primary" style="width: 100%;" onclick="openDemo()">Select Standard Hub</button>
+        </div>
+
+        <div class="pricing-card popular">
+          <div class="popular-tag">Most Popular</div>
+          <h3 style="color: #fff; font-size: 22px;">Enterprise Fleet</h3>
+          <p style="color: var(--text-muted); font-size: 14px; margin-top: 6px;">For high-volume multi-facility 3PL operations requiring custom ERP sync.</p>
+          <div class="price-num">$2,800 <span>/ month</span></div>
+          <ul style="color: var(--text-muted); font-size: 14px; list-style: none; line-height: 2; margin-bottom: 28px;">
+            <li>✓ Unlimited Loading Bays & Terminals</li>
+            <li>✓ Bi-directional SAP / Oracle TMS Sync</li>
+            <li>✓ Predictive Demurrage Alert Engine</li>
+            <li>✓ 99.99% Enterprise Uptime Guarantee</li>
+            <li>✓ Dedicated Implementation Engineer</li>
+          </ul>
+          <button class="btn-primary" style="width: 100%;" onclick="openDemo()">Select Enterprise Fleet</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="demo-modal" class="modal">
+    <div class="modal-box">
+      <h3 style="color: #fff; font-size: 22px; margin-bottom: 8px;">Schedule Dockyard Scoping Call</h3>
+      <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Book a 20-minute operational review with Jack Johnson, Co-Founder.</p>
+      <div style="margin-bottom: 16px;">
+        <label style="display:block; color:#fff; font-size:13px; margin-bottom:6px;">Your Name</label>
+        <input type="text" value="Jack Johnson" style="width:100%; padding:10px; background:var(--surface-2); border:1px solid var(--border); color:#fff; border-radius:6px;">
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label style="display:block; color:#fff; font-size:13px; margin-bottom:6px;">Terminal Location / Company</label>
+        <input type="text" value="Apex Cold Logistics — Midwest Hub" style="width:100%; padding:10px; background:var(--surface-2); border:1px solid var(--border); color:#fff; border-radius:6px;">
+      </div>
+      <div style="margin-bottom: 24px;">
+        <label style="display:block; color:#fff; font-size:13px; margin-bottom:6px;">Work Email</label>
+        <input type="email" value="jack@dockstream.io" style="width:100%; padding:10px; background:var(--surface-2); border:1px solid var(--border); color:#fff; border-radius:6px;">
+      </div>
+      <button class="btn-primary" style="width: 100%;" onclick="submitDemo()">Confirm Scoping Reservation</button>
+      <button class="btn-secondary" style="width: 100%; margin: 10px 0 0 0;" onclick="closeDemo()">Close</button>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(nb => nb.classList.remove('active'));
+      const target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.add('active');
+      event.target.classList.add('active');
+    }
+    function calcROI() {
+      const trailers = parseInt(document.getElementById('slide-trailers').value);
+      const dwell = parseInt(document.getElementById('slide-dwell').value);
+      document.getElementById('val-trailers').textContent = trailers;
+      document.getElementById('val-dwell').textContent = dwell;
+
+      // 38% dwell time reduction
+      const minutesSavedPerTruck = dwell * 0.38;
+      const hoursSavedMonthly = Math.round((trailers * 26 * minutesSavedPerTruck) / 60);
+      const preventedDetentions = Math.round(trailers * 26 * 0.08); // 8% risk
+      const dollarSavings = (preventedDetentions * 150) + (hoursSavedMonthly * 28);
+      document.getElementById('roi-savings').textContent = '$' + dollarSavings.toLocaleString();
+      document.getElementById('roi-hours').textContent = 'Includes ' + hoursSavedMonthly + ' dispatcher hours saved and ' + preventedDetentions + ' prevented detention claims.';
+    }
+    const bayStates = [
+      { text: 'Unloading', cls: 'busy' },
+      { text: 'Available', cls: 'free' },
+      { text: 'Check-in SMS', cls: 'docking' }
+    ];
+    function toggleBay(idx) {
+      const tag = document.getElementById('tag-' + idx);
+      if (tag.classList.contains('busy')) {
+        tag.className = 'bay-tag free';
+        tag.textContent = 'Available';
+      } else if (tag.classList.contains('free')) {
+        tag.className = 'bay-tag docking';
+        tag.textContent = 'Docking In';
+      } else {
+        tag.className = 'bay-tag busy';
+        tag.textContent = 'Unloading';
+      }
+    }
+    function openDemo() {
+      document.getElementById('demo-modal').style.display = 'flex';
+    }
+    function closeDemo() {
+      document.getElementById('demo-modal').style.display = 'none';
+    }
+    function submitDemo() {
+      alert('Scoping call request submitted! Implementation team will contact within 2 hours.');
+      closeDemo();
+    }
+  </script>
+</body>
+</html>

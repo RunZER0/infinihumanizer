@@ -3,38 +3,169 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ApexDesk MagSafe Modular Dock — Live Storefront Preview</title>
+  <title>ApexDesk · Precision Modular MagSafe Desk Dock & Wireless Charger</title>
   <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      margin: 0; padding: 40px; background: #0c0b09; color: #f7f4ec; line-height: 1.6;
+    :root {
+      --bg: #0c0b09;
+      --surface: #171612;
+      --surface-2: #24221c;
+      --border: #36342e;
+      --accent: #cc4b2c;
+      --accent-hover: #e05837;
+      --text: #f7f4ec;
+      --text-muted: #9e998c;
     }
-    .container { max-width: 860px; margin: 0 auto; background: #171612; border: 1px solid #36342e; border-radius: 8px; padding: 36px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
-    h1 { color: #ffffff; border-bottom: 2px solid #cc4b2c; padding-bottom: 12px; margin-top: 0; font-size: 26px; }
-    h2 { color: #e8e3d6; margin-top: 28px; font-size: 19px; }
-    p, li { color: #c4beb1; font-size: 15px; }
-    code, pre { background: #0c0b09; border: 1px solid #36342e; border-radius: 4px; font-family: monospace; padding: 2px 6px; color: #ff8a65; }
-    pre { padding: 16px; overflow-x: auto; }
-    .badge { display: inline-block; background: #cc4b2c; color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; margin-bottom: 16px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; }
+    header { border-bottom: 1px solid var(--border); padding: 18px 40px; display: flex; justify-content: space-between; align-items: center; background: rgba(12, 11, 9, 0.95); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
+    .logo { font-size: 20px; font-weight: 800; letter-spacing: 1.5px; color: #fff; }
+    .logo span { color: var(--accent); }
+    .container { max-width: 1080px; margin: 0 auto; padding: 50px 24px; }
+    .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+    .badge { display: inline-block; background: rgba(204, 75, 44, 0.15); color: var(--accent); border: 1px solid rgba(204, 75, 44, 0.3); padding: 4px 12px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 16px; letter-spacing: 1px; }
+    h1 { font-size: 40px; line-height: 1.15; font-weight: 800; color: #fff; margin-bottom: 16px; }
+    .lead { font-size: 17px; color: var(--text-muted); margin-bottom: 24px; }
+    .price-box { display: flex; align-items: baseline; gap: 12px; margin-bottom: 24px; }
+    .current-price { font-size: 42px; font-weight: 800; color: #fff; }
+    .original-price { font-size: 20px; text-decoration: line-through; color: var(--text-muted); }
+    .save-badge { background: #22c55e; color: #000; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; }
+    .product-visual { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 40px; text-align: center; position: relative; }
+    .color-pill { width: 32px; height: 32px; border-radius: 50%; display: inline-block; cursor: pointer; border: 2px solid transparent; }
+    .color-pill.active { border-color: var(--accent); transform: scale(1.1); }
+    .options-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin: 20px 0; }
+    .option-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .btn-buy { background: var(--accent); color: #fff; width: 100%; border: none; padding: 18px; border-radius: 8px; font-size: 17px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+    .btn-buy:hover { background: var(--accent-hover); }
+    .specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 60px; }
+    .spec-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 24px; }
+    .spec-card strong { color: #fff; display: block; font-size: 15px; margin-bottom: 6px; }
+    .spec-card p { color: var(--text-muted); font-size: 13px; }
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; }
+    .modal-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 36px; max-width: 480px; width: 90%; text-align: center; }
   </style>
 </head>
 <body>
+  <header>
+    <div class="logo">APEX<span>DESK</span></div>
+    <div style="font-size: 13px; color: var(--text-muted);">Batch 1 Shipping: Nov 2026</div>
+  </header>
   <div class="container">
-    <span class="badge">Verified Client Deliverable</span>
-    <h1>ApexDesk MagSafe Modular Dock — Live Storefront Preview</h1>
-    
-        <p><strong>The last desk dock you will ever need.</strong> Precision CNC-machined aerospace aluminum with modular 15W wireless charging pucks.</p>
-        <h2>Key Product Highlights</h2>
-        <ul>
-          <li><strong>Universal Modular Rail:</strong> Snap in phone mounts, earbud pads, and pencil docks in any order.</li>
-          <li><strong>Single-Cable Cleanliness:</strong> One braided 100W USB-C input powers all 4 accessories.</li>
-          <li><strong>Thermal Management:</strong> Solid aluminum heatsink keeps MagSafe charging at full speed.</li>
-        </ul>
-        <h2>Launch Pricing & Packages</h2>
-        <p>— <em>Starter Kit:</em> $129 (Base Rail + 15W Phone Charger + Cable Caddy)<br>
-        — <em>Studio Pro Bundle:</em> $199 (Base Rail + Phone + Watch + AirPods Pad + Walnut Pen Tray)</p>
-        <p style="margin-top: 30px;"><a href="#preorder" style="display:inline-block; background:#cc4b2c; color:#fff; padding:12px 24px; text-decoration:none; border-radius:6px; font-weight:bold;">Pre-Order Now — Limited First Batch</a></p>
+    <div class="hero-grid">
+      <div class="product-visual">
+        <div style="font-size: 80px; margin-bottom: 20px;" id="dock-emoji">⚡</div>
+        <div style="font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 8px;" id="variant-label">Matte Black Edition</div>
+        <h3 style="font-size: 24px; color: #fff; margin-bottom: 16px;">ApexDesk Modular 4-in-1 Rail</h3>
+        <div style="display: flex; justify-content: center; gap: 16px; margin-top: 20px;">
+          <div class="color-pill active" style="background: #181714;" onclick="setColor('black', this)" title="Matte Black"></div>
+          <div class="color-pill" style="background: #94a3b8;" onclick="setColor('silver', this)" title="Aerospace Silver"></div>
+        </div>
+      </div>
+      <div>
+        <span class="badge">DTC Hardware Pre-Order</span>
+        <h1>The last desk dock you will ever need.</h1>
+        <p class="lead">Precision CNC-machined aerospace 6063 aluminum with Qi2 15W MagSafe fast charging and modular snap-in magnetic rail architecture.</p>
         
+        <div class="price-box">
+          <div class="current-price" id="total-price">$129</div>
+          <div class="original-price">$179</div>
+          <span class="save-badge">Save $50 Early Bird</span>
+        </div>
+
+        <div class="options-box">
+          <strong style="color: #fff; display: block; font-size: 14px; margin-bottom: 12px;">Customize Modular Accessories:</strong>
+          <div class="option-item">
+            <label style="font-size: 14px; display: flex; align-items: center; gap: 10px; cursor: pointer;">
+              <input type="checkbox" id="opt-rail" checked disabled> CNC Aluminum Base Rail + 15W Phone Puck
+            </label>
+            <span style="font-size: 13px; color: var(--text-muted);">Included</span>
+          </div>
+          <div class="option-item">
+            <label style="font-size: 14px; display: flex; align-items: center; gap: 10px; cursor: pointer;">
+              <input type="checkbox" id="opt-watch" onchange="calcTotal()"> 5W Fast-Charge Apple Watch Magnetic Puck
+            </label>
+            <span style="font-size: 13px; color: var(--accent);">+$39</span>
+          </div>
+          <div class="option-item">
+            <label style="font-size: 14px; display: flex; align-items: center; gap: 10px; cursor: pointer;">
+              <input type="checkbox" id="opt-pods" onchange="calcTotal()"> Wireless AirPods Qi Charging Base
+            </label>
+            <span style="font-size: 13px; color: var(--accent);">+$29</span>
+          </div>
+          <div class="option-item">
+            <label style="font-size: 14px; display: flex; align-items: center; gap: 10px; cursor: pointer;">
+              <input type="checkbox" id="opt-tray" onchange="calcTotal()"> American Walnut Magnetic Pen & Card Tray
+            </label>
+            <span style="font-size: 13px; color: var(--accent);">+$25</span>
+          </div>
+        </div>
+
+        <button class="btn-buy" onclick="openCheckout()">Pre-Order ApexDesk — <span id="btn-price">$129</span></button>
+        <div style="font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 12px;">30-Day Money Back Guarantee · 2-Year Hardware Replacement Warranty</div>
+      </div>
+    </div>
+
+    <div class="specs-grid">
+      <div class="spec-card">
+        <strong>Aerospace Aluminum Chassis</strong>
+        <p>Unibody solid block 6063 alloy CNC-milled with bead-blasted satin finish.</p>
+      </div>
+      <div class="spec-card">
+        <strong>Qi2 15W MagSafe Standard</strong>
+        <p>Certified fast wireless charging compatible with iPhone 12 through 17 series.</p>
+      </div>
+      <div class="spec-card">
+        <strong>Single Cable Cleanliness</strong>
+        <p>One 100W USB-C input on back powers all 4 modular accessories simultaneously.</p>
+      </div>
+      <div class="spec-card">
+        <strong>Thermal Management</strong>
+        <p>Passive internal copper heatsink prevents thermal throttling during high-speed charging.</p>
+      </div>
+    </div>
   </div>
+
+  <div id="checkout-modal" class="modal">
+    <div class="modal-box">
+      <div style="font-size: 48px; margin-bottom: 12px;">🎉</div>
+      <h2 style="color: #fff; margin-bottom: 8px;">Batch 1 Reserved!</h2>
+      <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Your ApexDesk configuration is locked in at early-bird pricing. Production tracking updates will be emailed to your account.</p>
+      <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 14px; margin-bottom: 20px; font-weight: bold; color: var(--accent);" id="modal-summary">$129 — Matte Black Edition</div>
+      <button class="btn-buy" onclick="closeCheckout()">Close Window</button>
+    </div>
+  </div>
+
+  <script>
+    let currentColor = 'Matte Black Edition';
+    function setColor(color, el) {
+      document.querySelectorAll('.color-pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      if (color === 'silver') {
+        currentColor = 'Aerospace Silver Edition';
+        document.getElementById('dock-emoji').textContent = '✨';
+        document.getElementById('variant-label').textContent = 'Aerospace Silver Edition';
+      } else {
+        currentColor = 'Matte Black Edition';
+        document.getElementById('dock-emoji').textContent = '⚡';
+        document.getElementById('variant-label').textContent = 'Matte Black Edition';
+      }
+    }
+    function calcTotal() {
+      let base = 129;
+      if (document.getElementById('opt-watch').checked) base += 39;
+      if (document.getElementById('opt-pods').checked) base += 29;
+      if (document.getElementById('opt-tray').checked) base += 25;
+      document.getElementById('total-price').textContent = '$' + base;
+      document.getElementById('btn-price').textContent = '$' + base;
+    }
+    function openCheckout() {
+      const price = document.getElementById('total-price').textContent;
+      document.getElementById('modal-summary').textContent = price + ' · ' + currentColor;
+      const modal = document.getElementById('checkout-modal');
+      modal.style.display = 'flex';
+    }
+    function closeCheckout() {
+      document.getElementById('checkout-modal').style.display = 'none';
+    }
+  </script>
 </body>
 </html>
