@@ -1,40 +1,74 @@
 %PDF-1.4
+%“Œ‹ž ReportLab Generated PDF document (opensource)
 1 0 obj
-<< /Type /Catalog /Pages 2 0 R >>
+<<
+/F1 2 0 R /F2 3 0 R
+>>
 endobj
 2 0 obj
-<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+<<
+/BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font
+>>
 endobj
 3 0 obj
-<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+<<
+/BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font
+>>
 endobj
 4 0 obj
-<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+<<
+/Contents 8 0 R /MediaBox [ 0 0 612 792 ] /Parent 7 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
 endobj
 5 0 obj
-<< /Length 201 >>
+<<
+/PageMode /UseNone /Pages 7 0 R /Type /Catalog
+>>
+endobj
+6 0 obj
+<<
+/Author (\(anonymous\)) /CreationDate (D:20261023113258+03'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20261023113258+03'00') /Producer (ReportLab PDF Library - \(opensource\)) 
+  /Subject (\(unspecified\)) /Title (\(anonymous\)) /Trapped /False
+>>
+endobj
+7 0 obj
+<<
+/Count 1 /Kids [ 4 0 R ] /Type /Pages
+>>
+endobj
+8 0 obj
+<<
+/Filter [ /ASCII85Decode /FlateDecode ] /Length 701
+>>
 stream
-BT
-/F1 13 Tf
-54 740 Td
-(B2B Enterprise Deck & 5-Page Website Copy \(v1 Draft\)) Tj
-/F1 10 Tf
-0 -22 Td
-(Draft slide deck structure and website messaging for third-party logistics buyers.) Tj
-0 -15 Td
-ET
-endstream
+GasalgQ'uA'R]'ok,Df?XW'?A/q)am.TZm(Uoc*iTg0#s$OKN//,&:U*(&nIC/nEIfJtrJSf)TO1jFFUm=B/.%g*:o&?WbhjrbQdN*<u"]W%,24I]8(XYJT)Ke5T%/9%C"paA$PlG<M-'hfh*;c<_S]M_gKHFD@;TLPrV0V3sH:8Gn)).q:J^)CK6>S#l25kS)hLjh<_hl*>4$m-$D+aS&4IA-2"PU.uY?GS]->R5sq-ue&t@$Y;DgS:Ylrkt@`>BW9edI)lE_Q;2)Th%h9^0^cV435H6][?MWQXs?7o^]m;oCe$9?c;8FrpU[XQW0r@EBM_C\])4s[6,PT\"s?9^)#,9oM[9@J(m>R!>]jGrM,o&1udEF><Hl@\EeC*Hfop-F+El%!a/aST6:DN_GM"B-W;l1d2Pl1]X\d?MTr\%BEjZD66(Xje@rhDY1O^["79?dNG^.gBqg_,NQ\=]Y,Z!*&SDEA)km#;/E9HnD6V:n<84cN*Y36fS[$?sBj%:5'$K<<(F=El\#?WQ[q[_HKSFdClAk>FJn?PfWMkGd2Z(8W=O+%H1oV*q0&8N*j9[Hpi81--7/lRupdEBsl!os>=S_6lf3&:-s+mS#S!A9-=Gl4W.(:>4(+TaQil'Ln=^Op"k?)Tm,(7iF`Woef<LRRjNoI]E:GcAFoVG;olSM6rlDi_$hnY59B`/.=4T;J~>endstream
 endobj
 xref
-0 6
+0 9
 0000000000 65535 f 
-0000000009 00000 n 
-0000000058 00000 n 
-0000000115 00000 n 
-0000000241 00000 n 
-0000000311 00000 n 
+0000000061 00000 n 
+0000000102 00000 n 
+0000000209 00000 n 
+0000000321 00000 n 
+0000000514 00000 n 
+0000000582 00000 n 
+0000000862 00000 n 
+0000000921 00000 n 
 trailer
-<< /Size 6 /Root 1 0 R >>
+<<
+/ID 
+[<774facc4a4002456bcdbe6d8456bf63c><774facc4a4002456bcdbe6d8456bf63c>]
+% ReportLab generated PDF document -- digest (opensource)
+
+/Info 6 0 R
+/Root 5 0 R
+/Size 9
+>>
 startxref
-563
+1712
 %%EOF

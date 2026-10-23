@@ -1,48 +1,74 @@
 %PDF-1.4
+%“Œ‹ž ReportLab Generated PDF document (opensource)
 1 0 obj
-<< /Type /Catalog /Pages 2 0 R >>
+<<
+/F1 2 0 R /F2 3 0 R
+>>
 endobj
 2 0 obj
-<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+<<
+/BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font
+>>
 endobj
 3 0 obj
-<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+<<
+/BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font
+>>
 endobj
 4 0 obj
-<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+<<
+/Contents 8 0 R /MediaBox [ 0 0 612 792 ] /Parent 7 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
 endobj
 5 0 obj
-<< /Length 472 >>
+<<
+/PageMode /UseNone /Pages 7 0 R /Type /Catalog
+>>
+endobj
+6 0 obj
+<<
+/Author (\(anonymous\)) /CreationDate (D:20261023113257+03'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20261023113257+03'00') /Producer (ReportLab PDF Library - \(opensource\)) 
+  /Subject (\(unspecified\)) /Title (\(anonymous\)) /Trapped /False
+>>
+endobj
+7 0 obj
+<<
+/Count 1 /Kids [ 4 0 R ] /Type /Pages
+>>
+endobj
+8 0 obj
+<<
+/Filter [ /ASCII85Decode /FlateDecode ] /Length 855
+>>
 stream
-BT
-/F1 13 Tf
-54 740 Td
-(Angel Pitch Deck Architecture \(10 Slides\) ? v1 Review) Tj
-/F1 10 Tf
-0 -22 Td
-(Slide 1: Executive Title & The 10-Second Hook) Tj
-0 -15 Td
-(Slide 2: The Operational Pain of Disconnected Field Crews) Tj
-0 -15 Td
-(Slide 3: Product Demo: Real-Time Mobile Dispatch & Invoicing) Tj
-0 -15 Td
-(Slide 4: TAM / SAM / SOM \($8.2B North American Service Fleets\)) Tj
-0 -15 Td
-(Slide 5: Traction: 28 Paid Pilots, $14.2K MRR, 100% Logo Retention) Tj
-0 -15 Td
-ET
-endstream
+Gatn#?ZVZ$'ZJu.'^$XaQqftk(Db@V'"+S/:TCctR;iM6\da6[1mrghhF2:E8a>pk_m#o?h#6&Mml_YL/mba''"Eg<g#Luld1"g8*(53sUW0JAhsZd<T$:t*4gSt^(UaH`ZW`B"/Ka)e5r&/lYelQZQ5!<62a8`@2_gf\YSRee+N3K@3tA!(1n7qdIIDh6g^;ZNW7ME\_k<&c[ibUB/Q_o=)5<aZ4rU)4FM3?:EY$,/S(eu8-Adc(#`IB<=(KU-Mu*]OL`.ebk:4B/Y*&rL._/&G-4=+YUtV%?[nY.%a`OQ6[qEW.4D[$tC9,n&0fYMaWSofXkl0#7]U$`'+-ph<d3?Y88/pSbNP,7,#t[Qna=qlaSB#g3?7*%CRb'DQ<G_%*[lF+eLBQSu830B\I;BN!brQ[12S+r!fi39u&EtZC3(:3I([PV*Os3]l\L?m,B'AS;r:aoDdQZ^HJa\^h]*9+S<#JcKaC?\lXE,(3FS)#`E[lo<dF0R<EF#T"ohdj1^8k^d)`M>jDN]mgA6H:=#NG(odS#9[EMlAnU0P[7MbXlHgHm8KT-#@icFXGIOFY.IQ^I-jd=Ah&`4*Z"L.,5s&1gh\P;pTNQ!9e-oJ36mlK_rEdMM@E.>b?h'3!jJKPtUqde%*>[6DV;)3FWN_0C?&S]F!f?d&mU\l-*7i$bM)g[Wfmf+J=XnDn!nIGYe3cY=>qW3+8hpRec?D=8pN1eo9'\[6AnQ7'1a?X&S>OMlW(7,P=53h.?cdHhRhAk?,Lm'I@;l7nm5N$V1sZD?`r.Q=aW9t/n]V6c_$#+K@)Pkm<J`Ug(nW/RUbN:3\ml[<2*e%#t*K7"K]:YolD`ZJETG]s~>endstream
 endobj
 xref
-0 6
+0 9
 0000000000 65535 f 
-0000000009 00000 n 
-0000000058 00000 n 
-0000000115 00000 n 
-0000000241 00000 n 
-0000000311 00000 n 
+0000000061 00000 n 
+0000000102 00000 n 
+0000000209 00000 n 
+0000000321 00000 n 
+0000000514 00000 n 
+0000000582 00000 n 
+0000000862 00000 n 
+0000000921 00000 n 
 trailer
-<< /Size 6 /Root 1 0 R >>
+<<
+/ID 
+[<69cf658f297e775a786e15389dee5da2><69cf658f297e775a786e15389dee5da2>]
+% ReportLab generated PDF document -- digest (opensource)
+
+/Info 6 0 R
+/Root 5 0 R
+/Size 9
+>>
 startxref
-834
+1866
 %%EOF

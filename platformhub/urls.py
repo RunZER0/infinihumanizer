@@ -49,5 +49,7 @@ urlpatterns = [
     path("billing/config/", views.payment_config, name="payment_config"),
     path(".well-known/apple-developer-merchantid-domain-association", views.apple_pay_domain, name="apple_pay_domain"),
     path("operations/reconciliation/", views.reconciliation, name="reconciliation"),
+    path("showcase/studio-brown/", views.showcase_studio_brown, name="showcase_studio_brown"),
+    path("studio-brown/", views.showcase_studio_brown, name="studio_brown_direct"),
     path("health/", views.health, name="health"),
 ]

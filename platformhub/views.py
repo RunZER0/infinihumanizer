@@ -1973,5 +1973,14 @@ def operations_download_all_posters(request):
     return response
 
 
+def showcase_studio_brown(request):
+    """
+    Live hosted website deliverable for Audrey Brown (Studio Brown Photography, Austin TX).
+    Showcases editorial portraiture, transparent package pricing, and the streamlined 5-field booking flow.
+    """
+    return render(request, "platformhub/showcase_studio_brown.html")
+
+
 def health(request):
     return JsonResponse({"status": "ok", "service": "infiniai"})
+

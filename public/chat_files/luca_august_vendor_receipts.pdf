@@ -1,44 +1,74 @@
 %PDF-1.4
+%“Œ‹ž ReportLab Generated PDF document (opensource)
 1 0 obj
-<< /Type /Catalog /Pages 2 0 R >>
+<<
+/F1 2 0 R /F2 3 0 R
+>>
 endobj
 2 0 obj
-<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+<<
+/BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font
+>>
 endobj
 3 0 obj
-<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+<<
+/BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font
+>>
 endobj
 4 0 obj
-<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+<<
+/Contents 8 0 R /MediaBox [ 0 0 612 792 ] /Parent 7 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
 endobj
 5 0 obj
-<< /Length 397 >>
+<<
+/PageMode /UseNone /Pages 7 0 R /Type /Catalog
+>>
+endobj
+6 0 obj
+<<
+/Author (\(anonymous\)) /CreationDate (D:20261023113258+03'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20261023113258+03'00') /Producer (ReportLab PDF Library - \(opensource\)) 
+  /Subject (\(unspecified\)) /Title (\(anonymous\)) /Trapped /False
+>>
+endobj
+7 0 obj
+<<
+/Count 1 /Kids [ 4 0 R ] /Type /Pages
+>>
+endobj
+8 0 obj
+<<
+/Filter [ /ASCII85Decode /FlateDecode ] /Length 804
+>>
 stream
-BT
-/F1 13 Tf
-54 740 Td
-(August Maintenance Receipts ? Ala Moana & Waikiki Properties) Tj
-/F1 10 Tf
-0 -22 Td
-(Invoice 4821 ? Pacific Split-AC Service: $620.00 \(Unit 12A coil cleaning & refrigerant\).) Tj
-0 -15 Td
-(Receipt 9102 ? Kakaako Hardware: $185.00 \(Unit 4B smart keyless deadbolt\).) Tj
-0 -15 Td
-(Receipt 3409 ? CleanTeam Hawaii: $280.00 \(Deep clean between guest stays\).) Tj
-0 -15 Td
-ET
-endstream
+Gatn#?#S1G'Sc)R/'\;b*R]o6`/1h4Ci(?B[:@J>B%#`dDD=kVP,,5"YNNDefqsag$Y8A:dE+DpqqB(!-k<]#B.JM]']+lf0Fm=eQqr*#a"U265C9Ji'GNlp@5*-TSs8"DJ70_o"cXd,M]V"gJ'r?]+C/DR%ar%"<p"GrPK>5@,]Nn7MrA6;-I^'FB'IhgRDLfl6C<d&a]T7;@5&ZK?SUV`4?S5f#Ggf.ckd[_TE=Ac:lid)XubaKUgmf\+V<pcbR<qi:]S?W3V=SLLOQm=D!D5MQ*H=Wb%;PEFf*EpW=b)E&/P]!94\jNKl>*bE?)Lb(KJ#s<F^.L,&.t%W!mioIHlqK$>:i=85J^\H1n[mE;?2?pV3gqi0$nb@.m8T?Tt7?DiJCY/"JuUg.rOn"!=p,<t]:gB8*hHT%Imo:p;T5CW0VYbficcZZT]Fj7j$p]%UW7$+pR(-'Z8hs2pc7G>&EJBaVogXfSc8FJmRYat.Y2Cib"m??CjENr5I9=`k6s[6jcH>!^(TD^Bd39;Rq#HrO+[;jB^_;ER5=:SD*oWe%"\.s,&aY#TpT(9^&'s$&kt5)ib01Zr5IeI&R*ar#foZL`F9ot%OKDKW;7g;7<oER33q\uT1h(=G):PHUZ*>]a^IES-RT"rq8$ErE93EMrFN\"sY`I88btMZX:Tc2o+3B-N/'392+XOnU4l7#?_)Pr+9qTZf;ED&Z"M-W"V7Fee[/HF)-[0<:SBCK7[ckNt8BDjp-+AU`k`VV%B<0r7kR%!5pd35$nc)jf3fYpN3UjrH[fgGoSRh^8Ur;?~>endstream
 endobj
 xref
-0 6
+0 9
 0000000000 65535 f 
-0000000009 00000 n 
-0000000058 00000 n 
-0000000115 00000 n 
-0000000241 00000 n 
-0000000311 00000 n 
+0000000061 00000 n 
+0000000102 00000 n 
+0000000209 00000 n 
+0000000321 00000 n 
+0000000514 00000 n 
+0000000582 00000 n 
+0000000862 00000 n 
+0000000921 00000 n 
 trailer
-<< /Size 6 /Root 1 0 R >>
+<<
+/ID 
+[<f8d90c7f4e4daab6b7fbe28d62c620ee><f8d90c7f4e4daab6b7fbe28d62c620ee>]
+% ReportLab generated PDF document -- digest (opensource)
+
+/Info 6 0 R
+/Root 5 0 R
+/Size 9
+>>
 startxref
-759
+1815
 %%EOF

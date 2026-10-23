@@ -1,46 +1,74 @@
 %PDF-1.4
+%“Œ‹ž ReportLab Generated PDF document (opensource)
 1 0 obj
-<< /Type /Catalog /Pages 2 0 R >>
+<<
+/F1 2 0 R /F2 3 0 R
+>>
 endobj
 2 0 obj
-<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+<<
+/BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font
+>>
 endobj
 3 0 obj
-<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+<<
+/BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font
+>>
 endobj
 4 0 obj
-<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+<<
+/Contents 8 0 R /MediaBox [ 0 0 612 792 ] /Parent 7 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
 endobj
 5 0 obj
-<< /Length 562 >>
+<<
+/PageMode /UseNone /Pages 7 0 R /Type /Catalog
+>>
+endobj
+6 0 obj
+<<
+/Author (\(anonymous\)) /CreationDate (D:20261023113258+03'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20261023113258+03'00') /Producer (ReportLab PDF Library - \(opensource\)) 
+  /Subject (\(unspecified\)) /Title (\(anonymous\)) /Trapped /False
+>>
+endobj
+7 0 obj
+<<
+/Count 1 /Kids [ 4 0 R ] /Type /Pages
+>>
+endobj
+8 0 obj
+<<
+/Filter [ /ASCII85Decode /FlateDecode ] /Length 2086
+>>
 stream
-BT
-/F1 13 Tf
-54 740 Td
-(HubSpot CRM Lead-Routing & Deal Stage Specification ? Jack Johnson) Tj
-/F1 10 Tf
-0 -22 Td
-(1. AUTOMATED TERRITORY ROUTING: Round-robin dispatch based on shipping volume and geographic territory.) Tj
-0 -15 Td
-(2. STAGE DEFINITIONS & EXIT CRITERIA: Explicit requirements to move from Technical Scoping to Proposal.) Tj
-0 -15 Td
-(3. STALE DEAL SLA: Automated alert to sales manager when any deal sits in Discovery > 7 business days.) Tj
-0 -15 Td
-(4. WEIGHTED REVENUE FORECAST: Probability coefficients assigned per milestone.) Tj
-0 -15 Td
-ET
-endstream
+Gatm;?$"`@&q0MXka.b_GE&=m&:ThJlmN6r"XVj(E`Hk9#+2f[a@NV'rUop/876JiMsoK=PU//FB"Cd152B_2M3"L:abK"?V@U-O=Z45lZ<Y;DGXPtfnbp=>B6kot*=J&cAiRMC4!%h!0lT9si0.DO?k)G+XDN1rDm607^A<^e/[]3RAhs:0*m_]29]:C>cDIp]*n!.fKl`\V_c[O@PP[@'fY'K)KVR`=L9=&*H]!<Npts5k?h!m-Y+G)=G5Z)?:DmQpC0+u$jXVhidrd4>O1PW=?pBT/SH8)TcGt5ch\Hq9B4Dj"Q?Hn0?&<qtn*#M4N91jZELLfk,*jE]Ppg\*C%qA1F[!(kOZjNG]I`W;#5;F[fN%WKDIY>/@;:/V^(6.DE:b4p\#b&)e+SNA`T:-XP&$8Z@`pQiEscH`()9WF>4P>R$10mDeJU%!cYXhN_FctGn!c@Jj[kA9^TlFcBDd7j0`$Eng%WVX*R>c,8'M<pAp5'%IVhFnfOPV&HY#3Qn-T.j_\pWZKZn20Etg1S)YD+TH>_X,Bb2hJK$Wst*5peFh1_')=YTdk%@*!L0T6;PRmljXp)D7'TB#/7mZa34n$NR*.(ao8'>29/[UP6f(ReS-T'$ju>+Y$cG+s@]e9OY(i%Jf`F"UV7;gK(8T)#*KJ>c/!Xbsn,&L`KEG#Dj"+]ck"-3%<C4@-n2`jiVBBic&XO],7VO<b[A%eL//i!I9uK_Z!V@P@5WH7imMFIX#$4f)OfFNY;ZM/#Q4Ce$k#L>I<t=.hC+IOhs2XXc_)(an9gKu[5Tgbt/t._!Ls4fHkUYkh'8Fm+V8=JXb-PE3AN=E$hB*=jUNZV@s>.j*VTBkkOei,Q!9"br$;Go"pKW.A.lOlM.YMP\<5ODhQF=35jD=3#^5f0'/[ip9N/\'E^i:YJYq,U#`0dDZN=!%570XHl:%MIR@q+%]M"n2T/O7#"/)<cNl;"p&1U<GXK&^I6NQE>"T-4Co.Y>k>=WLoa?]@9Vhd?eZ^,4-,$+&8E;GBGsSgqY0:>2S+s<@doDp?_\G^(Eo9Ci07rYDuG/'m/C8l2em8:2$3VIbqc4]J5_>$?][hTkn&lVBI^kFK_m,hR8=KW\1-c5,6jK6Cm>E:>5=jsMlk;(ZGtgd-kTpNo"<BYT>]W0cR)SMQhD054B^jGC)Oan0$RUGdN/p7.:F3E*R?sgj8"h:T]nS+?ID6I,X]DYc>$+h'oI,Emk9M\_.Dtq(+>4-1XE?/mjbTij7NUlEPQ(R?#34ah\>t#Hj^;Q[7^"NZEf%u\Y?&S[RCK&hP"OLFH(srH!/Q,U:LT)6lq1LiHttGF571flj7?jZmen5oT[")]u%W9]:f*K*Mn"7'L+i[ndG^!%;1s&B6DdZZQ_c['<EJB.LPZJ'nnBs^4^qF'h.NBI@*fb2G*lnpbQbi=XrUCqYfNiU1ggci,/.Vj`XQRQL\lnm*t;*GK9:T>,BaE/XO0Bk-K8#_lQ\RnS?mm^$pGMF>HH8Or(MAq>@1=84C(#'m*=$UIZGaj\i"!Xu!PL9/UQ0Z:l(f*HH[4JuZ`FoF9(0R:Of%#U2<E7C6ofTUcAOHk`7&^7EK&i><U0.>)Ho5F8MUq$pl3C/g`S?:_eE5sp+Y#]r7lKq0]/0>b'I)c`k6c5IDIbG`kmJc\b?eXGULVo:hK6*N`>g1ea">#!2D=KRhc1,(IRoHiTfp!UIQSqlL7a>2"fOeZA@Ek57J-Ypk?W>]GJL1c9Blsr@umqcjCCXCZe])/G;g0+1s]`/u25+LC=UJ\B//V4lNKDA_WX_j]4>X02DCsf&);Xc!:'Ypla3f</ha7B5+PlFQE3j,Fe%`8(hl*hm@4WZY:k4(Dg4-liMJV.i0H$Y;;G(7kI$%rVda>??XJYo7323T-i`l_an4YqaFR*ACHXm'KtCXa72N!"*KDh%9HrLSurA"ZSWq>dTnr>uP6Q>aL=l)BlE9h#Xp[$!o9[_1JT0@=b4U$uELd0%FnHS0c+;]Mdk$;/^j(&cu/5JJLbo5,#f[h<=SA",*?@s(Tm^SJ#=PC5ZIT\OL_IZc9<hTUoK,uQXWp<[rCGAV>qMuNcPTO_a~>endstream
 endobj
 xref
-0 6
+0 9
 0000000000 65535 f 
-0000000009 00000 n 
-0000000058 00000 n 
-0000000115 00000 n 
-0000000241 00000 n 
-0000000311 00000 n 
+0000000061 00000 n 
+0000000102 00000 n 
+0000000209 00000 n 
+0000000321 00000 n 
+0000000514 00000 n 
+0000000582 00000 n 
+0000000862 00000 n 
+0000000921 00000 n 
 trailer
-<< /Size 6 /Root 1 0 R >>
+<<
+/ID 
+[<1561d42fef43dcfb441804c670cda423><1561d42fef43dcfb441804c670cda423>]
+% ReportLab generated PDF document -- digest (opensource)
+
+/Info 6 0 R
+/Root 5 0 R
+/Size 9
+>>
 startxref
-924
+3098
 %%EOF

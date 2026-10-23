@@ -1,42 +1,74 @@
 %PDF-1.4
+%“Œ‹ž ReportLab Generated PDF document (opensource)
 1 0 obj
-<< /Type /Catalog /Pages 2 0 R >>
+<<
+/F1 2 0 R /F2 3 0 R
+>>
 endobj
 2 0 obj
-<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+<<
+/BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font
+>>
 endobj
 3 0 obj
-<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+<<
+/BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font
+>>
 endobj
 4 0 obj
-<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+<<
+/Contents 8 0 R /MediaBox [ 0 0 612 792 ] /Parent 7 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
 endobj
 5 0 obj
-<< /Length 256 >>
+<<
+/PageMode /UseNone /Pages 7 0 R /Type /Catalog
+>>
+endobj
+6 0 obj
+<<
+/Author (\(anonymous\)) /CreationDate (D:20261023113257+03'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20261023113257+03'00') /Producer (ReportLab PDF Library - \(opensource\)) 
+  /Subject (\(unspecified\)) /Title (\(anonymous\)) /Trapped /False
+>>
+endobj
+7 0 obj
+<<
+/Count 1 /Kids [ 4 0 R ] /Type /Pages
+>>
+endobj
+8 0 obj
+<<
+/Filter [ /ASCII85Decode /FlateDecode ] /Length 685
+>>
 stream
-BT
-/F1 13 Tf
-54 740 Td
-(Executive Discovery Synthesis & Priority Actions \(v1 Draft\)) Tj
-/F1 10 Tf
-0 -22 Td
-(Key Findings: 3 core friction points across leadership tiers.) Tj
-0 -15 Td
-(Proposed 6-week modular executive alignment workshops.) Tj
-0 -15 Td
-ET
-endstream
+Gatn":N+rP&B4*cMKc'kV/3j2s1(-I<,N;pi:[ik\b6*Z(n7Z;KRWdC)FtcDV*.eDf5#1"ju;mD3@qad\)qJa2T<9O#8]oIi!sgiN\F"N5C35Al!!Rn:;QR^fg-`s(DOkUa0ibaHJ'MPrZj"]Mf_[f!eK$f.Q<gpA3<Q*8X*U<*Sa(t1)\Cl9>AEe"S]e)0c:IbpIR2.4;]AO.HGY/\3g$4l!"8^RBDlQQ@":2Okqh7KeOAR!Y5\?ZQ,Ih5!<32-[#R#m#]lI+$@\ngT$f4XI?fY8U\D@:phh,W!7/oeZ.3#4WqmO<EBXtq`Bg?B8cK_l8:bdRa^eHm-4N%@t*WEIK1/9XpBlYl_TTQ&&#"?D%2hZYY\g&#<C[&H,-uZ3E-DGC*Y#tD>&YqcIiJ`n74q"DZ>n_@&U(l<QjM/2Y($E/@=^-_kpI7gE=[^h)$Nk<_2&Je-<%L%=>Kl-hpJn;dF>,7MbKrpJO1_>o26Ndu[@;AYiR2CK\'tfD;1DeXO=XOmU)1nPq8_)C+CVB;:'o'D0:21FM"WRtCXi.*I(jFNp<^0TT9&Jbao0??jj'qqQqaq7qXn$VZ_j5X2FCD-(Ndh]U7rC7]'L3R9b0k06N@G/!!Q;_3rA.GD3\RbFC`_9#13b_0OR@TcUtFS;i$a1.pKW(KM#\T?B;,s?A_]jCp##M&~>endstream
 endobj
 xref
-0 6
+0 9
 0000000000 65535 f 
-0000000009 00000 n 
-0000000058 00000 n 
-0000000115 00000 n 
-0000000241 00000 n 
-0000000311 00000 n 
+0000000061 00000 n 
+0000000102 00000 n 
+0000000209 00000 n 
+0000000321 00000 n 
+0000000514 00000 n 
+0000000582 00000 n 
+0000000862 00000 n 
+0000000921 00000 n 
 trailer
-<< /Size 6 /Root 1 0 R >>
+<<
+/ID 
+[<0e481ca458aad495adfc2259e300e5f7><0e481ca458aad495adfc2259e300e5f7>]
+% ReportLab generated PDF document -- digest (opensource)
+
+/Info 6 0 R
+/Root 5 0 R
+/Size 9
+>>
 startxref
-618
+1696
 %%EOF

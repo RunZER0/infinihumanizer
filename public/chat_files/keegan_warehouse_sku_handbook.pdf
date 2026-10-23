@@ -1,52 +1,93 @@
 %PDF-1.4
+%“Œ‹ž ReportLab Generated PDF document (opensource)
 1 0 obj
-<< /Type /Catalog /Pages 2 0 R >>
+<<
+/F1 2 0 R /F2 3 0 R
+>>
 endobj
 2 0 obj
-<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+<<
+/BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font
+>>
 endobj
 3 0 obj
-<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+<<
+/BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font
+>>
 endobj
 4 0 obj
-<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+<<
+/Contents 9 0 R /MediaBox [ 0 0 612 792 ] /Parent 8 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
 endobj
 5 0 obj
-<< /Length 790 >>
+<<
+/Contents 10 0 R /MediaBox [ 0 0 612 792 ] /Parent 8 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
+endobj
+6 0 obj
+<<
+/PageMode /UseNone /Pages 8 0 R /Type /Catalog
+>>
+endobj
+7 0 obj
+<<
+/Author (\(anonymous\)) /CreationDate (D:20261023113257+03'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20261023113257+03'00') /Producer (ReportLab PDF Library - \(opensource\)) 
+  /Subject (\(unspecified\)) /Title (\(anonymous\)) /Trapped /False
+>>
+endobj
+8 0 obj
+<<
+/Count 2 /Kids [ 4 0 R 5 0 R ] /Type /Pages
+>>
+endobj
+9 0 obj
+<<
+/Filter [ /ASCII85Decode /FlateDecode ] /Length 2555
+>>
 stream
-BT
-/F1 13 Tf
-54 740 Td
-(Warehouse Receiving & Landed Cost Entry SOP ? Chin Specialty Goods) Tj
-/F1 10 Tf
-0 -22 Td
-(SECTION 1: RECEIVING CONTAINERS & LCL PALLETS) Tj
-0 -15 Td
-(1. Inspect ocean bills of lading against supplier pack lists before signing drayage interchange receipts.) Tj
-0 -15 Td
-(2. Count master cartons by SKU code and record broken seal exceptions within 24 hours.) Tj
-0 -15 Td
-(SECTION 2: UPDATING THE SPREADSHEET MODEL) Tj
-0 -15 Td
-(3. Enter invoice totals in cell C2 \(Ocean Freight\) and C3 \(Customs Broker Total\).) Tj
-0 -15 Td
-(4. Formulas in columns F through I dynamically distribute landed cost per item based on carton volume.) Tj
-0 -15 Td
-(5. If gross margin falls below 65%, review wholesale multiplier before publishing retail catalog changes.) Tj
-0 -15 Td
-ET
-endstream
+Gau0C?#Sa_&q&$/k_I'Ik7DD[q)`N'lm1G-Cp0tbiXPtnN5XB(aJ>,dP0(JR,%W20P4;qbfa6e6U<)c&lKY6B/c>D3cZi5BNp-)F:OYRV*Vg_Z6d_F$dE/".raBBI7K'ZU`H^OQ#D8]*,qSYBSSi4&+MBqS*e(e>i,pL&A(,r4p7L!f[sL$MbLqJ*X(aO4c(k<e`H!ulcqVmQdrI<OO.t<JZ(\5Gid*F7+3t_cZc-`;qaAgR'`H'Aoc&?d7FiEbbK+#1d'FkuJN_ThiX]iF?E;QKgO9"U72ErEiO@N.A3c.3RH?S2(f"ifF7CC6p691[J]h<_-Q4c]Wrrst(Rd.Jn:X,>ng^rb<9@;j=fr<]d&1h1,],:X$^TpNFJ2ZCNb6[c08kib_XE^\J>/?&,3TQ!#'k([$V^>E^XmU"/2OG3DPOjRZ=#-;.8;=hF.2T#8Y]1Gi4Y;O[+[Y\&S&pV)T6>3+uPi'?)`LT('Z'pOUCj!dGR*=13fE4nb^oOY<VB]q?-9mm;=T\c;$04>$mdjpXu.Lcs)E+g:Xb_5C<]oG,Zt+>>sgRid*n&b9-H!o6[$WX69!A4^)-p=3Jk\PVs[aL(nF*6"LV^A/%b!-.a/Z&'D@8GPZK4jG*7-X/5M/q>5e:s#pl&qKEW3U7F!Fae9cQ'7/eUV,ba'6?B_P5X@?$BWE2aQA1(*<J=-1:33\rjnO>NmeJ;C'mU,?ZRmQ+(3b"";L@`:asgo24LI5Q<JmRAe>YC89^a"N70ZV.j2Ag_oNh"Hkc,>aeuh,kjco3nc'=ubh!u.`UhVDR/n.1.f6\ZDl5^&;r>3:e#<r:a!2m\r[#%f&cQHiX@L1mIM0slFOBb`TVA*itW4Q,fgb`'Tq$9qFRQXf0?.LPacX>&/1!P*dA2C=]Sh$,bgNbd!V]!;23SeGqmM#8LP:Z^TP@T"PPKE;V0g!Z2*qZLjF*)64>T<MP2Z8qKT:>;V.^lt[n_cC@W.PU1V8.^(O-eIV$(\8tZ]!"_f$eS!q`7qdTW2U^BY"[,7uN9SrbYBdQIrIp3o.WAf_f(#E3nZ6K&NpmV!.?&#9HG9Z!OAKj7iH=i!-mk/+@r=?n*:V-b(3#)M:.Kqit/b32825m$s$e8h4n^mn*V-"o2)5K`J!hM[d&\(g2=QQKtQ!:n2QS?U<&EGr53uWm4W1',I?nSn0@/r@R)VHI1u[85j"uR53B;DAqQ]&65\Q;e0$GUW?PbDr7Fj3eP\ajsF#/_8!<9:N;2r6.O[DnIA<XUAde9TfnV!NgosFN6l!^7b+.HTWrqc<P`a/$CT1:%O%>r\,KY5p_R6%N$?c>br!K#4YueS>^d@@D[bGcfg>8nlO2V]`G'L!aSY+pB%^ssKQ.RB\H=quDea24e]lP3\Bk<VR'Vb#NZ!ue`Ql#9'lSZs@&6!"GEr*ICg=uCm7*"9(T@;n&8=iM.$RI1p=)Hgf#Ff<NcNY;FcLJ66+"!JkVOqmTkRDJSmQ1-4m&/"A84B]ToMV5WCdb6JY\rSUq_Q4ek$g$j`$+j;fT'4HblaQOmd$AG3F6H86VjD4!>2?@9Lm!W5U>JgDL51ON48U5j__%A#1^2Wn7jTM3D1aQUPau@7c2MN(<%TKuZFL_!A)]P_m']bC*L#@dN`C2NBre.l9rp-K[hcC3BujM;+0^3+l7gqtp*Bp1QQlLWdf(k+hHg%Tc,0>;%AU@>(n-*L/NG`WSJoc^3VSBD*;RqZ"'sg2LR:-3e2n.OadL9T@.2XaB>X'/G-&-?bKY/K5>M<(N.<\k.Rs;MKJ8)D0F9"SkX2DF*@V.Vt-F3N2(^cgl<^\[olXrnjUDMbL1ILoh[Fgr&XZ_F+k`^#LZQ,8qdS9'b4MbGb$Gf+^!s6/*U,S/9prl9c(Zg)!<Q'T+]O(0NYC`!lC"578fZ(s/K6b=J`*;YWi:'oo:BW#Fo]p$o3#?:q74)[HaV9gRr2HA=[p99V\HT:3c]qA"(>SfNe?Gh8"Vl1dX<o04N]NR/Rs5mc=0<AAI*q/gcsR4qcRLc#r@%'bO[CW9_+Su6b]p'7^s;j6@d(%PY1PfDKjBlG#uBlYntWL_V!;)PHp=In7nkT2WBI!h/-J,!n'rHM#UM!U!HU=d4L,s\.qf3$(IeoYW4]g*7<#QU+IF[",ZFJ/^%-J&uKY.6rSen@aMkfeGs"FgT9pIE#[a!3u_kF-7iaa^1Dn(hQkQ8@sNBOaVn:5:0rJ;#h0[l:"cd`Pr?O0,$]Us'["2/'IJ"B*!h,f4B5m*q1F1tMSe<W_]Aep\U$i5=us*=n]K0ptcb>](a1s(8[1N[C7=kqo+b1lAgai0T@@2P9rT)[tU^WfJL,K4](>Dkbf4mlB8\q9@\2htB`^L&;.k`W`4IV8#.rhk94\bZE\#oDOWn<LTpXqcS>#XtIlJkuDj^2!%-nr4M.uDp)jgh"#D!Z\4Xrij.h#-O?+T\N/r&^#1!Q.cg;l*hZ:i:L:UO""p-dI[ElBnj/,";ri\mRmr)Q'#a/607V@A>-6-0p^0_./P+VaZa@NH>f_8-KuJrc`f`Q:Qu)oeD*cXmrrIa7Y/L~>endstream
+endobj
+10 0 obj
+<<
+/Filter [ /ASCII85Decode /FlateDecode ] /Length 1216
+>>
+stream
+GauI4gMZ%0&;KZF'`Z.\E8%BEauTajL#Uaf]@j\5/%[2@+J:=?eqOf;P"P"'I7Nk%$.9:0M\^nUCW,2UI.Ilni6oTUqm$>W1A&TqbX8f?o,Sq+'h6lumjDqd12mg[T,*WM<ZfO:"H/fN=\3M5;nGcP)HLeoMaBY&n'I&'+-&9fK4k7u7dl@+d4)B)ki'M4:e6H%i#JN7$B8J(X==[6;K0m]V8.dc&+j<^KY^s_*V0?QFg7+b6<%!(Yn@+&iZ7XHp;O5AWt`,,>JAs^.9X,eF")h1,%a'4\)C=>Me[Zal5XV>q^8s]e/u]s5Hisg4H,OX)p.VQk[IOC\Lgd'^3eSNDQ)!WP"f(fN-nk"P*SYL`DVtD@gS(DNI[gn6r$3]M:58lVQOLXJt$$WLK$l7)iOX8@($c>G1<6gD_/"MOM>VuQFIo$:@QnI7:DcG8d`J45coqji<*ZR3UDeCZ)J@?FJ7T(lc9#-gArX))2!uTY6uhWiL7,NaE($Vi7/V7&%@%0jNtcl>HBoaEp'e@;EZ0KfmO*OgiJmTO["(Xbc"ml,?BE?V'7`oBT&U%:9e+5/TM(T]A6\;!^-KT`(SN47A=-'#J@4IH6eZ3/NsHFV?k'K`?Ytj@26b2,R6c<YFC7$9BC$9/:#4f`F)J%fMV@XfH.@<`3DgWh8Ekrf])TL2s`4'%R/^G=4?LpV"=EL9mSrB+jI=?4A3$Fll+dAAi(K%5>SI1Qqo*]mq:\N>IaoWYflFgc$c#R5on9nYnK`joM*S7MP?ppeMF(+cr"8n8f[4fi/)6S;2l1;hhho#[KA3f@mrt1oB#$1mM&HND6`t?1o@2SBn8CRJQec(Ce[!@a+cO<<'7'mBLer$l'S/H]2[JrTch<H(eTVDdV$,T;H18=b_E2ZN6jCmBP<8[qH%E;(t+Z5:TK0nj8I52]>!HS@K4T,#N=Uu61r"7eC%1GrFsdGE*eH6_55ssU/Z%"jiDIC$f.q\6eVnmA3uVO`?ftN(@]XhV$tde9t`5n(oD3e0^'5Jar3:s5qZ#b-[PU3M%dq'7o)n>-F$3$-@T/VDC-`2k?B.'s#:f-o7)QaH91I3`9nc<i.Q3MK?/m3(50d[>(ZpX\0Jsr;GlG,8K/u!dCWB$VUO&enf/1r&DnQeGAeOkqtAo[U""]nkGoW*[':RHMa'c?8!([W;FhFYjpO4j]62S;<E)CJ4lC\e4S#'i:At<P6nhd~>endstream
 endobj
 xref
-0 6
+0 11
 0000000000 65535 f 
-0000000009 00000 n 
-0000000058 00000 n 
-0000000115 00000 n 
-0000000241 00000 n 
-0000000311 00000 n 
+0000000061 00000 n 
+0000000102 00000 n 
+0000000209 00000 n 
+0000000321 00000 n 
+0000000514 00000 n 
+0000000708 00000 n 
+0000000776 00000 n 
+0000001056 00000 n 
+0000001121 00000 n 
+0000003767 00000 n 
 trailer
-<< /Size 6 /Root 1 0 R >>
+<<
+/ID 
+[<8b67cade99c34eddab13cce8d54ebc17><8b67cade99c34eddab13cce8d54ebc17>]
+% ReportLab generated PDF document -- digest (opensource)
+
+/Info 7 0 R
+/Root 6 0 R
+/Size 11
+>>
 startxref
-1152
+5075
 %%EOF

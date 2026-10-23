@@ -140,12 +140,38 @@ def write_docx_file(filename: str, title: str, paragraphs: list[str], role: str 
     body_xml = []
     if title:
         body_xml.append(
-            f'<w:p><w:r><w:rPr><w:b/><w:sz w:val="28"/></w:rPr><w:t>{xml_escape(title)}</w:t></w:r></w:p>'
+            f'<w:p><w:pPr><w:spacing w:before="120" w:after="240"/></w:pPr><w:r><w:rPr><w:b/><w:color w:val="0F172A"/><w:sz w:val="32"/></w:rPr><w:t xml:space="preserve">{xml_escape(title)}</w:t></w:r></w:p>'
         )
     for para in paragraphs:
-        body_xml.append(
-            f'<w:p><w:r><w:rPr><w:sz w:val="22"/></w:rPr><w:t xml:space="preserve">{xml_escape(para)}</w:t></w:r></w:p>'
+        text = str(para or "").strip()
+        if not text:
+            body_xml.append('<w:p><w:pPr><w:spacing w:after="100"/></w:pPr></w:p>')
+            continue
+        is_heading = (
+            text.startswith("#")
+            or text.startswith("ARTICLE ")
+            or text.startswith("SECTION ")
+            or text.startswith("TEMPLATE ")
+            or text.startswith("ROLE ")
+            or text.startswith("PAGE ")
+            or text.startswith("EMAIL ")
+            or (text.isupper() and len(text) < 70 and not text.startswith("—"))
         )
+        is_bullet = text.startswith(("—", "•", "-", "*")) or (len(text) > 2 and text[:2].isdigit() and text[2:4] in (". ", ") "))
+
+        if is_heading:
+            clean_heading = text.lstrip("# ").strip()
+            body_xml.append(
+                f'<w:p><w:pPr><w:spacing w:before="240" w:after="80"/></w:pPr><w:r><w:rPr><w:b/><w:color w:val="0F172A"/><w:sz w:val="24"/></w:rPr><w:t xml:space="preserve">{xml_escape(clean_heading)}</w:t></w:r></w:p>'
+            )
+        elif is_bullet:
+            body_xml.append(
+                f'<w:p><w:pPr><w:ind w:left="360"/><w:spacing w:after="100"/></w:pPr><w:r><w:rPr><w:color w:val="1E293B"/><w:sz w:val="21"/></w:rPr><w:t xml:space="preserve">{xml_escape(text)}</w:t></w:r></w:p>'
+            )
+        else:
+            body_xml.append(
+                f'<w:p><w:pPr><w:spacing w:after="140" w:line="276" w:lineRule="auto"/></w:pPr><w:r><w:rPr><w:color w:val="1E293B"/><w:sz w:val="21"/></w:rPr><w:t xml:space="preserve">{xml_escape(text)}</w:t></w:r></w:p>'
+            )
 
     document_xml = f"""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
@@ -261,49 +287,138 @@ def write_xlsx_file(
     return build_attachment_meta(filename=filename, display_name=filename, role=role)
 
 
-def _pdf_escape(text: str) -> str:
-    ascii_text = text.encode("latin-1", "replace").decode("latin-1")
-    return ascii_text.replace("\\", "\\\\").replace("(", "\\(").replace(")", "\\)")
+def write_pdf_file(
+    filename: str,
+    title: str,
+    lines: list[str],
+    role: str = "file",
+    subtitle: str = "",
+    meta_tag: str = "InfiniAI Operations Studio · Official Deliverable",
+) -> dict:
+    from reportlab.lib.pagesizes import letter
+    from reportlab.platypus import (
+        SimpleDocTemplate,
+        Paragraph,
+        Spacer,
+        HRFlowable,
+    )
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib import colors
 
-
-def write_pdf_file(filename: str, title: str, lines: list[str], role: str = "file") -> dict:
     files_dir = get_chat_files_dir()
     dest = files_dir / filename
 
-    stream_ops = ["BT", "/F1 13 Tf", "54 740 Td", f"({_pdf_escape(title)}) Tj", "/F1 10 Tf", "0 -22 Td"]
-    for line in lines[:42]:
-        stream_ops.append(f"({_pdf_escape(line)}) Tj")
-        stream_ops.append("0 -15 Td")
-    stream_ops.append("ET")
-    stream_bytes = "\n".join(stream_ops).encode("latin-1")
-
-    objects = [
-        b"1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n",
-        b"2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n",
-        b"3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>\nendobj\n",
-        b"4 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\nendobj\n",
-        f"5 0 obj\n<< /Length {len(stream_bytes)} >>\nstream\n".encode("latin-1")
-        + stream_bytes
-        + b"\nendstream\nendobj\n",
-    ]
-
-    buf = io.BytesIO()
-    buf.write(b"%PDF-1.4\n")
-    offsets = []
-    for obj in objects:
-        offsets.append(buf.tell())
-        buf.write(obj)
-
-    xref_pos = buf.tell()
-    buf.write(f"xref\n0 {len(objects) + 1}\n".encode("latin-1"))
-    buf.write(b"0000000000 65535 f \n")
-    for off in offsets:
-        buf.write(f"{off:010d} 00000 n \n".encode("latin-1"))
-    buf.write(
-        f"trailer\n<< /Size {len(objects) + 1} /Root 1 0 R >>\nstartxref\n{xref_pos}\n%%EOF\n".encode("latin-1")
+    doc = SimpleDocTemplate(
+        str(dest),
+        pagesize=letter,
+        leftMargin=44,
+        rightMargin=44,
+        topMargin=44,
+        bottomMargin=44,
     )
 
-    dest.write_bytes(buf.getvalue())
+    title_style = ParagraphStyle(
+        "DocTitle",
+        fontName="Helvetica-Bold",
+        fontSize=18,
+        leading=22,
+        textColor=colors.HexColor("#0B0F19"),
+        spaceAfter=6,
+    )
+    subtitle_style = ParagraphStyle(
+        "DocSubtitle",
+        fontName="Helvetica",
+        fontSize=10,
+        leading=14,
+        textColor=colors.HexColor("#475569"),
+        spaceAfter=14,
+    )
+    meta_style = ParagraphStyle(
+        "DocMeta",
+        fontName="Helvetica-Bold",
+        fontSize=8.5,
+        leading=11,
+        textColor=colors.HexColor("#6366F1"),
+        spaceAfter=4,
+    )
+    heading_style = ParagraphStyle(
+        "DocHeading",
+        fontName="Helvetica-Bold",
+        fontSize=11.5,
+        leading=15,
+        textColor=colors.HexColor("#0F172A"),
+        spaceBefore=14,
+        spaceAfter=6,
+    )
+    body_style = ParagraphStyle(
+        "DocBody",
+        fontName="Helvetica",
+        fontSize=9.5,
+        leading=14,
+        textColor=colors.HexColor("#1E293B"),
+        spaceAfter=8,
+    )
+    bullet_style = ParagraphStyle(
+        "DocBullet",
+        fontName="Helvetica",
+        fontSize=9.5,
+        leading=14,
+        textColor=colors.HexColor("#1E293B"),
+        leftIndent=16,
+        spaceAfter=5,
+    )
+    footer_style = ParagraphStyle(
+        "DocFooter",
+        fontName="Helvetica",
+        fontSize=8,
+        leading=11,
+        textColor=colors.HexColor("#94A3B8"),
+        alignment=1,
+    )
+
+    story = []
+
+    if meta_tag:
+        story.append(Paragraph(xml_escape(meta_tag.upper()), meta_style))
+
+    story.append(Paragraph(xml_escape(title), title_style))
+
+    if subtitle:
+        story.append(Paragraph(xml_escape(subtitle), subtitle_style))
+    story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor("#CBD5E1"), spaceAfter=14))
+
+    for item in lines:
+        text = str(item).strip()
+        if not text:
+            story.append(Spacer(1, 6))
+            continue
+
+        is_heading = (
+            text.isupper()
+            or text.startswith("SECTION ")
+            or text.startswith("ARTICLE ")
+            or text.startswith("PART ")
+            or text.startswith("PAGE ")
+            or (text.startswith(("1.", "2.", "3.", "4.", "5.", "6.", "7.", "8.", "9.")) and len(text) < 70 and not text.endswith("."))
+        )
+        is_bullet = text.startswith(("—", "-", "•", "*")) or (text.startswith(tuple(f"{i}." for i in range(1, 30))) and len(text) >= 70)
+
+        safe_text = xml_escape(text)
+
+        if is_heading:
+            clean_heading = safe_text.lstrip("# ").strip()
+            story.append(Paragraph(clean_heading, heading_style))
+        elif is_bullet:
+            clean_bullet = safe_text.lstrip("—•-* ").strip()
+            story.append(Paragraph(f"&bull;&nbsp;&nbsp;{clean_bullet}", bullet_style))
+        else:
+            story.append(Paragraph(safe_text, body_style))
+
+    story.append(Spacer(1, 16))
+    story.append(HRFlowable(width="100%", thickness=0.75, color=colors.HexColor("#E2E8F0"), spaceAfter=8))
+    story.append(Paragraph(f"Document ID: {filename} · Authorized Operational Deliverable · InfiniAI", footer_style))
+
+    doc.build(story)
     return build_attachment_meta(filename=filename, display_name=filename, role=role)
 
 

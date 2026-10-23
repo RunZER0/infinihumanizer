@@ -1,44 +1,74 @@
 %PDF-1.4
+%“Œ‹ž ReportLab Generated PDF document (opensource)
 1 0 obj
-<< /Type /Catalog /Pages 2 0 R >>
+<<
+/F1 2 0 R /F2 3 0 R
+>>
 endobj
 2 0 obj
-<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+<<
+/BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font
+>>
 endobj
 3 0 obj
-<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+<<
+/BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font
+>>
 endobj
 4 0 obj
-<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+<<
+/Contents 8 0 R /MediaBox [ 0 0 612 792 ] /Parent 7 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
 endobj
 5 0 obj
-<< /Length 362 >>
+<<
+/PageMode /UseNone /Pages 7 0 R /Type /Catalog
+>>
+endobj
+6 0 obj
+<<
+/Author (\(anonymous\)) /CreationDate (D:20261023113257+03'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20261023113257+03'00') /Producer (ReportLab PDF Library - \(opensource\)) 
+  /Subject (\(unspecified\)) /Title (\(anonymous\)) /Trapped /False
+>>
+endobj
+7 0 obj
+<<
+/Count 1 /Kids [ 4 0 R ] /Type /Pages
+>>
+endobj
+8 0 obj
+<<
+/Filter [ /ASCII85Decode /FlateDecode ] /Length 812
+>>
 stream
-BT
-/F1 13 Tf
-54 740 Td
-(Drako Santa Ana ? Resume \(Outdated 2021 Version\)) Tj
-/F1 10 Tf
-0 -22 Td
-(Drako Santa Ana ? Material Handler & Forklift Driver.) Tj
-0 -15 Td
-(Sunbelt Distribution \(2019?2021\): Operated sit-down forklift, unloaded freight trailers.) Tj
-0 -15 Td
-(Note: Missing 3 years as Night Shift Dock Supervisor managing 14 handlers.) Tj
-0 -15 Td
-ET
-endstream
+GatUp>Aour&;B$?/'_(Y<"7YhmWg#\[oAB%%EVPEBG7V`%>K%W7.%2H!-Tthi`<&jaFa*/GKsGQ(gVN6?>k@X%.C)6>Td7&>D@iJL+&PhR.0K7S&$sB*N"%8l$:.Q6,sDkZC1/IY9js9hhMr$NGLsJ"hag^7HJsAK6TS>kA_%Xq%>92/5G=Vdd/ND'3kg`75CFR+6$[_0UfuDFQ?sJ*?tB8ltm:*Q*.#]bhbZ@bN,N.K@rX_A;%oqru%64j5OC+-,b<KC3``&PuT=H<0C@:Mac$8RfXB28_<+1/TM+D36hofW4KQ"grJN<.0CC,*Sm>8L?gqFojE$A/UZOs4>a><32qYID.&S-$mj=<_E%Tjk.NmsI0Tt#/=/BCA==#4i-\`0H]X\dARUZh+Vmq$FrHLU?I`E4=PNIDXW2EOTj.Bmn]+$%k:TX)Co!G#7:-pr(gf#oPg%ZMQM;`+]IYnr?s;lc;Cu++>29tJfLn^X7WVm1r$(n\jAEf\g/V3C8P)q2C3A(7<9M(?mLuNT)Kh#"H_H4DBN0>Cf67sq>MOGdWj7pNI9Yu'Xk#(-/JVu7p.Mo6j8YAuYM8%RVlFH1[=X7-L"$QBKD@crXp7nklPlW?agb>FXg+"R>kR8/aEjr(IU:bJG/9eh?/H2T+g/NEI*\PpdCSiEOW8O60Cg2HhfdX>9Y2B\!Q1TYVri1,\"2\<DXOUr*]B'TH\gg<+j6hmlYDsUW^RmK,O\k-Z7b`A4Uh67Q.\".kK@ii"^SaC[JE<<*U?H`6*2%@A`&mGW[u/2EOAc2$K@Un7uoHD4iHD?AN`sJ~>endstream
 endobj
 xref
-0 6
+0 9
 0000000000 65535 f 
-0000000009 00000 n 
-0000000058 00000 n 
-0000000115 00000 n 
-0000000241 00000 n 
-0000000311 00000 n 
+0000000061 00000 n 
+0000000102 00000 n 
+0000000209 00000 n 
+0000000321 00000 n 
+0000000514 00000 n 
+0000000582 00000 n 
+0000000862 00000 n 
+0000000921 00000 n 
 trailer
-<< /Size 6 /Root 1 0 R >>
+<<
+/ID 
+[<29ad62556adf0c37f3fb8c7a925c79c2><29ad62556adf0c37f3fb8c7a925c79c2>]
+% ReportLab generated PDF document -- digest (opensource)
+
+/Info 6 0 R
+/Root 5 0 R
+/Size 9
+>>
 startxref
-724
+1823
 %%EOF

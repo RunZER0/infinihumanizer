@@ -1,48 +1,74 @@
 %PDF-1.4
+%“Œ‹ž ReportLab Generated PDF document (opensource)
 1 0 obj
-<< /Type /Catalog /Pages 2 0 R >>
+<<
+/F1 2 0 R /F2 3 0 R
+>>
 endobj
 2 0 obj
-<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+<<
+/BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font
+>>
 endobj
 3 0 obj
-<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+<<
+/BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font
+>>
 endobj
 4 0 obj
-<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+<<
+/Contents 8 0 R /MediaBox [ 0 0 612 792 ] /Parent 7 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
 endobj
 5 0 obj
-<< /Length 608 >>
+<<
+/PageMode /UseNone /Pages 7 0 R /Type /Catalog
+>>
+endobj
+6 0 obj
+<<
+/Author (\(anonymous\)) /CreationDate (D:20261023113256+03'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20261023113256+03'00') /Producer (ReportLab PDF Library - \(opensource\)) 
+  /Subject (\(unspecified\)) /Title (\(anonymous\)) /Trapped /False
+>>
+endobj
+7 0 obj
+<<
+/Count 1 /Kids [ 4 0 R ] /Type /Pages
+>>
+endobj
+8 0 obj
+<<
+/Filter [ /ASCII85Decode /FlateDecode ] /Length 909
+>>
 stream
-BT
-/F1 13 Tf
-54 740 Td
-(Studio Brown ? Current Squarespace Booking Funnel Audit) Tj
-/F1 10 Tf
-0 -22 Td
-(Audit capture of current Squarespace homepage and intake flow.) Tj
-0 -15 Td
-(Problem 1: Headline is generic \('Visual storytelling for modern life'\) with no location context.) Tj
-0 -15 Td
-(Problem 2: Booking button routes to a 14-question form before showing any package rates.) Tj
-0 -15 Td
-(Problem 3: Dropdown selection mixes commercial day rates with personal portrait sessions.) Tj
-0 -15 Td
-(Recommendation: Separate commercial inquiries from studio sessions; cut intake to 5 fields.) Tj
-0 -15 Td
-ET
-endstream
+Gatn#>AqtU&;B$5/'](;$0,;u':r+MJ5Oi^@sG"Q\b<O=C@A%c250qo`_OB>7>6N>MB/m4a5<:@3s%TQ@_A$ZE1Gt=;F!e62+6Y^aA6f=:[TQ=*uXlF!l;^cjooHKK*WIZ9uG&EVQeYcc67Y6Q!T-VjeNORn<^J=+m2^G[`m%&H%sk)POj'kXj5L"kFWOC$5YHmYZ`Zc2qe*CMj)WV1PZsBSifOB"o4&WkTaGa5fIHAL[r>J":71T@QGiG/3fLc,`<1@+s"1h*4aY'YEZl.2-\<N1;TI:>1*oH]=tN!D2OKqCs9$0f3%`M;fgkXRe'k[-tO%[-j@'WHU%%`C$[2r]JPH*P\J0q"uq)odGqYN&\I"s_>5hL_K7G7La3I5Zl$)g)EH:iGT]%0fHDs)gG)mE,=bmQ>]0qG7emkN2l<EGED7j'"f5LE9;if9ocBALj!S=6@*M\=/]8(dW2LW2$*(m#BsObW`R2$<Wp>QISMTur;:>phe]+=@'j6Mceb&4f3O[)d5T;PW/=\I6V9t=;\]8jfi=kO=Z_)YfeN:ekf(=t`3.lg8?f(J*NI7h$`>.oqd+t)VYbf_@?rq4N5A\0j*i4oqq8DpA$k$i/eSn8EC8`+D>P3sZPbr<>QAWASMYeFNY3Ht3S^G*a1"P$0H`j-Hj.64cO8UHC5Go)g=/5@CXLY)2^>G?D^?_%abZnB$E]]7*i;i_Cc\=Ng5?ekr<n(+K&.jeui5'0la_7k/M%2<b9k2:`hK0T?j(o`8s6!(37.`!B1lOU)0BTm&i?_Ain\\KH*,:c<Ra>d,-2_a)H%i#I.Jn9*#MER@U9?-(?g];[AZ$MRG,6M5gmbJ<2H@G[iUbp^(otALKbYOk<h.@FTLO@k=)Od=>c);5eN>o-nE',rhH(AS+6PPp9E~>endstream
 endobj
 xref
-0 6
+0 9
 0000000000 65535 f 
-0000000009 00000 n 
-0000000058 00000 n 
-0000000115 00000 n 
-0000000241 00000 n 
-0000000311 00000 n 
+0000000061 00000 n 
+0000000102 00000 n 
+0000000209 00000 n 
+0000000321 00000 n 
+0000000514 00000 n 
+0000000582 00000 n 
+0000000862 00000 n 
+0000000921 00000 n 
 trailer
-<< /Size 6 /Root 1 0 R >>
+<<
+/ID 
+[<42d94b9e54a578ee6b3022a9e02ace55><42d94b9e54a578ee6b3022a9e02ace55>]
+% ReportLab generated PDF document -- digest (opensource)
+
+/Info 6 0 R
+/Root 5 0 R
+/Size 9
+>>
 startxref
-970
+1920
 %%EOF

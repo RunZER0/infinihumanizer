@@ -1020,4 +1020,16 @@ class InvoicePdfAndVerificationTests(TestCase):
         self.assertNotContains(res, "josecruz.creative@gmail.com")
         self.assertNotContains(res, "Jose Cruz")
 
+    def test_audrey_brown_showcase_page(self):
+        res = self.client.get(reverse("platformhub:showcase_studio_brown"))
+        self.assertEqual(res.status_code, 200)
+        self.assertContains(res, "Studio Brown")
+        self.assertContains(res, "audreybrown-studio/studio-brown-portfolio")
+        self.assertContains(res, "East Austin")
+        self.assertContains(res, "Essential Session")
+        self.assertContains(res, "$450")
+        self.assertContains(res, "$950")
+        self.assertContains(res, "$2,200")
+
+
 
