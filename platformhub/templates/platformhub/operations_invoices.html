@@ -82,7 +82,11 @@
             </td>
             <td class="ops-col-actions">
               <div class="ops-row-actions">
-                <form method="post" action="{% url 'platformhub:admin_invoice_status' inv.id %}" class="ops-inline-form">
+                <a href="{% url 'platformhub:invoice_pdf_download' inv.id %}" class="ops-text-action ops-pdf-btn" download title="Download Branded PDF">PDF</a>
+                <span aria-hidden="true">·</span>
+                <a href="{% url 'platformhub:invoice_verify' inv.id %}" class="ops-text-action" target="_blank" title="Verify Online Certificate">Verify</a>
+                <span aria-hidden="true">·</span>
+                <form method="post" action="{% url 'platformhub:admin_invoice_status' inv.id %}" class="ops-inline-form ops-status-form">
                   {% csrf_token %}
                   <input type="hidden" name="next" value="{% url 'platformhub:operations_invoices' %}">
                   {% if inv.status != "paid" %}
@@ -101,7 +105,7 @@
             </td>
           </tr>
           {% empty %}
-          <tr>
+          <tr id="ops-no-invoices-row">
             <td colspan="7" class="ops-table-empty">No invoices issued yet.</td>
           </tr>
           {% endfor %}
@@ -119,7 +123,7 @@
       <button type="button" class="ops-modal-close" id="ops-close-invoice-modal">Close</button>
     </div>
 
-    <form method="post" action="{% url 'platformhub:admin_create_invoice' %}" class="ops-form">
+    <form method="post" action="{% url 'platformhub:admin_create_invoice' %}" class="ops-form" id="ops-invoice-create-form">
       {% csrf_token %}
       <input type="hidden" name="next" value="{% url 'platformhub:operations_invoices' %}">
 
@@ -167,10 +171,28 @@
       </div>
 
       <div class="ops-modal-foot">
-        <span></span>
-        <button class="ops-btn ops-btn-primary" type="submit">Generate invoice</button>
+        <span class="ops-form-feedback" id="ops-create-feedback" style="color: #ef4444; font-size: 12px;"></span>
+        <button class="ops-btn ops-btn-primary" type="submit" id="ops-invoice-submit-btn">Generate invoice</button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- Animated Tick & Motion Overlay -->
+<div class="ops-tick-overlay" id="ops-invoice-tick-overlay" role="status" aria-live="assertive" aria-atomic="true">
+  <div class="ops-tick-card">
+    <div class="ops-tick-badge">
+      <svg class="ops-tick-svg" viewBox="0 0 52 52">
+        <circle class="ops-tick-circle" cx="26" cy="26" r="23" fill="none"/>
+        <path class="ops-tick-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+      </svg>
+    </div>
+    <h3 class="ops-tick-title">Invoice Created &amp; Dispatched</h3>
+    <div class="ops-tick-subtitle" id="ops-tick-invoice-num">INV-RECORD</div>
+    <div class="ops-tick-meta">
+      <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#10B981;"></span>
+      <span>Settlement Ledger Active</span>
+    </div>
   </div>
 </div>
 {% endblock %}
@@ -183,12 +205,22 @@
   const closeBtn = document.getElementById("ops-close-invoice-modal");
   const searchInput = document.getElementById("ops-invoice-search");
   const filterBtns = document.querySelectorAll("[data-inv-filter]");
-  const rows = document.querySelectorAll("#ops-invoices-table tbody tr[data-inv-status]");
+  const tableBody = document.querySelector("#ops-invoices-table tbody");
+  const createForm = document.getElementById("ops-invoice-create-form");
+  const submitBtn = document.getElementById("ops-invoice-submit-btn");
+  const feedbackEl = document.getElementById("ops-create-feedback");
+  const tickOverlay = document.getElementById("ops-invoice-tick-overlay");
+  const tickNumEl = document.getElementById("ops-tick-invoice-num");
+
   let activeFilter = "all";
+
+  function getRows() {
+    return document.querySelectorAll("#ops-invoices-table tbody tr[data-inv-status]");
+  }
 
   function applyFilters() {
     const q = (searchInput ? searchInput.value : "").trim().toLowerCase();
-    rows.forEach(function (row) {
+    getRows().forEach(function (row) {
       const st = row.getAttribute("data-inv-status");
       const text = row.getAttribute("data-inv-search") || "";
       const okStatus = activeFilter === "all" || st === activeFilter;
@@ -220,6 +252,151 @@
   if (modal) {
     modal.addEventListener("click", function (e) {
       if (e.target === modal) modal.hidden = true;
+    });
+  }
+
+  function escapeHtml(value) {
+    const div = document.createElement("div");
+    div.textContent = value || "";
+    return div.innerHTML;
+  }
+
+  // Bind AJAX status toggle on form
+  function bindStatusForm(form) {
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const btn = form.querySelector('button[type="submit"]');
+      if (btn) btn.disabled = true;
+      try {
+        const formData = new FormData(form);
+        const res = await fetch(form.action, {
+          method: "POST",
+          body: formData,
+          headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            "Accept": "application/json"
+          }
+        });
+        const data = await res.json();
+        if (data && data.ok && data.invoice) {
+          const row = form.closest("tr");
+          const isPaid = data.invoice.status === "paid";
+          row.setAttribute("data-inv-status", isPaid ? "paid" : "open");
+          const badge = row.querySelector(".ops-state-settled, .ops-state-open");
+          if (badge) {
+            badge.className = isPaid ? "ops-state-settled" : "ops-state-open";
+            badge.textContent = data.invoice.status_display;
+          }
+          if (btn) {
+            btn.value = isPaid ? "open" : "paid";
+            btn.textContent = isPaid ? "Reopen" : "Mark paid";
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    });
+  }
+
+  document.querySelectorAll(".ops-status-form").forEach(bindStatusForm);
+
+  // Smooth Invoice Creation with Tick Motion
+  if (createForm) {
+    createForm.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      if (submitBtn.disabled) return;
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Issuing…";
+      if (feedbackEl) feedbackEl.textContent = "";
+
+      try {
+        const formData = new FormData(createForm);
+        const res = await fetch(createForm.action, {
+          method: "POST",
+          body: formData,
+          headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            "Accept": "application/json"
+          }
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+          throw new Error(data.error || "Could not issue invoice.");
+        }
+
+        const inv = data.invoice;
+
+        // 1. Show satisfying animated tick overlay
+        if (tickNumEl) tickNumEl.textContent = inv.number;
+        if (tickOverlay) {
+          tickOverlay.classList.add("is-visible");
+        }
+
+        // 2. Prepend row to table
+        const emptyRow = document.getElementById("ops-no-invoices-row");
+        if (emptyRow) emptyRow.remove();
+
+        const tr = document.createElement("tr");
+        tr.className = "ops-row-new";
+        tr.setAttribute("data-inv-status", inv.status === "paid" ? "paid" : "open");
+        tr.setAttribute("data-inv-search", (inv.number + " " + inv.client_name + " " + inv.email + " " + inv.description).toLowerCase());
+
+        const isPaid = inv.status === "paid";
+        const statusBadgeClass = isPaid ? "ops-state-settled" : "ops-state-open";
+
+        const csrfToken = createForm.querySelector('input[name="csrfmiddlewaretoken"]').value;
+        const statusUrl = "/operations/invoices/" + inv.id + "/status/";
+
+        tr.innerHTML =
+          '<td class="ops-mono"><strong>' + escapeHtml(inv.number) + '</strong></td>' +
+          '<td class="ops-mono">' + escapeHtml(inv.created_at_display) + '</td>' +
+          '<td><strong>' + escapeHtml(inv.client_name) + '</strong><div class="ops-cell-sub">' + escapeHtml(inv.email) + '</div></td>' +
+          '<td><strong>' + escapeHtml(inv.description) + '</strong></td>' +
+          '<td class="ops-col-num ops-mono"><strong>' + escapeHtml(inv.currency) + ' ' + escapeHtml(inv.amount_due) + '</strong></td>' +
+          '<td><span class="' + statusBadgeClass + '">' + escapeHtml(inv.status_display) + '</span></td>' +
+          '<td class="ops-col-actions">' +
+            '<div class="ops-row-actions">' +
+              '<a href="' + escapeHtml(inv.pdf_url) + '" class="ops-text-action ops-pdf-btn" download title="Download Branded PDF">PDF</a>' +
+              '<span aria-hidden="true">·</span>' +
+              '<a href="' + escapeHtml(inv.verify_url) + '" class="ops-text-action" target="_blank" title="Verify Online Certificate">Verify</a>' +
+              '<span aria-hidden="true">·</span>' +
+              '<form method="post" action="' + statusUrl + '" class="ops-inline-form ops-status-form">' +
+                '<input type="hidden" name="csrfmiddlewaretoken" value="' + csrfToken + '">' +
+                '<input type="hidden" name="next" value="/operations/invoices/">' +
+                '<button type="submit" name="status" value="' + (isPaid ? 'open' : 'paid') + '" class="ops-text-action">' + (isPaid ? 'Reopen' : 'Mark paid') + '</button>' +
+              '</form>' +
+              '<span aria-hidden="true">·</span>' +
+              '<a href="' + escapeHtml(inv.checkout_url) + '" class="ops-text-action">Checkout</a>' +
+            '</div>' +
+          '</td>';
+
+        if (tableBody) {
+          tableBody.prepend(tr);
+          const newForm = tr.querySelector(".ops-status-form");
+          if (newForm) bindStatusForm(newForm);
+        }
+
+        // 3. Reset form inputs
+        const descField = createForm.querySelector("#invoice-description");
+        const amountField = createForm.querySelector("#invoice-amount");
+        if (descField) descField.value = "";
+        if (amountField) amountField.value = "";
+
+        // 4. Smooth dismissal of tick and modal
+        window.setTimeout(function () {
+          if (tickOverlay) tickOverlay.classList.remove("is-visible");
+          if (modal) modal.hidden = true;
+          applyFilters();
+        }, 950);
+
+      } catch (err) {
+        if (feedbackEl) feedbackEl.textContent = err.message || "Failed to create invoice.";
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Generate invoice";
+      }
     });
   }
 })();

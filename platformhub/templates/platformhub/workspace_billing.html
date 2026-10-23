@@ -39,11 +39,15 @@
               </span>
             </td>
             <td class="cp-actions">
-              {% if invoice.status != "paid" %}
-              <a class="cp-pay-btn cp-pay-btn-sm" href="{% url 'platformhub:checkout' %}?invoice={{ invoice.id }}">Pay</a>
-              {% else %}
-              <span class="cp-muted">Settled</span>
-              {% endif %}
+              <div style="display: flex; gap: 6px; align-items: center; justify-content: flex-end;">
+                <a class="cp-btn-outline cp-btn-sm" href="{% url 'platformhub:invoice_pdf_download' invoice.id %}" download title="Download Branded PDF">PDF</a>
+                <a class="cp-btn-outline cp-btn-sm" href="{% url 'platformhub:invoice_verify' invoice.id %}" target="_blank" title="Verify Online Certificate">Verify</a>
+                {% if invoice.status != "paid" %}
+                <a class="cp-pay-btn cp-pay-btn-sm" href="{% url 'platformhub:checkout' %}?invoice={{ invoice.id }}">Pay</a>
+                {% else %}
+                <span class="cp-muted" style="font-size: 11px;">Settled</span>
+                {% endif %}
+              </div>
             </td>
           </tr>
           {% empty %}

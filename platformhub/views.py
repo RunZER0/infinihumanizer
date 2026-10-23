@@ -12,7 +12,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
-from django.http import FileResponse, Http404, JsonResponse
+from django.http import FileResponse, Http404, HttpResponse, JsonResponse
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.mail import EmailMessage
 from django.db.models import Q
@@ -915,10 +915,19 @@ def chat_file_download(request, filename):
 def _serialize_invoice(inv):
     created_local = timezone.localtime(inv.created_at)
     balance = max(Decimal("0.00"), inv.amount_due - inv.amount_paid)
+    client_name = ""
+    if inv.user:
+        client_name = inv.user.get_full_name() or inv.user.username
+    if not client_name and inv.request:
+        client_name = inv.request.full_name
+    if not client_name:
+        client_name = inv.email
+
     return {
         "id": str(inv.id),
         "number": inv.number,
         "email": inv.email,
+        "client_name": client_name,
         "description": inv.description or inv.number,
         "currency": inv.currency,
         "amount_due": f"{inv.amount_due:.2f}",
@@ -929,6 +938,8 @@ def _serialize_invoice(inv):
         "created_at_iso": created_local.isoformat(),
         "created_at_display": created_local.strftime("%b %d, %Y · %H:%M").replace(" 0", " "),
         "checkout_url": f"{reverse('platformhub:checkout')}?invoice={inv.id}",
+        "pdf_url": reverse("platformhub:invoice_pdf_download", kwargs={"invoice_id": str(inv.id)}),
+        "verify_url": reverse("platformhub:invoice_verify", kwargs={"invoice_id": str(inv.id)}),
     }
 
 
@@ -1492,6 +1503,77 @@ def admin_invoice_status(request, invoice_id):
     if conversation_id:
         return redirect("platformhub:operations_desk_conversation", conversation_id=conversation_id)
     return redirect("platformhub:operations_invoices")
+
+
+@require_http_methods(["GET"])
+def invoice_pdf_download(request, invoice_id):
+    """
+    Download executive branded invoice PDF with embedded verification QR code.
+    Accessible for any invoice (UUID or invoice number).
+    """
+    invoice = None
+    try:
+        invoice = Invoice.objects.filter(id=invoice_id).first()
+    except (ValueError, ValidationError):
+        pass
+    if not invoice:
+        invoice = Invoice.objects.filter(number__iexact=str(invoice_id).strip()).first()
+    if not invoice:
+        raise Http404("Invoice not found.")
+
+    from .invoice_pdf import generate_invoice_pdf
+    pdf_bytes = generate_invoice_pdf(invoice)
+    response = HttpResponse(pdf_bytes, content_type="application/pdf")
+    filename = f"{invoice.number}.pdf"
+    disposition = "attachment" if request.GET.get("inline") != "1" else "inline"
+    response["Content-Disposition"] = f'{disposition}; filename="{filename}"'
+    return response
+
+
+@require_http_methods(["GET"])
+def invoice_verify(request, invoice_id):
+    """
+    Public invoice verification view reached via QR code scan or direct verification link.
+    Displays authentic invoice status, amount, and items while redacting private client details
+    (masks email and redacts last name to First L. [Protected]).
+    """
+    invoice = None
+    try:
+        invoice = Invoice.objects.filter(id=invoice_id).first()
+    except (ValueError, ValidationError):
+        pass
+    if not invoice:
+        invoice = Invoice.objects.filter(number__iexact=str(invoice_id).strip()).first()
+    if not invoice:
+        raise Http404("Invoice not found.")
+
+    from .invoice_pdf import mask_email, mask_name
+    client_name = ""
+    if invoice.user:
+        client_name = invoice.user.get_full_name() or invoice.user.username
+    if not client_name and invoice.request:
+        client_name = invoice.request.full_name
+
+    masked_client_name = mask_name(client_name, fallback_email=invoice.email)
+    masked_client_email = mask_email(invoice.email)
+
+    payments = list(
+        invoice.payments.filter(status="success").order_by("-paid_at", "-created_at")
+    )
+    is_paid = invoice.status == "paid"
+    balance_due = max(Decimal("0.00"), invoice.amount_due - invoice.amount_paid)
+    pdf_url = reverse("platformhub:invoice_pdf_download", kwargs={"invoice_id": invoice.id})
+
+    context = {
+        "invoice": invoice,
+        "masked_name": masked_client_name,
+        "masked_email": masked_client_email,
+        "is_paid": is_paid,
+        "balance_due": balance_due,
+        "payments": payments,
+        "pdf_download_url": pdf_url,
+    }
+    return render(request, "platformhub/invoice_verify.html", context)
 
 
 @login_required

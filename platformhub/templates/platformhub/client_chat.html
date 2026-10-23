@@ -171,11 +171,13 @@
           <span aria-hidden="true">·</span>
           <time class="cp-mono" datetime="{{ inv.created_at|date:'c' }}">{{ inv.created_at|date:"M j, Y" }}</time>
         </div>
-        {% if inv.status == "open" or inv.status == "part_paid" %}
-        <div class="cp-inv-actions">
-          <a class="cp-pay-btn cp-pay-btn-sm" href="{% url 'platformhub:checkout' %}?invoice={{ inv.id }}">Pay invoice</a>
+        <div class="cp-inv-actions" style="display: flex; gap: 6px; align-items: center; margin-top: 8px;">
+          <a class="cp-btn-outline cp-btn-sm" href="{% url 'platformhub:invoice_pdf_download' inv.id %}" download title="Download PDF">PDF</a>
+          <a class="cp-btn-outline cp-btn-sm" href="{% url 'platformhub:invoice_verify' inv.id %}" target="_blank" title="Verify Online Certificate">Verify</a>
+          {% if inv.status == "open" or inv.status == "part_paid" %}
+          <a class="cp-pay-btn cp-pay-btn-sm" href="{% url 'platformhub:checkout' %}?invoice={{ inv.id }}">Pay</a>
+          {% endif %}
         </div>
-        {% endif %}
       </div>
       {% empty %}
       <p class="cp-sheet-empty" id="client-invoice-empty">No invoices on this account.</p>
@@ -524,7 +526,11 @@
           '<span aria-hidden="true">·</span>' +
           '<time class="cp-mono" datetime="' + escapeHtml(inv.created_at_iso) + '">' + escapeHtml(inv.created_at_display) + "</time>" +
         "</div>" +
-        (isPayable ? '<div class="cp-inv-actions"><a class="cp-pay-btn cp-pay-btn-sm" href="' + escapeHtml(inv.checkout_url) + '">Pay invoice</a></div>' : "");
+        '<div class="cp-inv-actions" style="display: flex; gap: 6px; align-items: center; margin-top: 8px;">' +
+          (inv.pdf_url ? '<a class="cp-btn-outline cp-btn-sm" href="' + escapeHtml(inv.pdf_url) + '" download title="Download PDF">PDF</a>' : "") +
+          (inv.verify_url ? '<a class="cp-btn-outline cp-btn-sm" href="' + escapeHtml(inv.verify_url) + '" target="_blank" title="Verify Online Certificate">Verify</a>' : "") +
+          (isPayable ? '<a class="cp-pay-btn cp-pay-btn-sm" href="' + escapeHtml(inv.checkout_url) + '">Pay</a>' : "") +
+        '</div>';
       invoiceList.prepend(card);
     });
     if (invoiceCount) {

@@ -967,3 +967,57 @@ class AudioChatAndIntakeEndToEndTests(TestCase):
         self.assertEqual(resp_conv.status_code, 200)
         self.assertContains(resp_conv, "Admin oversight thread")
 
+
+class InvoicePdfAndVerificationTests(TestCase):
+    def setUp(self):
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        self.user = User.objects.create_user(
+            username="jose_cruz",
+            email="josecruz.creative@gmail.com",
+            first_name="Jose",
+            last_name="Cruz",
+        )
+        self.invoice = Invoice.objects.create(
+            number="INV-261018-JC01",
+            user=self.user,
+            email=self.user.email,
+            currency="USD",
+            amount_due=Decimal("120.00"),
+            amount_paid=Decimal("120.00"),
+            description="Brand voice guidelines and story restructuring",
+            status="paid",
+        )
+
+    def test_privacy_masking_helpers(self):
+        from .invoice_pdf import mask_email, mask_name
+        self.assertEqual(mask_email("josecruz.creative@gmail.com"), "j***e@gmail.com")
+        self.assertEqual(mask_email("audreymbrown2007@gmail.com"), "a***7@gmail.com")
+        self.assertEqual(mask_name("Jose Cruz"), "Jose C. [Protected]")
+        self.assertEqual(mask_name("Audrey Brown"), "Audrey B. [Protected]")
+
+    def test_invoice_pdf_download_by_uuid_and_number(self):
+        res_uuid = self.client.get(reverse("platformhub:invoice_pdf_download", kwargs={"invoice_id": self.invoice.id}))
+        self.assertEqual(res_uuid.status_code, 200)
+        self.assertEqual(res_uuid["Content-Type"], "application/pdf")
+        self.assertIn("INV-261018-JC01.pdf", res_uuid["Content-Disposition"])
+        self.assertTrue(len(res_uuid.content) > 1000)
+
+        res_num = self.client.get(reverse("platformhub:invoice_pdf_download", kwargs={"invoice_id": self.invoice.number}))
+        self.assertEqual(res_num.status_code, 200)
+        self.assertEqual(res_num["Content-Type"], "application/pdf")
+
+    def test_invoice_verification_redacts_private_details(self):
+        res = self.client.get(reverse("platformhub:invoice_verify", kwargs={"invoice_id": self.invoice.id}))
+        self.assertEqual(res.status_code, 200)
+        self.assertContains(res, "INV-261018-JC01")
+        self.assertContains(res, "120.00")
+        self.assertContains(res, "Settled &amp; Paid")
+        self.assertContains(res, "Brand voice guidelines")
+
+        self.assertContains(res, "Jose C. [Protected]")
+        self.assertContains(res, "j***e@gmail.com")
+        self.assertNotContains(res, "josecruz.creative@gmail.com")
+        self.assertNotContains(res, "Jose Cruz")
+
+

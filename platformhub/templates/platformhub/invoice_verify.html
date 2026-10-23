@@ -1,0 +1,763 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Invoice Verification · {{ invoice.number }} — InfiniAI</title>
+  <link rel="icon" href="{% static 'favicon.ico' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-deep: #080C14;
+      --bg-card: #0F172A;
+      --bg-card-sub: #1E293B;
+      --border-subtle: #334155;
+      --border-focus: #6366F1;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+      --emerald-accent: #10B981;
+      --emerald-glow: rgba(16, 185, 129, 0.18);
+      --emerald-bg: rgba(16, 185, 129, 0.12);
+      --indigo-accent: #6366F1;
+      --indigo-glow: rgba(99, 102, 241, 0.2);
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-deep);
+      color: var(--text-main);
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 32px 16px 48px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .verify-container {
+      max-width: 840px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Top Brand Navigation */
+    .verify-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      padding: 0 4px;
+    }
+
+    .verify-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .verify-logo-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #4F46E5, #06B6D4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+    }
+
+    .verify-brand-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 19px;
+      letter-spacing: -0.02em;
+    }
+
+    .verify-ledger-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid var(--border-subtle);
+      padding: 5px 12px;
+      border-radius: 999px;
+    }
+
+    .ledger-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--emerald-accent);
+      box-shadow: 0 0 8px var(--emerald-accent);
+      animation: pulse-dot 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    /* Main Certificate Card */
+    .verify-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.04);
+      position: relative;
+    }
+
+    /* Decorative top accent line */
+    .verify-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #10B981, #6366F1, #38BDF8);
+    }
+
+    /* Verification Status Banner */
+    .verify-banner {
+      padding: 24px 28px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .verify-status-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .status-shield {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .status-shield.is-paid {
+      background: var(--emerald-bg);
+      color: var(--emerald-accent);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      box-shadow: 0 0 18px var(--emerald-glow);
+    }
+
+    .status-shield.is-open {
+      background: rgba(59, 130, 246, 0.12);
+      color: #3B82F6;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      box-shadow: 0 0 18px rgba(59, 130, 246, 0.2);
+    }
+
+    .verify-headline {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .verify-shield-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .verify-shield-sub {
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    .status-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 999px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-pill.is-paid {
+      background: var(--emerald-bg);
+      color: var(--emerald-accent);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .status-pill.is-open {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60A5FA;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+    }
+
+    /* Certificate Body */
+    .verify-body {
+      padding: 28px;
+    }
+
+    /* Privacy Redaction Notice Box */
+    .privacy-notice-box {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px dashed var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    .privacy-lock-icon {
+      color: #F59E0B;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* Details Grid */
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .meta-cell {
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+    }
+
+    .meta-label {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 5px;
+    }
+
+    .meta-value {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      word-break: break-all;
+    }
+
+    .meta-value.ops-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .meta-value.is-amount {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      color: #fff;
+    }
+
+    .meta-value.is-redacted {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #93C5FD;
+    }
+
+    .redacted-badge {
+      font-size: 10px;
+      background: rgba(147, 197, 253, 0.15);
+      color: #93C5FD;
+      padding: 1px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(147, 197, 253, 0.25);
+    }
+
+    /* Scope Section */
+    .scope-section {
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 20px 22px;
+      margin-bottom: 28px;
+    }
+
+    .scope-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .scope-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Financial Breakdown Table */
+    .financial-table-wrap {
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
+    .financial-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+
+    .financial-table th,
+    .financial-table td {
+      padding: 12px 18px;
+      text-align: left;
+    }
+
+    .financial-table th {
+      background: rgba(30, 41, 59, 0.9);
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .financial-table td {
+      border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+      color: var(--text-muted);
+    }
+
+    .financial-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .financial-table .text-right {
+      text-align: right;
+    }
+
+    .financial-table .ops-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .financial-table tr.total-row {
+      background: rgba(15, 23, 42, 0.6);
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Audit Trail Section */
+    .audit-section {
+      margin-bottom: 28px;
+    }
+
+    .audit-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .audit-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+    }
+
+    .audit-card {
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13px;
+    }
+
+    .audit-meta-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .audit-channel-badge {
+      background: rgba(99, 102, 241, 0.15);
+      color: #A5B4FC;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .audit-ref {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .audit-time {
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    /* Actions Bar */
+    .verify-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13.5px;
+      font-weight: 600;
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--indigo-accent);
+      color: #fff;
+      box-shadow: 0 4px 14px var(--indigo-glow);
+    }
+
+    .btn-primary:hover {
+      background: #4F46E5;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--bg-card-sub);
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .btn-secondary:hover {
+      background: #334155;
+    }
+
+    .btn-success {
+      background: var(--emerald-accent);
+      color: #064E3B;
+      font-weight: 700;
+    }
+
+    .btn-success:hover {
+      background: #059669;
+    }
+
+    .verify-stamp-text {
+      font-size: 11.5px;
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Footer */
+    .verify-footer {
+      text-align: center;
+      margin-top: 32px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .verify-footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .verify-footer a:hover {
+      color: var(--text-main);
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        color: #000;
+        padding: 0;
+      }
+      .verify-card {
+        border: 1px solid #ccc;
+        box-shadow: none;
+        background: #fff;
+      }
+      .verify-actions, .verify-nav {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="verify-container">
+    <header class="verify-nav">
+      <a href="/" class="verify-brand">
+        <span class="verify-logo-badge">IA</span>
+        <span class="verify-brand-title">InfiniAI Operations</span>
+      </a>
+      <div class="verify-ledger-tag">
+        <span class="ledger-dot"></span>
+        <span>Operational Ledger Verified</span>
+      </div>
+    </header>
+
+    <main class="verify-card" role="region" aria-label="Official Invoice Verification Certificate">
+      <!-- Status Banner -->
+      <section class="verify-banner">
+        <div class="verify-status-wrap">
+          <div class="status-shield {% if is_paid %}is-paid{% else %}is-open{% endif %}" aria-hidden="true">
+            {% if is_paid %}
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="m9 12 2 2 4-4"/>
+            </svg>
+            {% else %}
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            {% endif %}
+          </div>
+          <div class="verify-headline">
+            <h1 class="verify-shield-title">
+              <span>Authentic Invoice Record</span>
+              <span class="status-pill {% if is_paid %}is-paid{% else %}is-open{% endif %}">
+                {% if is_paid %}✓ Settled &amp; Paid{% else %}Pending Settlement{% endif %}
+              </span>
+            </h1>
+            <span class="verify-shield-sub">Verified on InfiniAI 256-bit Settlement Network</span>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <a href="{{ pdf_download_url }}" class="btn btn-primary" download>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            <span>Download Official PDF</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Certificate Body -->
+      <div class="verify-body">
+        <!-- Privacy Redaction Disclaimer -->
+        <div class="privacy-notice-box">
+          <svg class="privacy-lock-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <div>
+            <strong>Client Privacy Protection Active:</strong>
+            Under InfiniAI data privacy standards, private client identifiers (full surname, personal inbox, and payment tokens) are masked on public verification scans to prevent third-party scraping while maintaining verifiable cryptographic proof.
+          </div>
+        </div>
+
+        <!-- Metadata Grid -->
+        <section class="meta-grid" aria-label="Invoice Attributes">
+          <div class="meta-cell">
+            <div class="meta-label">Invoice Number</div>
+            <div class="meta-value ops-mono">{{ invoice.number }}</div>
+          </div>
+          <div class="meta-cell">
+            <div class="meta-label">Billed Client (Redacted)</div>
+            <div class="meta-value is-redacted">
+              <span>{{ masked_name }}</span>
+              <span class="redacted-badge">Privacy Mask</span>
+            </div>
+          </div>
+          <div class="meta-cell">
+            <div class="meta-label">Client Email (Masked)</div>
+            <div class="meta-value ops-mono">{{ masked_email }}</div>
+          </div>
+          <div class="meta-cell">
+            <div class="meta-label">Issued Date</div>
+            <div class="meta-value ops-mono">{{ invoice.created_at|date:"M j, Y · H:i T" }}</div>
+          </div>
+          <div class="meta-cell">
+            <div class="meta-label">Due Date</div>
+            <div class="meta-value ops-mono">{{ invoice.due_at|date:"M j, Y" }}</div>
+          </div>
+          <div class="meta-cell">
+            <div class="meta-label">Total Amount Billed</div>
+            <div class="meta-value is-amount">{{ invoice.currency }} {{ invoice.amount_due|floatformat:2 }}</div>
+          </div>
+        </section>
+
+        <!-- Scope & Deliverable Section -->
+        <section class="scope-section" aria-label="Itemized Scope">
+          <h2 class="scope-title">Engagement &amp; Scope of Deliverables</h2>
+          <p class="scope-desc">{{ invoice.description|default:"Executive Writing, Text Intelligence &amp; Operational Deliverables" }}</p>
+        </section>
+
+        <!-- Financial Summary Table -->
+        <div class="financial-table-wrap">
+          <table class="financial-table" aria-label="Financial Settlement Breakdown">
+            <thead>
+              <tr>
+                <th>Summary Item</th>
+                <th>Status</th>
+                <th class="text-right">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Subtotal</td>
+                <td>Agreed Milestone</td>
+                <td class="text-right ops-mono">{{ invoice.currency }} {{ invoice.amount_due|floatformat:2 }}</td>
+              </tr>
+              <tr>
+                <td>Tax &amp; Processing Surcharges</td>
+                <td>Exempt / Covered</td>
+                <td class="text-right ops-mono">{{ invoice.currency }} 0.00</td>
+              </tr>
+              <tr class="total-row">
+                <td>Total Invoice Balance</td>
+                <td>{{ invoice.get_status_display }}</td>
+                <td class="text-right ops-mono">{{ invoice.currency }} {{ invoice.amount_due|floatformat:2 }}</td>
+              </tr>
+              <tr>
+                <td>Amount Cleared / Settled</td>
+                <td><span style="color: var(--emerald-accent);">Cleared via Gateway</span></td>
+                <td class="text-right ops-mono" style="color: var(--emerald-accent);">{{ invoice.currency }} {{ invoice.amount_paid|floatformat:2 }}</td>
+              </tr>
+              <tr>
+                <td>Remaining Balance</td>
+                <td>{% if is_paid %}Zero Balance (Settled){% else %}Awaiting Clearance{% endif %}</td>
+                <td class="text-right ops-mono" style="color: {% if is_paid %}var(--emerald-accent){% else %}#F87171{% endif %}; font-weight: 700;">
+                  {{ invoice.currency }} {{ balance_due|floatformat:2 }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Settlement Audit Trail (if paid) -->
+        {% if payments %}
+        <section class="audit-section" aria-label="Audit Trail">
+          <div class="audit-head">
+            <h2 class="audit-title">Cryptographic Settlement Records</h2>
+            <span class="verify-stamp-text">{{ payments|length }} record{{ payments|length|pluralize }} verified</span>
+          </div>
+
+          {% for p in payments %}
+          <div class="audit-card">
+            <div class="audit-meta-left">
+              <span class="audit-channel-badge">{{ p.source_type|default:p.metadata.channel|default:"Gateway"|upper }}</span>
+              <div>
+                <div class="audit-ref">{{ p.reference }}</div>
+                <div class="audit-time">{{ p.paid_at|default:p.created_at|date:"F j, Y · H:i:s T" }}</div>
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <strong class="ops-mono" style="color: var(--emerald-accent);">{{ p.currency }} {{ p.amount|floatformat:2 }}</strong>
+              <div style="font-size: 11px; color: var(--text-dim);">Authorized &amp; Cleared</div>
+            </div>
+          </div>
+          {% endfor %}
+        </section>
+        {% endif %}
+
+        <!-- Actions -->
+        <div class="verify-actions">
+          <div class="btn-group">
+            <a href="{{ pdf_download_url }}" class="btn btn-primary" download>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              <span>Download PDF</span>
+            </a>
+            <button type="button" class="btn btn-secondary" onclick="window.print()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 6 2 18 2 18 9"/>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                <rect x="6" y="14" width="12" height="8"/>
+              </svg>
+              <span>Print Certificate</span>
+            </button>
+            {% if not is_paid %}
+            <a href="{% url 'platformhub:checkout' %}?invoice={{ invoice.id }}" class="btn btn-success">
+              <span>Pay Online</span>
+            </a>
+            {% endif %}
+          </div>
+          <span class="verify-stamp-text">Document ID: {{ invoice.id }}</span>
+        </div>
+      </div>
+    </main>
+
+    <footer class="verify-footer">
+      <p>InfiniAI Operations Studio · Encrypted Financial Ledger &amp; Text Intelligence System</p>
+      <p style="margin-top: 6px;">Questions? Contact operations team at <a href="mailto:operations@byinfini.online">operations@byinfini.online</a></p>
+    </footer>
+  </div>
+</body>
+</html>

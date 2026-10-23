@@ -271,6 +271,24 @@
     </form>
   </div>
 </div>
+
+<!-- Animated Tick & Motion Overlay -->
+<div class="ops-tick-overlay" id="desk-invoice-tick-overlay" role="status" aria-live="assertive" aria-atomic="true">
+  <div class="ops-tick-card">
+    <div class="ops-tick-badge">
+      <svg class="ops-tick-svg" viewBox="0 0 52 52">
+        <circle class="ops-tick-circle" cx="26" cy="26" r="23" fill="none"/>
+        <path class="ops-tick-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+      </svg>
+    </div>
+    <h3 class="ops-tick-title">Invoice Created &amp; Dispatched</h3>
+    <div class="ops-tick-subtitle" id="desk-tick-invoice-num">INV-RECORD</div>
+    <div class="ops-tick-meta">
+      <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#10B981;"></span>
+      <span>Dispatched to Thread &amp; Portal</span>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block extra_scripts %}
@@ -392,6 +410,8 @@
   const modal = document.getElementById("ops-invoice-modal");
   const openModalBtn = document.getElementById("ops-open-invoice-modal");
   const closeModalBtn = document.getElementById("ops-close-invoice-modal");
+  const deskTickOverlay = document.getElementById("desk-invoice-tick-overlay");
+  const deskTickNumEl = document.getElementById("desk-tick-invoice-num");
   const toggleNewClientBtn = document.getElementById("ops-toggle-new-client");
   const newClientForm = document.getElementById("ops-new-client-form");
   const searchInput = document.getElementById("ops-thread-search");
@@ -808,15 +828,20 @@
         if (!response.ok || !data.ok) {
           throw new Error(data.error || "Could not create invoice.");
         }
+        if (deskTickNumEl) deskTickNumEl.textContent = data.invoice.number;
+        if (deskTickOverlay) deskTickOverlay.classList.add("is-visible");
+
         if (data.message) {
           renderMessage(data.message);
         }
         invoiceForm.querySelector("#invoice-description").value = "";
         invoiceForm.querySelector("#invoice-amount").value = "";
-        invoiceFeedback.textContent = data.invoice.number + " created.";
-        if (modal) {
-          window.setTimeout(function () { modal.hidden = true; invoiceFeedback.textContent = ""; }, 400);
-        }
+
+        window.setTimeout(function () {
+          if (deskTickOverlay) deskTickOverlay.classList.remove("is-visible");
+          if (modal) modal.hidden = true;
+          invoiceFeedback.textContent = "";
+        }, 950);
       } catch (err) {
         invoiceFeedback.textContent = err.message || "Could not create invoice.";
       } finally {

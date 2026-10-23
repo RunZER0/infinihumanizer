@@ -53,6 +53,18 @@
     <aside class="summary-rail">
       <div class="eyebrow">Summary</div>
       <p>{% if kind == "invoice" %}Payment for {{ invoice.number }}.{% else %}{{ package.description }}{% endif %}</p>
+      {% if kind == "invoice" %}
+      <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;">
+        <a href="{% url 'platformhub:invoice_pdf_download' invoice.id %}" class="btn btn-outline" download style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; text-decoration: none;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span>Download PDF Invoice</span>
+        </a>
+        <a href="{% url 'platformhub:invoice_verify' invoice.id %}" target="_blank" class="btn btn-outline" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; text-decoration: none;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          <span>Verify Certificate &amp; QR</span>
+        </a>
+      </div>
+      {% endif %}
       {% if kind == "package" and package.word_credits %}
       <p><strong>{{ package.word_credits|floatformat:0 }} words</strong> are added to the signed-in account after Paystack confirms the payment.</p>
       {% endif %}
