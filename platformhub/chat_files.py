@@ -143,10 +143,51 @@ def write_docx_file(filename: str, title: str, paragraphs: list[str], role: str 
             f'<w:p><w:pPr><w:spacing w:before="120" w:after="240"/></w:pPr><w:r><w:rPr><w:b/><w:color w:val="0F172A"/><w:sz w:val="32"/></w:rPr><w:t xml:space="preserve">{xml_escape(title)}</w:t></w:r></w:p>'
         )
     for para in paragraphs:
+        if isinstance(para, (list, tuple)):
+            tbl_rows_xml = []
+            for r_idx, row in enumerate(para):
+                is_head = (r_idx == 0)
+                cells_xml = []
+                for cell in row:
+                    cell_text = xml_escape(str(cell if cell is not None else ""))
+                    bg_fill = "F1F5F9" if is_head else ("FFFFFF" if r_idx % 2 == 1 else "F8FAFC")
+                    b_tag = "<w:b/>" if is_head else ""
+                    color_val = "0F172A" if is_head else "334155"
+                    cell_xml = (
+                        f'<w:tc>'
+                        f'<w:tcPr>'
+                        f'<w:shd w:val="clear" w:color="auto" w:fill="{bg_fill}"/>'
+                        f'<w:tcMar><w:top w:w="80" w:type="dxa"/><w:bottom w:w="80" w:type="dxa"/><w:left w:w="120" w:type="dxa"/><w:right w:w="120" w:type="dxa"/></w:tcMar>'
+                        f'</w:tcPr>'
+                        f'<w:p><w:pPr><w:spacing w:after="20" w:before="20"/></w:pPr><w:r><w:rPr>{b_tag}<w:color w:val="{color_val}"/><w:sz w:val="19"/></w:rPr><w:t xml:space="preserve">{cell_text}</w:t></w:r></w:p>'
+                        f'</w:tc>'
+                    )
+                    cells_xml.append(cell_xml)
+                tbl_rows_xml.append(f'<w:tr>{"".join(cells_xml)}</w:tr>')
+
+            tbl_borders = (
+                '<w:tblBorders>'
+                '<w:top w:val="single" w:sz="6" w:space="0" w:color="CBD5E1"/>'
+                '<w:bottom w:val="single" w:sz="6" w:space="0" w:color="CBD5E1"/>'
+                '<w:left w:val="none"/>'
+                '<w:right w:val="none"/>'
+                '<w:insideH w:val="single" w:sz="4" w:space="0" w:color="E2E8F0"/>'
+                '<w:insideV w:val="none"/>'
+                '</w:tblBorders>'
+            )
+            body_xml.append(f'<w:tbl><w:tblPr>{tbl_borders}<w:tblW w:w="5000" w:type="pct"/></w:tblPr>{"".join(tbl_rows_xml)}</w:tbl>')
+            body_xml.append('<w:p><w:pPr><w:spacing w:after="100"/></w:pPr></w:p>')
+            continue
+
         text = str(para or "").strip()
         if not text:
             body_xml.append('<w:p><w:pPr><w:spacing w:after="100"/></w:pPr></w:p>')
             continue
+
+        if text in ("--PAGE-BREAK--", "[PAGE BREAK]", "===PAGE==="):
+            body_xml.append('<w:p><w:r><w:br w:type="page"/></w:r></w:p>')
+            continue
+
         is_heading = (
             text.startswith("#")
             or text.startswith("ARTICLE ")
@@ -290,10 +331,10 @@ def write_xlsx_file(
 def write_pdf_file(
     filename: str,
     title: str,
-    lines: list[str],
+    lines: list,
     role: str = "file",
     subtitle: str = "",
-    meta_tag: str = "InfiniAI Operations Studio · Official Deliverable",
+    meta_tag: str = "",
 ) -> dict:
     from reportlab.lib.pagesizes import letter
     from reportlab.platypus import (
@@ -301,9 +342,42 @@ def write_pdf_file(
         Paragraph,
         Spacer,
         HRFlowable,
+        Table,
+        TableStyle,
+        PageBreak,
     )
-    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.styles import ParagraphStyle
     from reportlab.lib import colors
+    from reportlab.pdfgen import canvas
+
+    class NumberedCanvas(canvas.Canvas):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self._saved_page_states = []
+
+        def showPage(self):
+            self._saved_page_states.append(dict(self.__dict__))
+            self._startPage()
+
+        def save(self):
+            num_pages = len(self._saved_page_states)
+            for state in self._saved_page_states:
+                self.__dict__.update(state)
+                self.draw_page_number(num_pages)
+                canvas.Canvas.showPage(self)
+            canvas.Canvas.save(self)
+
+        def draw_page_number(self, page_count):
+            self.saveState()
+            self.setFont("Helvetica", 8)
+            self.setFillColor(colors.HexColor("#64748B"))
+            self.setStrokeColor(colors.HexColor("#CBD5E1"))
+            self.setLineWidth(0.5)
+            self.line(44, 32, 568, 32)
+            self.drawString(44, 20, "CONFIDENTIAL & PROPRIETARY")
+            page_str = f"Page {self._pageNumber} of {page_count}"
+            self.drawRightString(568, 20, page_str)
+            self.restoreState()
 
     files_dir = get_chat_files_dir()
     dest = files_dir / filename
@@ -314,66 +388,72 @@ def write_pdf_file(
         leftMargin=44,
         rightMargin=44,
         topMargin=44,
-        bottomMargin=44,
+        bottomMargin=48,
     )
 
     title_style = ParagraphStyle(
         "DocTitle",
         fontName="Helvetica-Bold",
-        fontSize=18,
-        leading=22,
+        fontSize=16,
+        leading=20,
         textColor=colors.HexColor("#0B0F19"),
-        spaceAfter=6,
+        spaceAfter=4,
     )
     subtitle_style = ParagraphStyle(
         "DocSubtitle",
         fontName="Helvetica",
-        fontSize=10,
-        leading=14,
+        fontSize=9.5,
+        leading=13.5,
         textColor=colors.HexColor("#475569"),
-        spaceAfter=14,
+        spaceAfter=10,
     )
     meta_style = ParagraphStyle(
         "DocMeta",
         fontName="Helvetica-Bold",
-        fontSize=8.5,
-        leading=11,
-        textColor=colors.HexColor("#6366F1"),
+        fontSize=8,
+        leading=10,
+        textColor=colors.HexColor("#64748B"),
         spaceAfter=4,
     )
     heading_style = ParagraphStyle(
         "DocHeading",
         fontName="Helvetica-Bold",
-        fontSize=11.5,
-        leading=15,
+        fontSize=10.5,
+        leading=14,
         textColor=colors.HexColor("#0F172A"),
-        spaceBefore=14,
-        spaceAfter=6,
+        spaceBefore=12,
+        spaceAfter=5,
     )
     body_style = ParagraphStyle(
         "DocBody",
         fontName="Helvetica",
-        fontSize=9.5,
-        leading=14,
+        fontSize=9,
+        leading=13.5,
         textColor=colors.HexColor("#1E293B"),
-        spaceAfter=8,
+        spaceAfter=6,
     )
     bullet_style = ParagraphStyle(
         "DocBullet",
         fontName="Helvetica",
-        fontSize=9.5,
-        leading=14,
+        fontSize=9,
+        leading=13.5,
         textColor=colors.HexColor("#1E293B"),
-        leftIndent=16,
-        spaceAfter=5,
+        leftIndent=14,
+        spaceAfter=4,
     )
-    footer_style = ParagraphStyle(
-        "DocFooter",
+    table_header_style = ParagraphStyle(
+        "TableHeader",
+        fontName="Helvetica-Bold",
+        fontSize=8,
+        leading=10.5,
+        textColor=colors.HexColor("#0F172A"),
+    )
+    table_body_style = ParagraphStyle(
+        "TableBody",
         fontName="Helvetica",
         fontSize=8,
-        leading=11,
-        textColor=colors.HexColor("#94A3B8"),
-        alignment=1,
+        leading=10.5,
+        textColor=colors.HexColor("#334155"),
     )
 
     story = []
@@ -385,12 +465,45 @@ def write_pdf_file(
 
     if subtitle:
         story.append(Paragraph(xml_escape(subtitle), subtitle_style))
-    story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor("#CBD5E1"), spaceAfter=14))
+    story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor("#CBD5E1"), spaceAfter=12))
 
     for item in lines:
+        if isinstance(item, (list, tuple)):
+            table_data = []
+            for r_idx, row in enumerate(item):
+                row_cells = []
+                for cell in row:
+                    cell_text = xml_escape(str(cell if cell is not None else "")).replace("\n", "<br/>")
+                    is_head = (r_idx == 0)
+                    st = table_header_style if is_head else table_body_style
+                    row_cells.append(Paragraph(cell_text, st))
+                table_data.append(row_cells)
+
+            t = Table(table_data, colWidths=None, repeatRows=1)
+            t.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#F1F5F9")),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#0F172A")),
+                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+                ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+                ('TOPPADDING', (0, 0), (-1, -1), 4),
+                ('LEFTPADDING', (0, 0), (-1, -1), 5),
+                ('RIGHTPADDING', (0, 0), (-1, -1), 5),
+                ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor("#CBD5E1")),
+                ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor("#F8FAFC")]),
+            ]))
+            story.append(Spacer(1, 4))
+            story.append(t)
+            story.append(Spacer(1, 6))
+            continue
+
         text = str(item).strip()
         if not text:
-            story.append(Spacer(1, 6))
+            story.append(Spacer(1, 5))
+            continue
+
+        if text in ("--PAGE-BREAK--", "[PAGE BREAK]", "===PAGE==="):
+            story.append(PageBreak())
             continue
 
         is_heading = (
@@ -414,11 +527,7 @@ def write_pdf_file(
         else:
             story.append(Paragraph(safe_text, body_style))
 
-    story.append(Spacer(1, 16))
-    story.append(HRFlowable(width="100%", thickness=0.75, color=colors.HexColor("#E2E8F0"), spaceAfter=8))
-    story.append(Paragraph(f"Document ID: {filename} · Authorized Operational Deliverable · InfiniAI", footer_style))
-
-    doc.build(story)
+    doc.build(story, canvasmaker=NumberedCanvas)
     return build_attachment_meta(filename=filename, display_name=filename, role=role)
 
 
