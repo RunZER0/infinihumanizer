@@ -22,6 +22,48 @@ from platformhub.chat_files import (
 def build_all_authentic_deliverables() -> dict[str, dict]:
     files = {}
 
+    from platformhub.deliverables.cami import build_cami_deliverables
+    from platformhub.deliverables.liza import build_liza_deliverables
+    from platformhub.deliverables.audrey import build_audrey_deliverables
+    from platformhub.deliverables.cruz import build_cruz_deliverables
+    from platformhub.deliverables.estella import build_estella_deliverables
+    from platformhub.deliverables.johnson import build_johnson_deliverables
+    from platformhub.deliverables.alexa import build_alexa_deliverables
+    from platformhub.deliverables.keegan import build_keegan_deliverables
+    from platformhub.deliverables.drako import build_drako_deliverables
+    from platformhub.deliverables.dennis import build_dennis_deliverables
+    from platformhub.deliverables.luca import build_luca_deliverables
+    from platformhub.deliverables.cuevas import build_cuevas_deliverables
+    from platformhub.deliverables.carter import build_carter_deliverables
+    from platformhub.deliverables.patrick import build_patrick_deliverables
+    from platformhub.deliverables.lina import build_lina_deliverables
+    from platformhub.deliverables.orozco import build_orozco_deliverables
+    from platformhub.deliverables.kaylee import build_kaylee_deliverables
+    from platformhub.deliverables.victor import build_victor_deliverables
+
+    builders = [
+        build_cami_deliverables,
+        build_liza_deliverables,
+        build_audrey_deliverables,
+        build_cruz_deliverables,
+        build_estella_deliverables,
+        build_johnson_deliverables,
+        build_alexa_deliverables,
+        build_keegan_deliverables,
+        build_drako_deliverables,
+        build_dennis_deliverables,
+        build_luca_deliverables,
+        build_cuevas_deliverables,
+        build_carter_deliverables,
+        build_patrick_deliverables,
+        build_lina_deliverables,
+        build_orozco_deliverables,
+        build_kaylee_deliverables,
+        build_victor_deliverables,
+    ]
+    for b in builders:
+        files.update(b())
+
     # =========================================================================
     # 1. AUDREY BROWN — STUDIO BROWN (East Austin Editorial Photography)
     # =========================================================================
