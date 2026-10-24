@@ -21,6 +21,7 @@ from platformhub.chat_files import (
     write_xlsx_file,
     write_zip_file,
 )
+from platformhub.client_deliverables_builder import build_all_authentic_deliverables
 from platformhub.models import Deliverable, Invoice, PaymentRecord, ServiceRequest
 
 
@@ -6124,6 +6125,7 @@ class Command(BaseCommand):
                 tx_by_ref[ref_k] = r_val
 
         seed_files = build_seed_attachments()
+        seed_files.update(build_all_authentic_deliverables())
         mapped_refs = set()
         user_by_email = {}
 

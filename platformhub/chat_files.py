@@ -121,77 +121,117 @@ def save_uploaded_chat_files(uploaded_files):
     return saved
 
 
-def write_docx_file(filename: str, title: str, paragraphs: list[str], role: str = "file") -> dict:
+def write_docx_file(filename: str, title: str, paragraphs: list[str | list | tuple], role: str = "file") -> dict:
+    import docx
+    from docx.shared import Inches, Pt, RGBColor
+    from docx.enum.text import WD_ALIGN_PARAGRAPH
+    from docx.enum.table import WD_TABLE_ALIGNMENT
+    from docx.oxml import parse_xml, OxmlElement
+    from docx.oxml.ns import nsdecls, qn
+
     files_dir = get_chat_files_dir()
     dest = files_dir / filename
 
-    content_types = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
-  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
-  <Default Extension="xml" ContentType="application/xml"/>
-  <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
-</Types>"""
+    doc = docx.Document()
+    for section in doc.sections:
+        section.top_margin = Inches(1)
+        section.bottom_margin = Inches(1)
+        section.left_margin = Inches(1)
+        section.right_margin = Inches(1)
 
-    rels = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
-</Relationships>"""
+        # Running header & footer
+        header_p = section.header.paragraphs[0]
+        header_p.text = title[:60] if title else ""
+        header_p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+        header_p.style.font.name = "Calibri"
+        header_p.style.font.size = Pt(8.5)
+        header_p.style.font.color.rgb = RGBColor(148, 163, 184)
 
-    body_xml = []
+        footer_p = section.footer.paragraphs[0]
+        footer_p.text = "CONFIDENTIAL & PROPRIETARY"
+        footer_p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        footer_p.style.font.name = "Calibri"
+        footer_p.style.font.size = Pt(8.5)
+        footer_p.style.font.color.rgb = RGBColor(148, 163, 184)
+
     if title:
-        body_xml.append(
-            f'<w:p><w:pPr><w:spacing w:before="120" w:after="240"/></w:pPr><w:r><w:rPr><w:b/><w:color w:val="0F172A"/><w:sz w:val="32"/></w:rPr><w:t xml:space="preserve">{xml_escape(title)}</w:t></w:r></w:p>'
-        )
-    for para in paragraphs:
-        if isinstance(para, (list, tuple)):
-            tbl_rows_xml = []
-            for r_idx, row in enumerate(para):
-                is_head = (r_idx == 0)
-                cells_xml = []
-                for cell in row:
-                    cell_text = xml_escape(str(cell if cell is not None else ""))
-                    bg_fill = "F1F5F9" if is_head else ("FFFFFF" if r_idx % 2 == 1 else "F8FAFC")
-                    b_tag = "<w:b/>" if is_head else ""
-                    color_val = "0F172A" if is_head else "334155"
-                    cell_xml = (
-                        f'<w:tc>'
-                        f'<w:tcPr>'
-                        f'<w:shd w:val="clear" w:color="auto" w:fill="{bg_fill}"/>'
-                        f'<w:tcMar><w:top w:w="80" w:type="dxa"/><w:bottom w:w="80" w:type="dxa"/><w:left w:w="120" w:type="dxa"/><w:right w:w="120" w:type="dxa"/></w:tcMar>'
-                        f'</w:tcPr>'
-                        f'<w:p><w:pPr><w:spacing w:after="20" w:before="20"/></w:pPr><w:r><w:rPr>{b_tag}<w:color w:val="{color_val}"/><w:sz w:val="19"/></w:rPr><w:t xml:space="preserve">{cell_text}</w:t></w:r></w:p>'
-                        f'</w:tc>'
-                    )
-                    cells_xml.append(cell_xml)
-                tbl_rows_xml.append(f'<w:tr>{"".join(cells_xml)}</w:tr>')
+        p_title = doc.add_paragraph()
+        r_title = p_title.add_run(title)
+        r_title.bold = True
+        r_title.font.name = "Calibri"
+        r_title.font.size = Pt(22)
+        r_title.font.color.rgb = RGBColor(15, 23, 42)
+        p_title.paragraph_format.space_before = Pt(0)
+        p_title.paragraph_format.space_after = Pt(14)
 
-            tbl_borders = (
-                '<w:tblBorders>'
-                '<w:top w:val="single" w:sz="6" w:space="0" w:color="CBD5E1"/>'
-                '<w:bottom w:val="single" w:sz="6" w:space="0" w:color="CBD5E1"/>'
-                '<w:left w:val="none"/>'
-                '<w:right w:val="none"/>'
-                '<w:insideH w:val="single" w:sz="4" w:space="0" w:color="E2E8F0"/>'
-                '<w:insideV w:val="none"/>'
-                '</w:tblBorders>'
-            )
-            body_xml.append(f'<w:tbl><w:tblPr>{tbl_borders}<w:tblW w:w="5000" w:type="pct"/></w:tblPr>{"".join(tbl_rows_xml)}</w:tbl>')
-            body_xml.append('<w:p><w:pPr><w:spacing w:after="100"/></w:pPr></w:p>')
+    for item in paragraphs:
+        if isinstance(item, (list, tuple)):
+            if not item:
+                continue
+            num_rows = len(item)
+            num_cols = max(len(r) for r in item) if num_rows > 0 else 0
+            if num_cols == 0:
+                continue
+
+            tbl = doc.add_table(rows=num_rows, cols=num_cols)
+            tbl.alignment = WD_TABLE_ALIGNMENT.CENTER
+            tbl.autofit = True
+
+            for r_idx, row in enumerate(item):
+                is_head = (r_idx == 0)
+                for c_idx, cell_val in enumerate(row):
+                    if c_idx >= num_cols:
+                        break
+                    cell = tbl.cell(r_idx, c_idx)
+                    cell.text = str(cell_val if cell_val is not None else "")
+                    shd_color = "0F172A" if is_head else ("F8FAFC" if r_idx % 2 == 1 else "FFFFFF")
+                    shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="{shd_color}"/>')
+                    cell._tc.get_or_add_tcPr().append(shading)
+
+                    # Cell borders
+                    border_xml = (
+                        f'<w:tcBorders {nsdecls("w")}>'
+                        f'<w:top w:val="single" w:sz="4" w:space="0" w:color="CBD5E1"/>'
+                        f'<w:left w:val="none"/>'
+                        f'<w:bottom w:val="single" w:sz="4" w:space="0" w:color="CBD5E1"/>'
+                        f'<w:right w:val="none"/>'
+                        f'</w:tcBorders>'
+                    )
+                    cell._tc.get_or_add_tcPr().append(parse_xml(border_xml))
+
+                    for p in cell.paragraphs:
+                        p.alignment = WD_ALIGN_PARAGRAPH.CENTER if (is_head or isinstance(cell_val, (int, float))) else WD_ALIGN_PARAGRAPH.LEFT
+                        p.paragraph_format.space_before = Pt(4)
+                        p.paragraph_format.space_after = Pt(4)
+                        for r in p.runs:
+                            r.font.name = "Calibri"
+                            r.font.size = Pt(9 if not is_head else 9.5)
+                            if is_head:
+                                r.bold = True
+                                r.font.color.rgb = RGBColor(255, 255, 255)
+                            else:
+                                r.font.color.rgb = RGBColor(30, 41, 59)
+
+            p_sp = doc.add_paragraph()
+            p_sp.paragraph_format.space_before = Pt(0)
+            p_sp.paragraph_format.space_after = Pt(8)
             continue
 
-        text = str(para or "").strip()
+        text = str(item or "").strip()
         if not text:
-            body_xml.append('<w:p><w:pPr><w:spacing w:after="100"/></w:pPr></w:p>')
+            p_empty = doc.add_paragraph()
+            p_empty.paragraph_format.space_after = Pt(6)
             continue
 
         if text in ("--PAGE-BREAK--", "[PAGE BREAK]", "===PAGE==="):
-            body_xml.append('<w:p><w:r><w:br w:type="page"/></w:r></w:p>')
+            doc.add_page_break()
             continue
 
         is_heading = (
             text.startswith("#")
             or text.startswith("ARTICLE ")
             or text.startswith("SECTION ")
+            or text.startswith("PART ")
             or text.startswith("TEMPLATE ")
             or text.startswith("ROLE ")
             or text.startswith("PAGE ")
@@ -202,40 +242,37 @@ def write_docx_file(filename: str, title: str, paragraphs: list[str], role: str 
 
         if is_heading:
             clean_heading = text.lstrip("# ").strip()
-            body_xml.append(
-                f'<w:p><w:pPr><w:spacing w:before="240" w:after="80"/></w:pPr><w:r><w:rPr><w:b/><w:color w:val="0F172A"/><w:sz w:val="24"/></w:rPr><w:t xml:space="preserve">{xml_escape(clean_heading)}</w:t></w:r></w:p>'
-            )
+            p_h = doc.add_paragraph()
+            p_h.paragraph_format.space_before = Pt(14)
+            p_h.paragraph_format.space_after = Pt(4)
+            p_h.paragraph_format.keep_with_next = True
+            r_h = p_h.add_run(clean_heading)
+            r_h.bold = True
+            r_h.font.name = "Calibri"
+            r_h.font.size = Pt(13)
+            r_h.font.color.rgb = RGBColor(15, 23, 42)
         elif is_bullet:
-            body_xml.append(
-                f'<w:p><w:pPr><w:ind w:left="360"/><w:spacing w:after="100"/></w:pPr><w:r><w:rPr><w:color w:val="1E293B"/><w:sz w:val="21"/></w:rPr><w:t xml:space="preserve">{xml_escape(text)}</w:t></w:r></w:p>'
-            )
+            clean_b = text.lstrip("—•-* ").strip()
+            p_b = doc.add_paragraph(style='List Bullet')
+            p_b.paragraph_format.space_before = Pt(0)
+            p_b.paragraph_format.space_after = Pt(3)
+            p_b.paragraph_format.line_spacing = 1.15
+            r_b = p_b.add_run(clean_b)
+            r_b.font.name = "Calibri"
+            r_b.font.size = Pt(10)
+            r_b.font.color.rgb = RGBColor(30, 41, 59)
         else:
-            body_xml.append(
-                f'<w:p><w:pPr><w:spacing w:after="140" w:line="276" w:lineRule="auto"/></w:pPr><w:r><w:rPr><w:color w:val="1E293B"/><w:sz w:val="21"/></w:rPr><w:t xml:space="preserve">{xml_escape(text)}</w:t></w:r></w:p>'
-            )
+            p_body = doc.add_paragraph()
+            p_body.paragraph_format.space_before = Pt(0)
+            p_body.paragraph_format.space_after = Pt(6)
+            p_body.paragraph_format.line_spacing = 1.15
+            r_body = p_body.add_run(text)
+            r_body.font.name = "Calibri"
+            r_body.font.size = Pt(10)
+            r_body.font.color.rgb = RGBColor(30, 41, 59)
 
-    document_xml = f"""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-  <w:body>
-    {"".join(body_xml)}
-  </w:body>
-</w:document>"""
-
-    with zipfile.ZipFile(dest, "w", zipfile.ZIP_DEFLATED) as zf:
-        zf.writestr("[Content_Types].xml", content_types)
-        zf.writestr("_rels/.rels", rels)
-        zf.writestr("word/document.xml", document_xml)
-
+    doc.save(str(dest))
     return build_attachment_meta(filename=filename, display_name=filename, role=role)
-
-
-def _col_letter(idx: int) -> str:
-    result = ""
-    n = idx + 1
-    while n > 0:
-        n, rem = divmod(n - 1, 26)
-        result = chr(65 + rem) + result
-    return result
 
 
 def write_xlsx_file(
@@ -244,6 +281,10 @@ def write_xlsx_file(
     rows: list[list] = None,
     role: str = "file",
 ) -> dict:
+    import openpyxl
+    from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+    from openpyxl.utils import get_column_letter
+
     files_dir = get_chat_files_dir()
     dest = files_dir / filename
 
@@ -252,80 +293,129 @@ def write_xlsx_file(
     else:
         sheets_map = {str(sheet_name_or_dict or "Sheet1"): rows or []}
 
-    sheet_items = list(sheets_map.items())
+    wb = openpyxl.Workbook()
+    # remove default sheet
+    default_sheet = wb.active
 
-    # Build Content_Types
-    sheet_overrides = []
-    for idx in range(1, len(sheet_items) + 1):
-        sheet_overrides.append(
-            f'  <Override PartName="/xl/worksheets/sheet{idx}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'
-        )
-    content_types = f"""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
-  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
-  <Default Extension="xml" ContentType="application/xml"/>
-  <Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
-{chr(10).join(sheet_overrides)}
-</Types>"""
+    header_fill = PatternFill(fill_type="solid", fgColor="0F172A")
+    header_font = Font(name="Calibri", size=11, bold=True, color="FFFFFF")
+    data_font = Font(name="Calibri", size=10, color="1E293B")
+    total_font = Font(name="Calibri", size=10, bold=True, color="0F172A")
+    total_fill = PatternFill(fill_type="solid", fgColor="E2E8F0")
 
-    rels = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>
-</Relationships>"""
+    thin_border = Border(
+        left=Side(style='thin', color='CBD5E1'),
+        right=Side(style='thin', color='CBD5E1'),
+        top=Side(style='thin', color='CBD5E1'),
+        bottom=Side(style='thin', color='CBD5E1')
+    )
+    total_border = Border(
+        left=Side(style='thin', color='CBD5E1'),
+        right=Side(style='thin', color='CBD5E1'),
+        top=Side(style='thin', color='0F172A'),
+        bottom=Side(style='double', color='0F172A')
+    )
 
-    workbook_sheets = []
-    workbook_rels_list = []
-    for idx, (s_name, _) in enumerate(sheet_items, start=1):
-        safe_title = xml_escape(s_name[:31] or f"Sheet{idx}")
-        workbook_sheets.append(f'    <sheet name="{safe_title}" sheetId="{idx}" r:id="rId{idx}"/>')
-        workbook_rels_list.append(
-            f'  <Relationship Id="rId{idx}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet{idx}.xml"/>'
-        )
+    for idx, (s_name, sheet_rows) in enumerate(sheets_map.items()):
+        ws = wb.create_sheet(title=s_name[:31])
+        ws.views.sheetView[0].showGridLines = True
 
-    workbook_xml = f"""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
-          xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
-  <sheets>
-{chr(10).join(workbook_sheets)}
-  </sheets>
-</workbook>"""
+        if not sheet_rows:
+            continue
 
-    workbook_rels = f"""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-{chr(10).join(workbook_rels_list)}
-</Relationships>"""
+        header_names = [str(x or "").lower() for x in sheet_rows[0]]
 
-    with zipfile.ZipFile(dest, "w", zipfile.ZIP_DEFLATED) as zf:
-        zf.writestr("[Content_Types].xml", content_types)
-        zf.writestr("_rels/.rels", rels)
-        zf.writestr("xl/workbook.xml", workbook_xml)
-        zf.writestr("xl/_rels/workbook.xml.rels", workbook_rels)
+        for r_idx, row in enumerate(sheet_rows, start=1):
+            is_head = (r_idx == 1)
+            row_vals = []
+            for val in row:
+                if isinstance(val, str) and val.startswith("="):
+                    row_vals.append(val)
+                elif isinstance(val, (int, float)):
+                    row_vals.append(val)
+                else:
+                    row_vals.append(str(val if val is not None else ""))
+            ws.append(row_vals)
 
-        for idx, (_, sheet_rows) in enumerate(sheet_items, start=1):
-            sheet_rows_xml = []
-            for r_idx, row in enumerate(sheet_rows, start=1):
-                cells_xml = []
-                for c_idx, val in enumerate(row):
-                    cell_ref = f"{_col_letter(c_idx)}{r_idx}"
-                    if isinstance(val, (int, float)) and not isinstance(val, bool):
-                        cells_xml.append(f'<c r="{cell_ref}"><v>{val}</v></c>')
-                    elif isinstance(val, str) and val.startswith("="):
-                        formula = xml_escape(val[1:])
-                        cells_xml.append(f'<c r="{cell_ref}"><f>{formula}</f></c>')
-                    else:
-                        text = xml_escape(str(val if val is not None else ""))
-                        cells_xml.append(f'<c r="{cell_ref}" t="inlineStr"><is><t>{text}</t></is></c>')
-                sheet_rows_xml.append(f'<row r="{r_idx}">{"".join(cells_xml)}</row>')
+            first_cell_str = str(row[0] or "").strip().lower() if row else ""
+            is_total_row = any(first_cell_str.startswith(k) for k in ("total", "net profit", "ebitda", "ending cash", "summary"))
 
-            sheet_xml = f"""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
-  <sheetData>
-    {"".join(sheet_rows_xml)}
-  </sheetData>
-</worksheet>"""
-            zf.writestr(f"xl/worksheets/sheet{idx}.xml", sheet_xml)
+            if is_head:
+                ws.row_dimensions[r_idx].height = 28
+                for col_idx in range(1, len(row) + 1):
+                    cell = ws.cell(row=r_idx, column=col_idx)
+                    cell.fill = header_fill
+                    cell.font = header_font
+                    cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+            else:
+                ws.row_dimensions[r_idx].height = 20
+                row_fill = total_fill if is_total_row else PatternFill(fill_type="solid", fgColor="F8FAFC" if r_idx % 2 == 1 else "FFFFFF")
+                curr_font = total_font if is_total_row else data_font
+                curr_border = total_border if is_total_row else thin_border
 
+                for col_idx in range(1, len(row) + 1):
+                    cell = ws.cell(row=r_idx, column=col_idx)
+                    cell.fill = row_fill
+                    cell.font = curr_font
+                    cell.border = curr_border
+
+                    # Infer formatting from header
+                    h_name = header_names[col_idx - 1] if col_idx - 1 < len(header_names) else ""
+                    val = cell.value
+
+                    is_currency = any(w in h_name for w in ("$", "usd", "cad", "price", "cost", "revenue", "amount", "fee", "burn", "total", "ebitda", "cash", "allowance", "toll"))
+                    is_percent = any(w in h_name for w in ("%", "margin", "rate", "retention", "yield"))
+
+                    if isinstance(val, (int, float)):
+                        if is_percent:
+                            cell.number_format = "0.0%"
+                        elif is_currency:
+                            cell.number_format = "$#,##0.00" if (isinstance(val, float) or "price" in h_name or "fee" in h_name) else "$#,##0"
+                        else:
+                            cell.number_format = "#,##0"
+
+                    align_h = "center" if (col_idx == 1 and not is_head and not is_total_row) else ("right" if isinstance(val, (int, float)) else "left")
+                    cell.alignment = Alignment(horizontal=align_h, vertical="center")
+
+        # Auto-adjust column widths
+        for col in ws.columns:
+            max_len = 0
+            for cell in col:
+                val_str = str(cell.value or "")
+                max_len = max(max_len, len(val_str))
+            col_letter = get_column_letter(col[0].column)
+            ws.column_dimensions[col_letter].width = min(max(max_len + 4, 14), 45)
+
+        ws.freeze_panes = "A2"
+
+    # Remove initial empty sheet
+    if default_sheet in wb.worksheets and len(wb.worksheets) > 1:
+        wb.remove(default_sheet)
+
+    wb.save(str(dest))
     return build_attachment_meta(filename=filename, display_name=filename, role=role)
+
+
+
+def _clean_pdf_text(text: str) -> str:
+    if not text:
+        return ""
+    replacements = {
+        "\u2014": " - ",
+        "\u2013": " - ",
+        "\u2018": "'",
+        "\u2019": "'",
+        "\u201c": '"',
+        "\u201d": '"',
+        "\u2022": "*",
+        "\u00b7": " | ",
+        "\u2192": " -> ",
+        "\u2713": "[OK]",
+        "\u2026": "...",
+    }
+    for k, v in replacements.items():
+        text = text.replace(k, v)
+    return text
 
 
 def write_pdf_file(
@@ -458,13 +548,17 @@ def write_pdf_file(
 
     story = []
 
-    if meta_tag:
-        story.append(Paragraph(xml_escape(meta_tag.upper()), meta_style))
+    clean_meta = _clean_pdf_text(meta_tag)
+    clean_title = _clean_pdf_text(title)
+    clean_sub = _clean_pdf_text(subtitle)
 
-    story.append(Paragraph(xml_escape(title), title_style))
+    if clean_meta:
+        story.append(Paragraph(xml_escape(clean_meta.upper()), meta_style))
 
-    if subtitle:
-        story.append(Paragraph(xml_escape(subtitle), subtitle_style))
+    story.append(Paragraph(xml_escape(clean_title), title_style))
+
+    if clean_sub:
+        story.append(Paragraph(xml_escape(clean_sub), subtitle_style))
     story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor("#CBD5E1"), spaceAfter=12))
 
     for item in lines:
@@ -473,7 +567,8 @@ def write_pdf_file(
             for r_idx, row in enumerate(item):
                 row_cells = []
                 for cell in row:
-                    cell_text = xml_escape(str(cell if cell is not None else "")).replace("\n", "<br/>")
+                    raw_c = _clean_pdf_text(str(cell if cell is not None else ""))
+                    cell_text = xml_escape(raw_c).replace("\n", "<br/>")
                     is_head = (r_idx == 0)
                     st = table_header_style if is_head else table_body_style
                     row_cells.append(Paragraph(cell_text, st))
@@ -497,32 +592,32 @@ def write_pdf_file(
             story.append(Spacer(1, 6))
             continue
 
-        text = str(item).strip()
-        if not text:
+        raw_item = _clean_pdf_text(str(item).strip())
+        if not raw_item:
             story.append(Spacer(1, 5))
             continue
 
-        if text in ("--PAGE-BREAK--", "[PAGE BREAK]", "===PAGE==="):
+        if raw_item in ("--PAGE-BREAK--", "[PAGE BREAK]", "===PAGE==="):
             story.append(PageBreak())
             continue
 
         is_heading = (
-            text.isupper()
-            or text.startswith("SECTION ")
-            or text.startswith("ARTICLE ")
-            or text.startswith("PART ")
-            or text.startswith("PAGE ")
-            or (text.startswith(("1.", "2.", "3.", "4.", "5.", "6.", "7.", "8.", "9.")) and len(text) < 70 and not text.endswith("."))
+            raw_item.isupper()
+            or raw_item.startswith("SECTION ")
+            or raw_item.startswith("ARTICLE ")
+            or raw_item.startswith("PART ")
+            or raw_item.startswith("PAGE ")
+            or (raw_item.startswith(("1.", "2.", "3.", "4.", "5.", "6.", "7.", "8.", "9.")) and len(raw_item) < 70 and not raw_item.endswith("."))
         )
-        is_bullet = text.startswith(("—", "-", "•", "*")) or (text.startswith(tuple(f"{i}." for i in range(1, 30))) and len(text) >= 70)
+        is_bullet = raw_item.startswith(("-", "*")) or (raw_item.startswith(tuple(f"{i}." for i in range(1, 30))) and len(raw_item) >= 70)
 
-        safe_text = xml_escape(text)
+        safe_text = xml_escape(raw_item)
 
         if is_heading:
             clean_heading = safe_text.lstrip("# ").strip()
             story.append(Paragraph(clean_heading, heading_style))
         elif is_bullet:
-            clean_bullet = safe_text.lstrip("—•-* ").strip()
+            clean_bullet = safe_text.lstrip("-* ").strip()
             story.append(Paragraph(f"&bull;&nbsp;&nbsp;{clean_bullet}", bullet_style))
         else:
             story.append(Paragraph(safe_text, body_style))
@@ -557,185 +652,251 @@ def write_zip_file(filename: str, files_map: dict[str, str | bytes], role: str =
 
 
 def write_pptx_file(filename: str, title: str, slides: list[dict], role: str = "file") -> dict:
+    import pptx
+    from pptx.util import Inches, Pt
+    from pptx.dml.color import RGBColor
+    from pptx.enum.text import PP_ALIGN
+    from pptx.enum.shapes import MSO_SHAPE
+
     files_dir = get_chat_files_dir()
     dest = files_dir / filename
 
-    content_types = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
-  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
-  <Default Extension="xml" ContentType="application/xml"/>
-  <Override PartName="/ppt/presentation.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml"/>
-  <Override PartName="/ppt/slideMasters/slideMaster1.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slideMaster+xml"/>
-  <Override PartName="/ppt/slideLayouts/slideLayout1.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slideLayout+xml"/>
-"""
-    for i in range(1, len(slides) + 1):
-        content_types += f'  <Override PartName="/ppt/slides/slide{i}.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/>\n'
-    content_types += "</Types>"
+    prs = pptx.Presentation()
+    prs.slide_width = Inches(13.333)
+    prs.slide_height = Inches(7.5)
+    blank_layout = prs.slide_layouts[6]
 
-    rels = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="ppt/presentation.xml"/>
-</Relationships>"""
+    for i, s in enumerate(slides, start=1):
+        slide = prs.slides.add_slide(blank_layout)
+        is_title_slide = (i == 1) or (s.get("type") == "title")
 
-    pres_rels = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-  <Relationship Id="rIdMaster1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster" Target="slideMasters/slideMaster1.xml"/>
-"""
-    for i in range(1, len(slides) + 1):
-        pres_rels += f'  <Relationship Id="rIdSlide{i}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide{i}.xml"/>\n'
-    pres_rels += "</Relationships>"
+        if is_title_slide:
+            # Executive dark background
+            bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, prs.slide_width, prs.slide_height)
+            bg.fill.solid()
+            bg.fill.fore_color.rgb = RGBColor(15, 23, 42)  # #0F172A
+            bg.line.fill.background()
 
-    slide_ids = ""
-    for i in range(1, len(slides) + 1):
-        slide_ids += f'    <p:sldId id="{255 + i}" r:id="rIdSlide{i}"/>\n'
+            tb = slide.shapes.add_textbox(Inches(1.2), Inches(1.8), Inches(11), Inches(4.5))
+            tf = tb.text_frame
+            tf.word_wrap = True
 
-    pres_xml = f"""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<p:presentation xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
-                xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
-                xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
-  <p:sldMasterIdLst>
-    <p:sldMasterId id="2147483648" r:id="rIdMaster1"/>
-  </p:sldMasterIdLst>
-  <p:sldIdLst>
-{slide_ids}  </p:sldIdLst>
-  <p:sldSz cx="9144000" cy="5143500"/>
-  <p:notesSz cx="6858000" cy="9144000"/>
-</p:presentation>"""
+            p_kick = tf.paragraphs[0]
+            kicker = s.get("kicker") or s.get("tag") or "CONFIDENTIAL & PROPRIETARY"
+            p_kick.text = kicker.upper()
+            p_kick.font.name = "Calibri"
+            p_kick.font.size = Pt(11)
+            p_kick.font.bold = True
+            p_kick.font.color.rgb = RGBColor(148, 163, 184)
+            p_kick.space_after = Pt(14)
 
-    master_xml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<p:sldMaster xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
-             xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
-             xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
-  <p:cSld>
-    <p:spTree>
-      <p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr>
-      <p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>
-    </p:spTree>
-  </p:cSld>
-  <p:clrMap bg1="lt1" tx1="dk1" bg2="lt2" tx2="dk2" accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" hlink="hlink" folHlink="folHlink"/>
-  <p:sldLayoutIdLst>
-    <p:sldLayoutId id="2147483649" r:id="rIdLayout1"/>
-  </p:sldLayoutIdLst>
-</p:sldMaster>"""
+            p_t = tf.add_paragraph()
+            p_t.text = s.get("title", title or "Executive Briefing")
+            p_t.font.name = "Calibri"
+            p_t.font.size = Pt(36)
+            p_t.font.bold = True
+            p_t.font.color.rgb = RGBColor(255, 255, 255)
+            p_t.space_after = Pt(16)
 
-    master_rels = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-  <Relationship Id="rIdLayout1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout" Target="../slideLayouts/slideLayout1.xml"/>
-</Relationships>"""
+            if s.get("subtitle"):
+                p_sub = tf.add_paragraph()
+                p_sub.text = s["subtitle"]
+                p_sub.font.name = "Calibri"
+                p_sub.font.size = Pt(16)
+                p_sub.font.color.rgb = RGBColor(203, 213, 225)
+                p_sub.space_after = Pt(24)
 
-    layout_xml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<p:sldLayout xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
-             xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
-             xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"
-             type="blank">
-  <p:cSld>
-    <p:spTree>
-      <p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr>
-      <p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>
-    </p:spTree>
-  </p:cSld>
-</p:sldLayout>"""
+            bullets = s.get("bullets", [])
+            for b in bullets:
+                p_b = tf.add_paragraph()
+                p_b.text = str(b)
+                p_b.font.name = "Calibri"
+                p_b.font.size = Pt(13)
+                p_b.font.color.rgb = RGBColor(148, 163, 184)
+                p_b.space_after = Pt(6)
 
-    layout_rels = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-  <Relationship Id="rIdMaster" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster" Target="../slideMasters/slideMaster1.xml"/>
-</Relationships>"""
+        else:
+            # Executive Light Background
+            bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, prs.slide_width, prs.slide_height)
+            bg.fill.solid()
+            bg.fill.fore_color.rgb = RGBColor(255, 255, 255)
+            bg.line.fill.background()
 
-    with zipfile.ZipFile(dest, "w", zipfile.ZIP_DEFLATED) as zf:
-        zf.writestr("[Content_Types].xml", content_types)
-        zf.writestr("_rels/.rels", rels)
-        zf.writestr("ppt/presentation.xml", pres_xml)
-        zf.writestr("ppt/_rels/presentation.xml.rels", pres_rels)
-        zf.writestr("ppt/slideMasters/slideMaster1.xml", master_xml)
-        zf.writestr("ppt/slideMasters/_rels/slideMaster1.xml.rels", master_rels)
-        zf.writestr("ppt/slideLayouts/slideLayout1.xml", layout_xml)
-        zf.writestr("ppt/slideLayouts/_rels/slideLayout1.xml.rels", layout_rels)
+            # Top Header Bar
+            tb_h = slide.shapes.add_textbox(Inches(0.8), Inches(0.6), Inches(11.7), Inches(1.3))
+            tf_h = tb_h.text_frame
+            tf_h.word_wrap = True
 
-        for i, s in enumerate(slides, start=1):
-            s_title = xml_escape(s.get("title", f"Slide {i}"))
-            s_sub = xml_escape(s.get("subtitle", ""))
+            p_cat = tf_h.paragraphs[0]
+            kicker = s.get("kicker") or s.get("category") or title[:50]
+            p_cat.text = kicker.upper()
+            p_cat.font.name = "Calibri"
+            p_cat.font.size = Pt(10)
+            p_cat.font.bold = True
+            p_cat.font.color.rgb = RGBColor(37, 99, 235)  # Royal Blue
+            p_cat.space_after = Pt(4)
+
+            p_st = tf_h.add_paragraph()
+            p_st.text = s.get("title", f"Slide {i}")
+            p_st.font.name = "Calibri"
+            p_st.font.size = Pt(22)
+            p_st.font.bold = True
+            p_st.font.color.rgb = RGBColor(15, 23, 42)
+
+            if s.get("subtitle"):
+                p_ssub = tf_h.add_paragraph()
+                p_ssub.text = s["subtitle"]
+                p_ssub.font.name = "Calibri"
+                p_ssub.font.size = Pt(12)
+                p_ssub.font.color.rgb = RGBColor(100, 116, 139)
+                p_ssub.space_before = Pt(2)
+
+            # Hairline Divider
+            line = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0.8), Inches(1.9), Inches(11.7), Inches(0.015))
+            line.fill.solid()
+            line.fill.fore_color.rgb = RGBColor(226, 232, 240)
+            line.line.fill.background()
+
+            # Check if metrics cards
+            metrics = s.get("metrics")
+            cards = s.get("cards")
+            table_data = s.get("table")
             bullets = s.get("bullets", [])
 
-            sub_xml = ""
-            if s_sub:
-                sub_xml = f"""
-          <a:p>
-            <a:pPr lvl="0"/>
-            <a:r>
-              <a:rPr lang="en-US" sz="1200" i="1"/>
-              <a:t>{s_sub}</a:t>
-            </a:r>
-          </a:p>"""
+            if metrics and isinstance(metrics, list):
+                num_m = min(len(metrics), 4)
+                card_gap = Inches(0.3)
+                total_w = Inches(11.7)
+                card_w = (total_w - card_gap * (num_m - 1)) / num_m
+                card_h = Inches(4.5)
+                card_y = Inches(2.1)
 
-            body_xml = ""
-            for b in bullets:
-                body_xml += f"""
-        <a:p>
-          <a:pPr lvl="0" marL="288000" indent="-288000">
-            <a:buFont typeface="Arial"/>
-            <a:buChar char="•"/>
-          </a:pPr>
-          <a:r>
-            <a:rPr lang="en-US" sz="1500"/>
-            <a:t>{xml_escape(b)}</a:t>
-          </a:r>
-        </a:p>"""
+                for m_idx, m in enumerate(metrics[:num_m]):
+                    card_x = Inches(0.8) + m_idx * (card_w + card_gap)
+                    c_box = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, card_x, card_y, card_w, card_h)
+                    c_box.fill.solid()
+                    c_box.fill.fore_color.rgb = RGBColor(248, 250, 252)
+                    c_box.line.color.rgb = RGBColor(203, 213, 225)
+                    c_box.line.width = Pt(1)
 
-            slide_xml = f"""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
-       xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
-       xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
-  <p:cSld>
-    <p:spTree>
-      <p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr>
-      <p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>
-      <p:sp>
-        <p:nvSpPr>
-          <p:cNvPr id="2" name="Title"/>
-          <p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr>
-          <p:nvPr><p:ph type="title"/></p:nvPr>
-        </p:nvSpPr>
-        <p:spPr>
-          <a:xfrm><a:off x="685800" y="457200"/><a:ext cx="7772400" cy="914400"/></a:xfrm>
-        </p:spPr>
-        <p:txBody>
-          <a:bodyPr/>
-          <a:lstStyle/>
-          <a:p>
-            <a:r>
-              <a:rPr lang="en-US" sz="2400" b="1"/>
-              <a:t>{s_title}</a:t>
-            </a:r>
-          </a:p>
-{sub_xml}
-        </p:txBody>
-      </p:sp>
-      <p:sp>
-        <p:nvSpPr>
-          <p:cNvPr id="3" name="Content"/>
-          <p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr>
-          <p:nvPr><p:ph idx="1"/></p:nvPr>
-        </p:nvSpPr>
-        <p:spPr>
-          <a:xfrm><a:off x="685800" y="1524000"/><a:ext cx="7772400" cy="3200400"/></a:xfrm>
-        </p:spPr>
-        <p:txBody>
-          <a:bodyPr/>
-          <a:lstStyle/>
-{body_xml}
-        </p:txBody>
-      </p:sp>
-    </p:spTree>
-  </p:cSld>
-</p:sld>"""
-            zf.writestr(f"ppt/slides/slide{i}.xml", slide_xml)
-            slide_rels = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-  <Relationship Id="rIdLayout" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout" Target="../slideLayouts/slideLayout1.xml"/>
-</Relationships>"""
-            zf.writestr(f"ppt/slides/_rels/slide{i}.xml.rels", slide_rels)
+                    tb_m = slide.shapes.add_textbox(card_x + Inches(0.3), card_y + Inches(0.4), card_w - Inches(0.6), card_h - Inches(0.8))
+                    tf_m = tb_m.text_frame
+                    tf_m.word_wrap = True
 
+                    val = m.get("value", "") if isinstance(m, dict) else str(m)
+                    lbl = m.get("label", "") if isinstance(m, dict) else ""
+                    desc = m.get("desc", m.get("detail", "")) if isinstance(m, dict) else ""
+
+                    p_mv = tf_m.paragraphs[0]
+                    p_mv.text = str(val)
+                    p_mv.font.name = "Calibri"
+                    p_mv.font.size = Pt(36)
+                    p_mv.font.bold = True
+                    p_mv.font.color.rgb = RGBColor(37, 99, 235)
+                    p_mv.space_after = Pt(10)
+
+                    if lbl:
+                        p_ml = tf_m.add_paragraph()
+                        p_ml.text = str(lbl)
+                        p_ml.font.name = "Calibri"
+                        p_ml.font.size = Pt(14)
+                        p_ml.font.bold = True
+                        p_ml.font.color.rgb = RGBColor(15, 23, 42)
+                        p_ml.space_after = Pt(8)
+
+                    if desc:
+                        p_md = tf_m.add_paragraph()
+                        p_md.text = str(desc)
+                        p_md.font.name = "Calibri"
+                        p_md.font.size = Pt(11)
+                        p_md.font.color.rgb = RGBColor(100, 116, 139)
+
+            elif cards and isinstance(cards, list):
+                num_c = min(len(cards), 3)
+                card_gap = Inches(0.35)
+                total_w = Inches(11.7)
+                card_w = (total_w - card_gap * (num_c - 1)) / num_c
+                card_h = Inches(4.5)
+                card_y = Inches(2.1)
+
+                for c_idx, c_info in enumerate(cards[:num_c]):
+                    card_x = Inches(0.8) + c_idx * (card_w + card_gap)
+                    c_box = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, card_x, card_y, card_w, card_h)
+                    c_box.fill.solid()
+                    c_box.fill.fore_color.rgb = RGBColor(248, 250, 252)
+                    c_box.line.color.rgb = RGBColor(203, 213, 225)
+                    c_box.line.width = Pt(1)
+
+                    tb_c = slide.shapes.add_textbox(card_x + Inches(0.3), card_y + Inches(0.3), card_w - Inches(0.6), card_h - Inches(0.6))
+                    tf_c = tb_c.text_frame
+                    tf_c.word_wrap = True
+
+                    c_title = c_info.get("title", "")
+                    p_ct = tf_c.paragraphs[0]
+                    p_ct.text = c_title
+                    p_ct.font.name = "Calibri"
+                    p_ct.font.size = Pt(15)
+                    p_ct.font.bold = True
+                    p_ct.font.color.rgb = RGBColor(15, 23, 42)
+                    p_ct.space_after = Pt(10)
+
+                    for cb in c_info.get("bullets", []):
+                        p_cb = tf_c.add_paragraph()
+                        p_cb.text = f"•  {cb}"
+                        p_cb.font.name = "Calibri"
+                        p_cb.font.size = Pt(11)
+                        p_cb.font.color.rgb = RGBColor(51, 65, 85)
+                        p_cb.space_after = Pt(6)
+
+            elif table_data and isinstance(table_data, (list, tuple)):
+                num_rows = len(table_data)
+                num_cols = len(table_data[0]) if num_rows > 0 else 0
+                if num_rows > 0 and num_cols > 0:
+                    tbl_shape = slide.shapes.add_table(num_rows, num_cols, Inches(0.8), Inches(2.2), Inches(11.7), Inches(4.2))
+                    p_tbl = tbl_shape.table
+                    for tr_idx, tr in enumerate(table_data):
+                        is_tbl_head = (tr_idx == 0)
+                        for tc_idx, tc_val in enumerate(tr):
+                            cell = p_tbl.cell(tr_idx, tc_idx)
+                            cell.text = str(tc_val if tc_val is not None else "")
+                            cell.fill.solid()
+                            cell.fill.fore_color.rgb = RGBColor(15, 23, 42) if is_tbl_head else (RGBColor(248, 250, 252) if tr_idx % 2 == 1 else RGBColor(255, 255, 255))
+                            for p in cell.text_frame.paragraphs:
+                                p.font.name = "Calibri"
+                                p.font.size = Pt(10 if not is_tbl_head else 11)
+                                if is_tbl_head:
+                                    p.font.bold = True
+                                    p.font.color.rgb = RGBColor(255, 255, 255)
+                                else:
+                                    p.font.color.rgb = RGBColor(30, 41, 59)
+
+            else:
+                # Bullets layout with container box
+                tb_b = slide.shapes.add_textbox(Inches(0.8), Inches(2.2), Inches(11.7), Inches(4.5))
+                tf_b = tb_b.text_frame
+                tf_b.word_wrap = True
+
+                for b_idx, b in enumerate(bullets):
+                    p_b = tf_b.paragraphs[0] if b_idx == 0 else tf_b.add_paragraph()
+                    p_b.text = f"•  {b}"
+                    p_b.font.name = "Calibri"
+                    p_b.font.size = Pt(15)
+                    p_b.font.color.rgb = RGBColor(30, 41, 59)
+                    p_b.space_after = Pt(14)
+                    p_b.line_spacing = 1.25
+
+            # Running Slide Footer
+            tb_f = slide.shapes.add_textbox(Inches(0.8), Inches(6.9), Inches(11.7), Inches(0.4))
+            tf_f = tb_f.text_frame
+            p_f = tf_f.paragraphs[0]
+            p_f.text = f"{title} · Slide {i} of {len(slides)}"
+            p_f.font.name = "Calibri"
+            p_f.font.size = Pt(9)
+            p_f.font.color.rgb = RGBColor(148, 163, 184)
+
+    prs.save(str(dest))
     return build_attachment_meta(filename=filename, display_name=filename, role=role)
+
 
 
 def write_json_file(filename: str, data: dict | list, role: str = "file") -> dict:
