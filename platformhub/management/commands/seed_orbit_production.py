@@ -160,15 +160,52 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     files["audrey_current_site_screenshots.pdf"] = write_pdf_file(
         "audrey_current_site_screenshots.pdf",
-        "Studio Brown — Current Squarespace Booking Funnel Audit",
+        "Studio Brown — Current Squarespace Website & Booking Intake Reference",
         [
-            "Audit capture of current Squarespace homepage and intake flow.",
-            "Problem 1: Headline is generic ('Visual storytelling for modern life') with no location context.",
-            "Problem 2: Booking button routes to a 14-question form before showing any package rates.",
-            "Problem 3: Dropdown selection mixes commercial day rates with personal portrait sessions.",
-            "Recommendation: Separate commercial inquiries from studio sessions; cut intake to 5 fields.",
+            "# 1. CURRENT HOMEPAGE & NAVIGATION (SQUARESPACE EXPORT)",
+            "Active Website URL: studiobrownphotography.squarespace.com (Custom domain forwarding)",
+            "Current Header & Hero Headline: 'Studio Brown — Visual storytelling for modern life'",
+            "Current Subhead: None. (Single background photograph with logo watermark).",
+            "Navigation Menu: Home | Portfolio | About | Book a Session | Instagram",
+            "Portfolio Display: Single unpaginated grid of 36 uncategorized high-resolution photographs mixing personal portraits, lifestyle editorial, wedding commissions, and commercial lookbooks without captions or client tags.",
+            "Client Note from Audrey: 'Visitors say they love the images on Instagram, but bounce after hitting the site. I don't know if the page looks too sparse or if people don't know what I actually shoot or where in Austin I am.'",
+            "--PAGE-BREAK--",
+            "# 2. CURRENT INTAKE FORM (FULL 14-QUESTION SCRIPT)",
+            "The following 14 questions currently appear in the Squarespace lightbox modal when a visitor clicks 'Book a Session':",
+            [
+                ["Field #", "Field Label / Question", "Input Type", "Required?"],
+                ["1", "Full Legal Name", "Single-line Text", "Yes"],
+                ["2", "Email Address", "Email", "Yes"],
+                ["3", "Mobile Phone Number", "Phone", "Yes"],
+                ["4", "How did you hear about Studio Brown?", "Dropdown (IG, Google, Friend)", "Yes"],
+                ["5", "Type of Session", "Dropdown (Portrait, Brand, Event)", "Yes"],
+                ["6", "Preferred session date + 2 backup dates", "Text Area", "Yes"],
+                ["7", "Desired location (Studio, Outdoor, Specific Venue)", "Single-line Text", "Yes"],
+                ["8", "Estimated headcount / team size", "Number", "No"],
+                ["9", "Wardrobe vision & outfit changes planned", "Paragraph Text", "No"],
+                ["10", "Do you need on-site hair & makeup artist coordination?", "Dropdown (Yes, No, Maybe)", "Yes"],
+                ["11", "Pinterest moodboard or visual inspiration URL", "Website URL", "Yes (Required)"],
+                ["12", "Ideal total project budget range for this shoot", "Open Text Input", "Yes"],
+                ["13", "Intended image usage & licensing", "Dropdown (Personal, Commercial)", "Yes"],
+                ["14", "Additional notes, shot requests, or creative guidelines", "Paragraph Text", "No"],
+            ],
+            "Client Note from Audrey: 'I put this form together last year trying to get all details upfront before jumping on calls, but almost nobody ever finishes submitting it. Zero prices or starting rates are listed anywhere on the page.'",
+            "--PAGE-BREAK--",
+            "# 3. MOBILE VIEW & MONTHLY TRAFFIC OVERVIEW",
+            "Current Analytics & Performance Notes (Squarespace Analytics Snapshot - Sept 2026):",
+            "Monthly Unique Visitors: ~1,850 to 2,200 (84% mobile via Instagram profile link).",
+            "Avg Time on Homepage: 24 seconds.",
+            "Click-through rate to 'Book a Session' button: ~7.4% (approx. 140–160 clicks/mo).",
+            "Completed Intake Form Submissions: 1 to 3 submissions/mo (over 98% form abandonment rate).",
+            "Primary Client Confusion / Questions received in Instagram DMs:",
+            "- 'Hey Audrey, how much do your portrait sessions cost?'",
+            "- 'Do you shoot studio or on-location? Where are you located in Austin?'",
+            "- 'Can you do a quick headshot or do you only do full day commercial brand shoots?'",
+            "Client Note from Audrey: 'I spend 4-5 hours a week replying to basic pricing DMs on Instagram because people say the booking page is confusing or overwhelming. Need help figuring out why nobody is converting.'",
         ],
         role="source",
+        subtitle="Current Squarespace Site Reference & 14-Question Intake Screenshots (Client Upload)",
+        meta_tag="Studio Brown · Client Squarespace Reference · Austin, TX",
     )
     files["audrey_homepage_booking_audit.pdf"] = write_pdf_file(
         "audrey_homepage_booking_audit.pdf",
@@ -3464,7 +3501,7 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 9, 30, 19, 27, 34),
-                "hey there! hope your week is going well. so... my studio booking page on Squarespace is losing people left and right. visitors hit the home page, click 'book a session', and then immediately bounce because my current intake is like 14 questions long and doesn't even tell them what pricing starts at haha. i attached a couple screenshots of what it looks like right now. can you help me audit what to fix?",
+                "hey! hope you guys are doing well. i really need some help with my website... i get good traffic from instagram and people love the photos, but barely anyone actually books through the site. visitors click over to the booking page and then just vanish. i attached screenshots of my current homepage and booking form. can you guys take a look and see what might be going wrong?",
                 [
                     'audrey_current_site_screenshots.pdf',
                 ],
@@ -3472,13 +3509,13 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 9, 30, 19, 47, 18),
-                "Hi Audrey! Love your photography work—the natural lighting in your portrait portfolio is gorgeous. But you're completely right about the friction: asking 14 questions before showing package rates creates massive drop-off because people feel overwhelmed before they even know if you're in their budget. We can do a deep copy & booking funnel audit for $90.00 flat (invoice INV-260930-AB01). Normally for creative studios referred into our private network, we send a direct priority checkout link so you can tap Apple Pay in two seconds without dealing with standard portal setup: https://paystack.shop/pay/ppiajw3f1-. We'll map out an exact 5-question intake, upfront pricing anchors, and hero section fixes.",
+                "Hi Audrey! First off, your work is stunning—the natural light portraits are genuinely gorgeous, so rest assured your photography isn't the problem at all.\n\nWe looked through your booking flow, and the issue is clear:\nYou're asking 14 detailed questions before showing any rates. Visitors love the work, click Book, get hit with a wall of questions without knowing if they can afford you, and freeze up. Pair that with a generic headline that doesn't mention you're in East Austin, and people just bounce.\n\nWe can run a quick $90 diagnostic audit to fix this. We'll cut that form down to 5 painless fields, anchor your starting package rates upfront so clients pre-qualify, and sharpen your headline.\n\nHere's a direct Apple Pay link to get started: https://paystack.shop/pay/ppiajw3f1-\n\nOnce that clears, we'll dive right in and have the full breakdown to you tomorrow!",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 9, 30, 19, 58, 43),
-                "oh awesome, that was super fast and easy! just cleared the $90 on Apple Pay with that direct link. excited to see what we can streamline.",
+                "oh wow... hearing you say it out loud makes it so obvious haha. i had no idea 14 questions was that intimidating, i thought i was just being thorough! and yeah, another photographer told me never to list prices, but that clearly backfired.\n\njust tapped that apple pay link and cleared the $90! excited to see the breakdown.",
                 [],
             ),
             (
@@ -3548,7 +3585,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 15, 9, 19, 14),
-                "Totally understand being cautious Audrey, you're 100% right to double-check! That's our direct hosted store on Paystack (our payment processor), so your transaction is fully encrypted with 256-bit SSL, has standard buyer protection, and supports Apple Pay without exposing your card numbers. It routes straight to our verified business settlement account and logs right onto your invoice here.",
+                "Totally understand being cautious Audrey, you're 100% right to check! That's our direct hosted checkout on Paystack (our payment gateway). It's fully encrypted with 256-bit SSL, supports Apple Pay so your card details stay private, and deposits straight to our verified business account. Completely safe!",
                 [],
             ),
             (
@@ -3592,7 +3629,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 17, 14, 21, 19),
-                "Payment confirmed, thank you Audrey! I updated the three package names on the Services page and switched the Booking page hours to Mon–Fri only. Attached is your final Word copy deck, the standalone interactive HTML website prototype you can open and test directly in your browser, and the UX wireframe diagram. Hope the launch goes amazingly with your designer! By the way, we grow almost entirely through word of mouth from creative studios—if you have friends with photography, design, or local healthcare practices who are losing bookings on their websites, send them our way and we'll take great care of them.",
+                "Payment confirmed, thank you Audrey! I updated the package names on the Services page and switched booking hours to Mon–Fri.\n\nAttached is your final Word copy deck, the interactive HTML prototype you can test right in your browser, and the booking wireframe diagram.\n\nHope the launch goes amazingly with your designer! If you know any creative peers or local clinics losing clients on confusing sites, send them our way and we'll take great care of them.",
                 [
                     'audrey_3page_website_copy_final.docx',
                     'audrey_studio_brown_website_prototype.html',
