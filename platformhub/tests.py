@@ -548,10 +548,12 @@ class WorkspaceChatTests(TestCase):
     def test_client_and_admin_can_upload_chat_attachments(self):
         from django.core.files.uploadedfile import SimpleUploadedFile
         from humanizer.models import ClientConversation
+        from platformhub.chat_files import get_chat_files_dir
 
+        files_dir = get_chat_files_dir()
         sample_pdf = SimpleUploadedFile(
             "vendor_notes.pdf",
-            b"%PDF-1.4\n1 0 obj\n<< /Type /Catalog >>\nendobj\n%%EOF\n",
+            b"%PDF-1.4\n1 0 obj\n<< /Type /Catalog >>\nendobj\n" + b"A" * 12000 + b"\n%%EOF\n",
             content_type="application/pdf",
         )
         res = self.client.post(
@@ -569,11 +571,12 @@ class WorkspaceChatTests(TestCase):
 
         dl_res = self.client.get(att["url"])
         self.assertEqual(dl_res.status_code, 200)
+        dl_res.close()
 
         conv = ClientConversation.objects.get(user=self.user)
         sample_docx = SimpleUploadedFile(
             "deliverable_v1.docx",
-            b"PK\x03\x04fake-docx-payload",
+            b"PK\x03\x04fake-docx-payload" + b"B" * 12000,
             content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         )
         admin_res = self.client.post(
@@ -586,6 +589,18 @@ class WorkspaceChatTests(TestCase):
         self.assertTrue(admin_payload["ok"])
         self.assertEqual(len(admin_payload["message"]["attachments"]), 1)
         self.assertEqual(admin_payload["message"]["attachments"][0]["kind"], "DOCX")
+
+        # Clean up uploaded test files from disk
+        for p in files_dir.glob("*_vendor_notes.pdf"):
+            try:
+                p.unlink(missing_ok=True)
+            except Exception:
+                pass
+        for p in files_dir.glob("*_deliverable_v1.docx"):
+            try:
+                p.unlink(missing_ok=True)
+            except Exception:
+                pass
 
     def test_seed_orbit_production_populates_threads_invoices_and_ledger(self):
         from django.core.management import call_command
@@ -857,9 +872,12 @@ class AudioChatAndIntakeEndToEndTests(TestCase):
             status="open",
         )
 
+        from platformhub.chat_files import get_chat_files_dir
+
+        files_dir = get_chat_files_dir()
         admin_audio = SimpleUploadedFile(
             "studio_briefing.mp3",
-            b"\xff\xfb\x90\x44" * 128,
+            b"\xff\xfb\x90\x44" * 3000,
             content_type="audio/mpeg",
         )
         admin_post = self.client.post(
@@ -885,6 +903,7 @@ class AudioChatAndIntakeEndToEndTests(TestCase):
         audio_res = self.client.get(att["url"])
         self.assertEqual(audio_res.status_code, 200)
         self.assertEqual(audio_res["Content-Type"], "audio/mpeg")
+        audio_res.close()
 
         feed_res = self.client.get(
             reverse("platformhub:client_chat_feed"),
@@ -897,7 +916,7 @@ class AudioChatAndIntakeEndToEndTests(TestCase):
 
         client_voice = SimpleUploadedFile(
             "voice_note_feedback.webm",
-            b"\x1a\x45\xdf\xa3" * 128,
+            b"\x1a\x45\xdf\xa3" * 3000,
             content_type="audio/webm",
         )
         self.client.force_login(client_user)
@@ -923,6 +942,19 @@ class AudioChatAndIntakeEndToEndTests(TestCase):
         client_audio_res = self.client.get(client_att["url"])
         self.assertEqual(client_audio_res.status_code, 200)
         self.assertEqual(client_audio_res["Content-Type"], "audio/webm")
+        client_audio_res.close()
+
+        # Clean up created audio files from disk
+        for p in files_dir.glob("*_studio_briefing.mp3"):
+            try:
+                p.unlink(missing_ok=True)
+            except Exception:
+                pass
+        for p in files_dir.glob("*_voice_note_feedback.webm"):
+            try:
+                p.unlink(missing_ok=True)
+            except Exception:
+                pass
 
         admin_feed_res = self.client.get(
             reverse("platformhub:client_chat_feed"),

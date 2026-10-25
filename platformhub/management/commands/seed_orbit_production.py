@@ -706,6 +706,36 @@ def build_seed_attachments() -> dict[str, dict]:
         role="deliverable",
         subtitle="Operating Manual for Port Deconsolidation, Physical Inspection & Cost Model Reconciliation",
     )
+    files["keegan_staff_sku_guide.pdf"] = write_pdf_file(
+        "keegan_staff_sku_guide.pdf",
+        "Warehouse Staff Quick Reference Guide — SKU Matrix, HTS Classifications & Duty Rates",
+        [
+            "# WAREHOUSE RECEIVING STAFF SKU REFERENCE GUIDE",
+            "This quick-reference handbook is issued for dock receiving clerks and inventory technicians at Chin Specialty Goods.",
+            "--PAGE-BREAK--",
+            "# SECTION 1: ACTIVE SKU CATALOG & DUTY SPECIFICATIONS",
+            [
+                ["SKU Code", "Product Commercial Name", "HTS Code", "Base Duty", "Sec 301", "Effective Duty", "Master Ctn Qty"],
+                ["KC-101", "Precision Gooseneck Electric Kettle (1.0L)", "8516.79.00", "2.7%", "25.0%", "27.7%", "6 Units"],
+                ["KC-102", "Conical Burr Stainless Hand Grinder", "8210.00.00", "3.7%", "7.5%", "11.2%", "12 Units"],
+                ["KC-103", "Digital Precision Scale w/ Micro-Timer", "8423.81.00", "4.5%", "25.0%", "29.5%", "24 Units"],
+                ["KC-104", "Double-Wall Borosilicate Glasses (Set of 2)", "7013.37.20", "6.0%", "7.5%", "13.5%", "16 Sets"],
+                ["KC-105", "Ceramic V60 Style Pour-Over Dripper", "6912.00.48", "9.8%", "25.0%", "34.8%", "18 Units"],
+                ["KC-106", "Stainless Milk Frothing Pitcher (600ml)", "7323.93.00", "3.4%", "7.5%", "10.9%", "20 Units"],
+                ["KC-107", "Tritan Airtight Cold Brew Pitcher (1.5L)", "3924.10.40", "3.4%", "25.0%", "28.4%", "8 Units"],
+                ["KC-108", "Titanium Coated Cupping Spoons (Pair)", "8215.99.20", "5.3%", "7.5%", "12.8%", "48 Pairs"],
+            ],
+            "--PAGE-BREAK--",
+            "# SECTION 2: PALLET RECEIVING & QUALITY ASSURANCE PROTOCOLS",
+            "Clerks must verify carton count, outer box barcodes, and structural integrity before signing bill of lading.",
+            "- Check outer master cartons for crush damage or dampness.",
+            "- Scan 2D matrix barcode against warehouse management system (WMS).",
+            "- Quarantine non-compliant lots immediately in Bay 4.",
+            "- Report any carton count discrepancies directly to Keegan Chin.",
+        ],
+        role="deliverable",
+        subtitle="Quick-Reference Matrix for Inbound Container Intake & Verification",
+    )
 
     # =========================================================================
     # 4. Liza Iza (vickyizad@gmail.com)
@@ -2895,16 +2925,6 @@ def build_seed_attachments() -> dict[str, dict]:
 </html>""",
         role="deliverable",
     )
-    # DIVERSE DELIVERABLE: Real ZIP pack with prototype files
-    files["carter_storefront_assets_and_launch_kit.zip"] = write_zip_file(
-        "carter_storefront_assets_and_launch_kit.zip",
-        {
-            "README_LAUNCH.txt": "Carter Lemburg — ApexDesk Launch Kit\nIncludes: HTML Prototype, CSS Stylesheet, Launch Checklist, Asset Manifest.",
-            "launch_checklist.md": "# ApexDesk Storefront Launch Checklist\n\n- [x] Configure Shopify variant SKUs (AD-01 Matte Black, AD-02 Silver)\n- [x] Integrate 15W Qi2 fast-charging compliance badge\n- [x] Set up abandoned cart recovery email trigger (1hr / 24hr)\n- [x] Test Apple Pay and Google Pay express checkout buttons",
-            "styles.css": "/* ApexDesk Production CSS */\n:root { --accent: #cc4b2c; --bg: #0c0b09; }\nbody { font-family: -apple-system, sans-serif; background: var(--bg); color: #fff; }",
-        },
-        role="deliverable",
-    )
     files["carter_website_launch_checklist_final.pdf"] = write_pdf_file(
         "carter_website_launch_checklist_final.pdf",
         "ApexDesk · DTC Storefront Launch & Conversion Optimization Audit (Final)",
@@ -2918,25 +2938,23 @@ def build_seed_attachments() -> dict[str, dict]:
             [
                 ["Audit Domain", "Total Checkpoints", "Passed", "Pass Rate %", "Risk Level", "Lead Systems Engineer"],
                 ["Domain 1: Funnel & Checkout Integrity", "5 Gates", "5 / 5", "100.0%", "Zero Residual Risk", "Shopify Plus Architect"],
-                ["Domain 2: PDP Merchandising & Trust", "5 Gates", "5 / 5", "100.0%", "Zero Residual Risk", "Conversion UX Lead"],
-                ["Domain 3: Core Web Vitals & Mobile UX", "5 Gates", "5 / 5", "100.0%", "Zero Residual Risk", "Frontend Performance Eng"],
-                ["Domain 4: Tracking, Attribution & GA4", "5 Gates", "5 / 5", "100.0%", "Zero Residual Risk", "Growth Analytics Lead"],
-                ["Domain 5: Post-Purchase & Logistics", "5 Gates", "5 / 5", "100.0%", "Zero Residual Risk", "Fulfillment Operations Lead"],
-                ["Consolidated Launch Readiness", "25 Gates", "25 / 25", "100.0%", "GO FOR LAUNCH", "Lead Systems Architect"],
+                ["Domain 2: Hardware Merchandising & Trust", "5 Gates", "5 / 5", "100.0%", "Zero Residual Risk", "Conversion Optimization Lead"],
+                ["Domain 3: Core Web Vitals & Speed", "5 Gates", "5 / 5", "100.0%", "Optimal (Top 3%)", "Frontend Performance Engineer"],
+                ["Domain 4: Tracking, Analytics & CAPI", "5 Gates", "5 / 5", "100.0%", "Zero Residual Risk", "AdTech & Data Infrastructure Lead"],
+                ["Domain 5: Post-Purchase Fulfillment & QA", "5 Gates", "5 / 5", "100.0%", "Zero Residual Risk", "E-Commerce Operations Director"],
             ],
             "--PAGE-BREAK--",
-            "# SECTION 2: 25-POINT TECHNICAL VERIFICATION AUDIT SCHEDULE",
-            "Every individual storefront checkpoint was tested under realistic simulated network conditions and load testing.",
+            "# SECTION 2: COMPREHENSIVE 25-POINT TECHNICAL VERIFICATION AUDIT",
             [
-                ["#", "Audit Checkpoint Item", "Target Operational Standard", "Measured Test Result", "Gate Status"],
-                ["01", "Shopify Variant SKU Matrix", "Real-time inventory locks on AD-01 & AD-02", "Zero inventory sync race conditions", "VERIFIED [PASS]"],
-                ["02", "Express Mobile Checkout", "Apple Pay, Google Pay, Shop Pay, PayPal", "1-click tokenized checkout in < 6 seconds", "VERIFIED [PASS]"],
-                ["03", "2-Stage Cart Recovery", "1h email snapshot + 24h incentive trigger", "Klaviyo webhooks tested on test carts", "VERIFIED [PASS]"],
-                ["04", "Dynamic Freight & Duty", "Automated carrier API (USPS/UPS/DHL)", "Live rate calculation with automated VAT", "VERIFIED [PASS]"],
-                ["05", "Transactional Webhooks", "Instant order confirmation & quickstart guide", "SendGrid transactional delivery < 2 sec", "VERIFIED [PASS]"],
-                ["06", "Qi2 15W MagSafe Certification", "WPC compliance seal rendered above fold", "Verified SVG badge & modal lightbox", "VERIFIED [PASS]"],
-                ["07", "Triple Risk-Reversal Badges", "30-day money back, 2-yr warranty, free ship", "Sticky visual banner on PDP buy box", "VERIFIED [PASS]"],
-                ["08", "Interactive Color Switcher", "Instant re-render between Black & Silver", "Zero page reload; WebP srcset swap", "VERIFIED [PASS]"],
+                ["Gate", "Verification Item", "Target Architecture / Specification", "Measured Result", "Status"],
+                ["01", "Apple Pay 1-Click Checkout", "Direct PassKit session initialization via Stripe", "Instant biometric sheet trigger verified", "VERIFIED [PASS]"],
+                ["02", "Google Pay Dynamic Sheet", "Instant payment API integration on Android/Chrome", "Single-tap checkout flow verified", "VERIFIED [PASS]"],
+                ["03", "Shop Pay Express Integration", "Shopify Plus tokenized 1-click customer vault", "SMS OTP autofill verified across test accounts", "VERIFIED [PASS]"],
+                ["04", "Multi-Currency Conversion", "Real-time FX rates for USD, CAD, EUR, GBP, AUD", "Dynamic currency switcher verified on IP geotarget", "VERIFIED [PASS]"],
+                ["05", "Automated Fraud Defense", "Stripe Radar ML scoring with 3D Secure 2.2 rules", "High-risk transaction auto-friction active", "VERIFIED [PASS]"],
+                ["06", "Qi2 Magnetic Fast Charging", "WPC Qi2 Magnetic Power Profile (MPP) 15W badge", "Official compliance certification badge visible", "VERIFIED [PASS]"],
+                ["07", "CNC Aluminum Exploded View", "6063 aerospace unibody chassis technical callouts", "Interactive 3D layer callout panel functioning", "VERIFIED [PASS]"],
+                ["08", "Color Variant State Sync", "Matte Black (Obsidian) vs Space Silver toggle", "DOM class swap and gallery image reactive", "VERIFIED [PASS]"],
                 ["09", "Modular Bundle Builder", "Dynamic accessory add-on pricing (+watch/airpod)", "Cart subtotal updates asynchronously", "VERIFIED [PASS]"],
                 ["10", "Verified Social Proof", "Curated tech editor quotes & Batch 1 reviews", "Clean typography grid with verified badges", "VERIFIED [PASS]"],
                 ["11", "Largest Contentful Paint (LCP)", "Google Core Web Vitals standard < 2.50s", "1.14s on throttled 4G mobile profile", "OPTIMAL [PASS]"],
@@ -2987,6 +3005,21 @@ def build_seed_attachments() -> dict[str, dict]:
         subtitle="25-Point Comprehensive Technical, Conversion & Operational Pre-Flight Launch Audit",
         meta_tag="ApexDesk E-Commerce Systems · Technical Pre-Flight Launch Audit",
     )
+
+    # DIVERSE DELIVERABLE: Real ZIP pack bundling HTML prototype, PDF audit, and engineering assets
+    files["carter_storefront_assets_and_launch_kit.zip"] = write_zip_file(
+        "carter_storefront_assets_and_launch_kit.zip",
+        {
+            "ApexDesk_Storefront_Prototype.html": "carter_landing_page_prototype.html",
+            "ApexDesk_Launch_Audit_Report.pdf": "carter_website_launch_checklist_final.pdf",
+            "README_LAUNCH.txt": "Carter Lemburg — ApexDesk DTC Storefront Launch Package\nPackage Version: 2.4 Final Master Launch Kit\nIncludes: HTML Prototype, PDF Technical Audit, CSS Stylesheet, Launch Checklist, Hardware Engineering Spec, Asset Manifest.",
+            "launch_checklist.md": "# ApexDesk Storefront Launch Checklist\n\n- [x] Configure Shopify variant SKUs (AD-01 Matte Black, AD-02 Silver)\n- [x] Integrate 15W Qi2 fast-charging compliance badge\n- [x] Set up abandoned cart recovery email trigger (1hr / 24hr)\n- [x] Test Apple Pay and Google Pay express checkout buttons\n- [x] Verify Cloudflare edge SSL and cache rules\n- [x] Activate Meta Conversions API (CAPI) and GA4 e-commerce events",
+            "hardware_engineering_spec.txt": "APEXDESK HARDWARE ENGINEERING SPECIFICATIONS\nModel: AD-01 Modular Magnetic Charging Rail\nChassis: Solid Unibody CNC 6063 Aerospace Aluminum\nWeight: 980 grams (weighted non-slip base)\nCharging Module: Qi2 MPP (Magnetic Power Profile) 15W Fast Charge\nInput Power: USB-C PD 3.0 (Minimum 30W recommended; 65W GaN included)\nMagnets: 16x N52 Neodymium Ring Array (1.2 kg pull force)\nFinish: Type-II Matte Anodized Bead-Blasted (Obsidian / Space Silver)\nSafety Protection: Over-voltage, Over-current, Foreign Object Detection (FOD)\n",
+            "styles.css": "/* ApexDesk Production CSS */\n:root { --accent: #cc4b2c; --bg: #0c0b09; }\nbody { font-family: -apple-system, sans-serif; background: var(--bg); color: #fff; }",
+        },
+        role="deliverable",
+    )
+
 
     # =========================================================================
     # 18. Issa Cuevas (issabelc207@gmail.com)
@@ -3509,19 +3542,31 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 9, 30, 19, 47, 18),
-                "Hi Audrey! First off, your work is stunning—the natural light portraits are genuinely gorgeous, so rest assured your photography isn't the problem at all.\n\nWe looked through your booking flow, and the issue is clear:\nYou're asking 14 detailed questions before showing any rates. Visitors love the work, click Book, get hit with a wall of questions without knowing if they can afford you, and freeze up. Pair that with a generic headline that doesn't mention you're in East Austin, and people just bounce.\n\nWe can run a quick $90 diagnostic audit to fix this. We'll cut that form down to 5 painless fields, anchor your starting package rates upfront so clients pre-qualify, and sharpen your headline.\n\nHere's a direct Apple Pay link to get started: https://paystack.shop/pay/ppiajw3f1-\n\nOnce that clears, we'll dive right in and have the full breakdown to you tomorrow!",
+                "Hi Audrey! First off, your work is stunning—the natural light portraits are genuinely gorgeous, so rest assured your photography isn't the problem at all.\n\nWe looked through your booking flow, and the issue is clear:\nYou're asking 14 detailed questions before showing any rates. Visitors love the work, click Book, get hit with a wall of questions without knowing if they can afford you, and freeze up. Pair that with a generic headline that doesn't mention you're in East Austin, and people just bounce.\n\nWe can run a quick $90 diagnostic audit to fix this: we'll cut that form down to 5 painless fields, anchor your starting package rates upfront so clients pre-qualify, and sharpen your headline.\n\nWant us to run that for you?",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 9, 30, 19, 54, 10),
+                "oh wow... okay hearing you say it out loud makes it so obvious haha. i had no idea 14 questions was that terrifying, i thought i was just being thorough! and yes, i've been terrified of putting prices on the site because someone told me not to, but what you said makes complete sense. send over the link and let's do it!",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 9, 30, 19, 56, 5),
+                "Here is the direct Apple Pay checkout link: https://paystack.shop/pay/ppiajw3f1-\n\nOnce that clears, we'll dive right in and have the full breakdown over to you tomorrow!",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 9, 30, 19, 58, 43),
-                "oh wow... hearing you say it out loud makes it so obvious haha. i had no idea 14 questions was that intimidating, i thought i was just being thorough! and yeah, another photographer told me never to list prices, but that clearly backfired.\n\njust tapped that apple pay link and cleared the $90! excited to see the breakdown.",
+                "just tapped that apple pay link and cleared the $90! excited to see the breakdown.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 9, 30, 20, 4, 12),
-                "Payment confirmed! We'll have the full audit report mapped out for you tomorrow afternoon.",
+                "Payment confirmed, Audrey! We'll have the full audit report mapped out for you tomorrow afternoon.",
                 [],
             ),
             (
@@ -4175,7 +4220,19 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 8, 28, 20, 41, 9),
-                "Aloha Luca! Happy to take this off your plate. We'll reconcile all 50+ transactions across the Waikiki and Ala Moana units, match those Pacific Split-AC and hardware receipts, and give you a clean monthly P&L plus a 50/50 partner distribution breakdown in both Excel and CSV. That's $220.00 flat.",
+                "Aloha Luca! Happy to take this off your plate. We can reconcile all 50+ transactions across the Waikiki and Ala Moana units, match those Pacific Split-AC and hardware receipts, and give you a clean monthly P&L plus a 50/50 partner distribution breakdown in both Excel and CSV for $220 flat. Want us to jump into it?",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 8, 28, 21, 2, 14),
+                "yes please, send the invoice over!",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 8, 28, 21, 5, 30),
+                "Invoice INV-260814-LC01 ($220.00) is posted to your account.",
                 [],
             ),
             (
@@ -4221,8 +4278,20 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
+                dt_utc(2026, 9, 15, 14, 15, 10),
+                "Welcome back Luca! We can design a high-converting guest brochure and build an automated slip fee manifest in Excel for $260 flat. Want us to take this on?",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 9, 15, 14, 28, 40),
+                "definitely, send the invoice!",
+                [],
+            ),
+            (
+                'admin',
                 dt_utc(2026, 9, 15, 14, 31, 4),
-                "Posted invoice INV-260915-LC02 ($260.00). We'll design a high-converting guest brochure and build an automated slip fee manifest.",
+                "Posted invoice INV-260915-LC02 ($260.00).",
                 [],
             ),
             (
@@ -4795,7 +4864,19 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 5, 7, 48, 15),
-                "Morning Estella! Yes, absolutely—investor updates should sound like a focused founder speaking directly to partners, not compliance legalese. We can do a complete rewrite and tone polish on the 1,800 words for $25.00 flat (invoice INV-261005-EW01). Normally for founders coming through our private executive network, we send a direct priority checkout link so you can clear it in one tap on mobile: https://paystack.shop/pay/tx0ipp9eg4. We'll preserve all your underlying retention and growth metrics while giving the prose real momentum.",
+                "Morning Estella! Absolutely—investor updates should sound like a focused founder speaking directly to partners, not compliance legalese. We can do a complete rewrite and tone polish on the 1,800 words for $25.00 flat, preserving all your core metrics while giving the prose real momentum. Want us to jump on this?",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 5, 8, 2, 10),
+                "yes please, send over the link and i'll clear it right now on my phone.",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 10, 5, 8, 5, 40),
+                "Posted invoice INV-261005-EW01 ($25.00). Here is the direct priority checkout link: https://paystack.shop/pay/tx0ipp9eg4",
                 [],
             ),
             (
@@ -4829,7 +4910,19 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 10, 18, 52, 14),
-                "Welcome back Estella! Great timing as your team scales. We can build the full 4-role onboarding package with concrete 30-60-90 ramp rubrics and daily checklists for $80.00 ($20 per role). Posted invoice INV-261010-EW02.",
+                "Welcome back Estella! Great timing as your team scales. We can build the full 4-role onboarding package with concrete 30-60-90 ramp rubrics and daily checklists for $80 flat ($20 per role). Want us to get rolling on this?",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 10, 18, 55, 30),
+                "yes please! post the invoice.",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 10, 10, 18, 57, 10),
+                "Posted invoice INV-261010-EW02 ($80.00).",
                 [],
             ),
             (
@@ -5115,13 +5208,25 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 4, 11, 42, 9),
-                'Hello Dennis! We can standardize all Southern and Western corridor trips, convert KES fuel burn to USD at historical benchmark rates, and calculate net trip margins for $140 flat.',
+                'Hello Dennis! We can standardize all Southern and Western corridor trips, convert KES fuel burn to USD at historical benchmark rates, and calculate net trip margins for $140 flat. Shall we put this together for you?',
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 4, 12, 15, 30),
+                'yes please, send the invoice over.',
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 5, 8, 31, 47),
-                'Posted invoice INV-261005-DK01 ($140.00).',
+                'Posted invoice INV-261005-DK01 ($140.00). Starting the calculations now.',
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 5, 8, 45, 10),
+                'paid on card just now. let me know once the sheets are ready.',
                 [],
             ),
             (
@@ -5136,7 +5241,7 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 10, 5, 14, 11, 28),
-                'paid on card. downloaded both Excel workbooks and the corridor segment formulas match our fleet dispatch sheets exactly. thank you.',
+                'downloaded both Excel workbooks and the corridor segment formulas match our fleet dispatch sheets exactly. thank you.',
                 [],
             ),
         ],
@@ -5763,7 +5868,25 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 5, 7, 14, 42, 19),
-                "Hi Carter! Hardware buyers want tactile language: CNC-machined aerospace aluminum, thermal heatsink efficiency, and modular freedom. We'll write your full storefront copy, build an interactive HTML prototype, and assemble a complete launch kit ZIP for $220 flat. Posted invoice INV-260507-CL01.",
+                "Hi Carter! Hardware buyers want tactile language: CNC-machined aerospace aluminum, thermal heatsink efficiency, and modular freedom. We can write your complete storefront copy, build an interactive HTML prototype, and assemble the full launch kit ZIP for $290 flat. Want us to take this on?",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 5, 7, 14, 55, 0),
+                "sounds awesome, shoot the invoice over!",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 5, 7, 14, 58, 30),
+                "Posted invoice INV-260508-CL01 ($290.00). Drafting the copy and assembling the prototype now.",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 5, 7, 15, 10, 15),
+                "paid the invoice! excited to see how the interactive prototype turns out.",
                 [],
             ),
             (
@@ -5779,7 +5902,7 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 5, 8, 16, 19, 48),
-                'paid! just tested the live HTML prototype in my browser—it looks so sleek! opening the ZIP pack now.',
+                'just tested the live HTML prototype in my browser—it looks so sleek! opening the ZIP pack now. thanks team!',
                 [],
             ),
         ],
