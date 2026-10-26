@@ -1,0 +1,700 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DockStream · Intelligent Yard Management & Cross-Dock Telemetry (B2B Supply Chain)</title>
+  <meta name="description" content="Next-generation yard management system (YMS) and cross-dock automation platform engineered for high-velocity Midwest freight corridors.">
+  <link rel="icon" href="{% static 'favicon.ico' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #07090e;
+      --surface: #0e131d;
+      --surface-elevated: #151c2a;
+      --surface-card: #111723;
+      --border: #1e293b;
+      --border-bright: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --cyan: #00e5ff;
+      --cyan-glow: rgba(0, 229, 255, 0.15);
+      --orange: #ff5722;
+      --orange-glow: rgba(255, 87, 34, 0.2);
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --radius-lg: 14px;
+      --radius-md: 8px;
+      --radius-sm: 4px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .font-tech { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Top Telemetry Ticker */
+    .telemetry-ticker {
+      background: #040609;
+      border-bottom: 1px solid var(--border);
+      padding: 8px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .ticker-left { display: flex; align-items: center; gap: 16px; }
+    .status-pulse { display: inline-flex; align-items: center; gap: 6px; color: var(--emerald); font-weight: 600; }
+    .pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--emerald); animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.3); } 100% { opacity: 1; transform: scale(1); } }
+
+    /* Header Nav */
+    header {
+      background: rgba(7, 9, 14, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      text-decoration: none;
+    }
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--cyan), #0284c7);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+      font-weight: 900;
+      font-size: 16px;
+    }
+    .brand span { color: var(--cyan); }
+    .nav-links { display: flex; gap: 28px; align-items: center; }
+    .nav-link { color: var(--text-muted); text-decoration: none; font-size: 14px; font-weight: 600; transition: color 0.2s; }
+    .nav-link:hover { color: #fff; }
+    .btn-pilot {
+      background: var(--cyan);
+      color: #07090e;
+      border: none;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .btn-pilot:hover { background: #38bdf8; transform: translateY(-1px); }
+
+    /* Hero Section */
+    .hero {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 72px 24px 48px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 229, 255, 0.08);
+      border: 1px solid rgba(0, 229, 255, 0.25);
+      color: var(--cyan);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: 48px;
+      font-weight: 800;
+      line-height: 1.12;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, #fff 30%, var(--cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-lead {
+      font-size: 18px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+    .hero-ctas { display: flex; gap: 14px; align-items: center; margin-bottom: 40px; }
+    .btn-primary-orange {
+      background: var(--orange);
+      color: #fff;
+      padding: 14px 28px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 15px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary-orange:hover { background: #ff3d00; transform: translateY(-1px); box-shadow: 0 8px 24px var(--orange-glow); }
+    .btn-secondary-dark {
+      background: var(--surface-elevated);
+      color: #fff;
+      border: 1px solid var(--border-bright);
+      padding: 14px 24px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-secondary-dark:hover { background: var(--surface-card); border-color: var(--cyan); }
+
+    /* Telemetry Live Radar Box */
+    .radar-box {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      position: relative;
+    }
+    .radar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+    .radar-title { font-size: 13px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+    .radar-stat-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .radar-stat-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      text-align: center;
+    }
+    .stat-number { font-size: 24px; font-weight: 800; color: var(--cyan); }
+    .stat-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; font-weight: 600; margin-top: 2px; }
+
+    /* Interactive Bay Grid */
+    .section-title-wrap {
+      text-align: center;
+      max-width: 760px;
+      margin: 80px auto 40px;
+      padding: 0 24px;
+    }
+    .section-eyebrow {
+      color: var(--orange);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 10px;
+    }
+    .section-title { font-size: 36px; font-weight: 800; color: #fff; margin-bottom: 14px; }
+    .section-desc { font-size: 16px; color: var(--text-muted); }
+
+    .bay-terminal {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px 60px;
+    }
+    .bay-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .bay-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .bay-card:hover {
+      border-color: var(--cyan);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 229, 255, 0.08);
+    }
+    .bay-card.active-bay {
+      border-color: var(--cyan);
+      background: var(--surface-elevated);
+      box-shadow: 0 0 0 1px var(--cyan);
+    }
+    .bay-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .bay-id { font-size: 14px; font-weight: 800; color: #fff; }
+    .bay-badge {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-loading { background: rgba(245, 158, 11, 0.15); color: var(--amber); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-docked { background: rgba(0, 229, 255, 0.15); color: var(--cyan); border: 1px solid rgba(0, 229, 255, 0.3); }
+    .badge-clear { background: rgba(16, 185, 129, 0.15); color: var(--emerald); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .bay-carrier { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .bay-trailer { font-size: 11px; color: var(--text-dim); }
+    .bay-timer {
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+    }
+    .timer-val { font-weight: 700; color: var(--orange); }
+
+    /* Bay Detail Inspector */
+    .bay-inspector {
+      background: var(--surface);
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .insp-col h5 { font-size: 11px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 1px; }
+    .insp-col p { font-size: 15px; color: #fff; font-weight: 600; }
+
+    /* ROI Detention Calculator */
+    .calc-container {
+      max-width: 1100px;
+      margin: 0 auto 80px;
+      background: linear-gradient(135deg, var(--surface-card) 0%, var(--surface-elevated) 100%);
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius-lg);
+      padding: 48px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .calc-inputs h3 { font-size: 26px; color: #fff; font-weight: 800; margin-bottom: 12px; }
+    .calc-inputs p { color: var(--text-muted); font-size: 15px; margin-bottom: 28px; }
+    .slider-group { margin-bottom: 24px; }
+    .slider-label { display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .slider-val { color: var(--cyan); font-family: 'JetBrains Mono', monospace; font-size: 16px; }
+    input[type=range] {
+      width: 100%;
+      height: 6px;
+      background: var(--surface);
+      border-radius: 4px;
+      outline: none;
+      accent-color: var(--cyan);
+    }
+
+    .calc-results-card {
+      background: #04070c;
+      border: 1px solid var(--cyan);
+      box-shadow: 0 0 30px rgba(0, 229, 255, 0.1);
+      border-radius: var(--radius-md);
+      padding: 36px;
+      text-align: center;
+    }
+    .res-eyebrow { font-size: 12px; text-transform: uppercase; color: var(--text-dim); font-weight: 700; letter-spacing: 1px; }
+    .res-dollar { font-size: 48px; font-weight: 800; color: #fff; margin: 12px 0 6px; }
+    .res-dollar span { color: var(--emerald); }
+    .res-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+    .res-breakdown {
+      display: flex;
+      justify-content: space-around;
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .res-breakdown strong { display: block; font-size: 16px; color: #fff; margin-top: 4px; }
+
+    /* Case Study Attestation Bar */
+    .case-banner {
+      background: #090e17;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 32px 24px;
+      margin-bottom: 80px;
+    }
+    .case-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 32px;
+    }
+    .case-badge {
+      background: rgba(255, 87, 34, 0.15);
+      border: 1px solid rgba(255, 87, 34, 0.3);
+      color: var(--orange);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+    .case-quote { font-size: 18px; font-weight: 600; color: #fff; line-height: 1.5; }
+    .case-author { font-size: 13px; color: var(--text-dim); margin-top: 6px; }
+    .case-kpis { display: flex; gap: 32px; }
+    .kpi-unit { text-align: right; }
+    .kpi-big { font-size: 32px; font-weight: 800; color: var(--cyan); }
+    .kpi-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 24px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+    footer a { color: var(--cyan); text-decoration: none; }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; padding-top: 40px; }
+      .bay-grid { grid-template-columns: repeat(2, 1fr); }
+      .calc-container { grid-template-columns: 1fr; padding: 24px; }
+      .case-inner { flex-direction: column; text-align: center; }
+      .case-kpis { justify-content: center; }
+      .kpi-unit { text-align: center; }
+      .bay-inspector { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Real-Time Telemetry Bar -->
+  <div class="telemetry-ticker">
+    <div class="ticker-left">
+      <span class="status-pulse"><span class="pulse-dot"></span> MIDWEST HUB ONLINE</span>
+      <span class="mono">EDI 214 / 204 GATEWAYS: 99.98%</span>
+      <span class="mono">AVG DETENTION: 18.2 MIN (-42%)</span>
+    </div>
+    <div class="mono" id="live-clock">OCT 26, 2026 · 14:10:00 UTC</div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="nav-inner">
+      <a href="/showcase/dockstream/" class="brand font-tech">
+        <div class="brand-mark">D</div>
+        DOCK<span>STREAM</span>
+      </a>
+      <div class="nav-links">
+        <a href="#bay-monitor" class="nav-link">Yard Telemetry</a>
+        <a href="#roi-calculator" class="nav-link">ROI Calculator</a>
+        <a href="#integrations" class="nav-link">Integrations</a>
+        <button class="btn-pilot font-tech" onclick="alert('Enterprise Pilot Scheduling: Request routed to Jack Johnson (VP Sales). Direct contact: sales@dockstream.io')">Request Pilot</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div>
+      <div class="hero-kicker font-tech">
+        <span>⚡ Cross-Dock Velocity Suite 4.2</span>
+      </div>
+      <h1 class="font-tech">Automate yard flow. <em>Eliminate detention fees.</em></h1>
+      <p class="hero-lead">
+        DockStream replaces whiteboards and radio chatter with real-time trailer tracking, automated door scheduling, and sub-second EDI carrier handoffs across Midwest 3PL hubs.
+      </p>
+      <div class="hero-ctas">
+        <a href="#bay-monitor" class="btn-primary-orange font-tech">Launch Bay Monitor ↓</a>
+        <a href="#roi-calculator" class="btn-secondary-dark font-tech">Calculate Detention ROI</a>
+      </div>
+      <div style="font-size: 12px; color: var(--text-dim); display: flex; gap: 20px;">
+        <span>✓ ISO 27001 Certified</span>
+        <span>✓ Direct WMS Webhooks</span>
+        <span>✓ Zero Hardware Install Required</span>
+      </div>
+    </div>
+
+    <!-- Live Telemetry Radar -->
+    <div class="radar-box">
+      <div class="radar-header">
+        <span class="radar-title font-tech">Live Chicago Yard Telemetry</span>
+        <span class="mono" style="font-size: 11px; color: var(--cyan);">NODE: CHI-04</span>
+      </div>
+      <div class="radar-stat-strip">
+        <div class="radar-stat-item">
+          <div class="stat-number mono" id="live-docked">8 / 12</div>
+          <div class="stat-label">Bays Occupied</div>
+        </div>
+        <div class="radar-stat-item">
+          <div class="stat-number mono">18m</div>
+          <div class="stat-label">Turnaround</div>
+        </div>
+        <div class="radar-stat-item">
+          <div class="stat-number mono" style="color: var(--emerald);">$0.00</div>
+          <div class="stat-label">Detention Incurred</div>
+        </div>
+      </div>
+      <div class="mono" style="font-size: 11px; background: #06090e; padding: 12px; border-radius: 4px; color: var(--text-muted); line-height: 1.7;">
+        <div>&gt; INBOUND: Knight-Swift Trl #94821 assigned to Door 04</div>
+        <div>&gt; VERIFIED: Bolt seal #ISO-8491 matching B/L 29401</div>
+        <div>&gt; DISCHARGED: Schneider #5520 departing Gate 2 [14m dwell]</div>
+        <div style="color: var(--cyan);">&gt; TELEMETRY STREAM: 0 variance across 148 shifts</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Bay Monitor Section -->
+  <div class="section-title-wrap" id="bay-monitor">
+    <div class="section-eyebrow font-tech">Real-Time Door Orchestration</div>
+    <h2 class="section-title font-tech">Interactive Cross-Dock Terminal</h2>
+    <p class="section-desc">Click any bay below to inspect live trailer manifest, driver check-in status, and automated detention avoidance triggers.</p>
+  </div>
+
+  <div class="bay-terminal">
+    <div class="bay-grid" id="bay-grid-container">
+      <!-- 8 Active / 4 Clear Doors generated via JS -->
+    </div>
+
+    <!-- Bay Detail Inspector Panel -->
+    <div class="bay-inspector" id="bay-inspector-box">
+      <div class="insp-col">
+        <h5>Selected Gate / Door</h5>
+        <p id="insp-bay" class="font-tech" style="color: var(--cyan);">Door 04 · Cross-Dock Bay</p>
+      </div>
+      <div class="insp-col">
+        <h5>Assigned Carrier &amp; Trailer</h5>
+        <p id="insp-carrier">Knight-Swift Transportation (#TR-94821)</p>
+      </div>
+      <div class="insp-col">
+        <h5>Freight Classification</h5>
+        <p id="insp-freight">High-Velocity Palletized FTL (24 Skids)</p>
+      </div>
+      <div class="insp-col">
+        <h5>Detention Risk Threshold</h5>
+        <p id="insp-timer" style="color: var(--emerald);">14m elapsed · Safe (106m to penalty)</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROI Detention Calculator -->
+  <div class="calc-container" id="roi-calculator">
+    <div class="calc-inputs">
+      <div class="section-eyebrow font-tech">Financial ROI Simulator</div>
+      <h3 class="font-tech">Calculate your detention savings</h3>
+      <p>Enter your weekly inbound volume and current dwell times to simulate annual fee reductions achieved through automated door allocation.</p>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span>Weekly Inbound Trailers</span>
+          <span class="slider-val" id="lbl-trailers">120 trailers/wk</span>
+        </div>
+        <input type="range" id="input-trailers" min="20" max="500" step="10" value="120" oninput="recalcROI()">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span>Current Average Yard Dwell Time</span>
+          <span class="slider-val" id="lbl-dwell">75 minutes</span>
+        </div>
+        <input type="range" id="input-dwell" min="30" max="180" step="5" value="75" oninput="recalcROI()">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span>Standard Carrier Detention Rate ($/hr)</span>
+          <span class="slider-val" id="lbl-rate">$85 / hour</span>
+        </div>
+        <input type="range" id="input-rate" min="50" max="150" step="5" value="85" oninput="recalcROI()">
+      </div>
+    </div>
+
+    <div class="calc-results-card">
+      <div class="res-eyebrow font-tech">Projected Annual Savings</div>
+      <div class="res-dollar font-tech">$<span id="roi-annual">79,560</span></div>
+      <div class="res-sub">Direct detention penalty clawback &amp; driver wait compensation</div>
+      <div class="res-breakdown">
+        <div>
+          <span>Monthly Reduction</span>
+          <strong id="roi-monthly" class="mono">$6,630</strong>
+        </div>
+        <div>
+          <span>Turnaround Lift</span>
+          <strong class="mono" style="color: var(--cyan);">-44% Dwell</strong>
+        </div>
+        <div>
+          <span>Payback Horizon</span>
+          <strong class="mono" style="color: var(--emerald);">21 Days</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Case Study Banner for Jack Johnson -->
+  <div class="case-banner">
+    <div class="case-inner">
+      <div>
+        <span class="case-badge">Verified Midwest 3PL Deployment</span>
+        <div class="case-quote font-tech">"DockStream eliminated 40+ hours of carrier phone calls weekly and dropped our cross-dock demurrage fees to absolute zero."</div>
+        <div class="case-author">Jack Johnson · VP Operations, Midwest Freight Solutions (4 Facilities · 64 Bays)</div>
+      </div>
+      <div class="case-kpis">
+        <div class="kpi-unit">
+          <div class="kpi-big font-tech mono">42%</div>
+          <div class="kpi-label">Faster Bay Turns</div>
+        </div>
+        <div class="kpi-unit">
+          <div class="kpi-big font-tech mono">$160k</div>
+          <div class="kpi-label">Annual Savings</div>
+        </div>
+        <div class="kpi-unit">
+          <div class="kpi-big font-tech mono">100%</div>
+          <div class="kpi-label">Carrier EDI Compliance</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div style="margin-bottom: 12px; font-weight: 700; color: #fff;">
+      DockStream Enterprise Logistics Platform · Client Deliverable for Jack Johnson
+    </div>
+    <div>
+      Showcase Mirror: <a href="/showcase/dockstream/">byinfini.online/showcase/dockstream/</a> · Deliverable Asset: <span class="mono">johnson_dockstream_b2b_website_prototype.html</span>
+    </div>
+  </footer>
+
+  <script>
+    // Bay Data Definition
+    const baysData = [
+      { id: "Door 01", carrier: "Schneider National", trailer: "#SN-41029", type: "Reefer Temp-Controlled", elapsed: "22m", status: "loading", badge: "badge-loading" },
+      { id: "Door 02", carrier: "J.B. Hunt Transport", trailer: "#JB-88102", type: "Intermodal Container", elapsed: "11m", status: "docked", badge: "badge-docked" },
+      { id: "Door 03", carrier: "FedEx Freight", trailer: "#FX-30219", type: "LTL Deconsolidation", elapsed: "08m", status: "docked", badge: "badge-docked" },
+      { id: "Door 04", carrier: "Knight-Swift", trailer: "#TR-94821", type: "High-Velocity Palletized FTL", elapsed: "14m", status: "docked", badge: "badge-docked" },
+      { id: "Door 05", carrier: "Werner Enterprises", trailer: "#WN-55201", type: "Retail Cross-Dock", elapsed: "31m", status: "loading", badge: "badge-loading" },
+      { id: "Door 06", carrier: "Available Dock", trailer: "No Trailer Assigned", type: "Staged for Inbound", elapsed: "--", status: "clear", badge: "badge-clear" },
+      { id: "Door 07", carrier: "Old Dominion Freight", trailer: "#OD-19284", type: "Pharmaceutical Dry Van", elapsed: "16m", status: "docked", badge: "badge-docked" },
+      { id: "Door 08", carrier: "Available Dock", trailer: "No Trailer Assigned", type: "Staged for Inbound", elapsed: "--", status: "clear", badge: "badge-clear" },
+      { id: "Door 09", carrier: "R+L Carriers", trailer: "#RL-67392", type: "Automotive Parts Expedited", elapsed: "19m", status: "loading", badge: "badge-loading" },
+      { id: "Door 10", carrier: "Estes Express Lines", trailer: "#ES-84019", type: "Consumer Packaged Goods", elapsed: "06m", status: "docked", badge: "badge-docked" },
+      { id: "Door 11", carrier: "Available Dock", trailer: "No Trailer Assigned", type: "Staged for Inbound", elapsed: "--", status: "clear", badge: "badge-clear" },
+      { id: "Door 12", carrier: "Available Dock", trailer: "No Trailer Assigned", type: "Staged for Inbound", elapsed: "--", status: "clear", badge: "badge-clear" }
+    ];
+
+    function renderBays() {
+      const container = document.getElementById('bay-grid-container');
+      container.innerHTML = baysData.map((b, idx) => `
+        <div class="bay-card ${idx === 3 ? 'active-bay' : ''}" onclick="selectBay(${idx})">
+          <div class="bay-top">
+            <span class="bay-id font-tech">${b.id}</span>
+            <span class="bay-badge ${b.badge}">${b.status}</span>
+          </div>
+          <div class="bay-carrier">${b.carrier}</div>
+          <div class="bay-trailer mono">${b.trailer}</div>
+          <div class="bay-timer mono">
+            <span>Dwell:</span>
+            <span class="timer-val">${b.elapsed}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function selectBay(idx) {
+      document.querySelectorAll('.bay-card').forEach((el, i) => {
+        el.classList.toggle('active-bay', i === idx);
+      });
+      const b = baysData[idx];
+      document.getElementById('insp-bay').textContent = b.id + ' · ' + (b.status === 'clear' ? 'Ready for Inbound' : 'Active Cross-Dock');
+      document.getElementById('insp-carrier').textContent = b.carrier + ' (' + b.trailer + ')';
+      document.getElementById('insp-freight').textContent = b.type;
+      document.getElementById('insp-timer').textContent = b.status === 'clear' ? 'Door available for queue routing' : `${b.elapsed} elapsed · Optimal turnaround pace`;
+    }
+
+    function recalcROI() {
+      const trailers = parseInt(document.getElementById('input-trailers').value);
+      const dwell = parseInt(document.getElementById('input-dwell').value);
+      const rate = parseInt(document.getElementById('input-rate').value);
+
+      document.getElementById('lbl-trailers').textContent = trailers + ' trailers/wk';
+      document.getElementById('lbl-dwell').textContent = dwell + ' minutes';
+      document.getElementById('lbl-rate').textContent = '$' + rate + ' / hour';
+
+      // Savings calculation: average dwell reduction 35 minutes across volume
+      const excessHours = Math.max(0, (dwell - 40) / 60);
+      const annualDetention = trailers * 52 * excessHours * rate * 0.45;
+      const rounded = Math.round(annualDetention);
+      const monthly = Math.round(rounded / 12);
+
+      document.getElementById('roi-annual').textContent = rounded.toLocaleString();
+      document.getElementById('roi-monthly').textContent = '$' + monthly.toLocaleString();
+    }
+
+    // Live clock update
+    setInterval(() => {
+      const now = new Date();
+      document.getElementById('live-clock').textContent = now.toUTCString().replace("GMT", "UTC");
+    }, 1000);
+
+    renderBays();
+    recalcROI();
+  </script>
+</body>
+</html>

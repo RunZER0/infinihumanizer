@@ -1,0 +1,628 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orozco Roofing · Commercial Flat Roofs &amp; Industrial Systems (South Texas)</title>
+  <meta name="description" content="Certified commercial flat roofing contractor specializing in 60-mil TPO single-ply and 24-gauge standing seam metal across McAllen, Brownsville, and South Texas.">
+  <link rel="icon" href="{% static 'favicon.ico' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,500;0,600;0,700;0,800;0,900;1,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #121417;
+      --surface: #1a1e23;
+      --surface-elevated: #242930;
+      --border: #2e3540;
+      --border-bright: #434c5b;
+      --amber: #f59e0b;
+      --amber-hover: #d97706;
+      --amber-glow: rgba(245, 158, 11, 0.18);
+      --orange: #ea580c;
+      --steel: #94a3b8;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --radius-lg: 12px;
+      --radius-md: 6px;
+      --radius-sm: 4px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .font-condensed { font-family: 'Barlow Semi Condensed', sans-serif; text-transform: uppercase; letter-spacing: -0.01em; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Top Emergency Dispatch Strip */
+    .emergency-strip {
+      background: var(--amber);
+      color: #000;
+      padding: 10px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 800;
+      font-size: 13px;
+    }
+    .dispatch-left { display: flex; align-items: center; gap: 10px; }
+    .siren-badge { background: #000; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 900; letter-spacing: 1px; }
+    .dispatch-phone { color: #000; font-family: 'JetBrains Mono', monospace; font-size: 15px; text-decoration: none; font-weight: 900; }
+
+    /* Navigation */
+    header {
+      background: rgba(18, 20, 23, 0.95);
+      border-bottom: 2px solid var(--border);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+    .brand-shield {
+      width: 36px;
+      height: 36px;
+      background: var(--amber);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+      font-weight: 900;
+      font-size: 18px;
+    }
+    .brand-text { font-size: 24px; font-weight: 900; line-height: 1; }
+    .brand-text span { color: var(--amber); }
+    .nav-links { display: flex; gap: 24px; align-items: center; }
+    .nav-link { color: var(--text-muted); text-decoration: none; font-size: 14px; font-weight: 700; text-transform: uppercase; transition: color 0.2s; }
+    .nav-link:hover { color: #fff; }
+    .btn-roof-bid {
+      background: var(--amber);
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
+    }
+    .btn-roof-bid:hover { background: var(--amber-hover); transform: translateY(-1px); }
+
+    /* Hero */
+    .hero {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 72px 24px 48px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 56px;
+      align-items: center;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: var(--amber);
+      padding: 4px 14px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: 52px;
+      font-weight: 900;
+      line-height: 1.05;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+    h1 span { color: var(--amber); }
+    .hero-lead {
+      font-size: 18px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+    .hero-actions { display: flex; gap: 16px; margin-bottom: 36px; }
+    .btn-main-amber {
+      background: var(--amber);
+      color: #000;
+      padding: 16px 32px;
+      border-radius: var(--radius-sm);
+      font-weight: 900;
+      font-size: 16px;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+    .btn-main-amber:hover { background: var(--amber-hover); box-shadow: 0 8px 24px var(--amber-glow); }
+    .btn-outline-steel {
+      background: transparent;
+      color: #fff;
+      border: 2px solid var(--border-bright);
+      padding: 14px 28px;
+      border-radius: var(--radius-sm);
+      font-weight: 800;
+      font-size: 16px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-outline-steel:hover { border-color: var(--amber); background: var(--surface); }
+
+    /* Hero Specs Card */
+    .hero-spec-card {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    }
+    .spec-header {
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .spec-title { font-size: 16px; font-weight: 900; color: #fff; }
+    .spec-matrix-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .spec-matrix-item span:first-child { color: var(--text-muted); }
+    .spec-matrix-item span:last-child { color: #fff; font-weight: 700; text-align: right; }
+
+    /* Roofing Bid Estimator */
+    .section-head {
+      text-align: center;
+      max-width: 760px;
+      margin: 80px auto 40px;
+      padding: 0 24px;
+    }
+    .section-eyebrow { color: var(--amber); font-size: 12px; font-weight: 900; letter-spacing: 2px; margin-bottom: 8px; }
+    .section-h2 { font-size: 40px; font-weight: 900; color: #fff; margin-bottom: 12px; }
+    .section-p { font-size: 16px; color: var(--text-muted); }
+
+    .estimator-box {
+      max-width: 1140px;
+      margin: 0 auto 80px;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 40px;
+      align-items: start;
+    }
+    .calc-controls {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+    }
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .control-label span:last-child { color: var(--amber); font-size: 18px; }
+    .system-select-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 20px 0 28px;
+    }
+    .system-option {
+      background: var(--surface-elevated);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .system-option:hover { border-color: var(--amber); }
+    .system-option.selected {
+      border-color: var(--amber);
+      background: rgba(245, 158, 11, 0.08);
+    }
+    .system-name { font-size: 15px; font-weight: 900; color: #fff; margin-bottom: 4px; }
+    .system-rate { font-size: 12px; color: var(--amber); font-weight: 700; }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      background: var(--surface-elevated);
+      border-radius: var(--radius-sm);
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    .checkbox-item input { width: 18px; height: 18px; accent-color: var(--amber); }
+    .checkbox-item span { font-size: 14px; font-weight: 600; color: #fff; }
+
+    /* Bid Summary Card */
+    .bid-summary-card {
+      background: #0d0f12;
+      border: 2px solid var(--amber);
+      box-shadow: 0 16px 48px var(--amber-glow);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+    }
+    .bid-eyebrow { font-size: 12px; font-weight: 900; color: var(--text-dim); letter-spacing: 1.5px; }
+    .bid-total-num { font-size: 46px; font-weight: 900; color: #fff; margin: 12px 0 4px; }
+    .bid-total-num span { color: var(--amber); }
+    .bid-sqft-cost { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+    .bid-breakdown-list {
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+      margin-bottom: 24px;
+    }
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 13px;
+    }
+    .breakdown-row span:first-child { color: var(--text-muted); }
+    .breakdown-row span:last-child { color: #fff; font-weight: 700; }
+    .btn-lock-bid {
+      background: var(--amber);
+      color: #000;
+      width: 100%;
+      border: none;
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      font-weight: 900;
+      font-size: 15px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
+    }
+    .btn-lock-bid:hover { background: var(--amber-hover); }
+
+    /* Warranty Attestation Grid */
+    .certs-bar {
+      background: #161a20;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 24px;
+      margin-bottom: 80px;
+    }
+    .certs-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      text-align: center;
+    }
+    .cert-item { padding: 16px; }
+    .cert-badge-h { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 6px; }
+    .cert-desc { font-size: 13px; color: var(--text-muted); }
+
+    /* Client Attestation Box */
+    .client-proof {
+      max-width: 1140px;
+      margin: 0 auto 80px;
+      padding: 32px;
+      background: var(--surface);
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius-lg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 32px;
+    }
+    .proof-quote { font-size: 17px; font-weight: 700; color: #fff; line-height: 1.5; }
+    .proof-author { font-size: 13px; color: var(--amber); margin-top: 6px; font-weight: 600; }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 24px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+    footer a { color: var(--amber); text-decoration: none; }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .estimator-box { grid-template-columns: 1fr; }
+      .certs-inner { grid-template-columns: 1fr 1fr; }
+      .client-proof { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Emergency Dispatch Strip -->
+  <div class="emergency-strip">
+    <div class="dispatch-left font-condensed">
+      <span class="siren-badge">24/7 RAPID DISPATCH</span>
+      <span>COMMERCIAL ROOF LEAK &amp; STORM RESPONSE UNIT (RIO GRANDE VALLEY)</span>
+    </div>
+    <div>
+      <a href="tel:9565557663" class="dispatch-phone font-condensed">📞 (956) 555-ROOF (7663)</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="nav-inner">
+      <a href="/showcase/orozco-roofing/" class="brand">
+        <div class="brand-shield font-condensed">O</div>
+        <div class="brand-text font-condensed">OROZCO <span>COMMERCIAL</span></div>
+      </a>
+      <div class="nav-links font-condensed">
+        <a href="#estimator" class="nav-link">Instant Bid Calculator</a>
+        <a href="#systems" class="nav-link">TPO &amp; Metal Systems</a>
+        <a href="#warranties" class="nav-link">NDL Warranties</a>
+        <button class="btn-roof-bid font-condensed" onclick="document.getElementById('estimator').scrollIntoView({behavior:'smooth'})">Request Inspection</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div>
+      <div class="hero-badge font-condensed">
+        <span>★ Certified South Texas Commercial Installer</span>
+      </div>
+      <h1 class="font-condensed">
+        INDUSTRIAL FLAT ROOFS. <span>ZERO DOLLAR LIMIT</span> WARRANTIES.
+      </h1>
+      <p class="hero-lead">
+        We install manufacturer-certified 60-mil TPO single-ply and architectural standing seam metal engineered to withstand 140 MPH Gulf Coast hurricane wind uplift across McAllen, Brownsville, and Harlingen.
+      </p>
+      <div class="hero-actions font-condensed">
+        <a href="#estimator" class="btn-main-amber font-condensed">Calculate Commercial Estimate ↓</a>
+        <a href="tel:9565557663" class="btn-outline-steel font-condensed">Emergency Dispatch</a>
+      </div>
+      <div style="font-size: 13px; color: var(--text-dim); display: flex; gap: 20px;">
+        <span>✓ 20-Year NDL Warranty</span>
+        <span>✓ Fully Bonded &amp; Insured</span>
+        <span>✓ Carlisle &amp; Firestone Master Contractor</span>
+      </div>
+    </div>
+
+    <!-- Live Spec Card -->
+    <div class="hero-spec-card">
+      <div class="spec-header font-condensed">
+        <span class="spec-title">Active Field Specification</span>
+        <span class="mono" style="color: var(--amber); font-size: 12px;">SPEC: TPO-2026-ST</span>
+      </div>
+      <div class="spec-matrix-item">
+        <span>Membrane System</span>
+        <span>Carlisle Sure-Weld 60-Mil White TPO</span>
+      </div>
+      <div class="spec-matrix-item">
+        <span>Wind Uplift Rating</span>
+        <span>UL Class 90 / FM 1-120 Hurricane Rated</span>
+      </div>
+      <div class="spec-matrix-item">
+        <span>Thermal Insulation</span>
+        <span>Dual-Layer Polyiso R-30 Staggered Joints</span>
+      </div>
+      <div class="spec-matrix-item">
+        <span>Warranty Guarantee</span>
+        <span>20-Year No Dollar Limit (NDL) Full System</span>
+      </div>
+      <div class="spec-matrix-item">
+        <span>Solar Reflectivity (SRI)</span>
+        <span>108 SRI (Title 24 Energy Reduction compliant)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Commercial Estimator -->
+  <div class="section-head" id="estimator">
+    <div class="section-eyebrow font-condensed">Instant Pricing Engine</div>
+    <h2 class="section-h2 font-condensed">Commercial Roof Bid Calculator</h2>
+    <p class="section-p">Get an immediate, transparent cost projection based on your commercial facility square footage, membrane type, and warranty tier.</p>
+  </div>
+
+  <div class="estimator-box">
+    <!-- Controls -->
+    <div class="calc-controls">
+      <div class="control-label font-condensed">
+        <span>Roof Surface Area</span>
+        <span id="lbl-sqft" class="mono font-condensed">25,000 SQ FT</span>
+      </div>
+      <input type="range" id="input-sqft" min="5000" max="100000" step="2500" value="25000" oninput="recalcRoofBid()" style="width:100%; accent-color: var(--amber); height: 8px;">
+
+      <div style="margin-top: 24px; font-size: 13px; font-weight: 800; text-transform: uppercase; color: var(--steel);" class="font-condensed">
+        Select Commercial Membrane System:
+      </div>
+      <div class="system-select-grid">
+        <div class="system-option selected" onclick="setSystem(4.85, '60-Mil TPO Single-Ply Membrane', this)">
+          <div class="system-name font-condensed">60-Mil TPO Single-Ply</div>
+          <div class="system-rate mono">$4.85 / sq.ft</div>
+        </div>
+        <div class="system-option" onclick="setSystem(7.40, '24-Ga Standing Seam Metal', this)">
+          <div class="system-name font-condensed">Standing Seam Metal</div>
+          <div class="system-rate mono">$7.40 / sq.ft</div>
+        </div>
+        <div class="system-option" onclick="setSystem(5.60, '4-Ply SBS Modified Bitumen', this)">
+          <div class="system-name font-condensed">SBS Modified Bitumen</div>
+          <div class="system-rate mono">$5.60 / sq.ft</div>
+        </div>
+        <div class="system-option" onclick="setSystem(2.90, 'High-Solids Silicone Restore', this)">
+          <div class="system-name font-condensed">Silicone Restoration</div>
+          <div class="system-rate mono">$2.90 / sq.ft</div>
+        </div>
+      </div>
+
+      <div style="font-size: 13px; font-weight: 800; text-transform: uppercase; color: var(--steel); margin-bottom: 12px;" class="font-condensed">
+        Project Scope Add-Ons:
+      </div>
+      <label class="checkbox-item font-condensed">
+        <input type="checkbox" id="chk-tearoff" checked onchange="recalcRoofBid()">
+        <span>Complete Tear-Off of Existing Wet Insulation (+$1.20/sq.ft)</span>
+      </label>
+      <label class="checkbox-item font-condensed">
+        <input type="checkbox" id="chk-r30" checked onchange="recalcRoofBid()">
+        <span>Polyiso R-30 Thermal Energy Efficiency Upgrade (+$0.95/sq.ft)</span>
+      </label>
+      <label class="checkbox-item font-condensed">
+        <input type="checkbox" id="chk-ndl" checked onchange="recalcRoofBid()">
+        <span>20-Year Manufacturer NDL No Dollar Limit Warranty (+$0.40/sq.ft)</span>
+      </label>
+    </div>
+
+    <!-- Calculated Bid Output -->
+    <div class="bid-summary-card">
+      <div class="bid-eyebrow font-condensed">Commercial Proposal Projection</div>
+      <div class="bid-total-num font-condensed">$<span id="bid-total">185,000</span></div>
+      <div class="bid-sqft-cost mono" id="bid-unit-rate">$7.40 per square foot installed</div>
+
+      <div class="bid-breakdown-list mono">
+        <div class="breakdown-row">
+          <span>Membrane Materials &amp; Fasteners:</span>
+          <span id="b-materials">$121,250</span>
+        </div>
+        <div class="breakdown-row">
+          <span>Tear-Off &amp; Disposal Hauling:</span>
+          <span id="b-tearoff">$30,000</span>
+        </div>
+        <div class="breakdown-row">
+          <span>R-30 Staggered Insulation:</span>
+          <span id="b-insulation">$23,750</span>
+        </div>
+        <div class="breakdown-row">
+          <span>Manufacturer NDL Inspection &amp; Certification:</span>
+          <span id="b-warranty">$10,000</span>
+        </div>
+      </div>
+
+      <button class="btn-lock-bid font-condensed" onclick="alert('Proposal Locked! Commercial bid request routed to Azael Orozco. Direct estimate line: (956) 555-7663')">
+        Lock Bid &amp; Schedule Core Sample Audit
+      </button>
+      <div style="font-size: 11px; color: var(--text-dim); text-align: center; margin-top: 12px;">
+        *Includes on-site core sampling, moisture scan &amp; architectural submission drawings.
+      </div>
+    </div>
+  </div>
+
+  <!-- Manufacturer Attestation Bar -->
+  <div class="certs-bar" id="warranties">
+    <div class="certs-inner">
+      <div class="cert-item">
+        <div class="cert-badge-h font-condensed">CARLISLE SYNTEC</div>
+        <div class="cert-desc">Certified Commercial Applicator &amp; ESP Excellence Partner</div>
+      </div>
+      <div class="cert-item">
+        <div class="cert-badge-h font-condensed">FIRESTONE BP</div>
+        <div class="cert-desc">Authorized Master Contractor · UltraPly TPO Platinum Tier</div>
+      </div>
+      <div class="cert-item">
+        <div class="cert-badge-h font-condensed">GAF COMMERCIAL</div>
+        <div class="cert-desc">EverGuard Master Select · Diamond Pledge 25-Year NDL</div>
+      </div>
+      <div class="cert-item">
+        <div class="cert-badge-h font-condensed">JOHNS MANVILLE</div>
+        <div class="cert-desc">Peak Advantage Contractor · Single-Ply System Attested</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Client Proof Box -->
+  <div class="client-proof">
+    <div>
+      <div class="proof-quote font-condensed">
+        "Commercial building owners in McAllen stop haggling when they see our clear square-foot pricing formulas and 20-year NDL warranties laid out on this platform."
+      </div>
+      <div class="proof-author font-condensed">Azael Orozco · Owner &amp; Lead Commercial Estimator, Orozco Roofing (McAllen, TX)</div>
+    </div>
+    <div style="text-align: right; white-space: nowrap;">
+      <div class="mono" style="font-size: 32px; font-weight: 900; color: var(--amber);">$480k+</div>
+      <div style="font-size: 12px; color: var(--text-dim); text-transform: uppercase;">Commercial Bids Won</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div style="margin-bottom: 12px; font-weight: 700; color: #fff;" class="font-condensed">
+      Orozco Commercial Roofing Systems · South Texas Service Fleet
+    </div>
+    <div>
+      Showcase Mirror: <a href="/showcase/orozco-roofing/">byinfini.online/showcase/orozco-roofing/</a> · Deliverable Asset: <span class="mono">orozco_roofing_website_prototype.html</span>
+    </div>
+  </footer>
+
+  <script>
+    let baseRate = 4.85;
+
+    function setSystem(rate, name, el) {
+      baseRate = rate;
+      document.querySelectorAll('.system-option').forEach(opt => opt.classList.remove('selected'));
+      el.classList.add('selected');
+      recalcRoofBid();
+    }
+
+    function recalcRoofBid() {
+      const sqft = parseInt(document.getElementById('input-sqft').value);
+      document.getElementById('lbl-sqft').textContent = sqft.toLocaleString() + ' SQ FT';
+
+      const tearoffRate = document.getElementById('chk-tearoff').checked ? 1.20 : 0;
+      const r30Rate = document.getElementById('chk-r30').checked ? 0.95 : 0;
+      const ndlRate = document.getElementById('chk-ndl').checked ? 0.40 : 0;
+
+      const totalUnitRate = baseRate + tearoffRate + r30Rate + ndlRate;
+      const totalCost = Math.round(sqft * totalUnitRate);
+
+      const matCost = Math.round(sqft * baseRate);
+      const tearCost = Math.round(sqft * tearoffRate);
+      const insCost = Math.round(sqft * r30Rate);
+      const warCost = Math.round(sqft * ndlRate);
+
+      document.getElementById('bid-total').textContent = totalCost.toLocaleString();
+      document.getElementById('bid-unit-rate').textContent = '$' + totalUnitRate.toFixed(2) + ' per square foot installed';
+      document.getElementById('b-materials').textContent = '$' + matCost.toLocaleString();
+      document.getElementById('b-tearoff').textContent = '$' + tearCost.toLocaleString();
+      document.getElementById('b-insulation').textContent = '$' + insCost.toLocaleString();
+      document.getElementById('b-warranty').textContent = '$' + warCost.toLocaleString();
+    }
+
+    recalcRoofBid();
+  </script>
+</body>
+</html>

@@ -1981,6 +1981,31 @@ def showcase_studio_brown(request):
     return render(request, "platformhub/showcase_studio_brown.html")
 
 
+def showcase_dockstream(request):
+    """
+    Live hosted website deliverable for Jack Johnson (DockStream Yard Logistics, Chicago IL).
+    Showcases enterprise B2B yard management, interactive 12-bay terminal inspector, and detention ROI calculator.
+    """
+    return render(request, "platformhub/showcase_dockstream.html")
+
+
+def showcase_orozco(request):
+    """
+    Live hosted website deliverable for Azael Orozco (Orozco Commercial Roofing, McAllen TX).
+    Showcases commercial flat roofing systems, interactive square-foot bid estimator, and 20-year NDL warranty specs.
+    """
+    return render(request, "platformhub/showcase_orozco.html")
+
+
+def showcase_apexdesk(request):
+    """
+    Live hosted website deliverable for Carter Lemburg (ApexDesk Minimalist Hardware, Boulder CO).
+    Showcases CNC-machined aerospace aluminum desk accessories, 3D unibody colorway toggle, and Qi2 modular rail builder.
+    """
+    return render(request, "platformhub/showcase_apexdesk.html")
+
+
 def health(request):
     return JsonResponse({"status": "ok", "service": "infiniai"})
+
 

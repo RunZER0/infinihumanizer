@@ -3,227 +3,1055 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Studio Brown · Editorial & Portrait Photography (Austin, TX)</title>
+  <title>Studio Brown · East Austin Editorial &amp; Portrait Photography</title>
   <style>
-    :root {
-      --bg: #11100e;
-      --card-bg: #1c1a16;
-      --border: #33302a;
-      --accent: #d4a373;
-      --accent-hover: #e3b88c;
-      --text: #f7f4ec;
-      --text-muted: #a6a092;
-      --coral: #cc4b2c;
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      margin: 0; padding: 40px; background: #0c0b09; color: #f7f4ec; line-height: 1.6;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; }
-    header { border-bottom: 1px solid var(--border); padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; background: rgba(17, 16, 14, 0.95); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
-    .brand { font-size: 20px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text); }
-    .brand span { color: var(--accent); }
-    nav { display: flex; gap: 8px; }
-    .nav-btn { background: transparent; border: 1px solid transparent; color: var(--text-muted); padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
-    .nav-btn:hover { color: var(--text); background: var(--card-bg); }
-    .nav-btn.active { color: #fff; background: var(--card-bg); border-color: var(--accent); }
-    .container { max-width: 1080px; margin: 0 auto; padding: 50px 24px; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-    .hero { text-align: center; padding: 60px 0 40px; max-width: 780px; margin: 0 auto; }
-    .badge { display: inline-block; background: rgba(212, 163, 115, 0.15); color: var(--accent); border: 1px solid rgba(212, 163, 115, 0.3); padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
-    .hero h1 { font-size: 42px; line-height: 1.2; font-weight: 700; margin-bottom: 20px; color: #fff; }
-    .hero p { font-size: 18px; color: var(--text-muted); margin-bottom: 32px; }
-    .btn-group { display: flex; gap: 16px; justify-content: center; }
-    .btn-primary { background: var(--accent); color: #11100e; font-weight: 600; padding: 14px 28px; border-radius: 6px; border: none; cursor: pointer; text-decoration: none; font-size: 15px; transition: background 0.2s; }
-    .btn-primary:hover { background: var(--accent-hover); }
-    .btn-secondary { background: transparent; color: var(--text); border: 1px solid var(--border); font-weight: 600; padding: 14px 28px; border-radius: 6px; cursor: pointer; text-decoration: none; font-size: 15px; }
-    .btn-secondary:hover { background: var(--card-bg); border-color: var(--accent); }
-    .trust-strip { display: flex; justify-content: center; gap: 40px; padding: 30px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin: 50px 0; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); flex-wrap: wrap; }
-    .trust-strip strong { color: var(--text); }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 30px; }
-    .pricing-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 32px; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
-    .pricing-card.featured { border-color: var(--accent); box-shadow: 0 0 30px rgba(212, 163, 115, 0.12); }
-    .featured-badge { position: absolute; top: -12px; right: 24px; background: var(--accent); color: #11100e; font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 3px 10px; border-radius: 12px; letter-spacing: 1px; }
-    .card-title { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 8px; }
-    .card-price { font-size: 36px; font-weight: 800; color: var(--accent); margin-bottom: 16px; }
-    .card-price span { font-size: 14px; font-weight: 400; color: var(--text-muted); }
-    .card-desc { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; min-height: 42px; }
-    .features-list { list-style: none; margin-bottom: 30px; }
-    .features-list li { font-size: 14px; color: var(--text); padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 10px; }
-    .features-list li::before { content: "✓"; color: var(--accent); font-weight: bold; }
-    .form-box { max-width: 640px; margin: 0 auto; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 40px; }
-    .form-group { margin-bottom: 20px; }
-    .form-label { display: block; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; color: var(--text); }
-    .form-control { width: 100%; background: #11100e; border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; color: #fff; font-size: 15px; }
-    .form-control:focus { outline: none; border-color: var(--accent); }
-    .form-note { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
-    .alert-box { background: rgba(204, 75, 44, 0.12); border: 1px solid var(--coral); border-radius: 6px; padding: 16px; margin-bottom: 24px; font-size: 13px; color: #f4c2b7; }
-    .success-modal { display: none; background: rgba(212, 163, 115, 0.15); border: 1px solid var(--accent); border-radius: 8px; padding: 24px; text-align: center; margin-top: 24px; }
+    .container { max-width: 860px; margin: 0 auto; background: #171612; border: 1px solid #36342e; border-radius: 8px; padding: 36px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
+    h1 { color: #ffffff; border-bottom: 2px solid #cc4b2c; padding-bottom: 12px; margin-top: 0; font-size: 26px; }
+    h2 { color: #e8e3d6; margin-top: 28px; font-size: 19px; }
+    p, li { color: #c4beb1; font-size: 15px; }
+    code, pre { background: #0c0b09; border: 1px solid #36342e; border-radius: 4px; font-family: monospace; padding: 2px 6px; color: #ff8a65; }
+    pre { padding: 16px; overflow-x: auto; }
+    .badge { display: inline-block; background: #cc4b2c; color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; margin-bottom: 16px; }
   </style>
 </head>
 <body>
-  <header>
-    <div class="brand">Studio <span>Brown</span></div>
-    <nav>
-      <button class="nav-btn active" onclick="switchTab('home')">Home</button>
-      <button class="nav-btn" onclick="switchTab('services')">Services & Packages</button>
-      <button class="nav-btn" onclick="switchTab('booking')">Booking & Availability</button>
-    </nav>
-  </header>
   <div class="container">
-    <div id="tab-home" class="tab-content active">
-      <section class="hero">
-        <span class="badge">East Austin · Natural Light Studio</span>
-        <h1>Editorial portraits & brand campaigns that feel authentic, modern, and enduring.</h1>
-        <p>Specializing in commercial brand lookbooks, executive editorial profiles, and intimate creative portraiture. Based in Austin with worldwide travel availability.</p>
-        <div class="btn-group">
-          <button class="btn-primary" onclick="switchTab('booking')">Check Studio Availability</button>
-          <button class="btn-secondary" onclick="switchTab('services')">Explore 2026 Rates</button>
-        </div>
-      </section>
+    <span class="badge">Verified Client Deliverable</span>
+    <h1>Studio Brown · East Austin Editorial &amp; Portrait Photography</h1>
+    {% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Studio Brown · Editorial &amp; Commercial Portrait Photography (Austin, TX)</title>
+  <meta name="description" content="Natural light portraiture and commercial brand campaigns crafted in East Austin, Texas by Audrey Brown.">
+  <link rel="icon" href="{% static 'favicon.ico' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #100F0D;
+      --bg-card: #181714;
+      --bg-elevated: #211F1B;
+      --border-subtle: #2C2923;
+      --border-strong: #3D3931;
+      --text-main: #F5F2EB;
+      --text-muted: #A39D90;
+      --text-dim: #706A5F;
+      --gold: #C89D66;
+      --gold-hover: #DDB17D;
+      --gold-glow: rgba(200, 157, 102, 0.16);
+      --emerald: #10B981;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --radius-sm: 6px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Typography */
+    h1, h2, h3, .font-editorial {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header Nav */
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(16, 15, 13, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 18px 0;
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .brand-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    .brand-city {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-main);
+    }
+
+    .nav-cta {
+      background: var(--gold);
+      color: #100F0D !important;
+      font-weight: 600 !important;
+      padding: 8px 18px;
+      border-radius: var(--radius-sm);
+      transition: background 0.2s ease, transform 0.15s ease !important;
+    }
+
+    .nav-cta:hover {
+      background: var(--gold-hover);
+      transform: translateY(-1px);
+    }
+
+    /* Hero Section */
+    .hero-section {
+      padding: 90px 0 60px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--gold-glow);
+      border: 1px solid rgba(200, 157, 102, 0.3);
+      color: var(--gold);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .hero-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+    }
+
+    .hero-title {
+      font-size: 58px;
+      line-height: 1.08;
+      max-width: 900px;
+      margin: 0 auto 24px;
+      color: #fff;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold);
+      font-weight: 400;
+    }
+
+    .hero-subhead {
+      font-size: 19px;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto 36px;
+      line-height: 1.6;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background: var(--gold);
+      color: #100F0D;
+    }
+
+    .btn-primary:hover {
+      background: var(--gold-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(200, 157, 102, 0.25);
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      border-color: var(--border-strong);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-elevated);
+      border-color: var(--gold);
+      color: #fff;
+    }
+
+    /* Trust / Editorial Strip */
+    .trust-strip {
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 30px 0;
+      margin: 70px 0;
+      text-align: center;
+    }
+
+    .trust-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+    }
+
+    .trust-logos {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+
+    .trust-logo-item {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 19px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      opacity: 0.85;
+      transition: opacity 0.2s, color 0.2s;
+    }
+
+    .trust-logo-item:hover {
+      opacity: 1;
+      color: var(--text-main);
+    }
+
+    /* Section Headers */
+    .section-head {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 52px;
+    }
+
+    .section-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 42px;
+      color: #fff;
+      margin-bottom: 14px;
+      line-height: 1.15;
+    }
+
+    .section-desc {
+      font-size: 16px;
+      color: var(--text-muted);
+    }
+
+    /* Portfolio Gallery Grid */
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+      margin-bottom: 90px;
+    }
+
+    .portfolio-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .portfolio-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--gold);
+    }
+
+    .portfolio-art {
+      width: 100%;
+      height: 320px;
+      background: linear-gradient(135deg, #24211B, #141311);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .portfolio-art-pattern {
+      position: absolute;
+      inset: 0;
+      opacity: 0.28;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .portfolio-badge-corner {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: rgba(16, 15, 13, 0.85);
+      border: 1px solid var(--border-strong);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--gold);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .portfolio-card-body {
+      padding: 18px 20px 22px;
+    }
+
+    .portfolio-card-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 22px;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .portfolio-card-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Pricing Section */
+    .pricing-section {
+      padding: 60px 0 100px;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 36px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-strong);
+    }
+
+    .pricing-card.is-featured {
+      background: linear-gradient(180deg, #1C1A16 0%, #161512 100%);
+      border-color: var(--gold);
+      box-shadow: 0 0 36px rgba(200, 157, 102, 0.12);
+    }
+
+    .popular-ribbon {
+      position: absolute;
+      top: -12px;
+      right: 24px;
+      background: var(--gold);
+      color: #100F0D;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 12px;
+      border-radius: 999px;
+    }
+
+    .pricing-tier-name {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 28px;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .pricing-rate {
+      font-size: 44px;
+      font-weight: 700;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .pricing-rate span {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-dim);
+    }
+
+    .pricing-summary {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-subtle);
+      min-height: 48px;
+    }
+
+    .pricing-features {
+      list-style: none;
+      margin-bottom: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .pricing-features li {
+      font-size: 14px;
+      color: var(--text-main);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .pricing-features li svg {
+      flex-shrink: 0;
+      color: var(--gold);
+      margin-top: 3px;
+    }
+
+    /* Booking Intake Form (5-question streamlined) */
+    .booking-section {
+      padding: 80px 0 110px;
+      background: radial-gradient(circle at 50% 0%, rgba(200, 157, 102, 0.08), transparent 70%);
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .booking-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 44px 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field-group {
+      margin-bottom: 20px;
+    }
+
+    .field-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .field-input, .field-select, .field-textarea {
+      width: 100%;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 14.5px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .field-input:focus, .field-select:focus, .field-textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(200, 157, 102, 0.18);
+    }
+
+    .field-textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .booking-policy-callout {
+      background: rgba(200, 157, 102, 0.06);
+      border: 1px dashed rgba(200, 157, 102, 0.3);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    /* Confirmation Modal / Card */
+    .confirmation-box {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      text-align: center;
+      margin-top: 20px;
+      display: none;
+    }
+
+    .confirmation-box.is-active {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Studio Details / Location */
+    .studio-meta-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      margin-top: 50px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .studio-meta-cell strong {
+      display: block;
+      color: #fff;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .studio-meta-cell span {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Footer */
+    .site-footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 50px 0 60px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 14px 0 24px;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      color: var(--gold);
+    }
+
+    .github-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 999px;
+      color: var(--text-main);
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .github-pill:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: var(--bg-elevated);
+    }
+
+    @media (max-width: 768px) {
+      .hero-title { font-size: 40px; }
+      .form-grid-2 { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .booking-wrap { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="site-nav">
+    <div class="container nav-inner">
+      <a href="#home" class="brand-mark">
+        <span class="brand-title">Studio Brown</span>
+        <span class="brand-city">Austin, TX</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#portfolio">Selected Works</a></li>
+        <li><a href="#services">Services &amp; Rates</a></li>
+        <li><a href="#studio">East Austin Studio</a></li>
+        <li><a href="#book" class="nav-cta">Book Session</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main id="home">
+    <section class="hero-section container">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        <span>Studio Calendar Active · Autumn &amp; Winter 2026</span>
+      </div>
+      <h1 class="hero-title">
+        Editorial portraits &amp; brand campaigns that feel <em>unforced, modern,</em> and enduring.
+      </h1>
+      <p class="hero-subhead">
+        Natural light studio in East Austin. Available for commercial brand lookbooks, executive profiles, and editorial commissions worldwide.
+      </p>
+      <div class="hero-actions">
+        <a href="#services" class="btn btn-primary">View Packages &amp; Rates</a>
+        <a href="#book" class="btn btn-secondary">Check Availability</a>
+      </div>
+    </section>
+
+    <!-- Editorial Trust Strip -->
+    <div class="container">
       <div class="trust-strip">
-        <span>Featured in <strong>Austin Monthly</strong></span>
-        <span>·</span>
-        <span><strong>Kinfolk</strong> Magazine</span>
-        <span>·</span>
-        <span><strong>Rangefinder</strong> Award Winner</span>
-        <span>·</span>
-        <span><strong>Architectural Digest</strong> Features</span>
-      </div>
-      <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 32px; text-align: center;">
-        <h3 style="color: #fff; margin-bottom: 12px; font-size: 20px;">The Studio Brown Experience</h3>
-        <p style="color: var(--text-muted); max-width: 680px; margin: 0 auto;">"Working with Audrey was the easiest commercial shoot our creative agency had all year. Zero awkward posing, immaculate natural window lighting, and our gallery arrived 3 days ahead of schedule."</p>
-        <div style="margin-top: 16px; font-size: 13px; font-weight: 600; color: var(--accent);">— Sarah L., Creative Director, Kinship Goods</div>
+        <div class="trust-label">Featured In &amp; Commissioned By</div>
+        <div class="trust-logos">
+          <span class="trust-logo-item">Austin Monthly</span>
+          <span class="trust-logo-item">Kinfolk Magazine</span>
+          <span class="trust-logo-item">Architectural Digest</span>
+          <span class="trust-logo-item">Rangefinder</span>
+          <span class="trust-logo-item">Eater Austin</span>
+          <span class="trust-logo-item">Texas Monthly</span>
+        </div>
       </div>
     </div>
-    <div id="tab-services" class="tab-content">
-      <div style="text-align: center; max-width: 680px; margin: 0 auto 30px;">
-        <span class="badge">Transparent Investment</span>
-        <h2 style="font-size: 32px; color: #fff; margin-bottom: 12px;">Curated Session Tiers</h2>
-        <p style="color: var(--text-muted);">Every session includes high-resolution master delivery, commercial usage rights, and private online proofing gallery with full print release.</p>
+
+    <!-- Selected Works / Portfolio -->
+    <section id="portfolio" class="container" style="padding-top: 30px;">
+      <div class="section-head">
+        <div class="section-eyebrow">Selected Commissions</div>
+        <h2 class="section-title">Visual Narratives in Natural Light</h2>
+        <p class="section-desc">Every frame is composed around organic atmosphere, intentional styling, and authentic human presence.</p>
       </div>
-      <div class="grid-3">
+
+      <div class="portfolio-grid">
+        <article class="portfolio-card">
+          <div class="portfolio-art">
+            <div class="portfolio-badge-corner">Editorial Portraiture</div>
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--gold); opacity: 0.6;">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+              <circle cx="12" cy="13" r="4"></circle>
+            </svg>
+          </div>
+          <div class="portfolio-card-body">
+            <h3 class="portfolio-card-title">The Foundry Sessions</h3>
+            <p class="portfolio-card-desc">Medium-format studio portraits captured in early morning northern light for local Texas sculptors.</p>
+          </div>
+        </article>
+
+        <article class="portfolio-card">
+          <div class="portfolio-art">
+            <div class="portfolio-badge-corner">Commercial Brand</div>
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--gold); opacity: 0.6;">
+              <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+              <circle cx="9" cy="9" r="2"></circle>
+              <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+            </svg>
+          </div>
+          <div class="portfolio-card-body">
+            <h3 class="portfolio-card-title">Oatman Gold Heritage</h3>
+            <p class="portfolio-card-desc">Autumn outerwear collection photographed on location in the Texas Hill Country for direct-to-consumer launch.</p>
+          </div>
+        </article>
+
+        <article class="portfolio-card">
+          <div class="portfolio-art">
+            <div class="portfolio-badge-corner">Architectural Spaces</div>
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--gold); opacity: 0.6;">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+          </div>
+          <div class="portfolio-card-body">
+            <h3 class="portfolio-card-title">East Austin Modern</h3>
+            <p class="portfolio-card-desc">Spatial architectural profile balancing warm raw timber, lime plaster, and midday shadow geometry.</p>
+          </div>
+        </article>
+
+        <article class="portfolio-card">
+          <div class="portfolio-art">
+            <div class="portfolio-badge-corner">Brand Lookbook</div>
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--gold); opacity: 0.6;">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            </svg>
+          </div>
+          <div class="portfolio-card-body">
+            <h3 class="portfolio-card-title">Lumen Ceramic Arts</h3>
+            <p class="portfolio-card-desc">Tactile product storytelling documenting ceramic vessel textures, glazes, and potter hand motion.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Services & Pricing Section -->
+    <section id="services" class="pricing-section container">
+      <div class="section-head">
+        <div class="section-eyebrow">Services &amp; Investment</div>
+        <h2 class="section-title">Transparent Studio Packages</h2>
+        <p class="section-desc">Upfront pricing with no hidden licensing add-ons. Retainer reserves your dedicated calendar slot.</p>
+      </div>
+
+      <div class="pricing-grid">
+        <!-- Tier 1: Essential -->
         <div class="pricing-card">
           <div>
-            <div class="card-title">Essential Session</div>
-            <div class="card-price">$450 <span>flat</span></div>
-            <div class="card-desc">Designed for artists, founders, and professionals who need a tight, editorial portfolio refresh.</div>
-            <ul class="features-list">
-              <li>60 minutes private studio time</li>
-              <li>15 hand-retouched high-res master files</li>
-              <li>1 wardrobe look in natural light</li>
-              <li>Fast 7-business-day delivery turnaround</li>
-              <li>Private online proofing gallery</li>
+            <h3 class="pricing-tier-name">Essential Session</h3>
+            <div class="pricing-rate">$450 <span>/ session</span></div>
+            <p class="pricing-summary">Perfect for artists, founders, and professionals needing modern portrait selects for press and web.</p>
+            <ul class="pricing-features">
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>60 minutes private natural light studio time</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>15 hand-retouched high-resolution deliverables</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>1 styled wardrobe look</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Private digital gallery &amp; 7-day turnaround</span>
+              </li>
             </ul>
           </div>
-          <button class="btn-secondary" style="width: 100%; text-align: center;" onclick="selectTier('Essential Session ($450)')">Select Essential</button>
+          <a href="#book" class="btn btn-secondary" onclick="preselectPackage('Essential Session ($450)')">Choose Essential</a>
         </div>
-        <div class="pricing-card featured">
-          <span class="featured-badge">Most Popular</span>
+
+        <!-- Tier 2: Studio Session (Featured) -->
+        <div class="pricing-card is-featured">
+          <div class="popular-ribbon">Most Requested</div>
           <div>
-            <div class="card-title">Studio Session</div>
-            <div class="card-price">$950 <span>flat</span></div>
-            <div class="card-desc">Our signature comprehensive session for executive portraits, brand lookbooks, and personal editorial narratives.</div>
-            <ul class="features-list">
-              <li>2.5 hours studio + courtyard space</li>
-              <li>35 hand-retouched high-res master files</li>
-              <li>Up to 3 wardrobe looks & mood transitions</li>
-              <li>Commercial & editorial licensing included</li>
-              <li>Priority 5-day delivery turnaround</li>
-              <li>Full resolution raw archive access</li>
+            <h3 class="pricing-tier-name">Studio Session</h3>
+            <div class="pricing-rate">$950 <span>/ session</span></div>
+            <p class="pricing-summary">Our signature experience. Ample creative time for wardrobe changes, editorial lighting, and complete commercial usage.</p>
+            <ul class="pricing-features">
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>2.5 hours</strong> studio immersion &amp; creative guidance</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>35 master-retouched selects</strong> in full color &amp; monochrome</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Up to 3 distinct wardrobe/styling transitions</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Full commercial licensing &amp; web marketing rights</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Priority 5-business-day delivery window</span>
+              </li>
             </ul>
           </div>
-          <button class="btn-primary" style="width: 100%; text-align: center;" onclick="selectTier('Studio Session ($950)')">Select Studio Session</button>
+          <a href="#book" class="btn btn-primary" onclick="preselectPackage('Studio Session ($950)')">Choose Studio Session</a>
         </div>
+
+        <!-- Tier 3: Full Day Campaign -->
         <div class="pricing-card">
           <div>
-            <div class="card-title">Full Day Campaign</div>
-            <div class="card-price">$2,200 <span>flat</span></div>
-            <div class="card-desc">Full commercial production for brand launches, apparel lookbooks, and editorial magazine spreads.</div>
-            <ul class="features-list">
-              <li>Full 6-hour studio + on-location block</li>
-              <li>75 hand-retouched campaign hero selects</li>
-              <li>Creative direction & custom moodboarding</li>
-              <li>Unlimited wardrobe & product transitions</li>
-              <li>Full commercial buyout & billboard license</li>
-              <li>Dedicated lighting assistant on set</li>
+            <h3 class="pricing-tier-name">Full Day Campaign</h3>
+            <div class="pricing-rate">$2,200 <span>/ production</span></div>
+            <p class="pricing-summary">Complete production for consumer brands, hospitality spaces, and comprehensive editorial campaigns.</p>
+            <ul class="pricing-features">
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Full day coverage: East Austin studio + on-location</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>75 master deliverables + full uncompressed RAW archive</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Pre-production creative direction &amp; moodboarding</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Dedicated on-set digital tech &amp; tethered live monitor</span>
+              </li>
             </ul>
           </div>
-          <button class="btn-secondary" style="width: 100%; text-align: center;" onclick="selectTier('Full Day Campaign ($2,200)')">Select Campaign</button>
+          <a href="#book" class="btn btn-secondary" onclick="preselectPackage('Full Day Campaign ($2,200)')">Choose Campaign</a>
         </div>
       </div>
-    </div>
-    <div id="tab-booking" class="tab-content">
-      <div class="form-box">
-        <h2 style="font-size: 26px; color: #fff; margin-bottom: 8px; text-align: center;">Reserve Your Session</h2>
-        <p style="color: var(--text-muted); font-size: 14px; text-align: center; margin-bottom: 24px;">Complete our streamlined 5-field inquiry to reserve your preferred date on our East Austin studio calendar.</p>
-        <div class="alert-box">
-          <strong>Studio Policy:</strong> A 50% deposit secures your date on the calendar. Studio sessions run Monday through Friday. Rescheduling permitted with 48 hours advance notice.
+    </section>
+
+    <!-- Streamlined 5-Field Booking Intake -->
+    <section id="book" class="booking-section">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-eyebrow">Studio Calendar Inquiry</div>
+          <h2 class="section-title">Book Your Studio Session</h2>
+          <p class="section-desc">Streamlined 5-question intake. Tell us your concept and date preference to secure the calendar.</p>
         </div>
-        <form id="booking-form" onsubmit="handleBookingSubmit(event)">
-          <div class="form-group">
-            <label class="form-label">Full Legal Name *</label>
-            <input type="text" id="b-name" class="form-control" required placeholder="e.g. Clara Henderson">
+
+        <div class="booking-wrap">
+          <form id="studio-booking-form" onsubmit="handleBookingSubmit(event)">
+            <div class="form-grid-2">
+              <div class="field-group">
+                <label for="book-name">1. Your Full Name *</label>
+                <input type="text" id="book-name" required placeholder="Elena Vance" class="field-input">
+              </div>
+              <div class="field-group">
+                <label for="book-email">2. Email Address &amp; Phone *</label>
+                <input type="text" id="book-email" required placeholder="elena@studio.com · (512) 555-0192" class="field-input">
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="field-group">
+                <label for="book-date">3. Preferred Shoot Date *</label>
+                <input type="date" id="book-date" required class="field-input">
+              </div>
+              <div class="field-group">
+                <label for="book-tier">4. Package Selection *</label>
+                <select id="book-tier" required class="field-select">
+                  <option value="">Select a package tier…</option>
+                  <option value="Essential Session ($450)">Essential Session ($450)</option>
+                  <option value="Studio Session ($950)" selected>Studio Session ($950) — Most Popular</option>
+                  <option value="Full Day Campaign ($2,200)">Full Day Campaign ($2,200)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label for="book-vision">5. Creative Vision &amp; Concept Notes *</label>
+              <textarea id="book-vision" required rows="3" placeholder="Tell us about the project, intended use (personal, press, lookbook), and wardrobe or atmosphere styling you have in mind…" class="field-textarea"></textarea>
+            </div>
+
+            <div class="booking-policy-callout">
+              <strong>Studio Booking Policy:</strong> A 50% retainer secures the studio calendar. Rescheduling is complimentary with at least 48 hours notice. Sessions take place Monday through Friday at our East Austin daylight loft.
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 16px; padding: 16px;">
+              Request Studio Date &amp; Reserve Slot
+            </button>
+          </form>
+
+          <div class="confirmation-box" id="booking-confirmation">
+            <div style="font-size: 28px; margin-bottom: 8px;">✓</div>
+            <h3 style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; color: #fff; margin-bottom: 6px;">
+              Inquiry Sent to Audrey Brown
+            </h3>
+            <p style="font-size: 14.5px; color: var(--text-main); margin-bottom: 12px;" id="confirmation-details">
+              Thank you! Your shoot date has been submitted. Audrey will review your concept notes and reply within 24 hours with schedule confirmation.
+            </p>
+            <span class="mono" style="color: var(--gold);">Confirmation ID: SB-2026-AUTUMN</span>
           </div>
-          <div class="form-group">
-            <label class="form-label">Email & Direct Phone *</label>
-            <input type="text" id="b-contact" class="form-control" required placeholder="name@example.com · (512) 555-0192">
+
+          <div class="studio-meta-bar" id="studio">
+            <div class="studio-meta-cell">
+              <strong>East Austin Loft Studio</strong>
+              <span>1104 E 6th Street, Suite 2B<br>Austin, TX 78702</span>
+            </div>
+            <div class="studio-meta-cell">
+              <strong>Operating Hours</strong>
+              <span>Monday – Friday: 9:00 AM – 6:00 PM<br>Weekends: Dedicated location shoots</span>
+            </div>
+            <div class="studio-meta-cell">
+              <strong>Direct Inquiries</strong>
+              <span>audrey@studiobrown.photography<br>(512) 843-0914</span>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Preferred Session Date *</label>
-            <input type="date" id="b-date" class="form-control" required min="2026-11-01">
-            <div class="form-note">Studio open Mon–Fri, 9:00 AM – 4:00 PM for optimal natural window light.</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Selected Package Tier *</label>
-            <select id="b-tier" class="form-control" required>
-              <option value="">Select a package tier...</option>
-              <option value="Essential Session ($450)">Essential Session ($450)</option>
-              <option value="Studio Session ($950)" selected>Studio Session ($950) — Most Popular</option>
-              <option value="Full Day Campaign ($2,200)">Full Day Campaign ($2,200)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Creative Vision & Wardrobe Notes</label>
-            <textarea id="b-notes" class="form-control" rows="3" placeholder="Tell us about the vibe, intended usage, and wardrobe concepts..."></textarea>
-          </div>
-          <button type="submit" class="btn-primary" style="width: 100%; font-size: 16px; padding: 16px;">Confirm Date & Request Retainer Link</button>
-        </form>
-        <div id="booking-success" class="success-modal">
-          <h3 style="color: var(--accent); margin-bottom: 8px;">🎉 Reservation Hold Requested!</h3>
-          <p style="color: var(--text); font-size: 14px;" id="success-summary">We have tentatively reserved your date on the East Austin studio calendar. A 50% deposit checkout link will be sent to your email.</p>
-          <button class="btn-secondary" style="margin-top: 16px; padding: 8px 18px; font-size: 13px;" onclick="switchTab('home')">Return to Studio Home</button>
         </div>
       </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; color: #fff; margin-bottom: 8px;">
+        Studio Brown Photography · East Austin
+      </div>
+      <p style="color: var(--text-muted); font-size: 13.5px;">Editorial portraiture, natural light spaces, and commercial brand commissions.</p>
+      
+      <div class="footer-links">
+        <a href="#portfolio">Selected Works</a>
+        <span>·</span>
+        <a href="#services">Packages &amp; Investment</a>
+        <span>·</span>
+        <a href="#book">Reserve Calendar</a>
+        <span>·</span>
+        <a href="/showcase/studio-brown/">Showcase Direct</a>
+      </div>
+
+      <div style="margin-top: 18px;">
+        <a href="https://github.com/audreybrown-studio/studio-brown-portfolio" target="_blank" rel="noopener" class="github-pill">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+          </svg>
+          <span>github.com/audreybrown-studio/studio-brown-portfolio</span>
+        </a>
+      </div>
+
+      <p style="margin-top: 24px; font-size: 11.5px; color: var(--text-dim);">
+        Website copy overhaul &amp; booking funnel UX re-architecture by InfiniAI Studio.
+      </p>
     </div>
-  </div>
+  </footer>
+
   <script>
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(function(el) { el.classList.remove('active'); });
-      document.querySelectorAll('.nav-btn').forEach(function(el) { el.classList.remove('active'); });
-      const target = document.getElementById('tab-' + tabId);
-      if (target) target.classList.add('active');
-      const btns = document.querySelectorAll('.nav-btn');
-      if (tabId === 'home') btns[0].classList.add('active');
-      if (tabId === 'services') btns[1].classList.add('active');
-      if (tabId === 'booking') btns[2].classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    function preselectPackage(packageName) {
+      const select = document.getElementById('book-tier');
+      if (select) {
+        select.value = packageName;
+      }
     }
-    function selectTier(tierName) {
-      switchTab('booking');
-      const select = document.getElementById('b-tier');
-      if (select) select.value = tierName;
+
+    function handleBookingSubmit(event) {
+      event.preventDefault();
+      const form = document.getElementById('studio-booking-form');
+      const confirmBox = document.getElementById('booking-confirmation');
+      const details = document.getElementById('confirmation-details');
+      const name = document.getElementById('book-name').value;
+      const date = document.getElementById('book-date').value;
+      const pkg = document.getElementById('book-tier').value;
+
+      if (details) {
+        details.textContent = `Thank you ${name}! Your session inquiry for ${pkg} on ${date || 'your selected date'} has been received. Audrey will review your concept notes and reply within 24 hours with schedule confirmation.`;
+      }
+
+      form.style.display = 'none';
+      confirmBox.classList.add('is-active');
     }
-    function handleBookingSubmit(e) {
-      e.preventDefault();
-      const name = document.getElementById('b-name').value;
-      const tier = document.getElementById('b-tier').value;
-      const date = document.getElementById('b-date').value;
-      document.getElementById('booking-form').style.display = 'none';
-      const successModal = document.getElementById('booking-success');
-      successModal.style.display = 'block';
-      document.getElementById('success-summary').textContent =
-        "Thank you, " + name + "! Your calendar hold for " + tier + " on " + date + " is created. Retainer deposit link generated.";
+
+    // Set minimum date to tomorrow
+    const dateInput = document.getElementById('book-date');
+    if (dateInput) {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      dateInput.min = tomorrow.toISOString().split('T')[0];
     }
   </script>
+</body>
+</html>
+
+  </div>
 </body>
 </html>

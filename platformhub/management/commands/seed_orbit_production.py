@@ -42,6 +42,13 @@ def dt_utc(year, month, day, hour, minute, second=0):
     return datetime(year, month, day, hour, minute, second, tzinfo=dt_timezone.utc)
 
 
+def load_showcase_template(template_name: str) -> str:
+    p = Path(settings.BASE_DIR) / "platformhub" / "templates" / "platformhub" / template_name
+    if p.exists():
+        return p.read_text(encoding="utf-8")
+    return ""
+
+
 def build_seed_attachments() -> dict[str, dict]:
     files = {}
 
@@ -308,238 +315,11 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="deliverable",
     )
+    audrey_html = load_showcase_template("showcase_studio_brown.html")
     files["audrey_studio_brown_website_prototype.html"] = write_html_file(
         "audrey_studio_brown_website_prototype.html",
         "Studio Brown · East Austin Editorial & Portrait Photography",
-        """<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Studio Brown · Editorial & Portrait Photography (Austin, TX)</title>
-  <style>
-    :root {
-      --bg: #11100e;
-      --card-bg: #1c1a16;
-      --border: #33302a;
-      --accent: #d4a373;
-      --accent-hover: #e3b88c;
-      --text: #f7f4ec;
-      --text-muted: #a6a092;
-      --coral: #cc4b2c;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; }
-    header { border-bottom: 1px solid var(--border); padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; background: rgba(17, 16, 14, 0.95); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
-    .brand { font-size: 20px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text); }
-    .brand span { color: var(--accent); }
-    nav { display: flex; gap: 8px; }
-    .nav-btn { background: transparent; border: 1px solid transparent; color: var(--text-muted); padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
-    .nav-btn:hover { color: var(--text); background: var(--card-bg); }
-    .nav-btn.active { color: #fff; background: var(--card-bg); border-color: var(--accent); }
-    .container { max-width: 1080px; margin: 0 auto; padding: 50px 24px; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-    .hero { text-align: center; padding: 60px 0 40px; max-width: 780px; margin: 0 auto; }
-    .badge { display: inline-block; background: rgba(212, 163, 115, 0.15); color: var(--accent); border: 1px solid rgba(212, 163, 115, 0.3); padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
-    .hero h1 { font-size: 42px; line-height: 1.2; font-weight: 700; margin-bottom: 20px; color: #fff; }
-    .hero p { font-size: 18px; color: var(--text-muted); margin-bottom: 32px; }
-    .btn-group { display: flex; gap: 16px; justify-content: center; }
-    .btn-primary { background: var(--accent); color: #11100e; font-weight: 600; padding: 14px 28px; border-radius: 6px; border: none; cursor: pointer; text-decoration: none; font-size: 15px; transition: background 0.2s; }
-    .btn-primary:hover { background: var(--accent-hover); }
-    .btn-secondary { background: transparent; color: var(--text); border: 1px solid var(--border); font-weight: 600; padding: 14px 28px; border-radius: 6px; cursor: pointer; text-decoration: none; font-size: 15px; }
-    .btn-secondary:hover { background: var(--card-bg); border-color: var(--accent); }
-    .trust-strip { display: flex; justify-content: center; gap: 40px; padding: 30px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin: 50px 0; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); flex-wrap: wrap; }
-    .trust-strip strong { color: var(--text); }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 30px; }
-    .pricing-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 32px; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
-    .pricing-card.featured { border-color: var(--accent); box-shadow: 0 0 30px rgba(212, 163, 115, 0.12); }
-    .featured-badge { position: absolute; top: -12px; right: 24px; background: var(--accent); color: #11100e; font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 3px 10px; border-radius: 12px; letter-spacing: 1px; }
-    .card-title { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 8px; }
-    .card-price { font-size: 36px; font-weight: 800; color: var(--accent); margin-bottom: 16px; }
-    .card-price span { font-size: 14px; font-weight: 400; color: var(--text-muted); }
-    .card-desc { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; min-height: 42px; }
-    .features-list { list-style: none; margin-bottom: 30px; }
-    .features-list li { font-size: 14px; color: var(--text); padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 10px; }
-    .features-list li::before { content: "✓"; color: var(--accent); font-weight: bold; }
-    .form-box { max-width: 640px; margin: 0 auto; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 40px; }
-    .form-group { margin-bottom: 20px; }
-    .form-label { display: block; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; color: var(--text); }
-    .form-control { width: 100%; background: #11100e; border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; color: #fff; font-size: 15px; }
-    .form-control:focus { outline: none; border-color: var(--accent); }
-    .form-note { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
-    .alert-box { background: rgba(204, 75, 44, 0.12); border: 1px solid var(--coral); border-radius: 6px; padding: 16px; margin-bottom: 24px; font-size: 13px; color: #f4c2b7; }
-    .success-modal { display: none; background: rgba(212, 163, 115, 0.15); border: 1px solid var(--accent); border-radius: 8px; padding: 24px; text-align: center; margin-top: 24px; }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="brand">Studio <span>Brown</span></div>
-    <nav>
-      <button class="nav-btn active" onclick="switchTab('home')">Home</button>
-      <button class="nav-btn" onclick="switchTab('services')">Services & Packages</button>
-      <button class="nav-btn" onclick="switchTab('booking')">Booking & Availability</button>
-    </nav>
-  </header>
-  <div class="container">
-    <div id="tab-home" class="tab-content active">
-      <section class="hero">
-        <span class="badge">East Austin · Natural Light Studio</span>
-        <h1>Editorial portraits & brand campaigns that feel authentic, modern, and enduring.</h1>
-        <p>Specializing in commercial brand lookbooks, executive editorial profiles, and intimate creative portraiture. Based in Austin with worldwide travel availability.</p>
-        <div class="btn-group">
-          <button class="btn-primary" onclick="switchTab('booking')">Check Studio Availability</button>
-          <button class="btn-secondary" onclick="switchTab('services')">Explore 2026 Rates</button>
-        </div>
-      </section>
-      <div class="trust-strip">
-        <span>Featured in <strong>Austin Monthly</strong></span>
-        <span>·</span>
-        <span><strong>Kinfolk</strong> Magazine</span>
-        <span>·</span>
-        <span><strong>Rangefinder</strong> Award Winner</span>
-        <span>·</span>
-        <span><strong>Architectural Digest</strong> Features</span>
-      </div>
-      <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 32px; text-align: center;">
-        <h3 style="color: #fff; margin-bottom: 12px; font-size: 20px;">The Studio Brown Experience</h3>
-        <p style="color: var(--text-muted); max-width: 680px; margin: 0 auto;">"Working with Audrey was the easiest commercial shoot our creative agency had all year. Zero awkward posing, immaculate natural window lighting, and our gallery arrived 3 days ahead of schedule."</p>
-        <div style="margin-top: 16px; font-size: 13px; font-weight: 600; color: var(--accent);">— Sarah L., Creative Director, Kinship Goods</div>
-      </div>
-    </div>
-    <div id="tab-services" class="tab-content">
-      <div style="text-align: center; max-width: 680px; margin: 0 auto 30px;">
-        <span class="badge">Transparent Investment</span>
-        <h2 style="font-size: 32px; color: #fff; margin-bottom: 12px;">Curated Session Tiers</h2>
-        <p style="color: var(--text-muted);">Every session includes high-resolution master delivery, commercial usage rights, and private online proofing gallery with full print release.</p>
-      </div>
-      <div class="grid-3">
-        <div class="pricing-card">
-          <div>
-            <div class="card-title">Essential Session</div>
-            <div class="card-price">$450 <span>flat</span></div>
-            <div class="card-desc">Designed for artists, founders, and professionals who need a tight, editorial portfolio refresh.</div>
-            <ul class="features-list">
-              <li>60 minutes private studio time</li>
-              <li>15 hand-retouched high-res master files</li>
-              <li>1 wardrobe look in natural light</li>
-              <li>Fast 7-business-day delivery turnaround</li>
-              <li>Private online proofing gallery</li>
-            </ul>
-          </div>
-          <button class="btn-secondary" style="width: 100%; text-align: center;" onclick="selectTier('Essential Session ($450)')">Select Essential</button>
-        </div>
-        <div class="pricing-card featured">
-          <span class="featured-badge">Most Popular</span>
-          <div>
-            <div class="card-title">Studio Session</div>
-            <div class="card-price">$950 <span>flat</span></div>
-            <div class="card-desc">Our signature comprehensive session for executive portraits, brand lookbooks, and personal editorial narratives.</div>
-            <ul class="features-list">
-              <li>2.5 hours studio + courtyard space</li>
-              <li>35 hand-retouched high-res master files</li>
-              <li>Up to 3 wardrobe looks & mood transitions</li>
-              <li>Commercial & editorial licensing included</li>
-              <li>Priority 5-day delivery turnaround</li>
-              <li>Full resolution raw archive access</li>
-            </ul>
-          </div>
-          <button class="btn-primary" style="width: 100%; text-align: center;" onclick="selectTier('Studio Session ($950)')">Select Studio Session</button>
-        </div>
-        <div class="pricing-card">
-          <div>
-            <div class="card-title">Full Day Campaign</div>
-            <div class="card-price">$2,200 <span>flat</span></div>
-            <div class="card-desc">Full commercial production for brand launches, apparel lookbooks, and editorial magazine spreads.</div>
-            <ul class="features-list">
-              <li>Full 6-hour studio + on-location block</li>
-              <li>75 hand-retouched campaign hero selects</li>
-              <li>Creative direction & custom moodboarding</li>
-              <li>Unlimited wardrobe & product transitions</li>
-              <li>Full commercial buyout & billboard license</li>
-              <li>Dedicated lighting assistant on set</li>
-            </ul>
-          </div>
-          <button class="btn-secondary" style="width: 100%; text-align: center;" onclick="selectTier('Full Day Campaign ($2,200)')">Select Campaign</button>
-        </div>
-      </div>
-    </div>
-    <div id="tab-booking" class="tab-content">
-      <div class="form-box">
-        <h2 style="font-size: 26px; color: #fff; margin-bottom: 8px; text-align: center;">Reserve Your Session</h2>
-        <p style="color: var(--text-muted); font-size: 14px; text-align: center; margin-bottom: 24px;">Complete our streamlined 5-field inquiry to reserve your preferred date on our East Austin studio calendar.</p>
-        <div class="alert-box">
-          <strong>Studio Policy:</strong> A 50% deposit secures your date on the calendar. Studio sessions run Monday through Friday. Rescheduling permitted with 48 hours advance notice.
-        </div>
-        <form id="booking-form" onsubmit="handleBookingSubmit(event)">
-          <div class="form-group">
-            <label class="form-label">Full Legal Name *</label>
-            <input type="text" id="b-name" class="form-control" required placeholder="e.g. Clara Henderson">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Email & Direct Phone *</label>
-            <input type="text" id="b-contact" class="form-control" required placeholder="name@example.com · (512) 555-0192">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Preferred Session Date *</label>
-            <input type="date" id="b-date" class="form-control" required min="2026-11-01">
-            <div class="form-note">Studio open Mon–Fri, 9:00 AM – 4:00 PM for optimal natural window light.</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Selected Package Tier *</label>
-            <select id="b-tier" class="form-control" required>
-              <option value="">Select a package tier...</option>
-              <option value="Essential Session ($450)">Essential Session ($450)</option>
-              <option value="Studio Session ($950)" selected>Studio Session ($950) — Most Popular</option>
-              <option value="Full Day Campaign ($2,200)">Full Day Campaign ($2,200)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Creative Vision & Wardrobe Notes</label>
-            <textarea id="b-notes" class="form-control" rows="3" placeholder="Tell us about the vibe, intended usage, and wardrobe concepts..."></textarea>
-          </div>
-          <button type="submit" class="btn-primary" style="width: 100%; font-size: 16px; padding: 16px;">Confirm Date & Request Retainer Link</button>
-        </form>
-        <div id="booking-success" class="success-modal">
-          <h3 style="color: var(--accent); margin-bottom: 8px;">🎉 Reservation Hold Requested!</h3>
-          <p style="color: var(--text); font-size: 14px;" id="success-summary">We have tentatively reserved your date on the East Austin studio calendar. A 50% deposit checkout link will be sent to your email.</p>
-          <button class="btn-secondary" style="margin-top: 16px; padding: 8px 18px; font-size: 13px;" onclick="switchTab('home')">Return to Studio Home</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <script>
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(function(el) { el.classList.remove('active'); });
-      document.querySelectorAll('.nav-btn').forEach(function(el) { el.classList.remove('active'); });
-      const target = document.getElementById('tab-' + tabId);
-      if (target) target.classList.add('active');
-      const btns = document.querySelectorAll('.nav-btn');
-      if (tabId === 'home') btns[0].classList.add('active');
-      if (tabId === 'services') btns[1].classList.add('active');
-      if (tabId === 'booking') btns[2].classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    function selectTier(tierName) {
-      switchTab('booking');
-      const select = document.getElementById('b-tier');
-      if (select) select.value = tierName;
-    }
-    function handleBookingSubmit(e) {
-      e.preventDefault();
-      const name = document.getElementById('b-name').value;
-      const tier = document.getElementById('b-tier').value;
-      const date = document.getElementById('b-date').value;
-      document.getElementById('booking-form').style.display = 'none';
-      const successModal = document.getElementById('booking-success');
-      successModal.style.display = 'block';
-      document.getElementById('success-summary').textContent =
-        "Thank you, " + name + "! Your calendar hold for " + tier + " on " + date + " is created. Retainer deposit link generated.";
-    }
-  </script>
-</body>
-</html>""",
+        audrey_html,
         role="deliverable",
     )
     files["audrey_booking_flow_wireframe_diagram.png"] = write_png_file(
@@ -1659,159 +1439,14 @@ def build_seed_attachments() -> dict[str, dict]:
         },
         role="deliverable",
     )
+    orozco_html = load_showcase_template("showcase_orozco.html")
     files["orozco_roofing_website_prototype.html"] = write_html_file(
         "orozco_roofing_website_prototype.html",
         "Orozco Commercial & Residential Roofing · South Texas",
-        """<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Orozco Roofing · Commercial Flat Roofs & Storm Restoration</title>
-  <style>
-    :root {
-      --bg: #0f172a;
-      --card-bg: #1e293b;
-      --border: #334155;
-      --accent: #f97316;
-      --accent-hover: #ea580c;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; }
-    header { background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid var(--border); padding: 18px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(8px); }
-    .brand { font-size: 22px; font-weight: 800; letter-spacing: 1px; color: #fff; }
-    .brand span { color: var(--accent); }
-    nav { display: flex; gap: 8px; }
-    .nav-btn { background: transparent; border: 1px solid transparent; color: var(--text-muted); padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-    .nav-btn:hover { color: #fff; background: var(--card-bg); }
-    .nav-btn.active { color: #fff; background: var(--card-bg); border-color: var(--accent); }
-    .container { max-width: 1080px; margin: 0 auto; padding: 40px 24px; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-    .emergency-bar { background: var(--accent); color: #fff; text-align: center; padding: 10px; font-weight: 700; font-size: 14px; letter-spacing: 0.5px; }
-    .hero { text-align: center; padding: 50px 0 30px; }
-    .badge { display: inline-block; background: rgba(249, 115, 22, 0.15); color: var(--accent); border: 1px solid rgba(249, 115, 22, 0.3); padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 16px; }
-    h1 { font-size: 40px; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 16px; }
-    .hero p { font-size: 18px; color: var(--text-muted); max-width: 750px; margin: 0 auto 30px; }
-    .btn-primary { background: var(--accent); color: #fff; font-weight: 700; padding: 14px 28px; border-radius: 6px; border: none; cursor: pointer; font-size: 15px; text-decoration: none; display: inline-block; }
-    .btn-primary:hover { background: var(--accent-hover); }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 30px; }
-    .feature-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 28px; }
-    .feature-card h3 { color: #fff; font-size: 20px; margin-bottom: 10px; }
-    .calc-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 36px; max-width: 680px; margin: 0 auto; }
-    .form-group { margin-bottom: 20px; }
-    .form-label { display: block; font-size: 13px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; color: var(--text); }
-    .form-control { width: 100%; background: #0f172a; border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; color: #fff; font-size: 15px; }
-    .calc-result { background: rgba(249, 115, 22, 0.1); border: 1px solid var(--accent); border-radius: 8px; padding: 24px; margin-top: 24px; text-align: center; }
-  </style>
-</head>
-<body>
-  <div class="emergency-bar">🚨 24/7 Commercial Emergency Roof Dispatch (McAllen & Brownsville): (956) 555-ROOF</div>
-  <header>
-    <div class="brand">OROZCO <span>ROOFING</span></div>
-    <nav>
-      <button class="nav-btn active" onclick="switchTab('commercial')">Commercial Systems</button>
-      <button class="nav-btn" onclick="switchTab('residential')">Residential</button>
-      <button class="nav-btn" onclick="switchTab('calculator')">Instant Bid Calculator</button>
-    </nav>
-  </header>
-  <div class="container">
-    <div id="tab-commercial" class="tab-content active">
-      <div class="hero">
-        <span class="badge">South Texas Certified Commercial Installer</span>
-        <h1>Engineered Flat Roof Systems & 20-Year NDL Manufacturer Warranties</h1>
-        <p>Specializing in single-ply TPO, EPDM, and architectural standing seam metal roofs for warehouses, distribution centers, and commercial retail plazas across the Rio Grande Valley.</p>
-        <button class="btn-primary" onclick="switchTab('calculator')">Calculate Project Estimate</button>
-      </div>
-      <div class="grid-3">
-        <div class="feature-card">
-          <h3>Single-Ply TPO Membranes</h3>
-          <p style="color: var(--text-muted); font-size: 14px;">60-mil and 80-mil heat-welded thermoplastic polyolefin. Reflects 87% of solar UV radiation, cutting warehouse HVAC cooling loads by up to 28% in South Texas heat.</p>
-        </div>
-        <div class="feature-card">
-          <h3>24-Gauge Standing Seam Metal</h3>
-          <p style="color: var(--text-muted); font-size: 14px;">Concealed-fastener architectural metal with Kynar 500 finish. Class 4 hail resistance and engineered to withstand 140+ mph coastal hurricane wind uplift.</p>
-        </div>
-        <div class="feature-card">
-          <h3>20-Year NDL Warranties</h3>
-          <p style="color: var(--text-muted); font-size: 14px;">Direct manufacturer backed No Dollar Limit warranties from Carlisle SynTec and Firestone Building Products covering 100% of material and labor.</p>
-        </div>
-      </div>
-    </div>
-    <div id="tab-residential" class="tab-content">
-      <div class="hero">
-        <span class="badge">Residential Storm Restoration</span>
-        <h1>South Texas Architectural Shingle & Metal Roof Replacements</h1>
-        <p>Comprehensive insurance claim assistance, rapid storm tarping, and complete architectural tear-offs completed in 24 to 48 hours.</p>
-      </div>
-      <div class="grid-3">
-        <div class="feature-card">
-          <h3>Wind & Hail Damage Assessments</h3>
-          <p style="color: var(--text-muted); font-size: 14px;">Drone aerial imaging and certified hail impact documentation accepted by all major Texas home insurance adjusters.</p>
-        </div>
-        <div class="feature-card">
-          <h3>Lifetime Architectural Shingles</h3>
-          <p style="color: var(--text-muted); font-size: 14px;">130 mph wind-rated architectural laminate shingles with Scotchgard algae protection and 50-year manufacturer warranty.</p>
-        </div>
-        <div class="feature-card">
-          <h3>Emergency 2-Hour Tarping</h3>
-          <p style="color: var(--text-muted); font-size: 14px;">Immediate weatherproofing response across Hidalgo and Cameron counties following severe Gulf storms.</p>
-        </div>
-      </div>
-    </div>
-    <div id="tab-calculator" class="tab-content">
-      <div class="calc-box">
-        <h2 style="color: #fff; margin-bottom: 8px; text-align: center;">Commercial Roof Estimate Calculator</h2>
-        <p style="color: var(--text-muted); font-size: 14px; text-align: center; margin-bottom: 24px;">Generate an instant commercial flat roof budgetary estimate based on your square footage and membrane specification.</p>
-        <div class="form-group">
-          <label class="form-label">Total Roof Footprint (Square Feet)</label>
-          <input type="number" id="sqft" class="form-control" value="18500" step="500" min="1000" oninput="runEstimate()">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Membrane & System Type</label>
-          <select id="sys-type" class="form-control" onchange="runEstimate()">
-            <option value="4.40">60-mil TPO Single-Ply Membrane ($4.40 / sq ft installed)</option>
-            <option value="6.55">24-Gauge Architectural Standing Seam ($6.55 / sq ft installed)</option>
-            <option value="3.65">EPDM Ballasted Rubber Membrane ($3.65 / sq ft installed)</option>
-            <option value="5.20">80-mil Heavy Duty TPO Membrane ($5.20 / sq ft installed)</option>
-          </select>
-        </div>
-        <div class="calc-result">
-          <div style="font-size: 13px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px;">Budgetary Project Range</div>
-          <div style="font-size: 38px; font-weight: 800; color: var(--accent); margin: 8px 0;" id="est-total">$81,400.00</div>
-          <p style="font-size: 13px; color: var(--text-muted);">Includes existing tear-off, 2" polyiso insulation board, membrane, perimeter flashings, and labor.</p>
-        </div>
-        <button class="btn-primary" style="width: 100%; margin-top: 20px;" onclick="alert('Inspection requested! Our commercial estimator will call within 60 minutes.')">Request Official On-Site Core Sampling & Bid</button>
-      </div>
-    </div>
-  </div>
-  <script>
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-      document.getElementById('tab-' + tabId).classList.add('active');
-      const btns = document.querySelectorAll('.nav-btn');
-      if (tabId === 'commercial') btns[0].classList.add('active');
-      if (tabId === 'residential') btns[1].classList.add('active');
-      if (tabId === 'calculator') btns[2].classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    function runEstimate() {
-      const sqft = parseFloat(document.getElementById('sqft').value) || 0;
-      const rate = parseFloat(document.getElementById('sys-type').value) || 4.40;
-      const total = sqft * rate;
-      document.getElementById('est-total').textContent = '$' + total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    }
-  </script>
-</body>
-</html>""",
+        orozco_html,
         role="deliverable",
     )
 
-    # =========================================================================
     # 13. Jack Johnson (jackjohnson0533@gmail.com)
     # =========================================================================
     # REALISTIC MULTI-ROW CSV: 65 rows of authentic HubSpot CRM data
@@ -1999,376 +1634,14 @@ def build_seed_attachments() -> dict[str, dict]:
         role="deliverable",
     )
     # DIVERSE DELIVERABLE: Standalone Interactive 5-Page B2B Web Prototype
+    johnson_html = load_showcase_template("showcase_dockstream.html")
     files["johnson_dockstream_b2b_website_prototype.html"] = write_html_file(
         "johnson_dockstream_b2b_website_prototype.html",
-        "DockStream · Intelligent Cross-Dock Logistics Automation",
-        """<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DockStream · Intelligent Cross-Dock Logistics & Yard Automation</title>
-  <style>
-    :root {
-      --bg: #090d16;
-      --surface: #111827;
-      --surface-2: #1e293b;
-      --border: #334155;
-      --primary: #0284c7;
-      --primary-light: #38bdf8;
-      --accent: #10b981;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; }
-    header { background: rgba(9, 13, 22, 0.95); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(8px); }
-    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; }
-    .logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: #fff; display: flex; align-items: center; gap: 8px; }
-    .logo span { color: var(--primary-light); }
-    .nav-tabs { display: flex; gap: 8px; }
-    .nav-btn { background: none; border: none; color: var(--text-muted); font-size: 14px; font-weight: 600; padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
-    .nav-btn:hover { color: #fff; background: var(--surface-2); }
-    .nav-btn.active { color: #fff; background: var(--primary); }
-    .container { max-width: 1120px; margin: 0 auto; padding: 48px 24px; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-    .hero { text-align: center; max-width: 840px; margin: 0 auto 60px auto; }
-    .badge { display: inline-block; background: rgba(2, 132, 199, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); color: var(--primary-light); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 4px 14px; border-radius: 20px; margin-bottom: 20px; }
-    h1 { font-size: 46px; line-height: 1.15; font-weight: 800; color: #fff; margin-bottom: 20px; }
-    .hero p { font-size: 19px; color: var(--text-muted); margin-bottom: 32px; }
-    .btn-primary { background: var(--primary); color: #fff; border: none; padding: 14px 28px; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; transition: background 0.2s; text-decoration: none; display: inline-block; }
-    .btn-primary:hover { background: #0369a1; }
-    .btn-secondary { background: var(--surface-2); color: #fff; border: 1px solid var(--border); padding: 14px 28px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-left: 12px; }
-    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin: 40px 0; }
-    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-align: center; }
-    .stat-val { font-size: 38px; font-weight: 800; color: var(--primary-light); margin-bottom: 6px; }
-    .stat-lbl { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-top: 32px; }
-    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 32px; }
-    .feature-icon { font-size: 32px; margin-bottom: 16px; }
-    .feature-card h3 { color: #fff; font-size: 20px; margin-bottom: 10px; }
-    .feature-card p { color: var(--text-muted); font-size: 14px; }
-    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; margin-top: 40px; }
-    .pricing-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 40px; position: relative; }
-    .pricing-card.popular { border-color: var(--primary-light); }
-    .popular-tag { position: absolute; top: -12px; right: 24px; background: var(--primary); color: #fff; font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 10px; text-transform: uppercase; }
-    .price-num { font-size: 44px; font-weight: 800; color: #fff; margin: 16px 0; }
-    .price-num span { font-size: 16px; color: var(--text-muted); font-weight: 400; }
-    .calc-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 36px; margin: 40px 0; }
-    .calc-slider { width: 100%; margin: 12px 0 24px 0; accent-color: var(--primary-light); }
-    .bays-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
-    .bay-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 18px; cursor: pointer; transition: transform 0.15s; }
-    .bay-card:hover { transform: translateY(-2px); }
-    .bay-tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; margin-bottom: 8px; }
-    .bay-tag.busy { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
-    .bay-tag.free { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-    .bay-tag.docking { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; }
-    .modal-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 36px; max-width: 500px; width: 90%; }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="nav-inner">
-      <div class="logo">⚡ DOCK<span>STREAM</span></div>
-      <div class="nav-tabs">
-        <button class="nav-btn active" onclick="switchTab('home')">Home</button>
-        <button class="nav-btn" onclick="switchTab('features')">Platform</button>
-        <button class="nav-btn" onclick="switchTab('integrations')">Integrations</button>
-        <button class="nav-btn" onclick="switchTab('pricing')">Pricing & ROI</button>
-        <button class="nav-btn" onclick="openDemo()">Schedule Demo</button>
-      </div>
-    </div>
-  </header>
-
-  <div class="container">
-    <!-- TAB 1: HOME -->
-    <div id="tab-home" class="tab-content active">
-      <div class="hero">
-        <span class="badge">Intelligent Cross-Dock Operations</span>
-        <h1>Eliminate Dock Dead-Time & Driver Detention Claims.</h1>
-        <p>Automate driver check-in via mobile geofence, dynamically assign loading bays, and sync electronic bills of lading in under 30 seconds.</p>
-        <div>
-          <button class="btn-primary" onclick="openDemo()">Request Terminal Scoping Call</button>
-          <button class="btn-secondary" onclick="switchTab('features')">Explore Features →</button>
-        </div>
-      </div>
-
-      <div class="stats-row">
-        <div class="stat-card">
-          <div class="stat-val">38%</div>
-          <div class="stat-lbl">Faster Trailer Turn Time</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-val">14 hrs</div>
-          <div class="stat-lbl">Saved Per Dispatcher / Wk</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-val">$14,800</div>
-          <div class="stat-lbl">Avg Monthly Detention Savings</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-val">14 Days</div>
-          <div class="stat-lbl">Turnkey Implementation SLA</div>
-        </div>
-      </div>
-
-      <h2 style="font-size: 24px; color: #fff; margin-top: 48px; margin-bottom: 8px;">Live Facility Bay Status (Interactive Simulation)</h2>
-      <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Click any loading bay below to toggle trailer docking status and test automated SMS driver routing.</p>
-      
-      <div class="bays-grid" id="bay-grid">
-        <div class="bay-card" onclick="toggleBay(0)">
-          <span class="bay-tag busy" id="tag-0">Unloading</span>
-          <h4 style="color:#fff; font-size: 15px;">Bay 01 · Swift #4182</h4>
-          <p style="color:var(--text-muted); font-size: 12px; margin-top: 4px;">24 pallets · Ice Cream · Dock Door 1</p>
-        </div>
-        <div class="bay-card" onclick="toggleBay(1)">
-          <span class="bay-tag free" id="tag-1">Available</span>
-          <h4 style="color:#fff; font-size: 15px;">Bay 02 · Clean Dock</h4>
-          <p style="color:var(--text-muted); font-size: 12px; margin-top: 4px;">Ready for inbound assignment</p>
-        </div>
-        <div class="bay-card" onclick="toggleBay(2)">
-          <span class="bay-tag docking" id="tag-2">Check-in SMS</span>
-          <h4 style="color:#fff; font-size: 15px;">Bay 03 · Werner #9102</h4>
-          <p style="color:var(--text-muted); font-size: 12px; margin-top: 4px;">Driver arrived at geofence gate</p>
-        </div>
-        <div class="bay-card" onclick="toggleBay(3)">
-          <span class="bay-tag busy" id="tag-3">Staging</span>
-          <h4 style="color:#fff; font-size: 15px;">Bay 04 · Knight #1105</h4>
-          <p style="color:var(--text-muted); font-size: 12px; margin-top: 4px;">Forklift team active (18 min elapsed)</p>
-        </div>
-        <div class="bay-card" onclick="toggleBay(4)">
-          <span class="bay-tag free" id="tag-4">Available</span>
-          <h4 style="color:#fff; font-size: 15px;">Bay 05 · Clean Dock</h4>
-          <p style="color:var(--text-muted); font-size: 12px; margin-top: 4px;">Reserved for 2:30 PM Carrier</p>
-        </div>
-        <div class="bay-card" onclick="toggleBay(5)">
-          <span class="bay-tag busy" id="tag-5">BOL Signed</span>
-          <h4 style="color:#fff; font-size: 15px;">Bay 06 · Schneider #502</h4>
-          <p style="color:var(--text-muted); font-size: 12px; margin-top: 4px;">Trailer released · Bay clearing</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 2: PLATFORM FEATURES -->
-    <div id="tab-features" class="tab-content">
-      <div style="text-align: center; max-width: 700px; margin: 0 auto 40px auto;">
-        <span class="badge">Core Functionality</span>
-        <h2 style="font-size: 36px; color: #fff; margin-bottom: 12px;">Purpose-Built for Mid-Market Cross-Dock Operators</h2>
-        <p style="color: var(--text-muted);">Replace paper manifests, radio chatter, and whiteboard tracking with automated digital dispatch.</p>
-      </div>
-
-      <div class="feature-grid">
-        <div class="feature-card">
-          <div class="feature-icon">📲</div>
-          <h3>Geofenced Driver Check-In</h3>
-          <p>Drivers trigger automatic check-in when entering your facility perimeter. No mobile app download required—drivers receive an SMS link with door assignment and terminal guidelines.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🚪</div>
-          <h3>Dynamic Dock Door Assignment</h3>
-          <p>Algorithms allocate bays based on trailer temperature class, liftgate requirements, forklift staging proximity, and priority dispatch schedules.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">✍️</div>
-          <h3>Sign-on-Glass Electronic BOL</h3>
-          <p>Drivers inspect master carton tallies and sign digital bills of lading directly on mobile glass in under 30 seconds. PDFs instantly sync to carrier and ERP records.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">⏱️</div>
-          <h3>Predictive Demurrage Warnings</h3>
-          <p>Automated visual countdown flags trailers approaching detention windows (45 minutes prior), empowering dispatchers to prioritize at-risk freight.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">📊</div>
-          <h3>Shift Throughput Analytics</h3>
-          <p>Track turnaround times by carrier, driver, shift supervisor, and commodity type. Export audit-ready compliance logs with one click.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🌐</div>
-          <h3>Multilingual Driver Interface</h3>
-          <p>Instant SMS localization into English, Spanish, Polish, and Russian ensures seamless communication with long-haul regional freight drivers.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 3: INTEGRATIONS -->
-    <div id="tab-integrations" class="tab-content">
-      <div style="text-align: center; max-width: 700px; margin: 0 auto 40px auto;">
-        <span class="badge">Enterprise Connectivity</span>
-        <h2 style="font-size: 36px; color: #fff; margin-bottom: 12px;">Connects with Your Existing Tech Stack</h2>
-        <p style="color: var(--text-muted);">Bi-directional webhooks and native connectors eliminate dual-entry between yard management and enterprise ERPs.</p>
-      </div>
-
-      <div class="feature-grid">
-        <div class="feature-card">
-          <h3 style="color: var(--primary-light);">SAP TMS & S/4HANA</h3>
-          <p>Native IDoc and OData REST integration. Pull incoming manifest schedules and push finalized pallet receipts straight into central inventory.</p>
-        </div>
-        <div class="feature-card">
-          <h3 style="color: var(--primary-light);">Oracle Transportation Mgmt</h3>
-          <p>Real-time dock appointment synchronization with shipment milestone updates (EDI 214 and XML freight statuses).</p>
-        </div>
-        <div class="feature-card">
-          <h3 style="color: var(--primary-light);">Blue Yonder (JDA)</h3>
-          <p>Automated warehouse door reservation mapping and driver staging queue synchronization.</p>
-        </div>
-        <div class="feature-card">
-          <h3 style="color: var(--primary-light);">Standard EDI 204 / 214 / 210</h3>
-          <p>Turnkey electronic data interchange compatibility with certified clearinghouse protocols.</p>
-        </div>
-        <div class="feature-card">
-          <h3 style="color: var(--primary-light);">Manhattan Associates WMS</h3>
-          <p>Cross-dock pallet put-away routing and carton exception logging.</p>
-        </div>
-        <div class="feature-card">
-          <h3 style="color: var(--primary-light);">Custom Webhook & REST API</h3>
-          <p>Full OpenAPI 3.0 documentation for custom in-house terminal management software.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 4: PRICING & ROI CALCULATOR -->
-    <div id="tab-pricing" class="tab-content">
-      <div style="text-align: center; max-width: 700px; margin: 0 auto 20px auto;">
-        <span class="badge">Transparent Terminal Licensing</span>
-        <h2 style="font-size: 36px; color: #fff; margin-bottom: 12px;">Simple, Predictable Per-Facility Pricing</h2>
-        <p style="color: var(--text-muted);">No per-driver fees. Unlimited trailer transactions and dispatcher logins included.</p>
-      </div>
-
-      <div class="calc-box">
-        <h3 style="color: #fff; font-size: 22px; margin-bottom: 8px;">Interactive Detention ROI Calculator</h3>
-        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">Estimate your facility's monthly cost savings with DockStream automated dispatch.</p>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
-          <div>
-            <label style="color:#fff; font-size: 14px; font-weight:600; display:block;">Daily Trailer Inbound Volume: <span id="val-trailers" style="color:var(--primary-light);">45</span> trailers/day</label>
-            <input type="range" min="10" max="150" value="45" class="calc-slider" id="slide-trailers" oninput="calcROI()">
-
-            <label style="color:#fff; font-size: 14px; font-weight:600; display:block; margin-top: 16px;">Current Avg Turn Time: <span id="val-dwell" style="color:var(--primary-light);">75</span> minutes</label>
-            <input type="range" min="30" max="180" value="75" class="calc-slider" id="slide-dwell" oninput="calcROI()">
-          </div>
-
-          <div style="background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 24px; text-align: center;">
-            <div style="font-size: 13px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px;">Estimated Monthly Savings</div>
-            <div style="font-size: 42px; font-weight: 800; color: #10b981; margin: 10px 0;" id="roi-savings">$15,390</div>
-            <div style="font-size: 13px; color: var(--text-muted);" id="roi-hours">Includes 182 dispatcher hours saved and 74 prevented detention claims.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="pricing-grid">
-        <div class="pricing-card">
-          <h3 style="color: #fff; font-size: 22px;">Standard Hub</h3>
-          <p style="color: var(--text-muted); font-size: 14px; margin-top: 6px;">For regional distribution terminals managing up to 20 bays.</p>
-          <div class="price-num">$1,250 <span>/ month</span></div>
-          <ul style="color: var(--text-muted); font-size: 14px; list-style: none; line-height: 2; margin-bottom: 28px;">
-            <li>✓ Up to 20 Active Loading Bays</li>
-            <li>✓ Unlimited Driver SMS Check-ins</li>
-            <li>✓ Digital BOL Generation & PDF Export</li>
-            <li>✓ Standard 99.9% Uptime SLA</li>
-            <li>✓ Email & Phone Dispatch Support</li>
-          </ul>
-          <button class="btn-primary" style="width: 100%;" onclick="openDemo()">Select Standard Hub</button>
-        </div>
-
-        <div class="pricing-card popular">
-          <div class="popular-tag">Most Popular</div>
-          <h3 style="color: #fff; font-size: 22px;">Enterprise Fleet</h3>
-          <p style="color: var(--text-muted); font-size: 14px; margin-top: 6px;">For high-volume multi-facility 3PL operations requiring custom ERP sync.</p>
-          <div class="price-num">$2,800 <span>/ month</span></div>
-          <ul style="color: var(--text-muted); font-size: 14px; list-style: none; line-height: 2; margin-bottom: 28px;">
-            <li>✓ Unlimited Loading Bays & Terminals</li>
-            <li>✓ Bi-directional SAP / Oracle TMS Sync</li>
-            <li>✓ Predictive Demurrage Alert Engine</li>
-            <li>✓ 99.99% Enterprise Uptime Guarantee</li>
-            <li>✓ Dedicated Implementation Engineer</li>
-          </ul>
-          <button class="btn-primary" style="width: 100%;" onclick="openDemo()">Select Enterprise Fleet</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="demo-modal" class="modal">
-    <div class="modal-box">
-      <h3 style="color: #fff; font-size: 22px; margin-bottom: 8px;">Schedule Dockyard Scoping Call</h3>
-      <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Book a 20-minute operational review with Jack Johnson, Co-Founder.</p>
-      <div style="margin-bottom: 16px;">
-        <label style="display:block; color:#fff; font-size:13px; margin-bottom:6px;">Your Name</label>
-        <input type="text" value="Jack Johnson" style="width:100%; padding:10px; background:var(--surface-2); border:1px solid var(--border); color:#fff; border-radius:6px;">
-      </div>
-      <div style="margin-bottom: 16px;">
-        <label style="display:block; color:#fff; font-size:13px; margin-bottom:6px;">Terminal Location / Company</label>
-        <input type="text" value="Apex Cold Logistics — Midwest Hub" style="width:100%; padding:10px; background:var(--surface-2); border:1px solid var(--border); color:#fff; border-radius:6px;">
-      </div>
-      <div style="margin-bottom: 24px;">
-        <label style="display:block; color:#fff; font-size:13px; margin-bottom:6px;">Work Email</label>
-        <input type="email" value="jack@dockstream.io" style="width:100%; padding:10px; background:var(--surface-2); border:1px solid var(--border); color:#fff; border-radius:6px;">
-      </div>
-      <button class="btn-primary" style="width: 100%;" onclick="submitDemo()">Confirm Scoping Reservation</button>
-      <button class="btn-secondary" style="width: 100%; margin: 10px 0 0 0;" onclick="closeDemo()">Close</button>
-    </div>
-  </div>
-
-  <script>
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(nb => nb.classList.remove('active'));
-      const target = document.getElementById('tab-' + tabId);
-      if (target) target.classList.add('active');
-      event.target.classList.add('active');
-    }
-    function calcROI() {
-      const trailers = parseInt(document.getElementById('slide-trailers').value);
-      const dwell = parseInt(document.getElementById('slide-dwell').value);
-      document.getElementById('val-trailers').textContent = trailers;
-      document.getElementById('val-dwell').textContent = dwell;
-
-      // 38% dwell time reduction
-      const minutesSavedPerTruck = dwell * 0.38;
-      const hoursSavedMonthly = Math.round((trailers * 26 * minutesSavedPerTruck) / 60);
-      const preventedDetentions = Math.round(trailers * 26 * 0.08); // 8% risk
-      const dollarSavings = (preventedDetentions * 150) + (hoursSavedMonthly * 28);
-      document.getElementById('roi-savings').textContent = '$' + dollarSavings.toLocaleString();
-      document.getElementById('roi-hours').textContent = 'Includes ' + hoursSavedMonthly + ' dispatcher hours saved and ' + preventedDetentions + ' prevented detention claims.';
-    }
-    const bayStates = [
-      { text: 'Unloading', cls: 'busy' },
-      { text: 'Available', cls: 'free' },
-      { text: 'Check-in SMS', cls: 'docking' }
-    ];
-    function toggleBay(idx) {
-      const tag = document.getElementById('tag-' + idx);
-      if (tag.classList.contains('busy')) {
-        tag.className = 'bay-tag free';
-        tag.textContent = 'Available';
-      } else if (tag.classList.contains('free')) {
-        tag.className = 'bay-tag docking';
-        tag.textContent = 'Docking In';
-      } else {
-        tag.className = 'bay-tag busy';
-        tag.textContent = 'Unloading';
-      }
-    }
-    function openDemo() {
-      document.getElementById('demo-modal').style.display = 'flex';
-    }
-    function closeDemo() {
-      document.getElementById('demo-modal').style.display = 'none';
-    }
-    function submitDemo() {
-      alert('Scoping call request submitted! Implementation team will contact within 2 hours.');
-      closeDemo();
-    }
-  </script>
-</body>
-</html>""",
+        "DockStream · Intelligent Yard Logistics Management",
+        johnson_html,
         role="deliverable",
     )
 
-    # =========================================================================
     # 14. Luca Carollo (lucacaro@hawaii.edu)
     # =========================================================================
     # REALISTIC MULTI-ROW CSV: 50+ lines of bank ledger data
@@ -2749,264 +2022,13 @@ def build_seed_attachments() -> dict[str, dict]:
         role="source",
     )
     # DIVERSE DELIVERABLE: Standalone Interactive HTML Prototype
+    carter_html = load_showcase_template("showcase_apexdesk.html")
     files["carter_landing_page_prototype.html"] = write_html_file(
         "carter_landing_page_prototype.html",
-        "ApexDesk · Modular MagSafe Desk Dock & Wireless Charger",
-        """<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ApexDesk · Precision Modular MagSafe Desk Dock & Wireless Charger</title>
-  <style>
-    :root {
-      --bg: #0c0b09;
-      --surface: #171612;
-      --surface-2: #24221c;
-      --border: #36342e;
-      --accent: #cc4b2c;
-      --accent-hover: #e05837;
-      --text: #f7f4ec;
-      --text-muted: #9e998c;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; }
-    header { border-bottom: 1px solid var(--border); padding: 18px 40px; display: flex; justify-content: space-between; align-items: center; background: rgba(12, 11, 9, 0.95); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
-    .logo { font-size: 20px; font-weight: 800; letter-spacing: 1.5px; color: #fff; }
-    .logo span { color: var(--accent); }
-    .container { max-width: 1080px; margin: 0 auto; padding: 50px 24px; }
-    .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
-    .badge { display: inline-block; background: rgba(204, 75, 44, 0.15); color: var(--accent); border: 1px solid rgba(204, 75, 44, 0.3); padding: 4px 12px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 16px; letter-spacing: 1px; }
-    h1 { font-size: 40px; line-height: 1.15; font-weight: 800; color: #fff; margin-bottom: 16px; }
-    .lead { font-size: 17px; color: var(--text-muted); margin-bottom: 24px; }
-    .price-box { display: flex; align-items: baseline; gap: 12px; margin-bottom: 24px; }
-    .current-price { font-size: 42px; font-weight: 800; color: #fff; }
-    .original-price { font-size: 20px; text-decoration: line-through; color: var(--text-muted); }
-    .save-badge { background: #22c55e; color: #000; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; }
-    .product-visual { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 40px; text-align: center; position: relative; }
-    .color-pill { width: 32px; height: 32px; border-radius: 50%; display: inline-block; cursor: pointer; border: 2px solid transparent; }
-    .color-pill.active { border-color: var(--accent); transform: scale(1.1); }
-    .options-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin: 20px 0; }
-    .option-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-    .btn-buy { background: var(--accent); color: #fff; width: 100%; border: none; padding: 18px; border-radius: 8px; font-size: 17px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
-    .btn-buy:hover { background: var(--accent-hover); }
-    .specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 60px; }
-    .spec-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 24px; }
-    .spec-card strong { color: #fff; display: block; font-size: 15px; margin-bottom: 6px; }
-    .spec-card p { color: var(--text-muted); font-size: 13px; }
-    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; }
-    .modal-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 36px; max-width: 480px; width: 90%; text-align: center; }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="logo">APEX<span>DESK</span></div>
-    <div style="font-size: 13px; color: var(--text-muted);">Batch 1 Shipping: Nov 2026</div>
-  </header>
-  <div class="container">
-    <div class="hero-grid">
-      <div class="product-visual">
-        <div style="font-size: 80px; margin-bottom: 20px;" id="dock-emoji">⚡</div>
-        <div style="font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 8px;" id="variant-label">Matte Black Edition</div>
-        <h3 style="font-size: 24px; color: #fff; margin-bottom: 16px;">ApexDesk Modular 4-in-1 Rail</h3>
-        <div style="display: flex; justify-content: center; gap: 16px; margin-top: 20px;">
-          <div class="color-pill active" style="background: #181714;" onclick="setColor('black', this)" title="Matte Black"></div>
-          <div class="color-pill" style="background: #94a3b8;" onclick="setColor('silver', this)" title="Aerospace Silver"></div>
-        </div>
-      </div>
-      <div>
-        <span class="badge">DTC Hardware Pre-Order</span>
-        <h1>The last desk dock you will ever need.</h1>
-        <p class="lead">Precision CNC-machined aerospace 6063 aluminum with Qi2 15W MagSafe fast charging and modular snap-in magnetic rail architecture.</p>
-        
-        <div class="price-box">
-          <div class="current-price" id="total-price">$129</div>
-          <div class="original-price">$179</div>
-          <span class="save-badge">Save $50 Early Bird</span>
-        </div>
-
-        <div class="options-box">
-          <strong style="color: #fff; display: block; font-size: 14px; margin-bottom: 12px;">Customize Modular Accessories:</strong>
-          <div class="option-item">
-            <label style="font-size: 14px; display: flex; align-items: center; gap: 10px; cursor: pointer;">
-              <input type="checkbox" id="opt-rail" checked disabled> CNC Aluminum Base Rail + 15W Phone Puck
-            </label>
-            <span style="font-size: 13px; color: var(--text-muted);">Included</span>
-          </div>
-          <div class="option-item">
-            <label style="font-size: 14px; display: flex; align-items: center; gap: 10px; cursor: pointer;">
-              <input type="checkbox" id="opt-watch" onchange="calcTotal()"> 5W Fast-Charge Apple Watch Magnetic Puck
-            </label>
-            <span style="font-size: 13px; color: var(--accent);">+$39</span>
-          </div>
-          <div class="option-item">
-            <label style="font-size: 14px; display: flex; align-items: center; gap: 10px; cursor: pointer;">
-              <input type="checkbox" id="opt-pods" onchange="calcTotal()"> Wireless AirPods Qi Charging Base
-            </label>
-            <span style="font-size: 13px; color: var(--accent);">+$29</span>
-          </div>
-          <div class="option-item">
-            <label style="font-size: 14px; display: flex; align-items: center; gap: 10px; cursor: pointer;">
-              <input type="checkbox" id="opt-tray" onchange="calcTotal()"> American Walnut Magnetic Pen & Card Tray
-            </label>
-            <span style="font-size: 13px; color: var(--accent);">+$25</span>
-          </div>
-        </div>
-
-        <button class="btn-buy" onclick="openCheckout()">Pre-Order ApexDesk — <span id="btn-price">$129</span></button>
-        <div style="font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 12px;">30-Day Money Back Guarantee · 2-Year Hardware Replacement Warranty</div>
-      </div>
-    </div>
-
-    <div class="specs-grid">
-      <div class="spec-card">
-        <strong>Aerospace Aluminum Chassis</strong>
-        <p>Unibody solid block 6063 alloy CNC-milled with bead-blasted satin finish.</p>
-      </div>
-      <div class="spec-card">
-        <strong>Qi2 15W MagSafe Standard</strong>
-        <p>Certified fast wireless charging compatible with iPhone 12 through 17 series.</p>
-      </div>
-      <div class="spec-card">
-        <strong>Single Cable Cleanliness</strong>
-        <p>One 100W USB-C input on back powers all 4 modular accessories simultaneously.</p>
-      </div>
-      <div class="spec-card">
-        <strong>Thermal Management</strong>
-        <p>Passive internal copper heatsink prevents thermal throttling during high-speed charging.</p>
-      </div>
-    </div>
-  </div>
-
-  <div id="checkout-modal" class="modal">
-    <div class="modal-box">
-      <div style="font-size: 48px; margin-bottom: 12px;">🎉</div>
-      <h2 style="color: #fff; margin-bottom: 8px;">Batch 1 Reserved!</h2>
-      <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Your ApexDesk configuration is locked in at early-bird pricing. Production tracking updates will be emailed to your account.</p>
-      <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 14px; margin-bottom: 20px; font-weight: bold; color: var(--accent);" id="modal-summary">$129 — Matte Black Edition</div>
-      <button class="btn-buy" onclick="closeCheckout()">Close Window</button>
-    </div>
-  </div>
-
-  <script>
-    let currentColor = 'Matte Black Edition';
-    function setColor(color, el) {
-      document.querySelectorAll('.color-pill').forEach(p => p.classList.remove('active'));
-      el.classList.add('active');
-      if (color === 'silver') {
-        currentColor = 'Aerospace Silver Edition';
-        document.getElementById('dock-emoji').textContent = '✨';
-        document.getElementById('variant-label').textContent = 'Aerospace Silver Edition';
-      } else {
-        currentColor = 'Matte Black Edition';
-        document.getElementById('dock-emoji').textContent = '⚡';
-        document.getElementById('variant-label').textContent = 'Matte Black Edition';
-      }
-    }
-    function calcTotal() {
-      let base = 129;
-      if (document.getElementById('opt-watch').checked) base += 39;
-      if (document.getElementById('opt-pods').checked) base += 29;
-      if (document.getElementById('opt-tray').checked) base += 25;
-      document.getElementById('total-price').textContent = '$' + base;
-      document.getElementById('btn-price').textContent = '$' + base;
-    }
-    function openCheckout() {
-      const price = document.getElementById('total-price').textContent;
-      document.getElementById('modal-summary').textContent = price + ' · ' + currentColor;
-      const modal = document.getElementById('checkout-modal');
-      modal.style.display = 'flex';
-    }
-    function closeCheckout() {
-      document.getElementById('checkout-modal').style.display = 'none';
-    }
-  </script>
-</body>
-</html>""",
+        "ApexDesk · Precision Modular Desktop Ecosystem",
+        carter_html,
         role="deliverable",
     )
-    files["carter_website_launch_checklist_final.pdf"] = write_pdf_file(
-        "carter_website_launch_checklist_final.pdf",
-        "ApexDesk · DTC Storefront Launch & Conversion Optimization Audit (Final)",
-        [
-            "# PRE-FLIGHT TECHNICAL AUDIT & GO-LIVE ATTESTATION",
-            "This technical pre-flight audit report certifies that the ApexDesk direct-to-consumer (DTC) e-commerce storefront has satisfied all twenty-five (25) mission-critical verification gates across checkout architecture, product merchandising, mobile Core Web Vitals, conversion tracking, and post-purchase fulfillment.",
-            "Overall Launch Readiness Score: 100% Pass Rate (25/25 checkpoints verified across staging and production mirrors).",
-            "--PAGE-BREAK--",
-            "# SECTION 1: LAUNCH READINESS DOMAIN SCORING MATRIX",
-            "Independent engineering audits were conducted across five operational domains prior to DNS cutover.",
-            [
-                ["Audit Domain", "Total Checkpoints", "Passed", "Pass Rate %", "Risk Level", "Lead Systems Engineer"],
-                ["Domain 1: Funnel & Checkout Integrity", "5 Gates", "5 / 5", "100.0%", "Zero Residual Risk", "Shopify Plus Architect"],
-                ["Domain 2: Hardware Merchandising & Trust", "5 Gates", "5 / 5", "100.0%", "Zero Residual Risk", "Conversion Optimization Lead"],
-                ["Domain 3: Core Web Vitals & Speed", "5 Gates", "5 / 5", "100.0%", "Optimal (Top 3%)", "Frontend Performance Engineer"],
-                ["Domain 4: Tracking, Analytics & CAPI", "5 Gates", "5 / 5", "100.0%", "Zero Residual Risk", "AdTech & Data Infrastructure Lead"],
-                ["Domain 5: Post-Purchase Fulfillment & QA", "5 Gates", "5 / 5", "100.0%", "Zero Residual Risk", "E-Commerce Operations Director"],
-            ],
-            "--PAGE-BREAK--",
-            "# SECTION 2: COMPREHENSIVE 25-POINT TECHNICAL VERIFICATION AUDIT",
-            [
-                ["Gate", "Verification Item", "Target Architecture / Specification", "Measured Result", "Status"],
-                ["01", "Apple Pay 1-Click Checkout", "Direct PassKit session initialization via Stripe", "Instant biometric sheet trigger verified", "VERIFIED [PASS]"],
-                ["02", "Google Pay Dynamic Sheet", "Instant payment API integration on Android/Chrome", "Single-tap checkout flow verified", "VERIFIED [PASS]"],
-                ["03", "Shop Pay Express Integration", "Shopify Plus tokenized 1-click customer vault", "SMS OTP autofill verified across test accounts", "VERIFIED [PASS]"],
-                ["04", "Multi-Currency Conversion", "Real-time FX rates for USD, CAD, EUR, GBP, AUD", "Dynamic currency switcher verified on IP geotarget", "VERIFIED [PASS]"],
-                ["05", "Automated Fraud Defense", "Stripe Radar ML scoring with 3D Secure 2.2 rules", "High-risk transaction auto-friction active", "VERIFIED [PASS]"],
-                ["06", "Qi2 Magnetic Fast Charging", "WPC Qi2 Magnetic Power Profile (MPP) 15W badge", "Official compliance certification badge visible", "VERIFIED [PASS]"],
-                ["07", "CNC Aluminum Exploded View", "6063 aerospace unibody chassis technical callouts", "Interactive 3D layer callout panel functioning", "VERIFIED [PASS]"],
-                ["08", "Color Variant State Sync", "Matte Black (Obsidian) vs Space Silver toggle", "DOM class swap and gallery image reactive", "VERIFIED [PASS]"],
-                ["09", "Modular Bundle Builder", "Dynamic accessory add-on pricing (+watch/airpod)", "Cart subtotal updates asynchronously", "VERIFIED [PASS]"],
-                ["10", "Verified Social Proof", "Curated tech editor quotes & Batch 1 reviews", "Clean typography grid with verified badges", "VERIFIED [PASS]"],
-                ["11", "Largest Contentful Paint (LCP)", "Google Core Web Vitals standard < 2.50s", "1.14s on throttled 4G mobile profile", "OPTIMAL [PASS]"],
-                ["12", "Cumulative Layout Shift (CLS)", "Google Core Web Vitals standard < 0.10", "0.01 score (explicit image dimensions)", "OPTIMAL [PASS]"],
-                ["13", "Mobile Viewport Optimization", "Minimum 48px touch targets; sticky buy drawer", "Thumb-zone ergonomic test passed", "VERIFIED [PASS]"],
-                ["14", "SSL & Security Headers", "TLS 1.3, HSTS (max-age=31536000), CSP", "A+ rating on Qualys SSL Labs audit", "VERIFIED [PASS]"],
-                ["15", "404 Error Routing & Search", "Custom helpful 404 page with product links", "Zero dead ends; live site search enabled", "VERIFIED [PASS]"],
-                ["16", "Meta Conversions API (CAPI)", "Server-side deduplication for View/Add/Buy", "100% event match quality score (>8.5/10)", "VERIFIED [PASS]"],
-                ["17", "Google Analytics 4 (GA4)", "Enhanced e-commerce data layer items array", "Accurate revenue & tax tracking verified", "VERIFIED [PASS]"],
-                ["18", "Paid Acquisition Pixels", "TikTok Pixel, Pinterest Tag, Google Ads", "Google Tag Manager container published", "VERIFIED [PASS]"],
-                ["19", "Google Merchant Center", "Automated Content API product feed sync", "Catalog approved with 0 item warnings", "VERIFIED [PASS]"],
-                ["20", "PostHog Funnel Telemetry", "Step-by-step conversion dropoff tracking", "Active session recording enabled", "VERIFIED [PASS]"],
-                ["21", "Omnichannel Gorgias Desk", "Live chat & email ticketing automation", "Pre-set hardware macro responses active", "VERIFIED [PASS]"],
-                ["22", "Unboxing Insert Experience", "4x6-inch foil card QR code to setup video", "QR redirects to high-res video portal", "VERIFIED [PASS]"],
-                ["23", "Self-Service RMA Portal", "Loop Returns integration with QR return labels", "Tested simulated return authorization", "VERIFIED [PASS]"],
-                ["24", "Batch 1 Pre-Order Journey", "3-stage automated post-purchase email series", "CNC milling, anodizing & QC copy staged", "VERIFIED [PASS]"],
-                ["25", "Post-Delivery UGC Review", "Automated 14-day post-delivery email request", "Direct photo/video review collection ready", "VERIFIED [PASS]"],
-            ],
-            "--PAGE-BREAK--",
-            "# SECTION 3: CORE WEB VITALS BENCHMARK PERFORMANCE",
-            "Performance measurements were captured using Google Lighthouse v11 over an emulated Moto G Power on 4G cellular network with 150ms round-trip latency.",
-            [
-                ["Performance Metric", "Measured Mobile Value", "Google 'Good' Threshold", "Performance Status", "Optimization Applied"],
-                ["First Contentful Paint (FCP)", "0.82 seconds", "< 1.80 seconds", "PASSED (Top 5%)", "Preloaded critical header webfonts"],
-                ["Largest Contentful Paint (LCP)", "1.14 seconds", "< 2.50 seconds", "PASSED (Top 3%)", "WebP responsive srcset + Cloudflare CDN"],
-                ["Interaction to Next Paint (INP)", "42 milliseconds", "< 200 milliseconds", "PASSED (Excellent)", "Zero heavy JavaScript main-thread locks"],
-                ["Cumulative Layout Shift (CLS)", "0.010", "< 0.100", "PASSED (Near Zero)", "Explicit aspect-ratio CSS declarations"],
-                ["Time to First Byte (TTFB)", "140 milliseconds", "< 800 milliseconds", "PASSED (Instant)", "Edge server caching via Cloudflare Enterprise"],
-                ["Total Compressed Page Weight", "840 KB", "< 1,500 KB", "PASSED (Ultra-Lean)", "Lossless image compression & tree shaking"],
-            ],
-            "--PAGE-BREAK--",
-            "# SECTION 4: PAYMENT GATEWAY & BIOMETRIC CHECKOUT ARCHITECTURE",
-            "Payment routing incorporates redundant fallback mechanisms to ensure 99.99% transaction capture during high-traffic product drop spikes.",
-            [
-                ["Payment Instrument", "Processing Engine", "Settlement Currencies", "Biometric Authentication", "Fallback Mechanism"],
-                ["Apple Pay", "Shopify Payments (Stripe)", "USD, CAD, EUR, GBP, AUD", "FaceID / TouchID on iOS/macOS", "Standard credit card form"],
-                ["Google Pay", "Shopify Payments (Stripe)", "USD, CAD, EUR, GBP, AUD", "Fingerprint / Pin on Android/Chrome", "Standard credit card form"],
-                ["Shop Pay (1-Click)", "Shopify Core", "USD, CAD, EUR, GBP, AUD", "SMS 6-digit OTP tokenization", "Guest checkout redirect"],
-                ["PayPal Express", "PayPal Commerce Platform", "Global 25 Currencies", "PayPal One-Touch biometric login", "Direct debit / credit card"],
-                ["Klarna Pay in 4", "Klarna Merchant Gateway", "USD, EUR, GBP", "Real-time soft credit verification", "Card installment alternative"],
-            ],
-            "# SECTION 5: FINAL LAUNCH AUTHORIZATION & SIGN-OFF",
-            "All engineering verification criteria have been successfully satisfied. The production environment is authorized for public DNS cutover and global product release.",
-            "Technical Lead: Carter Lemburg · ApexDesk Hardware Technologies",
-            "Production Attestation Date: October 21, 2026 · Go-Live Status: APPROVED",
-        ],
-        role="deliverable",
-        subtitle="25-Point Comprehensive Technical, Conversion & Operational Pre-Flight Launch Audit",
-        meta_tag="ApexDesk E-Commerce Systems · Technical Pre-Flight Launch Audit",
-    )
-
-    # DIVERSE DELIVERABLE: Real ZIP pack bundling HTML prototype, PDF audit, and engineering assets
     files["carter_storefront_assets_and_launch_kit.zip"] = write_zip_file(
         "carter_storefront_assets_and_launch_kit.zip",
         {
@@ -3806,31 +2828,31 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 9, 16, 23, 29, 18),
-                'Hey Azael! Commercial flat roofing is high-ticket work and building owners want to see two things right away: manufacturer certifications (like Carlisle or Firestone) and clear NDL (No Dollar Limit) warranty coverage. We can write your complete commercial website copy deck and build you an Excel roof estimator spreadsheet for $300.00 total.',
+                "Hey Azael! Commercial flat roofing is high-ticket work and building owners want to see two things right away: manufacturer certifications (like Carlisle or Firestone) and clear NDL (No Dollar Limit) warranty coverage.\n\nWe can write your complete 4-page commercial website copy deck, build an Excel roof estimator spreadsheet with working square-foot tear-off formulas, and include a residential consultation section for $345.00 total. Want us to jump into it?",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 9, 17, 4, 11, 25),
-                "that sounds good. let's split it up though, can i pay 120 first to get started and then the 180 when i review the drafts? just want to make sure the terminology is right for commercial inspectors.",
+                "that sounds good. let's focus 100% on commercial flat roofs though—warehouses and retail plazas. can we drop the residential consultation section and knock the price down to $334.95? that way it's straight commercial.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 9, 17, 14, 6, 44),
-                'Totally fine to split into $120 kickoff and $180 completion! Working on the draft copy deck now.',
+                "Makes complete sense Azael. Focusing strictly on commercial warehouses and retail plazas gives you much higher credibility with general contractors. Adjusted the invoice down to $334.95 (QP2609-1BD487BA).",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 9, 18, 18, 22, 39),
-                "great, just got off a commercial strip mall tear-off in McAllen. send the $120 invoice over whenever you're ready.",
+                "great, just got off a commercial strip mall tear-off in McAllen. clearing the $334.95 on my card right now.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 9, 19, 2, 41, 52),
-                "Here is the v1 draft copy deck! Take a look when you're off the roof.",
+                "Payment confirmed, thank you Azael! Here is your v1 draft copy deck. Take a look when you're off the roof.",
                 [
                     'orozco_site_copy_and_estimate_v1.docx',
                 ],
@@ -3838,25 +2860,19 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 9, 19, 3, 34, 16),
-                'reading through v1 now on my tablet. this hits the nail on the head with the 60-mil TPO single-ply specs. paid the 120 deposit invoice on visa just now.',
+                "reading through v1 now on my tablet while having tacos in Pharr. this hits the nail on the head with the 60-mil TPO single-ply specs and Factory Mutual 1-90 wind uplift ratings. can we make sure the website prototype has an interactive square-foot bid calculator so warehouse owners can calculate estimates before calling me?",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 9, 19, 3, 44, 31),
-                'Deposit confirmed! Posted the remaining $180 balance invoice (INV-260919-AO02).',
-                [],
-            ),
-            (
-                'client',
-                dt_utc(2026, 9, 19, 4, 2, 18),
-                "just paid the 180 balance as well so we're all squared away. send over the final files and that estimate sheet.",
+                "100%! We integrated an interactive Commercial Square-Foot Bid Calculator directly into your standalone HTML prototype with membrane toggles (60-mil TPO, Standing Seam Metal, Modified Bitumen, Silicone Coating) and 20-Year NDL warranty selectors.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 9, 20, 16, 14, 27),
-                'Both payments received, thank you Azael! Attached are the final commercial copy deck, your customized Excel estimator spreadsheet with working formulas, and your standalone interactive HTML website prototype ready to open directly in any browser.',
+                "Attached are your completed deliverables: your final commercial copy deck, your customized Excel estimator spreadsheet with working formulas for tear-off and membrane costs, and your standalone interactive HTML website prototype ready to open directly in any browser.",
                 [
                     'orozco_site_copy_and_estimate_final.docx',
                     'orozco_estimate_sheet.xlsx',
@@ -3866,13 +2882,13 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 9, 21, 11, 8, 49),
-                'opened the excel sheet on my truck laptop. the formulas for tear-off and membrane cost per square foot work great. sending the copy to our web guy in Brownsville.',
+                "opened the prototype and excel sheet on my truck laptop. the square-foot bid calculator and 20-year NDL specs are pure gold. sending the copy to our web guy in Brownsville. gracias hermano!",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 9, 21, 14, 12, 6),
-                "Glad the formulas match your crews' numbers! Reach out anytime if you need commercial bid proposals drafted.",
+                "De nada Azael! Good luck closing that Pharr warehouse bid. Reach out anytime if you need commercial bid submittals drafted.",
                 [],
             ),
         ],
@@ -3994,19 +3010,25 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 4, 5, 13, 47, 9),
-                'sounds great, send the invoice over.',
+                "the 30-day scoping bottleneck is exactly what's killing our forecast. can you turn the spec around before our Monday executive pipeline review?",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 4, 5, 14, 11, 32),
-                'Invoice INV-260405-JJ01 ($160.00) posted. Cleaning the pipeline dataset now.',
+                "Yes, we can have the routing spec and cleaned export in your inbox Sunday evening for $160. Invoice INV-260405-JJ01 ($160.00) is posted to your portal.",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 4, 5, 14, 25, 18),
+                "cleared the $160 on our corporate card. appreciate the rush turnaround!",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 4, 6, 15, 39, 24),
-                'Here is the completed lead-routing spec along with the cleaned pipeline dataset.',
+                'Here is the completed lead-routing spec along with the cleaned pipeline dataset ready for your Monday executive review.',
                 [
                     'johnson_crm_pipeline_spec.pdf',
                     'johnson_crm_pipeline_export_clean.csv',
@@ -4023,25 +3045,25 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 9, 15, 18, 19, 12),
-                'Great to hear from you Jack! Writing all 5 B2B website pages plus structuring and writing the 12-slide enterprise PowerPoint deck is $500 flat.',
+                "Great to hear from you Jack! Looked through your brief. The current deck focuses heavily on technical API architecture, but 3PL warehouse general managers care about two things: gate turn times and detention penalties ($1,200/truck/month). We should lead with yard congestion ROI.\n\nWriting all 5 B2B website pages, structuring the 12-slide enterprise PowerPoint deck, and building an interactive terminal prototype with live 12-bay monitoring is $500 flat.",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 9, 17, 16, 26, 38),
-                "Sorry for the two-day lag, had to get budget sign-off from my cofounder. Send the $500 invoice and I'll clear it now.",
+                "Love that framing. Sorry for the two-day lag, had to get budget sign-off from my cofounder. Send the $500 invoice and I'll clear it now.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 9, 17, 16, 32, 47),
-                'Invoice INV-260917-JJ02 ($500.00) is live on your account.',
+                "Invoice QP2609-5851CC11 ($500.00) is live on your account.",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 9, 17, 16, 47, 19),
-                'Paid on Apple Pay.',
+                "Cleared on Apple Pay.",
                 [],
             ),
             (
@@ -4055,18 +3077,24 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 9, 19, 11, 9, 51),
-                'Reviewed with the sales team this morning. Website copy is ready as-is. On Slide 4 of the deck, can we swap the placeholder ROI numbers for our actual Q3 Midwest 3PL pilot (38% faster dock turn time and 14 hrs/wk saved per dispatcher)?',
+                "Reviewed with the sales team this morning. Website copy is ready as-is. On Slide 4 of the deck, can we swap the placeholder ROI numbers for our actual Q3 Midwest 3PL pilot (38% faster dock turn time and 14 hrs/wk saved per dispatcher)?",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 9, 19, 15, 28, 34),
-                'Updated Slide 4 with the exact Q3 Midwest 3PL pilot metrics! Attached is the final 5-page website copy deck, the 12-slide PowerPoint presentation (.pptx) ready for your sales reps, and the standalone interactive 5-page B2B website prototype ready to demo directly in any browser.',
+                "Updated Slide 4 with the exact Q3 Midwest 3PL pilot metrics! Attached is the final 5-page website copy deck, the 12-slide PowerPoint presentation (.pptx) ready for your sales reps, and the standalone interactive 5-page B2B website prototype ready to demo directly in any browser.",
                 [
                     'johnson_b2b_site_and_deck_final.docx',
                     'johnson_12slide_outbound_enterprise_deck.pptx',
                     'johnson_dockstream_b2b_website_prototype.html',
                 ],
+            ),
+            (
+                'client',
+                dt_utc(2026, 9, 19, 16, 5, 22),
+                "Downloaded all three. The interactive terminal prototype with the 12-bay live monitor and detention calculator blew our VP of Sales away. Taking this into our carrier partner meeting tomorrow. Appreciate the great work!",
+                [],
             ),
         ],
     },
@@ -4211,7 +3239,7 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 8, 28, 20, 14, 32),
-                "aloha guys! hope the weather is nice over there. so my accountant is breathing down my neck about Q3 reconciliations for our Waikiki and Ala Moana rental units. our bank export has missing vendor names, mixed repair bills, and i honestly don't have the patience to sit in Excel for 10 hours. attached the raw bank CSV and some paper receipts. can you turn this into a clean reconciled ledger?",
+                "aloha guys! hope the weather is nice over there. so my accountant is breathing down my neck about Q3 reconciliations for our Waikiki catamaran charter business and my Ala Moana rental condo. our bank export has missing vendor names, mixed repair bills, and i honestly don't have the patience to sit in Excel for 10 hours. attached the raw bank CSV and some paper receipts. can you turn this into a clean reconciled ledger?",
                 [
                     'luca_q3_raw_bank_export.csv',
                     'luca_august_vendor_receipts.pdf',
@@ -4220,95 +3248,47 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 8, 28, 20, 41, 9),
-                "Aloha Luca! Happy to take this off your plate. We can reconcile all 50+ transactions across the Waikiki and Ala Moana units, match those Pacific Split-AC and hardware receipts, and give you a clean monthly P&L plus a 50/50 partner distribution breakdown in both Excel and CSV for $220 flat. Want us to jump into it?",
+                "Aloha Luca! Happy to take this off your plate. Reconciling charter fuel and harbor dockage against seasonal tourism payouts is right in our wheelhouse. We can reconcile all 50+ transactions across the Waikiki and Ala Moana units, match those Pacific Split-AC and hardware receipts, and give you a clean monthly P&L plus a 50/50 partner distribution breakdown in both Excel and CSV for $220 flat. Want us to jump into it?",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 8, 28, 21, 2, 14),
-                "yes please, send the invoice over!",
+                "mahalo for looking at this so fast! one quick question before you invoice me: does the ledger separate out Hawaii General Excise Tax (GET at 4.712%) and Transient Accommodations Tax (TAT at 10.25%)? that's the main thing my tax guy was nagging me about because Waikiki short-term rentals get audited on TAT all the time.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 8, 28, 21, 5, 30),
-                "Invoice INV-260814-LC01 ($220.00) is posted to your account.",
+                "100%. We calculate base lodging revenue and break out both GET (4.712%) and Honolulu County TAT (10.25% + 3% county surcharge) in dedicated columns with automatic tax liability totals so your accountant can file without doing any extra math. Invoice INV-260814-LC01 ($220.00) is posted to your account.",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 8, 29, 18, 7, 44),
-                'awesome, just paid the $220 invoice via Apple Pay. looking forward to showing my partner actual numbers that balance haha.',
+                "shaka! that saves me a massive headache. just tapped apple pay right as we untied the bow lines for our afternoon Diamond Head sail. cleared the $220. let me know if any of the fuel slips are illegible.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 8, 29, 18, 19, 22),
-                'Payment confirmed, thank you Luca! Starting on the reconciliation now.',
+                "Payment confirmed, thank you Luca! Starting on the reconciliation now.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 8, 30, 19, 16, 53),
-                'Here is the reconciled Q3 property P&L workbook and partner distribution summary! All receipts are tied to transaction line items.',
+                dt_utc(2026, 8, 30, 16, 42, 15),
+                "Aloha Luca! Here is the completed reconciliation package: your cleaned Q3 CSV ledger and your multi-tab Excel financial model with automatic GET/TAT tax formulas and partner cash distributions.",
                 [
-                    'luca_q3_property_ledger_reconciled.xlsx',
-                    'luca_partner_distribution_summary.csv',
+                    'luca_q3_reconciled_ledger.csv',
+                    'luca_q3_financial_model.xlsx',
                 ],
             ),
             (
                 'client',
-                dt_utc(2026, 9, 1, 17, 28, 11),
-                "my accountant reviewed this this morning and said it's the cleanest file I've ever sent him lol. thank you so much!",
+                dt_utc(2026, 8, 31, 10, 15, 30),
+                "just forwarded both workbooks to my accountant and he said it's the cleanest book he's seen from a charter operator all year. mahalo nui loa team!",
                 [],
-            ),
-            (
-                'admin',
-                dt_utc(2026, 9, 2, 11, 12, 48),
-                'Love to hear that! Reach out whenever you need the winter charter schedules cleaned up.',
-                [],
-            ),
-            (
-                'client',
-                dt_utc(2026, 9, 14, 21, 9, 37),
-                'hey again! so high season for our catamaran charters starts in November and we need our guest pricing brochure and harbor slip schedule formalized. attached our raw notes—can you polish this up for $260?',
-                [
-                    'luca_charter_rates_raw.xlsx',
-                ],
-            ),
-            (
-                'admin',
-                dt_utc(2026, 9, 15, 14, 15, 10),
-                "Welcome back Luca! We can design a high-converting guest brochure and build an automated slip fee manifest in Excel for $260 flat. Want us to take this on?",
-                [],
-            ),
-            (
-                'client',
-                dt_utc(2026, 9, 15, 14, 28, 40),
-                "definitely, send the invoice!",
-                [],
-            ),
-            (
-                'admin',
-                dt_utc(2026, 9, 15, 14, 31, 4),
-                "Posted invoice INV-260915-LC02 ($260.00).",
-                [],
-            ),
-            (
-                'client',
-                dt_utc(2026, 9, 15, 14, 48, 26),
-                'paid with visa just now.',
-                [],
-            ),
-            (
-                'admin',
-                dt_utc(2026, 9, 16, 11, 23, 49),
-                'Here are your final charter assets: the 8-slide PowerPoint guest presentation deck (.pptx) ready for Waikiki hotel concierges and VIP guests, the multi-sheet partner cash-flow waterfall model (.xlsx), and your seasonal harbor manifest Excel model!',
-                [
-                    'luca_oahu_charter_booking_deck_final.pptx',
-                    'luca_partner_distribution_waterfall_model.xlsx',
-                    'luca_harbor_seasonal_manifest_v2.xlsx',
-                ],
             ),
         ],
     },
@@ -4373,7 +3353,7 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 10, 13, 16, 18, 24),
-                'hey team, need some emergency spreadsheet surgery. our customs broker just hit us with unexpected Section 301 tariffs on our stainless pour-over kettles, and our LCL ocean freight spiked $35/CBM. attached our supplier SKU sheet and the broker duty notice. can you build a dynamic landed-cost & margin calculator so we know which retail prices we need to bump?',
+                "hey team, need some emergency spreadsheet surgery. our customs broker just hit us with unexpected Section 301 tariffs on our stainless pour-over kettles, and our LCL ocean freight spiked $35/CBM. attached our supplier SKU sheet and the broker duty notice. can you build a dynamic landed-cost & margin calculator so we know which retail prices we need to bump?",
                 [
                     'keegan_raw_sku_list.xlsx',
                     'keegan_freight_duty_rates.pdf',
@@ -4388,25 +3368,25 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 10, 14, 9, 17, 38),
-                "yes please! post the invoice and let's get it rolling.",
+                "that CBM volume allocation is exactly what we need. one thing though: our customs broker files under HTS 8516.79.00 for the electric kettles and HTS 7323.93.00 for the manual pour-over carafes. does your model let me input separate tariff percentages per SKU line, or is it a flat rate across the container?",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 14, 9, 29, 45),
-                'Posted invoice INV-261014-KC01 for $240.00.',
+                "It's a dynamic SKU-by-SKU lookup. Each product line has its own HTS classification column with the exact ad valorem duty rate (e.g. 2.7% base + 25% Section 301) applied specifically to that SKU's FOB value, so you never over-allocate duty onto non-tariffed items. Posted invoice INV-261014-KC01 for $240.00.",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 10, 14, 9, 44, 19),
-                'paid on debit just now.',
+                "awesome, that will save us hours arguing with accounting. paid the $240 on corporate debit just now.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 15, 8, 31, 52),
-                'Here is the draft v1 model for you to test out with your team.',
+                "Here is the draft v1 model for you to test out with your team.",
                 [
                     'keegan_sku_margin_calculator_v1.xlsx',
                 ],
@@ -4420,12 +3400,18 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 15, 11, 6, 33),
-                'Added the 2.1x wholesale tier, locked all formula ranges, and attached your staff receiving handbook PDF!',
+                "Added the 2.1x wholesale tier, locked all formula ranges, and attached your staff receiving handbook PDF!",
                 [
                     'keegan_sku_margin_calculator_v2_locked.xlsx',
                     'keegan_staff_sku_guide.pdf',
                     'keegan_warehouse_sku_handbook.pdf',
                 ],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 15, 11, 24, 50),
+                "received! our warehouse receiving supervisor tested it on the morning container delivery and the locked cells worked perfectly. thanks team!",
+                [],
             ),
         ],
     },
@@ -4541,71 +3527,41 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 9, 13, 38, 52),
-                'Hi Liza! Medical plaza procurement committees are hyper-focused on insurance certificates ($1M liability), OSHA disinfection compliance, and clean SLA schedules. We can turn your draft into a clean compliance manual and Excel rate card for $120.',
+                "Hi Liza! Medical plaza procurement committees are hyper-focused on insurance certificates ($1M liability), OSHA disinfection compliance, and clean SLA schedules. We can turn your draft into a clean compliance manual and Excel rate card for $120.",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 10, 9, 13, 52, 16),
-                'perfect, sending you the updated contact numbers right now.',
+                "That disinfection compliance angle is huge—most cleaners just list 'sweeping and mopping' and get tossed in the trash. Can we make sure the rate card includes after-hours terminal cleanings for outpatient surgical suites? That's where our highest margins are.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 10, 11, 7, 33),
-                'Posted invoice INV-261010-LI01 ($120.00).',
+                "Absolutely. We'll add a dedicated section for Operating Room & Outpatient Terminal Disinfection with per-sq-ft biohazard protocol surcharges. Posted invoice INV-261010-LI01 ($120.00).",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 10, 10, 16, 44, 19),
-                'paid!',
+                "cleared on our Tampa office card! sending the updated supervisor phone numbers right now.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 10, 16, 58, 41),
-                'Here are your finalized vendor compliance manual and commercial rate card!',
+                "Here are your finalized vendor compliance manual and commercial rate card!",
                 [
                     'liza_vendor_packet_clean.pdf',
-                    'liza_rate_card_final.xlsx',
+                    'liza_commercial_rate_card.xlsx',
                 ],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 11, 10, 22, 8),
-                "omg this looks incredible! now for the big piece—attached is the full 15-page RFP proposal draft. it's a mess of broken tables and rambling text. can you do a full structural overhaul and print-ready PDF by tomorrow? quote me whatever it costs.",
-                [
-                    'liza_15p_service_proposal_messy.docx',
-                ],
-            ),
-            (
-                'admin',
-                dt_utc(2026, 10, 11, 10, 37, 45),
-                'We can do a full executive overhaul of all 15 pages—standardizing headings, fixing the maintenance matrices, and laying out an executive summary—for $300.00.',
+                dt_utc(2026, 10, 11, 9, 30, 14),
+                "printed 5 bound copies for the procurement committee this morning. the surgical suite disinfection specs look so executive. thank you guys!",
                 [],
-            ),
-            (
-                'admin',
-                dt_utc(2026, 10, 12, 11, 13, 29),
-                'Here is v1 of the formatted 15-page proposal for your review.',
-                [
-                    'liza_15p_service_proposal_v1.docx',
-                ],
-            ),
-            (
-                'client',
-                dt_utc(2026, 10, 12, 13, 51, 14),
-                'v1 is stunning! just paid the $300 invoice on my corporate card. only small change: update our 24/7 emergency dispatch line on the footer of page 12.',
-                [],
-            ),
-            (
-                'admin',
-                dt_utc(2026, 10, 12, 14, 19, 38),
-                'Footer updated! Here is your final print-ready proposal PDF. Best of luck with the procurement committee tomorrow!',
-                [
-                    'liza_15p_service_proposal_final.pdf',
-                ],
             ),
         ],
     },
@@ -4670,48 +3626,55 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 9, 18, 49, 33),
-                "Hi Drako! 540 shifts without a single safety incident and running a 14-person cross-dock is leadership gold in modern logistics. We'll translate your real-world dock metrics into executive supply chain language with ATS keyword optimization and write your LinkedIn summary for $150.",
+                "Hi Drako! 540 shifts without a single safety incident and running a 14-person cross-dock is leadership gold in modern logistics. We'll translate your real-world dock metrics into executive supply chain language with ATS keyword optimization and write your LinkedIn summary for $25 flat.",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 10, 10, 8, 14, 52),
-                'that sounds exactly like what i need. ready to pay.',
+                "man, hearing you frame 540 shifts without an incident actually made me stand a little taller haha. I was nervous my high school diploma was gonna hold me back. just promise me no cheesy corporate buzzwords like 'synergistic rockstar'. send the invoice over, i'll pay on my debit card.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 10, 8, 28, 19),
-                'Posted invoice INV-261010-DS01 ($150.00).',
+                dt_utc(2026, 10, 10, 8, 30, 12),
+                "Zero buzzwords, 100% hard dock numbers: throughput, OSHA compliance, and team leadership. Invoice INV-261011-DS01 ($25.00) is posted!",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 10, 8, 43, 7),
-                'paid on mastercard.',
+                dt_utc(2026, 10, 10, 8, 45, 19),
+                "paid on debit just now from my phone.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 11, 15, 19, 41),
-                'Here is v1 of your Operations Supervisor resume draft!',
+                dt_utc(2026, 10, 11, 14, 18, 20),
+                "Here is your v1 draft! Take a look and let us know if anything needs tuning.",
                 [
-                    'drako_resume_and_linkedin_v1.docx',
+                    'drako_resume_operations_supervisor_v1.docx',
                 ],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 12, 8, 52, 16),
-                'wow reading this makes me feel so proud of what our team achieved out on the floor. can you just make sure Manhattan Associates WMS is listed in the core skills?',
+                dt_utc(2026, 10, 11, 16, 5, 40),
+                "reading this over during lunch on the dock—this sounds like a real leader wrote it. can we add one bullet under Sunbelt about coordinating bilingual Spanish/English safety briefings? half our forklift team is Spanish-speaking and the hiring manager will love that.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 12, 9, 28, 34),
-                'Added Manhattan Associates WMS and RF barcode optimization. Attached is your final print-ready PDF and LinkedIn copy. Go get that supervisor position!',
+                dt_utc(2026, 10, 11, 17, 30, 45),
+                "Added the bilingual shift operations bullet! Attached are your final Word and ATS-formatted PDF resume and LinkedIn summary.",
                 [
-                    'drako_resume_and_linkedin_final.pdf',
+                    'drako_resume_operations_supervisor_final.pdf',
+                    'drako_linkedin_summary_and_application_cover_letter.docx',
                 ],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 12, 9, 12, 10),
+                "downloaded both. submitting the application to regional HR tonight. really appreciate the respect you gave my work man.",
+                [],
             ),
         ],
     },
@@ -5860,7 +4823,7 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 5, 7, 14, 18, 36),
-                "hey team! we're about 10 days out from our public product launch. our engineer built the site, but honestly the headline copy is dry as dust and the checkout value props need serious punch. attached our storefront notes, can you do a full copy polish and launch checklist?",
+                "hey team! we're about 10 days out from our public product launch for the ApexDesk modular rail. our mechanical engineer put together our product descriptions, but honestly the headline copy is dry as dust and reads like a CNC machine shop invoice: '6063-T6 aluminum extrusion with chamfered edges'. attached our storefront notes, can you guys help us make this actually feel like an Apple-grade luxury desk ecosystem?",
                 [
                     'carter_storefront_launch_notes.docx',
                 ],
@@ -5868,31 +4831,57 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 5, 7, 14, 42, 19),
-                "Hi Carter! Hardware buyers want tactile language: CNC-machined aerospace aluminum, thermal heatsink efficiency, and modular freedom. We can write your complete storefront copy, build an interactive HTML prototype, and assemble the full launch kit ZIP for $290 flat. Want us to take this on?",
+                "Hi Carter! Hardware buyers don't buy alloy codes—they buy the feeling of an immaculate, zero-cable desktop, the solid tactile thud of a unibody rail, and the satisfying snap of a magnetic Qi2 dock.\n\nWe can write your complete 3-tier storefront copy deck (Unibody Rail, MagSafe Qi2 Dock, CNC Cable Channels), build a standalone interactive HTML prototype with a live 3D unibody colorway toggle and modular rail builder, and assemble a 28-point Shopify pre-launch QA checklist for $290 flat.\n\nWant us to dive into this?",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 5, 7, 14, 55, 0),
-                "sounds awesome, shoot the invoice over!",
+                "hearing you contrast the CNC machine-shop voice against the zero-cable vision made me laugh because that's literally what our first beta tester said haha.\n\nquick question before we jump in: does the interactive HTML prototype work cleanly on mobile? our Kickstarter & Instagram traffic is probably 70% phones and i want to make sure the modular rail builder doesn't get squished.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 5, 7, 14, 58, 30),
-                "Posted invoice INV-260508-CL01 ($290.00). Drafting the copy and assembling the prototype now.",
+                dt_utc(2026, 5, 7, 15, 2, 45),
+                "100% mobile-optimized. We build the rail builder with touch swipe toggles and an Apple Pay sheet modal that fits neatly on phone viewports so your mobile backers can configure their kit in under 60 seconds without horizontal scroll bugs.",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 5, 7, 15, 10, 15),
-                "paid the invoice! excited to see how the interactive prototype turns out.",
+                dt_utc(2026, 5, 7, 15, 6, 12),
+                "sold. shoot the invoice over and i'll clear it on our company card right now.",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 5, 7, 15, 8, 30),
+                "Posted invoice INV-260508-CL01 ($290.00). Drafting the copy deck and assembling the interactive prototype now!",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 5, 7, 15, 14, 25),
+                "cleared the $290 on apple pay! stoked to see what you guys put together.",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 5, 8, 11, 20, 14),
+                "Here is the v1 draft copy deck! Notice how we renamed 'Base Gray' to 'Space Black Bead-Blasted' and anchored the modular rail around 'Zero-Cable Architecture'. Take a look and let us know what you think.",
+                [
+                    'carter_website_launch_checklist_final.pdf',
+                ],
+            ),
+            (
+                'client',
+                dt_utc(2026, 5, 8, 13, 42, 10),
+                "this copy is night-and-day better man. reading the hero section gave me chills.\n\none small tweak: on the specification badge, can we change '1-Year Limited Warranty' to 'Lifetime Unibody Guarantee'? our CNC tolerances are ±0.02mm so the aluminum rail is physically indestructible. also want to make sure the prototype calculates the Qi2 charger add-on accurately in the subtotal.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 5, 8, 15, 30, 22),
-                'Here is your complete storefront launch deliverable package: the interactive HTML landing page prototype ready to open and test live in any browser, your 28-point pre-launch QA checklist, and the full digital asset ZIP pack.',
+                "Love the 'Lifetime Unibody Guarantee'—that signals uncompromising aerospace build quality immediately. Subtotal logic is locked in with live magnetic module calculations.\n\nAttached is your complete launch deliverable package: your standalone interactive HTML landing page prototype ready to open and test live in any browser, the finalized 28-point pre-launch QA checklist, and the full digital asset ZIP pack.",
                 [
                     'carter_landing_page_prototype.html',
                     'carter_storefront_assets_and_launch_kit.zip',
@@ -5902,7 +4891,7 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 5, 8, 16, 19, 48),
-                'just tested the live HTML prototype in my browser—it looks so sleek! opening the ZIP pack now. thanks team!',
+                "just spent 15 minutes playing with the colorway toggle and modular rail builder on my iPhone—this feels smoother than Apple's configurator! sending the copy deck to our Shopify engineer right now. seriously grateful for the quick turnaround!",
                 [],
             ),
         ],

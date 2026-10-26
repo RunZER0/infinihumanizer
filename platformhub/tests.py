@@ -1063,5 +1063,38 @@ class InvoicePdfAndVerificationTests(TestCase):
         self.assertContains(res, "$950")
         self.assertContains(res, "$2,200")
 
+    def test_dockstream_showcase_page(self):
+        res = self.client.get(reverse("platformhub:showcase_dockstream"))
+        self.assertEqual(res.status_code, 200)
+        self.assertContains(res, "DockStream")
+        self.assertContains(res, "Interactive Cross-Dock Terminal")
+        self.assertContains(res, "detention savings")
+        # Direct route
+        res_direct = self.client.get(reverse("platformhub:dockstream_direct"))
+        self.assertEqual(res_direct.status_code, 200)
+
+    def test_orozco_roofing_showcase_page(self):
+        res = self.client.get(reverse("platformhub:showcase_orozco"))
+        self.assertEqual(res.status_code, 200)
+        self.assertContains(res, "Orozco")
+        self.assertContains(res, "Commercial Roof Bid Calculator")
+        self.assertContains(res, "60-mil")
+        self.assertContains(res, "Carlisle")
+        # Direct route
+        res_direct = self.client.get(reverse("platformhub:orozco_direct"))
+        self.assertEqual(res_direct.status_code, 200)
+
+    def test_apexdesk_showcase_page(self):
+        res = self.client.get(reverse("platformhub:showcase_apexdesk"))
+        self.assertEqual(res.status_code, 200)
+        self.assertContains(res, "ApexDesk")
+        self.assertContains(res, "Configure Your Desk Ecosystem")
+        self.assertContains(res, "Qi2")
+        self.assertContains(res, "MagSafe")
+        # Direct route
+        res_direct = self.client.get(reverse("platformhub:apexdesk_direct"))
+        self.assertEqual(res_direct.status_code, 200)
+
+
 
 

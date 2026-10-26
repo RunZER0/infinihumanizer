@@ -51,5 +51,11 @@ urlpatterns = [
     path("operations/reconciliation/", views.reconciliation, name="reconciliation"),
     path("showcase/studio-brown/", views.showcase_studio_brown, name="showcase_studio_brown"),
     path("studio-brown/", views.showcase_studio_brown, name="studio_brown_direct"),
+    path("showcase/dockstream/", views.showcase_dockstream, name="showcase_dockstream"),
+    path("dockstream/", views.showcase_dockstream, name="dockstream_direct"),
+    path("showcase/orozco-roofing/", views.showcase_orozco, name="showcase_orozco"),
+    path("orozco-roofing/", views.showcase_orozco, name="orozco_direct"),
+    path("showcase/apexdesk/", views.showcase_apexdesk, name="showcase_apexdesk"),
+    path("apexdesk/", views.showcase_apexdesk, name="apexdesk_direct"),
     path("health/", views.health, name="health"),
 ]
