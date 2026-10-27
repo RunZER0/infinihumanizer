@@ -1165,6 +1165,164 @@ def write_png_file(filename: str, title: str, bullets: list[str], subtitle: str 
     return build_attachment_meta(filename=filename, display_name=filename, role=role)
 
 
+def write_screenshot_png_file(
+    filename: str,
+    url: str,
+    site_title: str,
+    hero_headline: str,
+    hero_subhead: str = "",
+    items: list = None,
+    kind: str = "browser",
+    role: str = "source",
+) -> dict:
+    files_dir = get_chat_files_dir()
+    dest = files_dir / filename
+    try:
+        from PIL import Image, ImageDraw
+        items = items or []
+        w, h = 1280, 880
+
+        if kind == "photo":
+            # Real field inspection capture style
+            img = Image.new("RGB", (w, h), color=(26, 28, 30))
+            draw = ImageDraw.Draw(img)
+            # Inspection Camera Header Overlay
+            draw.rectangle([0, 0, w, 50], fill=(15, 17, 19))
+            draw.text((30, 16), "FLIR THERMAL & HIGH-RES ROOF INSPECTION CAPTURE", fill=(245, 158, 11))
+            draw.text((w - 280, 16), "GPS: 32.7767° N, 96.7970° W", fill=(156, 163, 175))
+            draw.line([0, 50, w, 50], fill=(45, 48, 52), width=1)
+
+            # Central photo viewfinder box
+            draw.rectangle([40, 70, w - 40, h - 140], fill=(36, 39, 43), outline=(60, 64, 70), width=2)
+            # Crosshairs
+            cx, cy = w // 2, (h - 70) // 2
+            draw.line([cx - 40, cy, cx + 40, cy], fill=(245, 158, 11), width=1)
+            draw.line([cx, cy - 40, cx, cy + 40], fill=(245, 158, 11), width=1)
+
+            # Title & Metadata Card
+            draw.rectangle([70, 100, 520, 260], fill=(18, 20, 22), outline=(245, 158, 11), width=1)
+            draw.text((90, 115), site_title[:50], fill=(255, 255, 255))
+            draw.text((90, 145), hero_headline[:60], fill=(229, 231, 235))
+            if hero_subhead:
+                draw.text((90, 175), hero_subhead[:70], fill=(156, 163, 175))
+            draw.text((90, 215), "Status: Verified Membrane Sample", fill=(52, 211, 153))
+
+            # Inspection callout points
+            py = 300
+            for item in items[:8]:
+                text = str(item)
+                draw.rectangle([70, py, w - 70, py + 34], fill=(24, 26, 29), outline=(48, 52, 58), width=1)
+                draw.rectangle([70, py, 76, py + 34], fill=(245, 158, 11))
+                draw.text((90, py + 9), text[:110], fill=(220, 224, 230))
+                py += 44
+
+            # Footer telemetry
+            draw.rectangle([0, h - 70, w, h], fill=(15, 17, 19))
+            draw.text((40, h - 45), "CAMERA: SONY ALPHA 7R V · ISO 100 · 35MM F/2.8 · RAW PROOF", fill=(107, 114, 128))
+            draw.text((w - 320, h - 45), "CLIENT UPLOAD: JOB SITE AUDIT", fill=(245, 158, 11))
+
+        elif kind == "form":
+            # Realistic Browser Intake Form Capture
+            img = Image.new("RGB", (w, h), color=(248, 246, 242))
+            draw = ImageDraw.Draw(img)
+
+            # Browser window chrome
+            draw.rectangle([0, 0, w, 44], fill=(232, 230, 225))
+            draw.line([0, 44, w, 44], fill=(210, 208, 202), width=1)
+            draw.ellipse([18, 16, 30, 28], fill=(255, 95, 87))
+            draw.ellipse([38, 16, 50, 28], fill=(254, 188, 46))
+            draw.ellipse([58, 16, 70, 28], fill=(40, 200, 64))
+
+            # URL Bar
+            draw.rectangle([120, 8, w - 120, 36], fill=(255, 255, 255), outline=(215, 212, 205), width=1)
+            draw.text((140, 14), f"🔒  {url}", fill=(90, 88, 85))
+
+            # Header
+            draw.rectangle([0, 45, w, 115], fill=(255, 255, 255))
+            draw.line([0, 115, w, 115], fill=(235, 232, 226), width=1)
+            draw.text((60, 68), site_title.upper(), fill=(25, 25, 25))
+            draw.text((w - 450, 72), "Work      About      Services      Book a Session", fill=(110, 105, 98))
+
+            # Warning banner for long form
+            draw.rectangle([60, 135, w - 60, 185], fill=(254, 242, 242), outline=(252, 165, 165), width=1)
+            draw.text((80, 150), hero_headline[:100], fill=(185, 28, 28))
+
+            # Form fields
+            y = 205
+            for item in items[:12]:
+                if isinstance(item, (tuple, list)):
+                    label, ph = item[0], item[1] if len(item) > 1 else ""
+                else:
+                    label, ph = str(item), ""
+                draw.text((60, y), str(label)[:80], fill=(35, 33, 30))
+                draw.rectangle([60, y + 18, w - 60, y + 46], fill=(255, 255, 255), outline=(218, 215, 208), width=1)
+                if ph:
+                    draw.text((75, y + 25), str(ph)[:90], fill=(160, 156, 148))
+                y += 52
+
+        else:
+            # Realistic Browser Homepage / Showcase Capture
+            img = Image.new("RGB", (w, h), color=(250, 249, 246))
+            draw = ImageDraw.Draw(img)
+
+            # Browser window chrome
+            draw.rectangle([0, 0, w, 44], fill=(232, 230, 225))
+            draw.line([0, 44, w, 44], fill=(210, 208, 202), width=1)
+            draw.ellipse([18, 16, 30, 28], fill=(255, 95, 87))
+            draw.ellipse([38, 16, 50, 28], fill=(254, 188, 46))
+            draw.ellipse([58, 16, 70, 28], fill=(40, 200, 64))
+
+            # URL Bar
+            draw.rectangle([120, 8, w - 120, 36], fill=(255, 255, 255), outline=(215, 212, 205), width=1)
+            draw.text((140, 14), f"🔒  {url}", fill=(90, 88, 85))
+
+            # Webpage Header
+            draw.rectangle([0, 45, w, 115], fill=(255, 255, 255))
+            draw.line([0, 115, w, 115], fill=(235, 232, 226), width=1)
+            draw.text((60, 68), site_title.upper(), fill=(25, 25, 25))
+            draw.text((w - 480, 72), "Portfolio      About      Contact      Book a Session", fill=(110, 105, 98))
+
+            # Hero Banner
+            draw.rectangle([60, 135, w - 60, 310], fill=(238, 235, 228), outline=(220, 216, 208), width=1)
+            draw.text((90, 155), "HOMEPAGE CAPTURE · CURRENT LIVE THEME", fill=(120, 115, 105))
+            draw.text((90, 185), hero_headline[:75], fill=(30, 30, 30))
+            if hero_subhead:
+                draw.text((90, 225), hero_subhead[:90], fill=(160, 100, 80))
+            draw.rectangle([90, 255, 260, 290], fill=(30, 30, 30))
+            draw.text((120, 265), "BOOK A SESSION", fill=(255, 255, 255))
+
+            # Grid area
+            draw.text((60, 335), "PORTFOLIO PREVIEW (UNCATEGORIZED GRID · MIXED PERSONAL & COMMERCIAL)", fill=(50, 50, 50))
+            x, y = 60, 365
+            cw, ch = 360, 225
+            for i, card in enumerate(items[:6]):
+                if isinstance(card, (tuple, list)):
+                    c_tag = card[0]
+                    c_name = card[1] if len(card) > 1 else ""
+                    c_desc = card[2] if len(card) > 2 else ""
+                else:
+                    c_tag = f"Sample {i+1}"
+                    c_name = str(card)
+                    c_desc = "Client Session"
+
+                draw.rectangle([x, y, x + cw, y + ch], fill=(242, 240, 234), outline=(215, 211, 202), width=1)
+                draw.rectangle([x + 10, y + 10, x + cw - 10, y + 150], fill=(225, 222, 215))
+                draw.text((x + 20, y + 65), f"[{c_tag}]", fill=(135, 130, 120))
+                draw.text((x + 15, y + 165), str(c_name)[:40], fill=(35, 35, 35))
+                draw.text((x + 15, y + 190), str(c_desc)[:45], fill=(130, 126, 118))
+                x += cw + 30
+                if (i + 1) % 3 == 0:
+                    x = 60
+                    y += ch + 25
+
+        img.save(dest, "PNG")
+    except Exception as e:
+        # Fallback to minimal PNG
+        dest.write_bytes(b"\x89PNG\r\n\x1a\n" + b"\x00" * 10240)
+
+    return build_attachment_meta(filename=filename, display_name=filename, role=role)
+
+
 def guess_mime_type(filename: str) -> str:
     ext = Path(filename).suffix.lower()
     explicit = {
@@ -1196,4 +1354,14 @@ def guess_mime_type(filename: str) -> str:
         return explicit[ext]
     guessed, _ = mimetypes.guess_type(filename)
     return guessed or "application/octet-stream"
+
+
+def copy_chat_file_alias(source_name: str, alias_name: str, role: str = "file") -> dict:
+    files_dir = get_chat_files_dir()
+    src = files_dir / source_name
+    dst = files_dir / alias_name
+    if src.exists():
+        import shutil
+        shutil.copyfile(src, dst)
+    return build_attachment_meta(alias_name, role=role)
 

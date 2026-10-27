@@ -11,6 +11,7 @@ from django.db import transaction
 
 from humanizer.models import ClientConversation, ClientMessage
 from platformhub.chat_files import (
+    copy_chat_file_alias,
     write_csv_file,
     write_docx_file,
     write_html_file,
@@ -18,6 +19,7 @@ from platformhub.chat_files import (
     write_pdf_file,
     write_png_file,
     write_pptx_file,
+    write_screenshot_png_file,
     write_xlsx_file,
     write_zip_file,
 )
@@ -165,54 +167,45 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     # 2. Audrey Brown (audreymbrown2007@gmail.com)
     # =========================================================================
-    files["audrey_current_site_screenshots.pdf"] = write_pdf_file(
-        "audrey_current_site_screenshots.pdf",
-        "Studio Brown — Current Squarespace Website & Booking Intake Reference",
-        [
-            "# 1. CURRENT HOMEPAGE & NAVIGATION (SQUARESPACE EXPORT)",
-            "Active Website URL: studiobrownphotography.squarespace.com (Custom domain forwarding)",
-            "Current Header & Hero Headline: 'Studio Brown — Visual storytelling for modern life'",
-            "Current Subhead: None. (Single background photograph with logo watermark).",
-            "Navigation Menu: Home | Portfolio | About | Book a Session | Instagram",
-            "Portfolio Display: Single unpaginated grid of 36 uncategorized high-resolution photographs mixing personal portraits, lifestyle editorial, wedding commissions, and commercial lookbooks without captions or client tags.",
-            "Client Note from Audrey: 'Visitors say they love the images on Instagram, but bounce after hitting the site. I don't know if the page looks too sparse or if people don't know what I actually shoot or where in Austin I am.'",
-            "--PAGE-BREAK--",
-            "# 2. CURRENT INTAKE FORM (FULL 14-QUESTION SCRIPT)",
-            "The following 14 questions currently appear in the Squarespace lightbox modal when a visitor clicks 'Book a Session':",
-            [
-                ["Field #", "Field Label / Question", "Input Type", "Required?"],
-                ["1", "Full Legal Name", "Single-line Text", "Yes"],
-                ["2", "Email Address", "Email", "Yes"],
-                ["3", "Mobile Phone Number", "Phone", "Yes"],
-                ["4", "How did you hear about Studio Brown?", "Dropdown (IG, Google, Friend)", "Yes"],
-                ["5", "Type of Session", "Dropdown (Portrait, Brand, Event)", "Yes"],
-                ["6", "Preferred session date + 2 backup dates", "Text Area", "Yes"],
-                ["7", "Desired location (Studio, Outdoor, Specific Venue)", "Single-line Text", "Yes"],
-                ["8", "Estimated headcount / team size", "Number", "No"],
-                ["9", "Wardrobe vision & outfit changes planned", "Paragraph Text", "No"],
-                ["10", "Do you need on-site hair & makeup artist coordination?", "Dropdown (Yes, No, Maybe)", "Yes"],
-                ["11", "Pinterest moodboard or visual inspiration URL", "Website URL", "Yes (Required)"],
-                ["12", "Ideal total project budget range for this shoot", "Open Text Input", "Yes"],
-                ["13", "Intended image usage & licensing", "Dropdown (Personal, Commercial)", "Yes"],
-                ["14", "Additional notes, shot requests, or creative guidelines", "Paragraph Text", "No"],
-            ],
-            "Client Note from Audrey: 'I put this form together last year trying to get all details upfront before jumping on calls, but almost nobody ever finishes submitting it. Zero prices or starting rates are listed anywhere on the page.'",
-            "--PAGE-BREAK--",
-            "# 3. MOBILE VIEW & MONTHLY TRAFFIC OVERVIEW",
-            "Current Analytics & Performance Notes (Squarespace Analytics Snapshot - Sept 2026):",
-            "Monthly Unique Visitors: ~1,850 to 2,200 (84% mobile via Instagram profile link).",
-            "Avg Time on Homepage: 24 seconds.",
-            "Click-through rate to 'Book a Session' button: ~7.4% (approx. 140–160 clicks/mo).",
-            "Completed Intake Form Submissions: 1 to 3 submissions/mo (over 98% form abandonment rate).",
-            "Primary Client Confusion / Questions received in Instagram DMs:",
-            "- 'Hey Audrey, how much do your portrait sessions cost?'",
-            "- 'Do you shoot studio or on-location? Where are you located in Austin?'",
-            "- 'Can you do a quick headshot or do you only do full day commercial brand shoots?'",
-            "Client Note from Audrey: 'I spend 4-5 hours a week replying to basic pricing DMs on Instagram because people say the booking page is confusing or overwhelming. Need help figuring out why nobody is converting.'",
+    files["audrey_current_homepage_screenshot.png"] = write_screenshot_png_file(
+        "audrey_current_homepage_screenshot.png",
+        url="https://studiobrownphotography.squarespace.com/",
+        site_title="Studio Brown Photography · Austin, TX",
+        hero_headline="Visual storytelling for modern life.",
+        hero_subhead="[Current Live Subhead: None. No Austin location mention. No commercial vs portrait differentiation.]",
+        items=[
+            ("Card 01", "Sculptors Portrait · Northern Light", "No Category Tag / No Pricing"),
+            ("Card 02", "Texas Hill Country Outerwear", "Commercial Lookbook Commission"),
+            ("Card 03", "Architectural Warehouse Loft", "East Austin Interior Shoot"),
+            ("Card 04", "Dripping Springs Wedding", "Personal Wedding Commission"),
+            ("Card 05", "Ceramics Maker Editorial", "Austin Artisan Feature"),
+            ("Card 06", "Executive Founder Profile", "Studio Portrait Session"),
         ],
+        kind="browser",
         role="source",
-        subtitle="Current Squarespace Site Reference & 14-Question Intake Screenshots (Client Upload)",
-        meta_tag="Studio Brown · Client Squarespace Reference · Austin, TX",
+    )
+    files["audrey_current_booking_form_screenshot.png"] = write_screenshot_png_file(
+        "audrey_current_booking_form_screenshot.png",
+        url="https://studiobrownphotography.squarespace.com/book",
+        site_title="Studio Brown Photography · Client Booking",
+        hero_headline="FORM ABANDONMENT AUDIT REFERENCE: Squarespace Lightbox Modal (14 Mandatory Fields)",
+        hero_subhead="Client Intake Questionnaire (14 Required Fields · 0 Starting Rates Shown)",
+        items=[
+            ("1. Full Legal Name *", "Required for contract verification"),
+            ("2. Email Address *", "client@domain.com"),
+            ("3. Mobile Phone Number *", "+1 (512) 000-0000"),
+            ("4. How did you hear about Studio Brown? *", "Dropdown (Instagram, Referral, Google)"),
+            ("5. Type of Session *", "Dropdown (Portrait, Brand, Event)"),
+            ("6. Preferred Session Date + 2 Backup Dates *", "e.g. Oct 14th, Oct 21st, Nov 4th"),
+            ("7. Desired Location / Venue *", "Studio, Outdoor, Specific Venue"),
+            ("8. Wardrobe Vision & Outfit Changes Planned", "Describe fabric textures, color palettes..."),
+            ("9. Do you require on-site Hair & Makeup coordination? *", "Yes / No / Need recommendations"),
+            ("10. Pinterest Moodboard or Visual Inspiration URL *", "https://pinterest.com/... (REQUIRED FIELD)"),
+            ("11. Total Project Budget Band for this shoot *", "Open blank text input (No starting rates shown)"),
+            ("12. Intended Image Usage & Licensing Rights *", "Personal / Commercial / Editorial Advertising"),
+        ],
+        kind="form",
+        role="source",
     )
     files["audrey_homepage_booking_audit.pdf"] = write_pdf_file(
         "audrey_homepage_booking_audit.pdf",
@@ -563,6 +556,7 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="deliverable",
     )
+    files["liza_commercial_rate_card.xlsx"] = copy_chat_file_alias("liza_rate_card_final.xlsx", "liza_commercial_rate_card.xlsx", role="deliverable")
     files["liza_15p_service_proposal_messy.docx"] = write_docx_file(
         "liza_15p_service_proposal_messy.docx",
         "Tampa Bay Medical Plaza RFP Response — 15 Pages (Rough Scramble)",
@@ -736,6 +730,23 @@ def build_seed_attachments() -> dict[str, dict]:
         role="deliverable",
         subtitle="Executive Warehouse Leadership Resume & Complete LinkedIn Profile Strategy",
         meta_tag="Executive Operations & Logistics Leadership Portfolio",
+    )
+    files["drako_resume_operations_supervisor_v1.docx"] = copy_chat_file_alias("drako_resume_and_linkedin_v1.docx", "drako_resume_operations_supervisor_v1.docx", role="deliverable")
+    files["drako_resume_operations_supervisor_final.pdf"] = copy_chat_file_alias("drako_resume_and_linkedin_final.pdf", "drako_resume_operations_supervisor_final.pdf", role="deliverable")
+    files["drako_linkedin_summary_and_application_cover_letter.docx"] = write_docx_file(
+        "drako_linkedin_summary_and_application_cover_letter.docx",
+        "Drako Santa Ana — LinkedIn Profile Overhaul & Targeted Operations Cover Letter",
+        [
+            "# SECTION 1: LINKEDIN PROFILE OPTIMIZATION",
+            "Target Headline: Warehouse & Dock Operations Supervisor | 540 Consecutive Shifts Without Incident | DFW Cross-Dock Leadership",
+            "About Summary: Cross-dock operations supervisor with 8+ years leading fast-paced distribution and freight consolidation teams across the Dallas-Fort Worth metroplex. Passionate about sustaining 99.8% order accuracy and creating a culture of zero-incident safety.",
+            "# SECTION 2: TARGETED OPERATIONS COVER LETTER",
+            "Dear Hiring Director,",
+            "In high-velocity warehouse distribution, consistent trailer throughput depends on two things: unshakeable safety discipline and clear crew leadership. Over the past 18 months supervising night-shift operations across 30+ regional freight bays, our team turned 450,000 cases with 99.8% accuracy and completed 540 consecutive shifts without a single OSHA recordable incident.",
+            "I look forward to discussing how this operational rigor can support your regional distribution facility.",
+            "Sincerely, Drako Santa Ana",
+        ],
+        role="deliverable",
     )
 
     # =========================================================================
@@ -1350,6 +1361,22 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
+    files["orozco_commercial_flat_roof_job_photo.png"] = write_screenshot_png_file(
+        "orozco_commercial_flat_roof_job_photo.png",
+        url="FLIR E76 Thermal Imaging System · Job Site #TX-8840",
+        site_title="Orozco Roofing Systems · Commercial Inspection",
+        hero_headline="Field Job Photo: 42,000 Sq Ft Commercial TPO Heat-Welded Seams",
+        hero_subhead="Robotic hot-air welded lap seams & probe verification on Carlisle 60-mil membrane.",
+        items=[
+            "Inspection Point 1: 1.5-inch continuous hot-air fused lap seam passed 100% mechanical cotter probe test.",
+            "Inspection Point 2: R-30 polyiso insulation board mechanically fastened with #15 heavy-duty fasteners (FM 1-90).",
+            "Inspection Point 3: FLIR Infrared thermal moisture survey confirmed zero subsurface deck water pockets.",
+            "Inspection Point 4: 24-gauge Galvalume parapet coping with hemmed drip edge and continuous cleat verified.",
+            "Inspection Point 5: Direct manufacturer technical audit scheduled for 20-Year NDL warranty issuance.",
+        ],
+        kind="photo",
+        role="source",
+    )
     files["orozco_site_copy_and_estimate_v1.docx"] = write_docx_file(
         "orozco_site_copy_and_estimate_v1.docx",
         "Orozco Commercial Roofing — Website Copy & Bid Estimate (v1)",
@@ -1705,6 +1732,19 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="deliverable",
     )
+    files["luca_q3_financial_model.xlsx"] = copy_chat_file_alias("luca_q3_property_ledger_reconciled.xlsx", "luca_q3_financial_model.xlsx", role="deliverable")
+    files["luca_q3_reconciled_ledger.csv"] = write_csv_file(
+        "luca_q3_reconciled_ledger.csv",
+        [
+            ["Date", "Transaction Description", "Category", "Gross Inbound (USD)", "GET Tax (4.712%)", "County Surcharge (0.5%)", "Net Revenue"],
+            ["2026-08-02", "Oahu Sunset Catamaran Charter #1042", "Private Charter", 3450.00, 162.56, 17.25, 3270.19],
+            ["2026-08-09", "Diamond Head Snorkel Tour 14 Guests", "Group Charter", 2800.00, 131.94, 14.00, 2654.06],
+            ["2026-08-16", "Kewalo Basin Harbor Fuel Dock Surcharge", "Vessel Expense", -840.00, 0.00, 0.00, -840.00],
+            ["2026-08-23", "Corporate Team Building Excursion", "Corporate Charter", 4950.00, 233.24, 24.75, 4692.01],
+            ["2026-08-30", "Marine Diesel Maintenance & Hull Cleaning", "Vessel Expense", -1120.00, 0.00, 0.00, -1120.00],
+        ],
+        role="deliverable",
+    )
     files["luca_charter_rates_raw.xlsx"] = write_xlsx_file(
         "luca_charter_rates_raw.xlsx",
         "Charter_Pricing_Notes",
@@ -2028,6 +2068,26 @@ def build_seed_attachments() -> dict[str, dict]:
         "ApexDesk · Precision Modular Desktop Ecosystem",
         carter_html,
         role="deliverable",
+    )
+    files["carter_website_launch_checklist_final.pdf"] = write_pdf_file(
+        "carter_website_launch_checklist_final.pdf",
+        "ApexDesk — E-Commerce Pre-Launch & Shopify Technical Verification Checklist",
+        [
+            "# 1. TECHNICAL LAUNCH AUDIT OVERVIEW",
+            "Pre-flight verification checklist for the public release of the ApexDesk Modular Aluminum Rail Ecosystem.",
+            "# 2. HARDWARE ECOSYSTEM VERIFICATION CHECKS",
+            "— Mobile Rail Customizer: Verified 60fps gesture handling and live accessory rendering on iOS Safari and Android Chrome.",
+            "— Apple Pay & Express Checkout: Verified 1-tap tokenization and Paystack payment callback handling.",
+            "— Inventory Sync: Real-time reservation locks for Batch 01 (500 units) active across warehouse ERP.",
+            "— Page Weight & Core Web Vitals: Mobile LCP < 1.4s, FID < 15ms, CLS = 0.00 across all device viewports.",
+            "— SSL & Domain Security: HSTS enabled with automated 256-bit TLS certificate rotation.",
+            "# 3. CONVERSION COPY DECK",
+            "— Hero Positioning: 'The Last Desktop Surface You Will Ever Calibrate.'",
+            "— Value Props: Zero Cable Clutter · Unibody 6063 Aluminum · Qi2 15W High-Efficiency Magnetic Power.",
+        ],
+        role="deliverable",
+        subtitle="DTC Hardware Storefront Launch Specification & QA Sign-Off",
+        meta_tag="ApexDesk Modular Hardware Systems · Storefront Launch",
     )
     files["carter_storefront_assets_and_launch_kit.zip"] = write_zip_file(
         "carter_storefront_assets_and_launch_kit.zip",
@@ -2368,13 +2428,25 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 17, 21, 28, 40),
-                "Hey Jose! Good to connect. You're spot on—shippers right now are starving for reliable asset-based carriers who actually own their trucks, instead of brokers who re-broker and drop freight at the last minute. We can take your rough notes and shape them into a punchy executive capability bio plus 3 cold outreach emails targeting warehouse managers and shipping supervisors across DFW. We'll also design a clean digital rate card graphic you can text straight from your phone. Total package is $25.00 flat.",
+                "Hey Jose! Good to connect. Shippers right now are starving for reliable asset-based carriers who actually own their trucks, instead of brokers who re-broker and drop freight at the last minute. Are you mostly bidding on dedicated warehouse distribution runs between Dallas, Fort Worth, and Arlington, or regional hot-shot hauls across North Texas?",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 17, 21, 45, 12),
+                "mostly regional distribution routes and dedicated cross-town runs between DFW warehouses, Arlington assembly plants, and Alliance airport. we have two 26ft straight trucks with liftgates and pallet jacks ready to go. how much to clean this up and make us look like a serious carrier?",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 10, 18, 14, 12, 30),
+                "We can shape your notes into a punchy executive capability bio, 3 targeted cold outreach emails for DFW warehouse dispatchers, plus a clean mobile rate card graphic you can text straight from your cab. Total package is $25.00 flat and we can have the draft in your hands by tomorrow evening. Want us to get started?",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 10, 18, 19, 27, 14),
-                "sounds fair man. i tried paying through the normal checkout earlier this afternoon on my tablet, but chase flagged my debit card because of the processor location i think. do you have a direct link or alternate way to run it?",
+                "sounds fair man, let's do it. i tried paying through the normal checkout on your portal earlier from my phone, but chase flagged my debit card because of the merchant location i think. do you have a direct link or alternate way to run it?",
                 [],
             ),
             (
@@ -2558,25 +2630,38 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 9, 30, 19, 27, 34),
                 "hey! hope you guys are doing well. i really need some help with my website... i get good traffic from instagram and people love the photos, but barely anyone actually books through the site. visitors click over to the booking page and then just vanish. i attached screenshots of my current homepage and booking form. can you guys take a look and see what might be going wrong?",
                 [
-                    'audrey_current_site_screenshots.pdf',
+                    'audrey_current_homepage_screenshot.png',
+                    'audrey_current_booking_form_screenshot.png',
                 ],
             ),
             (
                 'admin',
-                dt_utc(2026, 9, 30, 19, 47, 18),
-                "Hi Audrey! First off, your work is stunning—the natural light portraits are genuinely gorgeous, so rest assured your photography isn't the problem at all.\n\nWe looked through your booking flow, and the issue is clear:\nYou're asking 14 detailed questions before showing any rates. Visitors love the work, click Book, get hit with a wall of questions without knowing if they can afford you, and freeze up. Pair that with a generic headline that doesn't mention you're in East Austin, and people just bounce.\n\nWe can run a quick $90 diagnostic audit to fix this: we'll cut that form down to 5 painless fields, anchor your starting package rates upfront so clients pre-qualify, and sharpen your headline.\n\nWant us to run that for you?",
+                dt_utc(2026, 9, 30, 19, 38, 12),
+                "Hi Audrey! First off, your work is stunning—the natural light portraits are genuinely gorgeous, so rest assured your photography isn't the problem at all.\n\nTook a look through both screenshots you sent over. The biggest friction point jumps right out on your booking form: you're asking visitors for 14 detailed questions before they even see starting rates or know your availability. When someone taps over from Instagram on their phone, that's a massive wall.\n\nAre most people reaching out directly in your Instagram DMs asking about pricing instead of finishing that form?",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 9, 30, 19, 54, 10),
-                "oh wow... okay hearing you say it out loud makes it so obvious haha. i had no idea 14 questions was that terrifying, i thought i was just being thorough! and yes, i've been terrified of putting prices on the site because someone told me not to, but what you said makes complete sense. send over the link and let's do it!",
+                dt_utc(2026, 9, 30, 19, 44, 25),
+                "oh wow... yes, 100%! my DMs are constantly flooded with people asking 'how much for a portrait session?' and when I tell them to check the site to book, they just ghost. I've been terrified of putting prices on the site because someone told me it scares people off, but answering the same pricing questions in DMs all day is exhausting. hearing you say 14 questions is terrifying makes so much sense haha, i honestly thought i was just being thorough!",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 9, 30, 19, 56, 5),
-                "Here is the direct Apple Pay checkout link: https://paystack.shop/pay/ppiajw3f1-\n\nOnce that clears, we'll dive right in and have the full breakdown over to you tomorrow!",
+                dt_utc(2026, 9, 30, 19, 50, 48),
+                "Putting starting rates upfront actually protects your time and attracts serious clients who already value your work—it filters out tire-kickers and builds immediate trust.\n\nWhat we'd recommend is a focused diagnostic audit: we'll cut the intake down from 14 questions to 5 painless essentials, anchor clear starting package tiers ($450 Essential, $950 Studio Session, $2,200 Campaign) so clients pre-qualify, and sharpen your hero headline to signal your East Austin studio.\n\nWe can run that complete diagnostic audit for $90 flat and have the full breakdown ready tomorrow afternoon. Would you like us to put that together for you?",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 9, 30, 19, 53, 10),
+                "That makes total sense and honestly takes such a huge weight off my shoulders. Yes please, let's do it!",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 9, 30, 19, 55, 30),
+                "Awesome Audrey! I just posted invoice INV-260930-AB01 for the $90 audit to your project billing tab. If you're on your phone between shoots, you can also clear it directly via Apple Pay right here: https://paystack.shop/pay/ppiajw3f1-.\n\nOnce that clears, we'll dive right in and have the complete audit report over to you tomorrow afternoon!",
                 [],
             ),
             (
@@ -2823,6 +2908,7 @@ CLIENT_PROFILES = {
                 "hey, got your info online. I'm usually up on a roof all day so writing isn't really my thing, but our company website still looks like it was made in 2010. we're doing more commercial flat roofs now and building owners keep asking if we do certified TPO and standing seam metal. attached some job photos and our rough estimate notes, can you write up good copy for our site?",
                 [
                     'orozco_roofing_rough_notes.docx',
+                    'orozco_commercial_flat_roof_job_photo.png',
                 ],
             ),
             (
@@ -3004,19 +3090,31 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 4, 4, 19, 31, 18),
-                "Hey Jack! Looked through the export. The biggest issue is deals sitting in 'Scoping' for 30+ days without automated task triggers. We can write a formal routing specification and deliver a cleaned CSV dataset with stage probability formulas for $160 flat.",
+                "Hey Jack! Looked through the export. The biggest issue is deals sitting in 'Scoping' for 30+ days without automated task triggers. Are you looking to enforce strict SLA escalation rules across SDRs and AEs, or do you also want us to re-tier your enterprise accounts?",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 4, 5, 13, 47, 9),
-                "the 30-day scoping bottleneck is exactly what's killing our forecast. can you turn the spec around before our Monday executive pipeline review?",
+                "Definitely strict SLA escalation rules. Deals over $25k need to alert the VP of Sales if untouched for 48 hours. Can you turn around a formal routing spec and cleaned export before our Monday executive pipeline review?",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 4, 5, 14, 11, 32),
-                "Yes, we can have the routing spec and cleaned export in your inbox Sunday evening for $160. Invoice INV-260405-JJ01 ($160.00) is posted to your portal.",
+                "We can deliver the complete CRM lead-routing spec PDF with automated SLA rules and clean up the entire pipeline dataset with stage probability formulas by Sunday evening for $160 flat. Want us to lock this into the weekend sprint?",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 4, 5, 14, 18, 50),
+                "Approved, that gives our engineering and sales leads exactly what they need for Monday morning. Send the invoice over and let's roll.",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 4, 5, 14, 20, 15),
+                "Invoice INV-260405-JJ01 ($160.00) is posted in your billing tab. Structuring the stage-gate rules and cleaning the CRM data now!",
                 [],
             ),
             (
@@ -3260,13 +3358,25 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 8, 28, 21, 5, 30),
-                "100%. We calculate base lodging revenue and break out both GET (4.712%) and Honolulu County TAT (10.25% + 3% county surcharge) in dedicated columns with automatic tax liability totals so your accountant can file without doing any extra math. Invoice INV-260814-LC01 ($220.00) is posted to your account.",
+                "100%. We calculate base lodging revenue and break out both GET (4.712%) and Honolulu County TAT (10.25% + 3% county surcharge) in dedicated columns with automatic tax liability totals so your accountant can file without doing any extra math. Does that cover everything your CPA needs so we can open up the project?",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 8, 28, 21, 15, 40),
+                "shaka! that saves me a massive headache and gives my CPA exactly what he asked for. Shoot the invoice over and I'll clear it from the dock.",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 8, 28, 21, 18, 10),
+                "Awesome Luca! Just posted invoice INV-260814-LC01 ($220.00) in your billing portal. If you're on the boat, you can also tap this direct link: https://paystack.shop/pay/892lxc01po. Diving into the reconciliation now!",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 8, 29, 18, 7, 44),
-                "shaka! that saves me a massive headache. just tapped apple pay right as we untied the bow lines for our afternoon Diamond Head sail. cleared the $220. let me know if any of the fuel slips are illegible.",
+                "just tapped apple pay right as we untied the bow lines for our afternoon Diamond Head sail! Cleared the $220. Let me know if any of the fuel slips are illegible.",
                 [],
             ),
             (
@@ -3374,13 +3484,25 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 14, 9, 29, 45),
-                "It's a dynamic SKU-by-SKU lookup. Each product line has its own HTS classification column with the exact ad valorem duty rate (e.g. 2.7% base + 25% Section 301) applied specifically to that SKU's FOB value, so you never over-allocate duty onto non-tariffed items. Posted invoice INV-261014-KC01 for $240.00.",
+                "It's a dynamic SKU-by-SKU lookup. Each product line has its own HTS classification column with the exact ad valorem duty rate (e.g. 2.7% base + 25% Section 301) applied specifically to that SKU's FOB value, so you never over-allocate duty onto non-tariffed items. We can build the full automated margin calculator and staff receiving SOP for $240.00 flat. Would you like us to spin this up for you?",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 14, 9, 36, 12),
+                "awesome, that will save us hours arguing with accounting. yes please, shoot the invoice over and let's get it rolling.",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 10, 14, 9, 38, 50),
+                "Posted invoice INV-261014-KC01 ($240.00) in your portal billing tab! Starting the CBM allocation formulas now.",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 10, 14, 9, 44, 19),
-                "awesome, that will save us hours arguing with accounting. paid the $240 on corporate debit just now.",
+                "paid the $240 on corporate debit just now.",
                 [],
             ),
             (
@@ -3527,19 +3649,31 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 9, 13, 38, 52),
-                "Hi Liza! Medical plaza procurement committees are hyper-focused on insurance certificates ($1M liability), OSHA disinfection compliance, and clean SLA schedules. We can turn your draft into a clean compliance manual and Excel rate card for $120.",
+                "Hi Liza! Medical plaza procurement committees are hyper-focused on insurance certificates ($1M liability), OSHA disinfection compliance, and clean SLA schedules. Are they requesting specialized terminal cleaning protocols for outpatient surgical suites, or standard commercial janitorial?",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 10, 9, 13, 52, 16),
-                "That disinfection compliance angle is huge—most cleaners just list 'sweeping and mopping' and get tossed in the trash. Can we make sure the rate card includes after-hours terminal cleanings for outpatient surgical suites? That's where our highest margins are.",
+                "That disinfection compliance angle is huge—most cleaners just list 'sweeping and mopping' and get tossed in the trash. Yes, they specifically asked for after-hours terminal cleanings for outpatient surgical suites. Can we make sure the rate card includes per-sq-ft biohazard protocols?",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 10, 9, 14, 15, 30),
+                "Absolutely. We'll build a dedicated section for Operating Room & Outpatient Terminal Disinfection with per-sq-ft biohazard protocol surcharges, plus the complete vendor compliance manual for $120 flat. Should we prepare this for the Tampa bid?",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 9, 14, 28, 45),
+                "Yes please, that's exactly what will set us apart from the generic franchise cleaners. Send the invoice over!",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 10, 11, 7, 33),
-                "Absolutely. We'll add a dedicated section for Operating Room & Outpatient Terminal Disinfection with per-sq-ft biohazard protocol surcharges. Posted invoice INV-261010-LI01 ($120.00).",
+                "Posted invoice INV-261010-LI01 ($120.00) in your billing portal. Diving into the OSHA disinfection specifications right now!",
                 [],
             ),
             (
@@ -3626,19 +3760,31 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 9, 18, 49, 33),
-                "Hi Drako! 540 shifts without a single safety incident and running a 14-person cross-dock is leadership gold in modern logistics. We'll translate your real-world dock metrics into executive supply chain language with ATS keyword optimization and write your LinkedIn summary for $25 flat.",
+                "Hi Drako! 540 shifts without a single safety incident and running a 14-person cross-dock is leadership gold in modern logistics. Are you targeting general warehouse supervisor roles, or specialized cold-chain and automated distribution facilities?",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 10, 10, 8, 14, 52),
-                "man, hearing you frame 540 shifts without an incident actually made me stand a little taller haha. I was nervous my high school diploma was gonna hold me back. just promise me no cheesy corporate buzzwords like 'synergistic rockstar'. send the invoice over, i'll pay on my debit card.",
+                "man, hearing you frame 540 shifts without an incident actually made me stand a little taller haha. I was nervous my high school diploma was gonna hold me back. I'm targeting operations supervisor and cross-dock lead at regional distribution centers. Just promise me no cheesy corporate buzzwords like 'synergistic rockstar'. What's the turnaround and cost to get this done?",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 10, 10, 8, 22, 10),
+                "Zero buzzwords, 100% hard dock numbers: trailer throughput, OSHA compliance, labor scheduling, and team leadership. We can build your executive resume and matching LinkedIn profile summary for $25.00 flat and deliver the draft by tomorrow. Ready for us to write the draft?",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 10, 8, 26, 40),
+                "Sounds great to me, let's do it. Post the bill and I'll clear it.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 10, 8, 30, 12),
-                "Zero buzzwords, 100% hard dock numbers: throughput, OSHA compliance, and team leadership. Invoice INV-261011-DS01 ($25.00) is posted!",
+                "Invoice INV-261011-DS01 ($25.00) is posted in your billing tab! Drafting the core leadership competencies right now.",
                 [],
             ),
             (
@@ -3827,19 +3973,31 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 5, 7, 48, 15),
-                "Morning Estella! Absolutely—investor updates should sound like a focused founder speaking directly to partners, not compliance legalese. We can do a complete rewrite and tone polish on the 1,800 words for $25.00 flat, preserving all your core metrics while giving the prose real momentum. Want us to jump on this?",
+                "Morning Estella! Absolutely—investor updates should read like a focused founder speaking directly to their board, not a dry compliance memo. Took a quick look at your draft: the Q3 numbers are strong ($4.2M ARR, 96.4% gross retention), but the passive phrasing hides the real momentum.\n\nIs this going primarily to institutional LPs, or do you also have enterprise carrier clients reading this?",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 5, 8, 2, 10),
-                "yes please, send over the link and i'll clear it right now on my phone.",
+                dt_utc(2026, 10, 5, 7, 56, 30),
+                "It actually goes to both, which is why our ops lead panicked and tried to make it sound overly formal. Our lead VC specifically cares about the ARR expansion and runway. How fast could you turn a polished version around?",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 5, 8, 5, 40),
-                "Posted invoice INV-261005-EW01 ($25.00). Here is the direct priority checkout link: https://paystack.shop/pay/tx0ipp9eg4",
+                dt_utc(2026, 10, 5, 8, 2, 10),
+                "We can do a complete tone refinement on the 1,800 words for $25.00 flat, emphasizing the founder voice and ARR momentum while keeping it polished for your enterprise clients. We can have the refined version in your hands within 4 hours. Want us to jump on that?",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 5, 8, 4, 45),
+                "That would be a lifesaver. Yes please, let's kick it off!",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 10, 5, 8, 6, 20),
+                "Great! I just generated invoice INV-261005-EW01 ($25.00) in your billing tab. You can settle it there, or if you're on your phone between meetings you can tap this direct checkout link: https://paystack.shop/pay/tx0ipp9eg4. We're opening up the draft now!",
                 [],
             ),
             (
@@ -4065,19 +4223,31 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 4, 18, 38, 12),
-                'Hi Kaylee! Botanical skincare copy lives and dies on sensory verbs—focusing on cloud textures, dewy absorption, and nighttime rituals rather than just listing clinical chemicals. We can write complete product page copy for all 12 SKUs in an easy-to-import spreadsheet plus the 4-part email sequence for $180 flat.',
+                'Hi Kaylee! Botanical skincare copy lives and dies on sensory verbs—focusing on cloud textures, dewy absorption, and nighttime rituals rather than just listing clinical chemicals. Are you launching these on Shopify with direct-to-consumer bundles, or are you also pitching wholesale boutique accounts?',
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 4, 19, 12, 35),
+                'Strictly Shopify D2C with our 4-bottle ritual bundle! We have a 4-part welcome email sequence that needs the exact same warm tone. Can you tackle both the 12 product descriptions and the welcome sequence?',
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 10, 4, 19, 28, 50),
+                'We can write complete sensory product descriptions for all 12 SKUs formatted in a ready-to-import Shopify spreadsheet, plus the complete 4-part email retention sequence for $180 flat. Want us to kick this off?',
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 10, 5, 9, 22, 47),
-                "yes that's exactly the vibe! please send the invoice so we can kick off.",
+                "yes that's exactly the vibe and budget! please send the invoice so we can kick off.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 5, 9, 37, 18),
-                'Posted invoice INV-261005-KC01 ($180.00). Drafting the sensory product sheets now.',
+                'Posted invoice INV-261005-KC01 ($180.00) in your billing portal. Drafting the sensory product sheets now!',
                 [],
             ),
             (
@@ -4171,19 +4341,31 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 4, 11, 42, 9),
-                'Hello Dennis! We can standardize all Southern and Western corridor trips, convert KES fuel burn to USD at historical benchmark rates, and calculate net trip margins for $140 flat. Shall we put this together for you?',
+                "Hello Dennis! We can standardize all Southern and Western corridor trips, convert KES fuel burn to USD at historical benchmark rates, and calculate net trip margins. Are you billing your logistics clients on a flat per-container rate or cost-plus fuel surcharges?",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 4, 12, 15, 30),
-                'yes please, send the invoice over.',
+                dt_utc(2026, 10, 4, 12, 5, 20),
+                "we bill on cost-plus fuel surcharges, which is why the toll discrepancies and KES exchange fluctuations are giving us a headache with client audits. What would it cost to clean this up and build an ongoing tracker?",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 10, 4, 12, 12, 45),
+                "We can reconcile your entire Q3 corridor dataset and build an automated 12-month multi-sheet cash-flow model with dynamic formula lookups for $140 flat. Should we put this together for you?",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 4, 12, 18, 30),
+                "yes please, send the invoice over and let's get started.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 5, 8, 31, 47),
-                'Posted invoice INV-261005-DK01 ($140.00). Starting the calculations now.',
+                "Posted invoice INV-261005-DK01 ($140.00) in your portal billing tab. Starting the calculations now!",
                 [],
             ),
             (
@@ -4277,19 +4459,37 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 2, 8, 41, 23),
-                "Hi Alexa! Trade logistics software is a great market, but angel investors get scared when founders can't prove an under-30-day sales cycle. We'll build a structured 10-slide presentation in PowerPoint (.pptx) highlighting your 28 paid pilots, $14.2K MRR, and zero churn, plus a clean unit economics model showing a 0.7-month payback. Total is $250.00.",
+                "Hi Alexa! Trade logistics software is a massive opportunity, but angel investors get anxious when founders pitch broad market sizes instead of proving repeatable pilot traction. Looked through your notes—28 paid pilots and zero logo churn in 90 days is genuinely impressive.\n\nIs your demo day presentation a rapid 3-to-4 minute pitch, or do you have a full 10-minute partner deck slot?",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 2, 9, 7, 18),
-                'omg yes that framing is so much sharper. sending the green light!',
+                dt_utc(2026, 10, 2, 8, 54, 10),
+                "It's a strict 4-minute pitch followed by 3 minutes of partner Q&A. That's exactly why I was stumbling—I was trying to cram 20 operational details into the go-to-market slide instead of telling a clean story. What would the structure and pricing look like to overhaul the slides and unit economics?",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 10, 2, 9, 4, 30),
+                "For a 4-minute demo day format, we structure a high-impact 10-slide deck: lead with the operational pain of lost paper logs, showcase your 28 paid pilots and 100% retention, and isolate the unit economics (0.7-month payback). We'll build the full PowerPoint (.pptx) with scripted speaker notes and an accompanying Excel financial model for $250.00 flat. Want us to build that narrative out?",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 2, 9, 8, 18),
+                "omg yes, that framing is so much sharper and cuts right to what investors care about. Sending the green light!",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 10, 2, 9, 12, 45),
+                "Just posted invoice INV-261002-AQ01 ($250.00) in your portal billing tab. Starting on the slide outline now, and I'll drop the v1 narrative architecture in here this afternoon!",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 2, 17, 34, 52),
-                'Posted invoice INV-261002-AQ01 ($250.00). Here is the v1 narrative outline to review.',
+                'Here is the v1 narrative outline to review, Alexa! Notice how Slide 3 shifts immediately into your 28 paid pilots and 0.7-month payback.',
                 [
                     'alexa_pitch_deck_structure_v1.pdf',
                 ],
@@ -4377,19 +4577,31 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 9, 29, 15, 47, 19),
-                'Hi Cami! We can extract the core friction themes across engineering, product, and people ops, and package them into a clean 5-page leadership action sheet with workshop modules for $160.',
+                "Hi Cami! Safe travels on the train. Skimmed the transcripts—the friction between engineering sprint delivery and the VP of Product's roadmap is glaring, while the People Ops notes point to severe manager burnout.\n\nIs this action sheet going straight to their C-suite for sign-off on your advisory scope, or is it for the workshop attendees themselves?",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 9, 29, 16, 18, 40),
+                "Straight to the CEO and Board. We need to demonstrate that their delivery silos are costing them millions before they'll approve the 4-workshop advisory retainer. What would the turnaround and investment look like for a concise synthesis?",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 9, 29, 16, 35, 12),
+                "We can extract the core friction points across all three departments, map them directly to 4 modular workshop agendas, and deliver a clean executive action sheet PDF for $160 flat by tomorrow morning. Want us to proceed with that?",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 9, 30, 8, 14, 41),
-                'perfect, please send invoice.',
+                "That framing will close the engagement. Yes please, let's do it!",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 9, 30, 8, 29, 56),
-                'Posted invoice INV-260930-CK01 ($160.00). Here is the v1 draft synthesis.',
+                "Just posted invoice INV-260930-CK01 ($160.00) in your portal billing tab. Alongside it, here is the v1 draft synthesis outline so you can review the department breakdown while on the move.",
                 [
                     'cami_call_action_sheet_v1.pdf',
                 ],
@@ -4470,13 +4682,43 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 9, 29, 14, 28, 44),
-                "Understood Victor. We'll map the exact lexical variation thresholds, anti-cliché heuristics, and Turnitin benchmark targets into a structured JSON configuration schema for $150.",
+                "Understood Victor. We'll map the exact lexical variation thresholds, anti-cliché heuristics, and syntactic entropy curves.\n\nDo you want us to calibrate specifically against Turnitin and GPTZero enterprise classifiers?",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 9, 29, 14, 42, 10),
+                "Yes, exactly—both Turnitin and GPTZero at sub-3% AI detection thresholds. What is the turnaround and cost for the blueprint schema?",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 9, 29, 14, 55, 30),
+                "We can deliver the complete JSON tone calibration blueprint with all mathematical weights, persona prompts, and classifier benchmarks for $150.00 flat in under 3 hours. Want us to compile that for you?",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 9, 29, 15, 8, 15),
+                "Approved. Post the invoice to our ledger and we'll process payment right away.",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 9, 29, 15, 12, 40),
+                "Posted invoice INV-260929-VM01 ($150.00) to your enterprise billing tab. Compiling the heuristic parameters now!",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 9, 29, 15, 29, 50),
+                "Payment cleared on our company card.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 9, 29, 16, 37, 12),
-                'Payment cleared, thank you Victor! Here is the finalized tone calibration blueprint JSON.',
+                'Payment confirmed, thank you Victor! Here is the finalized tone calibration blueprint JSON.',
                 [
                     'valdace_ai_tone_calibration_blueprint.json',
                 ],
@@ -4585,19 +4827,31 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 7, 25, 10, 38, 44),
-                "Hi Lina! Polite emails get ignored. The issue with your drafts is that the product benefit is buried in paragraph 3, and the CTA button says 'Shop Now' instead of creating urgency around reserved inventory. We can restructure all 5 emails with punchy hooks and psychological urgency triggers for $120.",
+                "Hi Lina! Polite emails get ignored. The issue with your drafts is that the product benefit is buried in paragraph 3, and the CTA button says 'Shop Now' instead of creating urgency around reserved inventory. Are these going out to repeat VIP buyers or your cold acquisition list?",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 7, 25, 11, 5, 19),
+                "These are going out to our VIP customer segment who bought our spring linen drop. That diagnostic is so true—we were so afraid of sounding pushy that we sounded boring. Can you rewrite the 5 summer retention emails and polish our spring collection copy deck?",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 7, 25, 11, 24, 30),
+                "We can restructure all 5 summer emails with punchy subject lines and benefit-driven urgency, plus polish the spring storefront copy deck for $120 flat. Want us to get started?",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 7, 26, 9, 17, 33),
-                "that diagnostic is so true. let's do it!",
+                "100%, that's a no-brainer. Send the invoice over!",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 7, 26, 9, 32, 18),
-                'Posted invoice INV-260726-LR01 ($120.00). Drafting now.',
+                "Posted invoice INV-260726-LR01 ($120.00) in your billing tab. Drafting the email hooks now!",
                 [],
             ),
             (
@@ -4720,19 +4974,31 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 6, 27, 15, 43, 18),
-                "Hello Patrick! We know the Marine Atlantic Port aux Basques ferry rates can throw a massive wrench into driver settlement sheets. We'll build a formula model that separates ferry tolls from driving mileage and applies sliding diesel index surcharges automatically for $175.",
+                "Hello Patrick! We know the Marine Atlantic Port aux Basques ferry rates can throw a massive wrench into driver settlement sheets. Are your dispatch sheets tracking solely the Newfoundland coastal routes, or do you have interprovincial hauls coming through Nova Scotia?",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 6, 27, 16, 12, 40),
+                "we run both—coastal NL distribution plus the Trans-Canada highway link through North Sydney into Nova Scotia. When the ferry gets delayed 18 hours due to gale warnings, our standby demurrage gets completely lost. Can you build formulas that capture both?",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 6, 27, 16, 28, 15),
+                "We'll build a formula model that separates ferry tolls from driving mileage, tracks standby demurrage hours, and applies sliding diesel index surcharges automatically for $175 flat. Shall we put this together for you?",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 6, 28, 9, 11, 54),
-                "send the bill over, let's get it done.",
+                "that'll save our dispatchers from pulling their hair out every blizzard. send the bill over, let's get it done.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 6, 28, 9, 27, 36),
-                'Posted invoice INV-260628-PH01 ($175.00). Building the model now.',
+                "Posted invoice INV-260628-PH01 ($175.00) in your billing tab. Building the dispatch model now!",
                 [],
             ),
             (
@@ -5047,7 +5313,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 20, 17, 22, 10),
-                "Hi Issa! Posted invoice INV-261020-IC01 ($240.00). Normally for clients referred by close collaborators like Audrey, we generate a direct priority settlement link so you don't have to deal with standard portal account creation—you can clear it directly on your phone or clinic tablet via card or Apple Pay: https://paystack.shop/pay/tx0ipp9eg4. As soon as you confirm, I'll release the complete print-ready PDF and editable intake bundle so you're set before your evening sessions.",
+                "Just posted invoice INV-261020-IC01 ($240.00) in your portal billing tab! If you're on your clinic tablet between patient sessions, you can also clear it directly via Apple Pay here: https://paystack.shop/pay/tx0ipp9eg4. Once that clears, I'll release the complete print-ready PDF agreement and intake bundle so you have everything before your evening appointments.",
                 [],
             ),
             (

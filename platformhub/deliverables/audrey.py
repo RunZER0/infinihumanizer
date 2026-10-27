@@ -3,7 +3,7 @@ audrey.py - Audrey Brown (Studio Brown Photography) Deliverables
 Authentic editorial photography website copy, wireframe notes, conversion audits, and booking architecture.
 """
 
-from platformhub.chat_files import write_docx_file, write_pdf_file
+from platformhub.chat_files import write_docx_file, write_pdf_file, write_screenshot_png_file
 
 def build_audrey_deliverables() -> dict[str, dict]:
     files = {}
@@ -90,55 +90,48 @@ def build_audrey_deliverables() -> dict[str, dict]:
         role="draft",
     )
 
-    # 3. audrey_current_site_screenshots.pdf: Current Squarespace site capture & raw 14-question intake screenshots
-    files["audrey_current_site_screenshots.pdf"] = write_pdf_file(
-        "audrey_current_site_screenshots.pdf",
-        "Studio Brown — Current Squarespace Website & Booking Intake Reference",
-        [
-            "# 1. CURRENT HOMEPAGE & NAVIGATION (SQUARESPACE EXPORT)",
-            "Active Website URL: studiobrownphotography.squarespace.com (Custom domain forwarding)",
-            "Current Header & Hero Headline: 'Studio Brown — Visual storytelling for modern life'",
-            "Current Subhead: None. (Single background photograph with logo watermark).",
-            "Navigation Menu: Home | Portfolio | About | Book a Session | Instagram",
-            "Portfolio Display: Single unpaginated grid of 36 uncategorized high-resolution photographs mixing personal portraits, lifestyle editorial, wedding commissions, and commercial lookbooks without captions or client tags.",
-            "Client Note from Audrey: 'Visitors say they love the images on Instagram, but bounce after hitting the site. I don't know if the page looks too sparse or if people don't know what I actually shoot or where in Austin I am.'",
-            "--PAGE-BREAK--",
-            "# 2. CURRENT INTAKE FORM (FULL 14-QUESTION SCRIPT)",
-            "The following 14 questions currently appear in the Squarespace lightbox modal when a visitor clicks 'Book a Session':",
-            [
-                ["Field #", "Field Label / Question", "Input Type", "Required?"],
-                ["1", "Full Legal Name", "Single-line Text", "Yes"],
-                ["2", "Email Address", "Email", "Yes"],
-                ["3", "Mobile Phone Number", "Phone", "Yes"],
-                ["4", "How did you hear about Studio Brown?", "Dropdown (IG, Google, Friend)", "Yes"],
-                ["5", "Type of Session", "Dropdown (Portrait, Brand, Event)", "Yes"],
-                ["6", "Preferred session date + 2 backup dates", "Text Area", "Yes"],
-                ["7", "Desired location (Studio, Outdoor, Specific Venue)", "Single-line Text", "Yes"],
-                ["8", "Estimated headcount / team size", "Number", "No"],
-                ["9", "Wardrobe vision & outfit changes planned", "Paragraph Text", "No"],
-                ["10", "Do you need on-site hair & makeup artist coordination?", "Dropdown (Yes, No, Maybe)", "Yes"],
-                ["11", "Pinterest moodboard or visual inspiration URL", "Website URL", "Yes (Required)"],
-                ["12", "Ideal total project budget range for this shoot", "Open Text Input", "Yes"],
-                ["13", "Intended image usage & licensing", "Dropdown (Personal, Commercial)", "Yes"],
-                ["14", "Additional notes, shot requests, or creative guidelines", "Paragraph Text", "No"],
-            ],
-            "Client Note from Audrey: 'I put this form together last year trying to get all details upfront before jumping on calls, but almost nobody ever finishes submitting it. Zero prices or starting rates are listed anywhere on the page.'",
-            "--PAGE-BREAK--",
-            "# 3. MOBILE VIEW & MONTHLY TRAFFIC OVERVIEW",
-            "Current Analytics & Performance Notes (Squarespace Analytics Snapshot - Sept 2026):",
-            "Monthly Unique Visitors: ~1,850 to 2,200 (84% mobile via Instagram profile link).",
-            "Avg Time on Homepage: 24 seconds.",
-            "Click-through rate to 'Book a Session' button: ~7.4% (approx. 140–160 clicks/mo).",
-            "Completed Intake Form Submissions: 1 to 3 submissions/mo (over 98% form abandonment rate).",
-            "Primary Client Confusion / Questions received in Instagram DMs:",
-            "- 'Hey Audrey, how much do your portrait sessions cost?'",
-            "- 'Do you shoot studio or on-location? Where are you located in Austin?'",
-            "- 'Can you do a quick headshot or do you only do full day commercial brand shoots?'",
-            "Client Note from Audrey: 'I spend 4-5 hours a week replying to basic pricing DMs on Instagram because people say the booking page is confusing or overwhelming. Need help figuring out why nobody is converting.'",
+    # 3. audrey_current_homepage_screenshot.png: Desktop Squarespace Homepage Capture
+    files["audrey_current_homepage_screenshot.png"] = write_screenshot_png_file(
+        "audrey_current_homepage_screenshot.png",
+        url="https://studiobrownphotography.squarespace.com/",
+        site_title="Studio Brown Photography · Austin, TX",
+        hero_headline="Visual storytelling for modern life.",
+        hero_subhead="[Current Live Subhead: None. No Austin location mention. No commercial vs portrait differentiation.]",
+        items=[
+            ("Card 01", "Sculptors Portrait · Northern Light", "No Category Tag / No Pricing"),
+            ("Card 02", "Texas Hill Country Outerwear", "Commercial Lookbook Commission"),
+            ("Card 03", "Architectural Warehouse Loft", "East Austin Interior Shoot"),
+            ("Card 04", "Dripping Springs Wedding", "Personal Wedding Commission"),
+            ("Card 05", "Ceramics Maker Editorial", "Austin Artisan Feature"),
+            ("Card 06", "Executive Founder Profile", "Studio Portrait Session"),
         ],
+        kind="browser",
         role="source",
-        subtitle="Current Squarespace Site Reference & 14-Question Intake Screenshots (Client Upload)",
-        meta_tag="Studio Brown · Client Squarespace Reference · Austin, TX",
+    )
+
+    # 4. audrey_current_booking_form_screenshot.png: Squarespace 14-Question Intake Form Capture
+    files["audrey_current_booking_form_screenshot.png"] = write_screenshot_png_file(
+        "audrey_current_booking_form_screenshot.png",
+        url="https://studiobrownphotography.squarespace.com/book",
+        site_title="Studio Brown Photography · Client Booking",
+        hero_headline="FORM ABANDONMENT AUDIT REFERENCE: Squarespace Lightbox Modal (14 Mandatory Fields)",
+        hero_subhead="Client Intake Questionnaire (14 Required Fields · 0 Starting Rates Shown)",
+        items=[
+            ("1. Full Legal Name *", "Required for contract verification"),
+            ("2. Email Address *", "client@domain.com"),
+            ("3. Mobile Phone Number *", "+1 (512) 000-0000"),
+            ("4. How did you hear about Studio Brown? *", "Dropdown (Instagram, Referral, Google)"),
+            ("5. Type of Session *", "Dropdown (Portrait, Brand, Event)"),
+            ("6. Preferred Session Date + 2 Backup Dates *", "e.g. Oct 14th, Oct 21st, Nov 4th"),
+            ("7. Desired Location / Venue *", "Studio, Outdoor, Specific Venue"),
+            ("8. Wardrobe Vision & Outfit Changes Planned", "Describe fabric textures, color palettes..."),
+            ("9. Do you require on-site Hair & Makeup coordination? *", "Yes / No / Need recommendations"),
+            ("10. Pinterest Moodboard or Visual Inspiration URL *", "https://pinterest.com/... (REQUIRED FIELD)"),
+            ("11. Total Project Budget Band for this shoot *", "Open blank text input (No starting rates shown)"),
+            ("12. Intended Image Usage & Licensing Rights *", "Personal / Commercial / Editorial Advertising"),
+        ],
+        kind="form",
+        role="source",
     )
 
     # 4. audrey_homepage_booking_audit.pdf: 4-page conversion architecture audit PDF
