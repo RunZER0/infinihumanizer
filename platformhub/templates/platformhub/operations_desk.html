@@ -44,6 +44,7 @@
       <a
         class="ops-thread-row {% if item.id == conversation.id %}is-active{% endif %}"
         href="{% url 'platformhub:operations_desk_conversation' item.id %}"
+        data-conversation-id="{{ item.id }}"
         data-thread-status="{{ item.status }}"
         data-thread-search="{{ item.user.get_full_name|default:''|lower }} {{ item.user.email|lower }} {{ item.subject|lower }} {{ item.channel }}"
       >
@@ -77,140 +78,7 @@
     </div>
   </aside>
 
-  <!-- Pane 2: Active Chat Interface -->
-  <section class="ops-chat-pane" aria-label="Active conversation">
-    <header class="ops-chat-header">
-      <div class="ops-chat-header-main">
-        <h1 class="ops-chat-title">{{ conversation.user.get_full_name|default:conversation.user.email }}</h1>
-        <div class="ops-chat-submeta">
-          <span>{{ conversation.user.email }}</span>
-        </div>
-      </div>
-
-      <div class="ops-chat-header-actions">
-        <span class="ops-status-text {% if conversation.status == 'open' %}ops-state-open{% else %}ops-state-settled{% endif %}" id="desk-thread-status">
-          {{ conversation.get_status_display }}
-        </span>
-        <form method="post" action="{% url 'platformhub:operations_desk_conversation' conversation.id %}" class="ops-inline-form">
-          {% csrf_token %}
-          <input type="hidden" name="action" value="toggle_status">
-          <button class="ops-btn ops-btn-secondary ops-btn-sm" type="submit">
-            {% if conversation.status == "open" %}Close thread{% else %}Reopen{% endif %}
-          </button>
-        </form>
-      </div>
-    </header>
-
-    <div class="ops-message-stream" id="desk-message-thread" aria-live="polite">
-      {% for item in chat_messages %}
-      <article class="ops-msg {% if item.sender == 'client' %}ops-msg-incoming{% else %}ops-msg-outgoing{% endif %}" data-message-id="{{ item.id }}">
-        <div class="ops-msg-meta">
-          <strong>{% if item.sender == "client" %}{{ conversation.user.get_full_name|default:conversation.user.email }}{% else %}You{% endif %}</strong>
-          <span aria-hidden="true">·</span>
-          <time datetime="{{ item.created_at|date:'c' }}">{{ item.created_at|date:"M j, Y · H:i" }}</time>
-        </div>
-        <div class="ops-msg-bubble">
-          {% if item.body %}
-          <p>{{ item.body|urlize|linebreaksbr }}</p>
-          {% endif %}
-          {% if item.attachments %}
-          <div class="ops-attachment-list">
-            {% for att in item.attachments %}
-            {% if att.is_audio or att.kind == "AUDIO" or att.ext == "MP3" or att.ext == "WAV" or att.ext == "M4A" or att.ext == "OGG" or att.ext == "WEBM" or att.ext == "AAC" or att.ext == "FLAC" %}
-            <div class="ops-audio-card">
-              <div class="ops-audio-meta">
-                <span class="ops-audio-badge">VOICE</span>
-                <strong class="ops-audio-title">{{ att.name }}</strong>
-                <span class="ops-audio-size">{{ att.size_display }}</span>
-              </div>
-              <audio controls preload="metadata" class="ops-audio-element" src="{{ att.url }}">
-                <source src="{{ att.url }}" type="{{ att.mime|default:'audio/webm' }}">
-                Your browser does not support audio playback.
-              </audio>
-              <div class="ops-audio-foot">
-                <a class="ops-audio-dl" href="{{ att.download_url|default:att.url }}">Download audio</a>
-              </div>
-            </div>
-            {% else %}
-            <a class="ops-attachment-card" href="{{ att.download_url|default:att.url }}" target="_blank" rel="noopener">
-              <span class="ops-attachment-ext">{{ att.ext|default:"FILE" }}</span>
-              <span class="ops-attachment-info">
-                <strong class="ops-attachment-name">{{ att.name }}</strong>
-                <span class="ops-attachment-size">{{ att.size_display }}</span>
-              </span>
-              <span class="ops-attachment-dl">Download</span>
-            </a>
-            {% endif %}
-            {% endfor %}
-          </div>
-          {% endif %}
-        </div>
-      </article>
-      {% empty %}
-      <div class="ops-stream-empty" id="desk-chat-empty">
-        <p>No messages in this thread yet.</p>
-      </div>
-      {% endfor %}
-    </div>
-
-    <form method="post" action="{% url 'platformhub:operations_desk_conversation' conversation.id %}" enctype="multipart/form-data" class="ops-composer cp-composer" id="desk-reply-form">
-      {% csrf_token %}
-      <input type="hidden" name="action" value="reply">
-      <input type="hidden" name="format" value="json">
-      <input type="file" id="desk-file-input" name="attachments" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.ppt,.pptx,.png,.jpg,.jpeg,.webp,.gif,.txt,.zip,.mp3,.wav,.m4a,.ogg,.webm,.aac,.flac,audio/*" hidden>
-
-      <div class="cp-composer-card" id="desk-composer-card">
-        <!-- Live Voice Recording Banner inside card -->
-        <div class="cp-recording-banner" id="desk-recording-bar" hidden>
-          <div class="cp-recording-live">
-            <span class="cp-recording-dot"></span>
-            <span class="cp-recording-label">Recording voice note</span>
-            <div class="cp-audio-wave" aria-hidden="true">
-              <span class="cp-wave-bar"></span>
-              <span class="cp-wave-bar"></span>
-              <span class="cp-wave-bar"></span>
-              <span class="cp-wave-bar"></span>
-            </div>
-            <span class="cp-recording-timer" id="desk-recording-timer">00:00</span>
-          </div>
-          <div class="cp-recording-actions">
-            <button type="button" class="cp-rec-btn cp-rec-stop" id="desk-record-stop" title="Stop and attach voice note">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"></rect></svg>
-              <span>Done &amp; attach</span>
-            </button>
-            <button type="button" class="cp-rec-btn cp-rec-cancel" id="desk-record-cancel" title="Discard recording">Cancel</button>
-          </div>
-        </div>
-
-        <!-- Staged Attachments (Chips list) -->
-        <div class="cp-staged-files ops-staged-files" id="desk-file-preview" hidden></div>
-
-        <!-- Textarea input body -->
-        <div class="cp-composer-body">
-          <label for="desk-reply-input" class="sr-only">Reply to {{ conversation.user.first_name|default:conversation.user.email }}</label>
-          <textarea id="desk-reply-input" name="message" rows="1" maxlength="5000" placeholder="Reply to {{ conversation.user.first_name|default:conversation.user.email }}… (Enter to send, Shift+Enter for new line)"></textarea>
-        </div>
-
-        <!-- Bottom toolbar controls -->
-        <div class="cp-composer-footer">
-          <div class="cp-composer-tools">
-            <button type="button" class="cp-icon-action-btn" id="desk-attach-btn" title="Attach documents, images, or audio" aria-label="Attach file">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l7.9-7.89"></path></svg>
-            </button>
-            <button type="button" class="cp-icon-action-btn" id="desk-record-btn" title="Record voice note" aria-label="Record voice note">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg>
-            </button>
-            <span class="cp-composer-hint" id="desk-reply-status">↵ send · ⇧↵ newline</span>
-          </div>
-          <div class="cp-composer-submit-wrap">
-            <button class="cp-send-action-btn" type="submit" id="desk-reply-submit" title="Send reply" aria-label="Send reply" disabled>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
-            </button>
-          </div>
-        </div>
-      </div>
-    </form>
-  </section>
+  {% include "platformhub/partials/ops_chat_pane.html" %}
 </div>
 
 <!-- Modal Dialog: Issue Invoice -->
@@ -292,26 +160,44 @@
 {% endblock %}
 
 {% block extra_scripts %}
+<style>
+  .ops-chat-pane {
+    transition: opacity 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .ops-chat-pane.is-switching {
+    opacity: 0.55;
+    pointer-events: none;
+  }
+  .ops-thread-row {
+    cursor: pointer;
+    user-select: none;
+  }
+</style>
 <script>
 (function () {
   const root = document.querySelector("[data-desk-root]");
   if (!root) return;
 
-  const conversationId = root.dataset.conversationId;
+  let currentConversationId = root.dataset.conversationId;
+  let clientLabel = "{{ conversation.user.get_full_name|default:conversation.user.email|escapejs }}";
   const feedUrl = root.dataset.feedUrl;
-  const thread = document.getElementById("desk-message-thread");
-  const replyForm = document.getElementById("desk-reply-form");
-  const replyInput = document.getElementById("desk-reply-input");
-  const replySubmit = document.getElementById("desk-reply-submit");
-  const replyStatus = document.getElementById("desk-reply-status");
-  const fileInput = document.getElementById("desk-file-input");
-  const attachBtn = document.getElementById("desk-attach-btn");
-  const filePreview = document.getElementById("desk-file-preview");
-  const recordBtn = document.getElementById("desk-record-btn");
-  const recordingBar = document.getElementById("desk-recording-bar");
-  const recordingTimer = document.getElementById("desk-recording-timer");
-  const recordStopBtn = document.getElementById("desk-record-stop");
-  const recordCancelBtn = document.getElementById("desk-record-cancel");
+  const threadCache = new Map();
+
+  // Pre-seed cache with initial active conversation
+  const initialPane = document.getElementById("ops-chat-pane-root");
+  if (initialPane && currentConversationId) {
+    threadCache.set(currentConversationId, {
+      conversation_id: currentConversationId,
+      client_name: clientLabel,
+      client_first_name: "{{ conversation.user.first_name|default:conversation.user.email|escapejs }}",
+      client_email: "{{ conversation.user.email|escapejs }}",
+      status: "{{ conversation.status }}",
+      status_display: "{{ conversation.get_status_display|escapejs }}",
+      chat_pane_html: initialPane.outerHTML,
+    });
+  }
+
+  // Voice Recording state
   let mediaRecorder = null;
   let audioChunks = [];
   let recordTimerInterval = null;
@@ -328,6 +214,11 @@
       alert("Microphone access is not supported on this browser.");
       return;
     }
+    const recordingBar = document.getElementById("desk-recording-bar");
+    const recordBtn = document.getElementById("desk-record-btn");
+    const recordingTimer = document.getElementById("desk-recording-timer");
+    const fileInput = document.getElementById("desk-file-input");
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       audioChunks = [];
@@ -343,8 +234,10 @@
       mediaRecorder.onstop = function () {
         stream.getTracks().forEach(function (track) { track.stop(); });
         if (recordTimerInterval) clearInterval(recordTimerInterval);
-        if (recordingBar) recordingBar.hidden = true;
-        if (recordBtn) recordBtn.classList.remove("is-recording");
+        const bar = document.getElementById("desk-recording-bar");
+        const btn = document.getElementById("desk-record-btn");
+        if (bar) bar.hidden = true;
+        if (btn) btn.classList.remove("is-recording");
         if (!audioChunks.length) return;
 
         const blobType = mediaRecorder.mimeType || "audio/webm";
@@ -352,11 +245,12 @@
         const ext = blobType.includes("ogg") ? "ogg" : "webm";
         const voiceFile = new File([audioBlob], "voice-note-" + Date.now() + "." + ext, { type: blobType });
 
-        if (window.DataTransfer && fileInput) {
+        const fi = document.getElementById("desk-file-input");
+        if (window.DataTransfer && fi) {
           const dt = new DataTransfer();
-          Array.from(fileInput.files || []).forEach(function (f) { dt.items.add(f); });
+          Array.from(fi.files || []).forEach(function (f) { dt.items.add(f); });
           dt.items.add(voiceFile);
-          fileInput.files = dt.files;
+          fi.files = dt.files;
         }
         updateFilePreview();
       };
@@ -368,7 +262,8 @@
       if (recordingTimer) recordingTimer.textContent = "00:00";
       recordTimerInterval = setInterval(function () {
         const elapsed = Math.floor((Date.now() - recordStartTime) / 1000);
-        if (recordingTimer) recordingTimer.textContent = formatSeconds(elapsed);
+        const timer = document.getElementById("desk-recording-timer");
+        if (timer) timer.textContent = formatSeconds(elapsed);
       }, 500);
     } catch (err) {
       console.error(err);
@@ -382,111 +277,6 @@
     mediaRecorder.stop();
   }
 
-  if (recordBtn) {
-    recordBtn.addEventListener("click", function () {
-      if (mediaRecorder && mediaRecorder.state === "recording") {
-        stopRecording(true);
-      } else {
-        startRecording();
-      }
-    });
-  }
-
-  if (recordStopBtn) {
-    recordStopBtn.addEventListener("click", function () {
-      stopRecording(true);
-    });
-  }
-
-  if (recordCancelBtn) {
-    recordCancelBtn.addEventListener("click", function () {
-      stopRecording(false);
-    });
-  }
-
-  const invoiceForm = document.getElementById("desk-invoice-form");
-  const invoiceSubmit = document.getElementById("desk-invoice-submit");
-  const invoiceFeedback = document.getElementById("desk-invoice-feedback");
-  const modal = document.getElementById("ops-invoice-modal");
-  const openModalBtn = document.getElementById("ops-open-invoice-modal");
-  const closeModalBtn = document.getElementById("ops-close-invoice-modal");
-  const deskTickOverlay = document.getElementById("desk-invoice-tick-overlay");
-  const deskTickNumEl = document.getElementById("desk-tick-invoice-num");
-  const toggleNewClientBtn = document.getElementById("ops-toggle-new-client");
-  const newClientForm = document.getElementById("ops-new-client-form");
-  const searchInput = document.getElementById("ops-thread-search");
-  const filterBtns = document.querySelectorAll("[data-thread-filter]");
-  const threadRows = document.querySelectorAll(".ops-thread-row");
-  const clientLabel = "{{ conversation.user.get_full_name|default:conversation.user.email|escapejs }}";
-
-  let activeFilter = "all";
-
-  function applyThreadFilters() {
-    const query = (searchInput ? searchInput.value : "").trim().toLowerCase();
-    threadRows.forEach(function (row) {
-      const status = row.getAttribute("data-thread-status");
-      const haystack = (row.getAttribute("data-thread-search") || "").toLowerCase();
-      const matchesStatus = activeFilter === "all" || status === activeFilter;
-      const matchesQuery = !query || haystack.indexOf(query) !== -1;
-      row.hidden = !(matchesStatus && matchesQuery);
-    });
-  }
-
-  if (searchInput) {
-    searchInput.addEventListener("input", applyThreadFilters);
-  }
-
-  filterBtns.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      filterBtns.forEach(function (b) { b.classList.remove("is-active"); });
-      btn.classList.add("is-active");
-      activeFilter = btn.getAttribute("data-thread-filter") || "all";
-      applyThreadFilters();
-    });
-  });
-
-  if (toggleNewClientBtn && newClientForm) {
-    toggleNewClientBtn.addEventListener("click", function () {
-      newClientForm.hidden = !newClientForm.hidden;
-      if (!newClientForm.hidden) {
-        const emailField = document.getElementById("desk-client-email");
-        if (emailField) emailField.focus();
-      }
-    });
-  }
-
-  if (openModalBtn && modal) {
-    openModalBtn.addEventListener("click", function () {
-      modal.hidden = false;
-      const descInput = document.getElementById("invoice-description");
-      if (descInput) descInput.focus();
-    });
-  }
-
-  if (closeModalBtn && modal) {
-    closeModalBtn.addEventListener("click", function () {
-      modal.hidden = true;
-    });
-  }
-
-  if (modal) {
-    modal.addEventListener("click", function (event) {
-      if (event.target === modal) modal.hidden = true;
-    });
-  }
-
-  function escapeHtml(value) {
-    const div = document.createElement("div");
-    div.textContent = value || "";
-    return div.innerHTML;
-  }
-
-  function scrollThreadToEnd() {
-    if (thread) {
-      thread.scrollTop = thread.scrollHeight;
-    }
-  }
-
   const AUDIO_EXTS = ["MP3", "WAV", "M4A", "OGG", "WEBM", "AAC", "FLAC", "OPUS"];
 
   function isAudioAttachment(att) {
@@ -496,7 +286,28 @@
     return AUDIO_EXTS.includes(ext);
   }
 
+  function escapeHtml(value) {
+    const div = document.createElement("div");
+    div.textContent = value || "";
+    return div.innerHTML;
+  }
+
+  function linkify(text) {
+    const escaped = escapeHtml(text);
+    return escaped.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+  }
+
+  function scrollThreadToEnd() {
+    const thread = document.getElementById("desk-message-thread");
+    if (thread) {
+      thread.scrollTop = thread.scrollHeight;
+    }
+  }
+
   function updateSendButtonState() {
+    const replySubmit = document.getElementById("desk-reply-submit");
+    const replyInput = document.getElementById("desk-reply-input");
+    const fileInput = document.getElementById("desk-file-input");
     if (!replySubmit) return;
     const hasText = Boolean(replyInput && replyInput.value.trim().length > 0);
     const hasFiles = Boolean(fileInput && fileInput.files && fileInput.files.length > 0);
@@ -520,6 +331,7 @@
   }
 
   function removeFileAtIndex(idx) {
+    const fileInput = document.getElementById("desk-file-input");
     if (!fileInput || !fileInput.files) return;
     if (window.DataTransfer) {
       const dt = new DataTransfer();
@@ -534,6 +346,8 @@
   }
 
   function updateFilePreview() {
+    const fileInput = document.getElementById("desk-file-input");
+    const filePreview = document.getElementById("desk-file-preview");
     if (!fileInput || !filePreview) return;
     const files = Array.from(fileInput.files || []);
     if (!files.length) {
@@ -570,13 +384,6 @@
     });
 
     updateSendButtonState();
-  }
-
-  if (attachBtn && fileInput) {
-    attachBtn.addEventListener("click", function () {
-      fileInput.click();
-    });
-    fileInput.addEventListener("change", updateFilePreview);
   }
 
   function renderAttachmentsHtml(attachments) {
@@ -625,13 +432,29 @@
     );
   }
 
-  function linkify(text) {
-    const escaped = escapeHtml(text);
-    return escaped.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+  function syncCurrentCacheHtml() {
+    if (!currentConversationId || !threadCache.has(currentConversationId)) return;
+    const currentPane = document.getElementById("ops-chat-pane-root");
+    if (currentPane) {
+      const cached = threadCache.get(currentConversationId);
+      cached.chat_pane_html = currentPane.outerHTML;
+    }
+  }
+
+  function updateSidebarPreview(convId, text, isClient, senderName) {
+    const row = document.querySelector('.ops-thread-row[data-conversation-id="' + convId + '"]')
+      || document.querySelector('.ops-thread-row[href*="' + convId + '"]');
+    if (!row) return;
+    const preview = row.querySelector(".ops-thread-preview");
+    if (preview) {
+      const prefix = isClient ? (senderName || "Client") + ":" : "You:";
+      preview.innerHTML = '<span class="ops-thread-sender">' + escapeHtml(prefix) + '</span> ' + escapeHtml((text || "").slice(0, 68));
+    }
   }
 
   function renderMessage(item) {
-    if (!thread || thread.querySelector('[data-message-id="' + item.id + '"]')) return;
+    const stream = document.getElementById("desk-message-thread");
+    if (!stream || stream.querySelector('[data-message-id="' + item.id + '"]')) return;
     const empty = document.getElementById("desk-chat-empty");
     if (empty) empty.remove();
 
@@ -646,23 +469,16 @@
       '<div class="ops-msg-meta">' +
         "<strong>" + escapeHtml(label) + "</strong>" +
         '<span aria-hidden="true">·</span>' +
-        '<time datetime="' + escapeHtml(item.created_at_iso) + '">' + escapeHtml(item.created_at_display) + "</time>" +
+        '<time datetime="' + escapeHtml(item.created_at_iso || item.created_at || "") + '">' + escapeHtml(item.created_at_display || item.created_at || "") + "</time>" +
       "</div>" +
       '<div class="ops-msg-bubble">' + bodyHtml + attHtml + "</div>";
-    thread.appendChild(article);
+    stream.appendChild(article);
     scrollThreadToEnd();
-  }
-
-  scrollThreadToEnd();
-  window.requestAnimationFrame(scrollThreadToEnd);
-  window.addEventListener("load", scrollThreadToEnd);
-
-  const activeThreadRow = document.querySelector(".ops-thread-row.is-active");
-  if (activeThreadRow && activeThreadRow.scrollIntoView) {
-    activeThreadRow.scrollIntoView({ block: "nearest" });
+    syncCurrentCacheHtml();
   }
 
   function autoResizeReplyTextarea() {
+    const replyInput = document.getElementById("desk-reply-input");
     if (!replyInput) return;
     replyInput.style.height = "auto";
     const scrollH = replyInput.scrollHeight;
@@ -671,125 +487,465 @@
     replyInput.style.overflowY = scrollH > 180 ? "auto" : "hidden";
   }
 
-  if (replyInput) {
-    replyInput.addEventListener("input", function () {
-      autoResizeReplyTextarea();
-      updateSendButtonState();
-    });
+  function bindChatPaneEvents() {
+    const thread = document.getElementById("desk-message-thread");
+    const replyForm = document.getElementById("desk-reply-form");
+    const replyInput = document.getElementById("desk-reply-input");
+    const replySubmit = document.getElementById("desk-reply-submit");
+    const replyStatus = document.getElementById("desk-reply-status");
+    const fileInput = document.getElementById("desk-file-input");
+    const attachBtn = document.getElementById("desk-attach-btn");
+    const recordBtn = document.getElementById("desk-record-btn");
+    const recordStopBtn = document.getElementById("desk-record-stop");
+    const recordCancelBtn = document.getElementById("desk-record-cancel");
+    const deskComposerCard = document.getElementById("desk-composer-card");
+    const toggleStatusForm = document.getElementById("desk-toggle-status-form");
 
-    replyInput.addEventListener("keydown", function (event) {
-      if ((event.key === "Enter" && !event.shiftKey) || ((event.ctrlKey || event.metaKey) && event.key === "Enter")) {
-        event.preventDefault();
-        if (replyForm && !replySubmit.disabled) {
-          replyForm.requestSubmit();
+    if (recordBtn) {
+      recordBtn.onclick = function () {
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+          stopRecording(true);
+        } else {
+          startRecording();
         }
-      }
-    });
+      };
+    }
+    if (recordStopBtn) {
+      recordStopBtn.onclick = function () { stopRecording(true); };
+    }
+    if (recordCancelBtn) {
+      recordCancelBtn.onclick = function () { stopRecording(false); };
+    }
 
-    replyInput.addEventListener("paste", function (e) {
-      const items = (e.clipboardData || window.clipboardData) ? (e.clipboardData || window.clipboardData).items : null;
-      if (!items) return;
-      let hasFile = false;
-      const dt = window.DataTransfer ? new DataTransfer() : null;
-      if (dt && fileInput) {
-        Array.from(fileInput.files || []).forEach(function (f) { dt.items.add(f); });
-        for (let i = 0; i < items.length; i++) {
-          if (items[i].kind === "file") {
-            const pastedFile = items[i].getAsFile();
-            if (pastedFile) {
-              dt.items.add(pastedFile);
-              hasFile = true;
+    if (attachBtn && fileInput) {
+      attachBtn.onclick = function () { fileInput.click(); };
+      fileInput.onchange = updateFilePreview;
+    }
+
+    if (replyInput) {
+      replyInput.oninput = function () {
+        autoResizeReplyTextarea();
+        updateSendButtonState();
+      };
+      replyInput.onkeydown = function (event) {
+        if ((event.key === "Enter" && !event.shiftKey) || ((event.ctrlKey || event.metaKey) && event.key === "Enter")) {
+          event.preventDefault();
+          if (replyForm && replySubmit && !replySubmit.disabled) {
+            replyForm.requestSubmit();
+          }
+        }
+      };
+      replyInput.onpaste = function (e) {
+        const items = (e.clipboardData || window.clipboardData) ? (e.clipboardData || window.clipboardData).items : null;
+        if (!items) return;
+        let hasFile = false;
+        const dt = window.DataTransfer ? new DataTransfer() : null;
+        if (dt && fileInput) {
+          Array.from(fileInput.files || []).forEach(function (f) { dt.items.add(f); });
+          for (let i = 0; i < items.length; i++) {
+            if (items[i].kind === "file") {
+              const pastedFile = items[i].getAsFile();
+              if (pastedFile) {
+                dt.items.add(pastedFile);
+                hasFile = true;
+              }
             }
           }
+          if (hasFile) {
+            fileInput.files = dt.files;
+            updateFilePreview();
+          }
         }
-        if (hasFile) {
-          fileInput.files = dt.files;
+      };
+    }
+
+    if (deskComposerCard) {
+      ["dragenter", "dragover"].forEach(function (eventName) {
+        deskComposerCard.addEventListener(eventName, function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          deskComposerCard.classList.add("is-dragover");
+        });
+      });
+      ["dragleave", "drop"].forEach(function (eventName) {
+        deskComposerCard.addEventListener(eventName, function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          deskComposerCard.classList.remove("is-dragover");
+        });
+      });
+      deskComposerCard.ondrop = function (e) {
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+          if (window.DataTransfer && fileInput) {
+            const dt = new DataTransfer();
+            Array.from(fileInput.files || []).forEach(function (f) { dt.items.add(f); });
+            Array.from(e.dataTransfer.files).forEach(function (f) { dt.items.add(f); });
+            fileInput.files = dt.files;
+          }
           updateFilePreview();
         }
-      }
-    });
-  }
+      };
+    }
 
-  const deskComposerCard = document.getElementById("desk-composer-card");
-  if (deskComposerCard) {
-    ["dragenter", "dragover"].forEach(function (eventName) {
-      deskComposerCard.addEventListener(eventName, function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        deskComposerCard.classList.add("is-dragover");
-      });
-    });
-    ["dragleave", "drop"].forEach(function (eventName) {
-      deskComposerCard.addEventListener(eventName, function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        deskComposerCard.classList.remove("is-dragover");
-      });
-    });
-    deskComposerCard.addEventListener("drop", function (e) {
-      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
-        if (window.DataTransfer && fileInput) {
-          const dt = new DataTransfer();
-          Array.from(fileInput.files || []).forEach(function (f) { dt.items.add(f); });
-          Array.from(e.dataTransfer.files).forEach(function (f) { dt.items.add(f); });
-          fileInput.files = dt.files;
+    if (replyForm) {
+      replyForm.onsubmit = async function (event) {
+        event.preventDefault();
+        const hasText = Boolean(replyInput && replyInput.value.trim());
+        const hasFiles = Boolean(fileInput && fileInput.files && fileInput.files.length > 0);
+        if ((!hasText && !hasFiles) || (replySubmit && replySubmit.disabled)) return;
+        if (replySubmit) {
+          replySubmit.disabled = true;
+          replySubmit.classList.remove("is-active");
         }
-        updateFilePreview();
-      }
-    });
+        if (replyStatus) replyStatus.textContent = "Sending…";
+
+        const csrfInput = replyForm.querySelector('input[name="csrfmiddlewaretoken"]');
+        const csrfToken = csrfInput ? csrfInput.value : "";
+        try {
+          const headers = {
+            "X-Requested-With": "XMLHttpRequest",
+            "Accept": "application/json"
+          };
+          if (csrfToken) headers["X-CSRFToken"] = csrfToken;
+
+          const response = await fetch(replyForm.action, {
+            method: "POST",
+            body: new FormData(replyForm),
+            headers: headers
+          });
+          const contentType = response.headers.get("content-type") || "";
+          let data;
+          if (contentType.includes("application/json")) {
+            data = await response.json();
+          } else {
+            if (response.ok) {
+              window.location.reload();
+              return;
+            }
+            throw new Error("Server error (" + response.status + ")");
+          }
+          if (!response.ok || !data.ok) {
+            throw new Error(data.error || "Could not send reply.");
+          }
+
+          renderMessage(data.message);
+          updateSidebarPreview(currentConversationId, data.message.body || "Attachment sent", false);
+
+          if (replyInput) {
+            replyInput.value = "";
+            autoResizeReplyTextarea();
+          }
+          if (fileInput) fileInput.value = "";
+          updateFilePreview();
+          if (replyStatus) replyStatus.textContent = "↵ send · ⇧↵ newline";
+        } catch (err) {
+          if (replyStatus) replyStatus.textContent = err.message || "Could not send reply.";
+        } finally {
+          updateSendButtonState();
+        }
+      };
+    }
+
+    if (toggleStatusForm) {
+      toggleStatusForm.onsubmit = async function (event) {
+        event.preventDefault();
+        const btn = document.getElementById("desk-toggle-status-btn");
+        if (btn) btn.disabled = true;
+
+        const csrfInput = toggleStatusForm.querySelector('input[name="csrfmiddlewaretoken"]');
+        try {
+          const response = await fetch(toggleStatusForm.action, {
+            method: "POST",
+            body: new FormData(toggleStatusForm),
+            headers: {
+              "X-Requested-With": "XMLHttpRequest",
+              "Accept": "application/json",
+              "X-CSRFToken": csrfInput ? csrfInput.value : ""
+            }
+          });
+          const data = await response.json();
+          if (data && data.ok) {
+            const isClosed = data.status === "closed";
+            const statusEl = document.getElementById("desk-thread-status");
+            if (statusEl) {
+              statusEl.textContent = data.status_display;
+              statusEl.className = "ops-status-text " + (isClosed ? "ops-state-settled" : "ops-state-open");
+            }
+            if (btn) {
+              btn.textContent = isClosed ? "Reopen" : "Close thread";
+            }
+            // Update status on active sidebar row
+            const activeRow = document.querySelector('.ops-thread-row[data-conversation-id="' + currentConversationId + '"]')
+              || document.querySelector(".ops-thread-row.is-active");
+            if (activeRow) {
+              activeRow.setAttribute("data-thread-status", data.status);
+              const metaStatus = activeRow.querySelector(".ops-thread-meta span:nth-child(3)");
+              if (metaStatus) {
+                metaStatus.textContent = data.status_display;
+                metaStatus.className = isClosed ? "ops-state-settled" : "ops-state-open";
+              }
+            }
+            if (threadCache.has(currentConversationId)) {
+              const cached = threadCache.get(currentConversationId);
+              cached.status = data.status;
+              cached.status_display = data.status_display;
+              syncCurrentCacheHtml();
+            }
+          }
+        } catch (err) {
+          console.error(err);
+        } finally {
+          if (btn) btn.disabled = false;
+        }
+      };
+    }
+
+    scrollThreadToEnd();
+    updateSendButtonState();
   }
 
-  if (replyForm) {
-    replyForm.addEventListener("submit", async function (event) {
-      event.preventDefault();
-      const hasText = Boolean(replyInput && replyInput.value.trim());
-      const hasFiles = Boolean(fileInput && fileInput.files && fileInput.files.length > 0);
-      if ((!hasText && !hasFiles) || replySubmit.disabled) return;
-      replySubmit.disabled = true;
-      replySubmit.classList.remove("is-active");
-      replyStatus.textContent = "Sending…";
-      const csrfInput = replyForm.querySelector('input[name="csrfmiddlewaretoken"]');
-      const csrfToken = csrfInput ? csrfInput.value : "";
-      try {
-        const headers = {
+  function applyConversationData(data) {
+    currentConversationId = data.conversation_id;
+    root.dataset.conversationId = data.conversation_id;
+    clientLabel = data.client_name;
+
+    document.title = "Inbox · " + data.client_name + " — InfiniAI Operations";
+    const crumb = document.querySelector(".ops-crumb-current");
+    if (crumb) crumb.textContent = data.client_name;
+
+    const invConv = document.querySelector('#desk-invoice-form input[name="conversation_id"]');
+    if (invConv) invConv.value = data.conversation_id;
+    const invEmail = document.getElementById("invoice-email");
+    if (invEmail) invEmail.value = data.client_email || "";
+
+    const currentPane = document.getElementById("ops-chat-pane-root");
+    if (currentPane && data.chat_pane_html) {
+      const wrapper = document.createElement("div");
+      wrapper.innerHTML = data.chat_pane_html.trim();
+      const newPane = wrapper.firstElementChild;
+      currentPane.replaceWith(newPane);
+    }
+
+    bindChatPaneEvents();
+
+    const replyInput = document.getElementById("desk-reply-input");
+    if (replyInput) replyInput.focus();
+  }
+
+  async function switchConversation(targetId, targetUrl, pushHistory) {
+    if (!targetId || targetId === currentConversationId) return;
+
+    stopRecording(false);
+
+    // 1. Instantly update sidebar rows (zero delay)
+    const rows = document.querySelectorAll(".ops-thread-row");
+    rows.forEach(function (row) {
+      const rowId = row.dataset.conversationId;
+      const href = row.getAttribute("href") || "";
+      if (rowId === targetId || href.includes(targetId)) {
+        row.classList.add("is-active");
+        if (row.scrollIntoView) {
+          row.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        }
+        const unreadBadge = row.querySelector(".ops-unread-text");
+        if (unreadBadge) {
+          const sep = unreadBadge.previousElementSibling;
+          if (sep && sep.getAttribute("aria-hidden") === "true") sep.remove();
+          unreadBadge.remove();
+        }
+      } else {
+        row.classList.remove("is-active");
+      }
+    });
+
+    // 2. Push history state
+    if (pushHistory && window.history && window.history.pushState) {
+      window.history.pushState({ conversationId: targetId }, "", targetUrl);
+    }
+
+    // 3. Instant swap from memory cache
+    if (threadCache.has(targetId)) {
+      applyConversationData(threadCache.get(targetId));
+      return;
+    }
+
+    // 4. Fetch via AJAX
+    const currentPane = document.getElementById("ops-chat-pane-root");
+    if (currentPane) currentPane.classList.add("is-switching");
+
+    try {
+      const response = await fetch(targetUrl, {
+        headers: {
           "X-Requested-With": "XMLHttpRequest",
           "Accept": "application/json"
-        };
-        if (csrfToken) {
-          headers["X-CSRFToken"] = csrfToken;
         }
-        const response = await fetch(replyForm.action, {
-          method: "POST",
-          body: new FormData(replyForm),
-          headers: headers
-        });
-        const contentType = response.headers.get("content-type") || "";
-        let data;
-        if (contentType.includes("application/json")) {
-          data = await response.json();
-        } else {
-          if (response.ok) {
-            window.location.reload();
-            return;
-          }
-          throw new Error("Server error (" + response.status + ")");
-        }
-        if (!response.ok || !data.ok) {
-          throw new Error(data.error || "Could not send reply.");
-        }
-        renderMessage(data.message);
-        if (replyInput) {
-          replyInput.value = "";
-          autoResizeReplyTextarea();
-        }
-        if (fileInput) fileInput.value = "";
-        updateFilePreview();
-        replyStatus.textContent = "↵ send · ⇧↵ newline";
-      } catch (err) {
-        replyStatus.textContent = err.message || "Could not send reply.";
-      } finally {
-        updateSendButtonState();
+      });
+      if (!response.ok) throw new Error("Server error " + response.status);
+      const data = await response.json();
+      if (!data.ok) throw new Error(data.error || "Could not load thread.");
+
+      threadCache.set(targetId, data);
+      applyConversationData(data);
+    } catch (err) {
+      console.error(err);
+      window.location.href = targetUrl;
+    } finally {
+      const activePane = document.getElementById("ops-chat-pane-root");
+      if (activePane) activePane.classList.remove("is-switching");
+    }
+  }
+
+  // Intercept thread list clicks & prefetch on hover
+  const threadList = document.getElementById("ops-thread-list");
+  if (threadList) {
+    threadList.addEventListener("click", function (e) {
+      const row = e.target.closest(".ops-thread-row");
+      if (!row) return;
+      e.preventDefault();
+      const href = row.getAttribute("href");
+      const targetId = row.dataset.conversationId || (href.match(/\/operations\/desk\/([a-f0-9\-]+)\//i) || [])[1];
+      if (targetId && href) {
+        switchConversation(targetId, href, true);
       }
+    });
+
+    threadList.addEventListener("pointerenter", function (e) {
+      const row = e.target.closest(".ops-thread-row");
+      if (!row) return;
+      const href = row.getAttribute("href");
+      if (!href) return;
+      const targetId = row.dataset.conversationId || (href.match(/\/operations\/desk\/([a-f0-9\-]+)\//i) || [])[1];
+      if (!targetId || targetId === currentConversationId || threadCache.has(targetId)) return;
+
+      fetch(href, {
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+          "Accept": "application/json"
+        }
+      })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (data && data.ok) {
+          threadCache.set(targetId, data);
+        }
+      })
+      .catch(function () {});
+    }, true);
+  }
+
+  // Support browser forward/backward buttons
+  window.addEventListener("popstate", function (e) {
+    if (e.state && e.state.conversationId) {
+      switchConversation(e.state.conversationId, window.location.pathname, false);
+    } else {
+      const match = window.location.pathname.match(/\/operations\/desk\/([a-f0-9\-]+)\//i);
+      if (match && match[1]) {
+        switchConversation(match[1], window.location.pathname, false);
+      }
+    }
+  });
+
+  // Modal Dialog: Issue Invoice
+  const invoiceForm = document.getElementById("desk-invoice-form");
+  const invoiceSubmit = document.getElementById("desk-invoice-submit");
+  const invoiceFeedback = document.getElementById("desk-invoice-feedback");
+  const modal = document.getElementById("ops-invoice-modal");
+  const openModalBtn = document.getElementById("ops-open-invoice-modal");
+  const closeModalBtn = document.getElementById("ops-close-invoice-modal");
+  const deskTickOverlay = document.getElementById("desk-invoice-tick-overlay");
+  const deskTickNumEl = document.getElementById("desk-tick-invoice-num");
+  const toggleNewClientBtn = document.getElementById("ops-toggle-new-client");
+  const newClientForm = document.getElementById("ops-new-client-form");
+  const searchInput = document.getElementById("ops-thread-search");
+  const filterBtns = document.querySelectorAll("[data-thread-filter]");
+  const threadRows = document.querySelectorAll(".ops-thread-row");
+
+  let activeFilter = "all";
+
+  function applyThreadFilters() {
+    const query = (searchInput ? searchInput.value : "").trim().toLowerCase();
+    threadRows.forEach(function (row) {
+      const status = row.getAttribute("data-thread-status");
+      const haystack = (row.getAttribute("data-thread-search") || "").toLowerCase();
+      const matchesStatus = activeFilter === "all" || status === activeFilter;
+      const matchesQuery = !query || haystack.indexOf(query) !== -1;
+      row.hidden = !(matchesStatus && matchesQuery);
+    });
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("input", applyThreadFilters);
+  }
+
+  filterBtns.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      filterBtns.forEach(function (b) { b.classList.remove("is-active"); });
+      btn.classList.add("is-active");
+      activeFilter = btn.getAttribute("data-thread-filter") || "all";
+      applyThreadFilters();
+    });
+  });
+
+  if (toggleNewClientBtn && newClientForm) {
+    toggleNewClientBtn.addEventListener("click", function () {
+      newClientForm.hidden = !newClientForm.hidden;
+      if (!newClientForm.hidden) {
+        const emailField = document.getElementById("desk-client-email");
+        if (emailField) emailField.focus();
+      }
+    });
+  }
+
+  if (newClientForm) {
+    newClientForm.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const submitBtn = newClientForm.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
+
+      const formData = new FormData(newClientForm);
+      const csrfInput = newClientForm.querySelector('input[name="csrfmiddlewaretoken"]');
+      try {
+        const response = await fetch(newClientForm.action, {
+          method: "POST",
+          body: formData,
+          headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            "Accept": "application/json",
+            "X-CSRFToken": csrfInput ? csrfInput.value : ""
+          }
+        });
+        const data = await response.json();
+        if (data && data.ok && data.conversation_id) {
+          newClientForm.hidden = true;
+          newClientForm.reset();
+          const targetUrl = data.url || ("/operations/desk/" + data.conversation_id + "/");
+          switchConversation(data.conversation_id, targetUrl, true);
+        } else {
+          alert(data.error || "Could not open client thread.");
+        }
+      } catch (err) {
+        alert("Error opening client thread.");
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    });
+  }
+
+  if (openModalBtn && modal) {
+    openModalBtn.addEventListener("click", function () {
+      modal.hidden = false;
+      const descInput = document.getElementById("invoice-description");
+      if (descInput) descInput.focus();
+    });
+  }
+
+  if (closeModalBtn && modal) {
+    closeModalBtn.addEventListener("click", function () { modal.hidden = true; });
+  }
+
+  if (modal) {
+    modal.addEventListener("click", function (event) {
+      if (event.target === modal) modal.hidden = true;
     });
   }
 
@@ -806,9 +962,8 @@
           "X-Requested-With": "XMLHttpRequest",
           "Accept": "application/json"
         };
-        if (csrfToken) {
-          headers["X-CSRFToken"] = csrfToken;
-        }
+        if (csrfToken) headers["X-CSRFToken"] = csrfToken;
+
         const response = await fetch(invoiceForm.action, {
           method: "POST",
           body: new FormData(invoiceForm),
@@ -833,6 +988,7 @@
 
         if (data.message) {
           renderMessage(data.message);
+          updateSidebarPreview(currentConversationId, data.message.body || "Invoice issued", false);
         }
         invoiceForm.querySelector("#invoice-description").value = "";
         invoiceForm.querySelector("#invoice-amount").value = "";
@@ -851,9 +1007,9 @@
   }
 
   async function pollFeed() {
-    if (!feedUrl || !conversationId) return;
+    if (!feedUrl || !currentConversationId) return;
     try {
-      const response = await fetch(feedUrl + "?conversation=" + encodeURIComponent(conversationId) + "&role=admin", {
+      const response = await fetch(feedUrl + "?conversation=" + encodeURIComponent(currentConversationId) + "&role=admin", {
         headers: {"X-Requested-With": "XMLHttpRequest"}
       });
       if (!response.ok) return;
@@ -862,6 +1018,14 @@
         data.messages.forEach(renderMessage);
       }
     } catch (e) {}
+  }
+
+  // Initialize active chat pane bindings
+  bindChatPaneEvents();
+
+  const activeThreadRow = document.querySelector(".ops-thread-row.is-active");
+  if (activeThreadRow && activeThreadRow.scrollIntoView) {
+    activeThreadRow.scrollIntoView({ block: "nearest" });
   }
 
   window.setInterval(pollFeed, 4000);

@@ -602,6 +602,48 @@ class WorkspaceChatTests(TestCase):
             except Exception:
                 pass
 
+    def test_operations_desk_ajax_switching_and_status_toggle(self):
+        from humanizer.models import ClientConversation, ClientMessage
+        conv = ClientConversation.objects.create(user=self.user, subject="Desk Test")
+        ClientMessage.objects.create(conversation=conv, sender="client", body="Initial inquiry")
+
+        # 1. Test AJAX GET for switching conversations without reloading page
+        res = self.client.get(
+            reverse("platformhub:operations_desk_conversation", kwargs={"conversation_id": conv.id}),
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(res.status_code, 200)
+        data = res.json()
+        self.assertTrue(data["ok"])
+        self.assertEqual(data["conversation_id"], str(conv.id))
+        self.assertEqual(data["client_email"], self.user.email)
+        self.assertIn("ops-chat-pane", data["chat_pane_html"])
+        self.assertIn("Initial inquiry", data["chat_pane_html"])
+
+        # 2. Test AJAX status toggle
+        toggle_res = self.client.post(
+            reverse("platformhub:operations_desk_conversation", kwargs={"conversation_id": conv.id}),
+            {"action": "toggle_status"},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(toggle_res.status_code, 200)
+        toggle_data = toggle_res.json()
+        self.assertTrue(toggle_data["ok"])
+        self.assertEqual(toggle_data["status"], "closed")
+
+        # 3. Test AJAX open_client
+        open_res = self.client.post(
+            reverse("platformhub:operations_desk"),
+            {"action": "open_client", "client_email": "new.lead@example.com"},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(open_res.status_code, 200)
+        open_data = open_res.json()
+        self.assertTrue(open_data["ok"])
+        self.assertTrue(open_data["conversation_id"])
+        self.assertIn("/operations/desk/", open_data["url"])
+
+
     def test_seed_orbit_production_populates_threads_invoices_and_ledger(self):
         from django.core.management import call_command
         from humanizer.models import ClientConversation, ClientMessage

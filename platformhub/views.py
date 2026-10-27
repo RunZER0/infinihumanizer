@@ -1094,7 +1094,11 @@ def operations_desk(request, conversation_id=None):
             target_user = User.objects.create(username=username, email=target_email)
         conv, _ = ClientConversation.objects.get_or_create(user=target_user)
         if is_ajax:
-            return JsonResponse({"ok": True, "conversation_id": str(conv.id)})
+            return JsonResponse({
+                "ok": True,
+                "conversation_id": str(conv.id),
+                "url": reverse("platformhub:operations_desk_conversation", kwargs={"conversation_id": conv.id}),
+            })
         return redirect("platformhub:operations_desk_conversation", conversation_id=conv.id)
 
     if not ClientConversation.objects.exists():
@@ -1127,7 +1131,11 @@ def operations_desk(request, conversation_id=None):
             active_conversation.status = "closed" if active_conversation.status == "open" else "open"
             active_conversation.save(update_fields=["status", "updated_at"])
             if is_ajax:
-                return JsonResponse({"ok": True, "status": active_conversation.status})
+                return JsonResponse({
+                    "ok": True,
+                    "status": active_conversation.status,
+                    "status_display": active_conversation.get_status_display(),
+                })
             return redirect("platformhub:operations_desk_conversation", conversation_id=active_conversation.id)
 
         body = request.POST.get("message", "").strip()
@@ -1174,6 +1182,30 @@ def operations_desk(request, conversation_id=None):
         return redirect("platformhub:operations_desk_conversation", conversation_id=active_conversation.id)
 
     active_conversation.messages.filter(sender="client", read_at__isnull=True).update(read_at=timezone.now())
+
+    if request.method == "GET" and is_ajax:
+        from django.template.loader import render_to_string
+        chat_pane_html = render_to_string(
+            "platformhub/partials/ops_chat_pane.html",
+            context={
+                "conversation": active_conversation,
+                "chat_messages": active_conversation.messages.select_related("author").all(),
+                "request": request,
+            },
+            request=request,
+        )
+        client_name = active_conversation.user.get_full_name() or active_conversation.user.email or "Client"
+        return JsonResponse({
+            "ok": True,
+            "conversation_id": str(active_conversation.id),
+            "client_name": client_name,
+            "client_first_name": active_conversation.user.first_name or client_name,
+            "client_email": active_conversation.user.email or "",
+            "status": active_conversation.status,
+            "status_display": active_conversation.get_status_display(),
+            "chat_pane_html": chat_pane_html,
+        })
+
 
     # Map acquisition channel per user for clean thread directory metadata
     all_requests = list(ServiceRequest.objects.select_related("user").order_by("-created_at"))
