@@ -704,7 +704,39 @@
     updateSendButtonState();
   }
 
+  function parseHtmlConversation(htmlText, targetId) {
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlText, "text/html");
+      const incomingPane = doc.getElementById("ops-chat-pane-root") || doc.querySelector(".ops-chat-pane");
+      if (!incomingPane) return null;
+
+      const crumb = doc.querySelector(".ops-crumb-current");
+      const clientName = crumb ? crumb.textContent.trim() : "Client";
+      const invEmail = doc.getElementById("invoice-email");
+      const clientEmail = invEmail ? invEmail.value : "";
+      const statusEl = doc.getElementById("desk-thread-status");
+      const statusDisplay = statusEl ? statusEl.textContent.trim() : "Open";
+      const isClosed = statusEl ? statusEl.classList.contains("ops-state-settled") : false;
+
+      return {
+        ok: true,
+        conversation_id: targetId,
+        client_name: clientName,
+        client_first_name: clientName.split(" ")[0] || clientName,
+        client_email: clientEmail,
+        status: isClosed ? "closed" : "open",
+        status_display: statusDisplay,
+        chat_pane_html: incomingPane.outerHTML,
+      };
+    } catch (e) {
+      console.error("DOMParser error:", e);
+      return null;
+    }
+  }
+
   function applyConversationData(data) {
+    if (!data || !data.conversation_id) return;
     currentConversationId = data.conversation_id;
     root.dataset.conversationId = data.conversation_id;
     clientLabel = data.client_name;
@@ -718,18 +750,49 @@
     const invEmail = document.getElementById("invoice-email");
     if (invEmail) invEmail.value = data.client_email || "";
 
-    const currentPane = document.getElementById("ops-chat-pane-root");
+    const currentPane = document.getElementById("ops-chat-pane-root") || document.querySelector(".ops-chat-pane");
     if (currentPane && data.chat_pane_html) {
       const wrapper = document.createElement("div");
       wrapper.innerHTML = data.chat_pane_html.trim();
       const newPane = wrapper.firstElementChild;
-      currentPane.replaceWith(newPane);
+      if (newPane) {
+        currentPane.replaceWith(newPane);
+      }
     }
 
     bindChatPaneEvents();
 
     const replyInput = document.getElementById("desk-reply-input");
     if (replyInput) replyInput.focus();
+  }
+
+  async function fetchConversationData(targetId, targetUrl) {
+    let fetchUrl = targetUrl;
+    if (!fetchUrl.includes("format=json")) {
+      fetchUrl += (fetchUrl.includes("?") ? "&" : "?") + "format=json";
+    }
+    const response = await fetch(fetchUrl, {
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+        "Accept": "application/json, text/html;q=0.9, */*;q=0.8"
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("HTTP error " + response.status);
+    }
+
+    const contentType = response.headers.get("content-type") || "";
+    if (contentType.includes("application/json")) {
+      const data = await response.json();
+      if (data && data.ok) return data;
+      throw new Error(data.error || "Failed to load thread JSON.");
+    }
+
+    const htmlText = await response.text();
+    const parsed = parseHtmlConversation(htmlText, targetId);
+    if (parsed) return parsed;
+    throw new Error("Could not parse conversation HTML.");
   }
 
   async function switchConversation(targetId, targetUrl, pushHistory) {
@@ -763,75 +826,94 @@
       window.history.pushState({ conversationId: targetId }, "", targetUrl);
     }
 
-    // 3. Instant swap from memory cache
+    // 3. Instant swap from memory cache (< 1ms, zero flicker)
     if (threadCache.has(targetId)) {
       applyConversationData(threadCache.get(targetId));
       return;
     }
 
-    // 4. Fetch via AJAX
-    const currentPane = document.getElementById("ops-chat-pane-root");
+    // 4. Fetch via background request (smooth indicator, zero page reload)
+    const currentPane = document.getElementById("ops-chat-pane-root") || document.querySelector(".ops-chat-pane");
     if (currentPane) currentPane.classList.add("is-switching");
 
     try {
-      const response = await fetch(targetUrl, {
-        headers: {
-          "X-Requested-With": "XMLHttpRequest",
-          "Accept": "application/json"
-        }
-      });
-      if (!response.ok) throw new Error("Server error " + response.status);
-      const data = await response.json();
-      if (!data.ok) throw new Error(data.error || "Could not load thread.");
-
+      const data = await fetchConversationData(targetId, targetUrl);
       threadCache.set(targetId, data);
       applyConversationData(data);
     } catch (err) {
-      console.error(err);
-      window.location.href = targetUrl;
+      console.error("Conversation switch error:", err);
+      // NEVER reload window.location.href!
+      const statusEl = document.getElementById("desk-reply-status");
+      if (statusEl) {
+        statusEl.textContent = "Could not load thread. Please try again.";
+        setTimeout(function () {
+          if (statusEl.textContent.includes("Could not load")) statusEl.textContent = "";
+        }, 4000);
+      }
     } finally {
-      const activePane = document.getElementById("ops-chat-pane-root");
+      const activePane = document.getElementById("ops-chat-pane-root") || document.querySelector(".ops-chat-pane");
       if (activePane) activePane.classList.remove("is-switching");
     }
   }
 
-  // Intercept thread list clicks & prefetch on hover
-  const threadList = document.getElementById("ops-thread-list");
-  if (threadList) {
-    threadList.addEventListener("click", function (e) {
-      const row = e.target.closest(".ops-thread-row");
-      if (!row) return;
-      e.preventDefault();
-      const href = row.getAttribute("href");
-      const targetId = row.dataset.conversationId || (href.match(/\/operations\/desk\/([a-f0-9\-]+)\//i) || [])[1];
-      if (targetId && href) {
-        switchConversation(targetId, href, true);
-      }
-    });
-
-    threadList.addEventListener("pointerenter", function (e) {
-      const row = e.target.closest(".ops-thread-row");
-      if (!row) return;
-      const href = row.getAttribute("href");
-      if (!href) return;
-      const targetId = row.dataset.conversationId || (href.match(/\/operations\/desk\/([a-f0-9\-]+)\//i) || [])[1];
-      if (!targetId || targetId === currentConversationId || threadCache.has(targetId)) return;
-
-      fetch(href, {
-        headers: {
-          "X-Requested-With": "XMLHttpRequest",
-          "Accept": "application/json"
-        }
-      })
-      .then(function (r) { return r.json(); })
+  function prefetchConversation(targetId, href) {
+    if (!targetId || targetId === currentConversationId || threadCache.has(targetId)) return;
+    fetchConversationData(targetId, href)
       .then(function (data) {
-        if (data && data.ok) {
-          threadCache.set(targetId, data);
-        }
+        if (data && data.ok) threadCache.set(targetId, data);
       })
       .catch(function () {});
-    }, true);
   }
+
+  // Intercept thread clicks at document capture phase to prevent browser reloads
+  document.addEventListener("click", function (e) {
+    const row = e.target.closest(".ops-thread-row");
+    if (!row) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const href = row.getAttribute("href");
+    const targetId = row.dataset.conversationId || (href && (href.match(/\/operations\/desk\/([a-f0-9\-]+)\//i) || [])[1]);
+    if (targetId && href) {
+      switchConversation(targetId, href, true);
+    }
+  }, true);
+
+  // Mouseover prefetching for instant switches on click
+  document.addEventListener("mouseover", function (e) {
+    const row = e.target.closest(".ops-thread-row");
+    if (!row) return;
+    const href = row.getAttribute("href");
+    if (!href) return;
+    const targetId = row.dataset.conversationId || (href.match(/\/operations\/desk\/([a-f0-9\-]+)\//i) || [])[1];
+    if (targetId) prefetchConversation(targetId, href);
+  }, { passive: true });
+
+  // Pre-warm top 10 conversations in background after initial page render
+  setTimeout(function () {
+    const rows = Array.from(document.querySelectorAll(".ops-thread-row")).slice(0, 10);
+    let idx = 0;
+    function nextPrefetch() {
+      if (idx >= rows.length) return;
+      const row = rows[idx++];
+      const href = row.getAttribute("href");
+      const targetId = row.dataset.conversationId || (href && (href.match(/\/operations\/desk\/([a-f0-9\-]+)\//i) || [])[1]);
+      if (targetId && targetId !== currentConversationId && !threadCache.has(targetId)) {
+        fetchConversationData(targetId, href)
+          .then(function (data) {
+            if (data && data.ok) threadCache.set(targetId, data);
+            setTimeout(nextPrefetch, 200);
+          })
+          .catch(function () {
+            setTimeout(nextPrefetch, 200);
+          });
+      } else {
+        nextPrefetch();
+      }
+    }
+    nextPrefetch();
+  }, 1000);
 
   // Support browser forward/backward buttons
   window.addEventListener("popstate", function (e) {
