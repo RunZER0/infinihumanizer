@@ -29,39 +29,47 @@
       </div>
     </div>
 
-    <div class="ops-thread-list" id="ops-thread-list">
+    <div class="ops-thread-list wa-thread-list" id="ops-thread-list">
       {% for item in conversations %}
       <a
-        class="ops-thread-row {% if item.id == conversation.id %}is-active{% endif %}"
+        class="ops-thread-row wa-thread-row {% if item.id == conversation.id %}is-active{% endif %}"
         href="{% url 'platformhub:operations_desk_conversation' item.id %}"
         data-conversation-id="{{ item.id }}"
         data-thread-status="{{ item.status }}"
         data-thread-search="{{ item.user.get_full_name|default:''|lower }} {{ item.user.email|lower }} {{ item.subject|lower }} {{ item.channel }}"
       >
-        <div class="ops-thread-row-top">
-          <strong class="ops-thread-name">{{ item.user.get_full_name|default:item.user.email }}</strong>
-          <time class="ops-thread-time" datetime="{{ item.updated_at|date:'c' }}">{{ item.updated_at|date:"M j, Y" }}</time>
+        <div class="wa-thread-avatar" aria-hidden="true">
+          <span>{{ item.user.first_name|default:item.user.email|slice:":1"|upper }}</span>
         </div>
-        {% if item.last_message %}
-        <p class="ops-thread-preview">
-          <span class="ops-thread-sender">{% if item.last_message.sender == "client" %}{{ item.user.first_name|default:"Client" }}:{% else %}You:{% endif %}</span>
-          {% if item.last_message.body %}
-            {{ item.last_message.body|truncatechars:68 }}
-          {% elif item.last_message.attachments %}
-            Attached {{ item.last_message.attachments.0.name }}
-          {% endif %}
-        </p>
-        {% else %}
-        <p class="ops-thread-preview">No messages</p>
-        {% endif %}
-        <div class="ops-thread-meta">
-          <span>{{ item.user.email }}</span>
-          <span aria-hidden="true">·</span>
-          <span class="{% if item.status == 'open' %}ops-state-open{% else %}ops-state-settled{% endif %}">{{ item.get_status_display }}</span>
-          {% if item.unread_client_count %}
-          <span aria-hidden="true">·</span>
-          <strong class="ops-unread-text">{{ item.unread_client_count }} new</strong>
-          {% endif %}
+        <div class="wa-thread-body">
+          <div class="ops-thread-row-top wa-thread-row-top">
+            <strong class="ops-thread-name wa-thread-name">{{ item.user.get_full_name|default:item.user.email }}</strong>
+            <time class="ops-thread-time wa-thread-time" datetime="{{ item.updated_at|date:'c' }}">{{ item.updated_at|date:"H:i" }}</time>
+          </div>
+          <div class="wa-thread-row-bottom">
+            <p class="ops-thread-preview wa-thread-preview">
+              {% if item.last_message %}
+                {% if item.last_message.sender != "client" %}
+                <span class="wa-preview-ticks">
+                  <svg class="wa-ticks {% if item.last_message.read_at %}wa-ticks-read{% else %}wa-ticks-unread{% endif %}" width="14" height="13" viewBox="0 0 16 15" fill="none">
+                    <path d="M15.01 3.316l-7.79 7.79-3.79-3.79 1.06-1.06 2.73 2.73 6.73-6.73 1.06 1.06z" fill="{% if item.last_message.read_at %}#53bdeb{% else %}#8696a0{% endif %}"/>
+                    <path d="M11.22 3.316l-7.79 7.79-3.43-3.43 1.06-1.06 2.37 2.37 6.73-6.73 1.06 1.06z" fill="{% if item.last_message.read_at %}#53bdeb{% else %}#8696a0{% endif %}"/>
+                  </svg>
+                </span>
+                {% endif %}
+                {% if item.last_message.body %}
+                  {{ item.last_message.body|truncatechars:42 }}
+                {% elif item.last_message.attachments %}
+                  📎 {{ item.last_message.attachments.0.name }}
+                {% endif %}
+              {% else %}
+                No messages yet
+              {% endif %}
+            </p>
+            {% if item.unread_client_count %}
+            <span class="wa-unread-badge">{{ item.unread_client_count }}</span>
+            {% endif %}
+          </div>
         </div>
       </a>
       {% endfor %}
@@ -389,43 +397,68 @@
   function renderAttachmentsHtml(attachments) {
     if (!Array.isArray(attachments) || !attachments.length) return "";
     return (
-      '<div class="ops-attachment-list">' +
+      '<div class="wa-attachment-list">' +
       attachments.map(function (att) {
         const href = escapeHtml(att.download_url || att.url || "#");
         const playUrl = escapeHtml(att.url || att.download_url || "#");
-        const ext = escapeHtml(att.ext || "FILE");
+        const ext = escapeHtml((att.ext || "FILE").toUpperCase().replace(".", ""));
         const name = escapeHtml(att.name || att.filename || "Attachment");
         const size = escapeHtml(att.size_display || "");
         const mime = escapeHtml(att.mime || "audio/webm");
 
         if (isAudioAttachment(att)) {
           return (
-            '<div class="ops-audio-card">' +
-              '<div class="ops-audio-meta">' +
-                '<span class="ops-audio-badge">VOICE</span>' +
-                '<strong class="ops-audio-title">' + name + '</strong>' +
-                '<span class="ops-audio-size">' + size + '</span>' +
+            '<div class="wa-voice-card">' +
+              '<button type="button" class="wa-voice-btn" aria-label="Play audio" onclick="const a=this.parentElement.querySelector(\'audio\'); if(a.paused){a.play(); this.classList.add(\'is-playing\');}else{a.pause(); this.classList.remove(\'is-playing\');}">' +
+                '<svg class="wa-icon-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 18 12 6 20 6 4"></polygon></svg>' +
+                '<svg class="wa-icon-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>' +
+              '</button>' +
+              '<div class="wa-voice-body">' +
+                '<div class="wa-voice-bars" aria-hidden="true">' +
+                  '<span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>' +
+                '</div>' +
+                '<div class="wa-voice-foot">' +
+                  '<span class="wa-voice-dur">' + size + '</span>' +
+                  '<a class="wa-voice-dl" href="' + href + '" download="' + name + '">Download</a>' +
+                '</div>' +
               '</div>' +
-              '<audio controls preload="metadata" class="ops-audio-element" src="' + playUrl + '">' +
+              '<audio preload="metadata" src="' + playUrl + '" onended="this.parentElement.querySelector(\'.wa-voice-btn\').classList.remove(\'is-playing\')" onpause="this.parentElement.querySelector(\'.wa-voice-btn\').classList.remove(\'is-playing\')">' +
                 '<source src="' + playUrl + '" type="' + mime + '">' +
-                'Your browser does not support audio playback.' +
               '</audio>' +
-              '<div class="ops-audio-foot">' +
-                '<a class="ops-audio-dl" href="' + href + '">Download audio</a>' +
-              '</div>' +
             '</div>'
           );
         }
 
+        if (["PNG", "JPG", "JPEG", "WEBP", "GIF"].includes(ext)) {
+          return (
+            '<a class="wa-image-card" href="' + href + '" target="_blank" rel="noopener">' +
+              '<img src="' + playUrl + '" alt="' + name + '" loading="lazy" class="wa-image-thumb">' +
+              '<span class="wa-image-meta">' + size + '</span>' +
+            '</a>'
+          );
+        }
+
         return (
-          '<a class="ops-attachment-card" href="' + href + '" target="_blank" rel="noopener">' +
-            '<span class="ops-attachment-ext">' + ext + "</span>" +
-            '<span class="ops-attachment-info">' +
-              '<strong class="ops-attachment-name">' + name + "</strong>" +
-              '<span class="ops-attachment-size">' + size + "</span>" +
-            "</span>" +
-            '<span class="ops-attachment-dl">Download</span>' +
-          "</a>"
+          '<a class="wa-doc-card" href="' + href + '" target="_blank" rel="noopener" download="' + name + '">' +
+            '<div class="wa-doc-badge wa-badge-' + ext.toLowerCase() + '">' +
+              '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>' +
+                '<polyline points="14 2 14 8 20 8"></polyline>' +
+              '</svg>' +
+              '<span class="wa-doc-ext">' + ext + '</span>' +
+            '</div>' +
+            '<div class="wa-doc-info">' +
+              '<strong class="wa-doc-name" title="' + name + '">' + name + '</strong>' +
+              '<span class="wa-doc-sub">' + size + ' · ' + ext + '</span>' +
+            '</div>' +
+            '<span class="wa-doc-dl" title="Download">' +
+              '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+                '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>' +
+                '<polyline points="7 10 12 15 17 10"></polyline>' +
+                '<line x1="12" y1="15" x2="12" y2="3"></line>' +
+              '</svg>' +
+            '</span>' +
+          '</a>'
         );
       }).join("") +
       "</div>"
@@ -447,8 +480,7 @@
     if (!row) return;
     const preview = row.querySelector(".ops-thread-preview");
     if (preview) {
-      const prefix = isClient ? (senderName || "Client") + ":" : "You:";
-      preview.innerHTML = '<span class="ops-thread-sender">' + escapeHtml(prefix) + '</span> ' + escapeHtml((text || "").slice(0, 68));
+      preview.innerHTML = escapeHtml((text || "").slice(0, 50));
     }
   }
 
@@ -459,19 +491,39 @@
     if (empty) empty.remove();
 
     const article = document.createElement("article");
-    const isClient = item.sender === "client";
-    article.className = "ops-msg " + (isClient ? "ops-msg-incoming" : "ops-msg-outgoing");
+    const isOut = typeof item.is_outgoing !== "undefined" ? Boolean(item.is_outgoing) : (item.sender !== "client");
+    article.className = "wa-msg " + (isOut ? "wa-msg-out" : "wa-msg-in");
     article.setAttribute("data-message-id", item.id);
-    const label = isClient ? clientLabel : "You";
-    const bodyHtml = item.body ? "<p>" + linkify(item.body).replace(/\n/g, "<br>") + "</p>" : "";
+
+    const bodyHtml = item.body ? '<div class="wa-msg-text">' + linkify(item.body).replace(/\n/g, "<br>") + '</div>' : "";
     const attHtml = renderAttachmentsHtml(item.attachments);
+    const timeStr = escapeHtml(item.time_display || (item.created_at_display ? item.created_at_display.split("·")[1]?.trim() : "") || "Now");
+    const isRead = Boolean(item.is_read);
+
+    let tickHtml = "";
+    if (isOut) {
+      const tickColor = isRead ? "#53bdeb" : "#8696a0";
+      const tickClass = isRead ? "wa-ticks-read" : "wa-ticks-unread";
+      const tickTitle = isRead ? "Read" : "Delivered";
+      tickHtml =
+        '<span class="wa-tick-wrap" title="' + tickTitle + '">' +
+          '<svg class="wa-ticks ' + tickClass + '" width="16" height="15" viewBox="0 0 16 15" fill="none">' +
+            '<path d="M15.01 3.316l-7.79 7.79-3.79-3.79 1.06-1.06 2.73 2.73 6.73-6.73 1.06 1.06z" fill="' + tickColor + '"/>' +
+            '<path d="M11.22 3.316l-7.79 7.79-3.43-3.43 1.06-1.06 2.37 2.37 6.73-6.73 1.06 1.06z" fill="' + tickColor + '"/>' +
+          '</svg>' +
+        '</span>';
+    }
+
     article.innerHTML =
-      '<div class="ops-msg-meta">' +
-        "<strong>" + escapeHtml(label) + "</strong>" +
-        '<span aria-hidden="true">·</span>' +
-        '<time datetime="' + escapeHtml(item.created_at_iso || item.created_at || "") + '">' + escapeHtml(item.created_at_display || item.created_at || "") + "</time>" +
-      "</div>" +
-      '<div class="ops-msg-bubble">' + bodyHtml + attHtml + "</div>";
+      '<div class="wa-msg-bubble">' +
+        bodyHtml +
+        attHtml +
+        '<div class="wa-msg-meta">' +
+          '<span class="wa-msg-time">' + timeStr + '</span>' +
+          tickHtml +
+        '</div>' +
+      '</div>';
+
     stream.appendChild(article);
     scrollThreadToEnd();
     syncCurrentCacheHtml();
@@ -482,9 +534,9 @@
     if (!replyInput) return;
     replyInput.style.height = "auto";
     const scrollH = replyInput.scrollHeight;
-    const newH = Math.min(Math.max(scrollH, 44), 180);
+    const newH = Math.min(Math.max(scrollH, 20), 140);
     replyInput.style.height = newH + "px";
-    replyInput.style.overflowY = scrollH > 180 ? "auto" : "hidden";
+    replyInput.style.overflowY = scrollH > 140 ? "auto" : "hidden";
   }
 
   function bindChatPaneEvents() {
@@ -751,12 +803,29 @@
     const emailEl = document.getElementById("desk-chat-email");
     if (emailEl) emailEl.textContent = data.client_email || "";
 
+    const presenceEl = document.getElementById("desk-chat-presence");
+    if (presenceEl && data.client_presence) {
+      if (data.client_presence.is_online) {
+        presenceEl.textContent = "online";
+        presenceEl.className = "wa-status-online";
+      } else {
+        presenceEl.textContent = data.client_presence.last_seen_display || "offline";
+        presenceEl.className = "wa-status-offline";
+      }
+    }
+
+    const avatarEl = document.getElementById("desk-chat-avatar");
+    if (avatarEl) {
+      const initial = (data.client_first_name || data.client_name || "?").charAt(0).toUpperCase();
+      avatarEl.innerHTML = "<span>" + escapeHtml(initial) + "</span>";
+    }
+
     // 2. Update status and toggle form
     const isClosed = data.status === "closed";
     const statusEl = document.getElementById("desk-thread-status");
     if (statusEl) {
       statusEl.textContent = data.status_display;
-      statusEl.className = "ops-status-text " + (isClosed ? "ops-state-settled" : "ops-state-open");
+      statusEl.className = "ops-status-text wa-thread-badge " + (isClosed ? "ops-state-settled" : "ops-state-open");
     }
     const toggleBtn = document.getElementById("desk-toggle-status-btn");
     if (toggleBtn) {
@@ -780,9 +849,9 @@
     }
     const replyInput = document.getElementById("desk-reply-input");
     if (replyInput) {
-      replyInput.placeholder = "Reply to " + (data.client_first_name || data.client_name) + "… (Enter to send, Shift+Enter for new line)";
+      replyInput.placeholder = "Type a message";
       replyInput.value = "";
-      replyInput.style.height = "auto";
+      replyInput.style.height = "22px";
     }
     const fileInput = document.getElementById("desk-file-input");
     if (fileInput) fileInput.value = "";

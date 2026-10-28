@@ -1,73 +1,111 @@
-<!-- Pane 2: Active Chat Interface -->
-<section class="ops-chat-pane" id="ops-chat-pane-root" data-conversation-id="{{ conversation.id }}" aria-label="Active conversation">
-  <header class="ops-chat-header">
-    <div class="ops-chat-header-main">
-      <h1 class="ops-chat-title" id="desk-chat-title">{{ conversation.user.get_full_name|default:conversation.user.email }}</h1>
-      <div class="ops-chat-submeta">
-        <span id="desk-chat-email">{{ conversation.user.email }}</span>
+<!-- Pane 2: Active Chat Interface (WhatsApp Web Remodel) -->
+<section class="ops-chat-pane wa-chat-pane" id="ops-chat-pane-root" data-conversation-id="{{ conversation.id }}" aria-label="Active conversation">
+  <header class="ops-chat-header wa-chat-header">
+    <div class="wa-header-contact">
+      <div class="wa-header-avatar" id="desk-chat-avatar" aria-hidden="true">
+        <span>{{ conversation.user.first_name|default:conversation.user.email|slice:":1"|upper }}</span>
+      </div>
+      <div class="wa-header-info">
+        <h1 class="wa-header-name" id="desk-chat-title">{{ conversation.user.get_full_name|default:conversation.user.email }}</h1>
+        <div class="wa-header-status-row" id="desk-chat-presence-wrap">
+          {% if client_presence.is_online %}
+          <span class="wa-status-online" id="desk-chat-presence">online</span>
+          {% else %}
+          <span class="wa-status-offline" id="desk-chat-presence">{{ client_presence.last_seen_display|default:"offline" }}</span>
+          {% endif %}
+          <span class="wa-header-sep" aria-hidden="true">·</span>
+          <span class="wa-header-email" id="desk-chat-email">{{ conversation.user.email }}</span>
+        </div>
       </div>
     </div>
 
-    <div class="ops-chat-header-actions">
-      <span class="ops-status-text {% if conversation.status == 'open' %}ops-state-open{% else %}ops-state-settled{% endif %}" id="desk-thread-status">
+    <div class="ops-chat-header-actions wa-header-actions">
+      <span class="ops-status-text wa-thread-badge {% if conversation.status == 'open' %}ops-state-open{% else %}ops-state-settled{% endif %}" id="desk-thread-status">
         {{ conversation.get_status_display }}
       </span>
-      <button type="button" class="ops-btn ops-btn-primary ops-btn-sm ops-open-invoice-trigger" id="ops-open-invoice-modal" title="Issue invoice to this client">
+      <button type="button" class="wa-btn-orange ops-open-invoice-trigger" id="ops-open-invoice-modal" title="Issue invoice to this client">
         Issue invoice
       </button>
       <form method="post" action="{% url 'platformhub:operations_desk_conversation' conversation.id %}" class="ops-inline-form" id="desk-toggle-status-form">
         {% csrf_token %}
         <input type="hidden" name="action" value="toggle_status">
-        <button class="ops-btn ops-btn-secondary ops-btn-sm" type="submit" id="desk-toggle-status-btn">
+        <button class="wa-btn-subtle" type="submit" id="desk-toggle-status-btn">
           {% if conversation.status == "open" %}Close thread{% else %}Reopen{% endif %}
         </button>
       </form>
     </div>
   </header>
 
-  <div class="ops-message-stream" id="desk-message-thread" aria-live="polite">
+  <div class="ops-message-stream wa-message-stream" id="desk-message-thread" aria-live="polite">
     {% for item in chat_messages %}
-    <article class="ops-msg {% if item.sender == 'client' %}ops-msg-incoming{% else %}ops-msg-outgoing{% endif %}" data-message-id="{{ item.id }}">
-      <div class="ops-msg-meta">
-        <strong>{% if item.sender == "client" %}{{ conversation.user.get_full_name|default:conversation.user.email }}{% else %}You{% endif %}</strong>
-        <span aria-hidden="true">·</span>
-        <time datetime="{{ item.created_at|date:'c' }}">{{ item.created_at|date:"M j, Y · H:i" }}</time>
-      </div>
-      <div class="ops-msg-bubble">
+    <article class="wa-msg {% if item.is_outgoing %}wa-msg-out{% else %}wa-msg-in{% endif %}" data-message-id="{{ item.id }}">
+      <div class="wa-msg-bubble">
         {% if item.body %}
-        <p>{{ item.body|urlize|linebreaksbr }}</p>
+        <div class="wa-msg-text">{{ item.body|urlize|linebreaksbr }}</div>
         {% endif %}
         {% if item.attachments %}
-        <div class="ops-attachment-list">
+        <div class="wa-attachment-list">
           {% for att in item.attachments %}
           {% if att.is_audio or att.kind == "AUDIO" or att.ext == "MP3" or att.ext == "WAV" or att.ext == "M4A" or att.ext == "OGG" or att.ext == "WEBM" or att.ext == "AAC" or att.ext == "FLAC" %}
-          <div class="ops-audio-card">
-            <div class="ops-audio-meta">
-              <span class="ops-audio-badge">VOICE</span>
-              <strong class="ops-audio-title">{{ att.name }}</strong>
-              <span class="ops-audio-size">{{ att.size_display }}</span>
+          <div class="wa-voice-card">
+            <button type="button" class="wa-voice-btn" aria-label="Play audio" onclick="const a=this.parentElement.querySelector('audio'); if(a.paused){a.play(); this.classList.add('is-playing');}else{a.pause(); this.classList.remove('is-playing');}">
+              <svg class="wa-icon-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 18 12 6 20 6 4"></polygon></svg>
+              <svg class="wa-icon-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+            </button>
+            <div class="wa-voice-body">
+              <div class="wa-voice-bars" aria-hidden="true">
+                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <div class="wa-voice-foot">
+                <span class="wa-voice-dur">{{ att.size_display|default:"Voice note" }}</span>
+                <a class="wa-voice-dl" href="{{ att.download_url|default:att.url }}" download="{{ att.name }}">Download</a>
+              </div>
             </div>
-            <audio controls preload="metadata" class="ops-audio-element" src="{{ att.url }}">
+            <audio preload="metadata" src="{{ att.url }}" onended="this.parentElement.querySelector('.wa-voice-btn').classList.remove('is-playing')" onpause="this.parentElement.querySelector('.wa-voice-btn').classList.remove('is-playing')">
               <source src="{{ att.url }}" type="{{ att.mime|default:'audio/webm' }}">
-              Your browser does not support audio playback.
             </audio>
-            <div class="ops-audio-foot">
-              <a class="ops-audio-dl" href="{{ att.download_url|default:att.url }}">Download audio</a>
-            </div>
           </div>
+          {% elif att.ext == "PNG" or att.ext == "JPG" or att.ext == "JPEG" or att.ext == "WEBP" or att.ext == "GIF" %}
+          <a class="wa-image-card" href="{{ att.download_url|default:att.url }}" target="_blank" rel="noopener">
+            <img src="{{ att.url }}" alt="{{ att.name }}" loading="lazy" class="wa-image-thumb">
+            <span class="wa-image-meta">{{ att.size_display }}</span>
+          </a>
           {% else %}
-          <a class="ops-attachment-card" href="{{ att.download_url|default:att.url }}" target="_blank" rel="noopener">
-            <span class="ops-attachment-ext">{{ att.ext|default:"FILE" }}</span>
-            <span class="ops-attachment-info">
-              <strong class="ops-attachment-name">{{ att.name }}</strong>
-              <span class="ops-attachment-size">{{ att.size_display }}</span>
+          <a class="wa-doc-card" href="{{ att.download_url|default:att.url }}" target="_blank" rel="noopener" download="{{ att.name }}">
+            <div class="wa-doc-badge wa-badge-{{ att.ext|lower|default:'file' }}">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+              <span class="wa-doc-ext">{{ att.ext|default:"FILE" }}</span>
+            </div>
+            <div class="wa-doc-info">
+              <strong class="wa-doc-name" title="{{ att.name }}">{{ att.name }}</strong>
+              <span class="wa-doc-sub">{{ att.size_display }} · {{ att.ext|default:"DOCUMENT" }}</span>
+            </div>
+            <span class="wa-doc-dl" title="Download">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
             </span>
-            <span class="ops-attachment-dl">Download</span>
           </a>
           {% endif %}
           {% endfor %}
         </div>
         {% endif %}
+        <div class="wa-msg-meta">
+          <span class="wa-msg-time">{{ item.time_display }}</span>
+          {% if item.is_outgoing %}
+          <span class="wa-tick-wrap" title="{% if item.is_read %}Read{% else %}Delivered{% endif %}">
+            <svg class="wa-ticks {% if item.is_read %}wa-ticks-read{% else %}wa-ticks-unread{% endif %}" width="16" height="15" viewBox="0 0 16 15" fill="none">
+              <path d="M15.01 3.316l-7.79 7.79-3.79-3.79 1.06-1.06 2.73 2.73 6.73-6.73 1.06 1.06z" fill="{% if item.is_read %}#53bdeb{% else %}#8696a0{% endif %}"/>
+              <path d="M11.22 3.316l-7.79 7.79-3.43-3.43 1.06-1.06 2.37 2.37 6.73-6.73 1.06 1.06z" fill="{% if item.is_read %}#53bdeb{% else %}#8696a0{% endif %}"/>
+            </svg>
+          </span>
+          {% endif %}
+        </div>
       </div>
     </article>
     {% empty %}
@@ -77,61 +115,63 @@
     {% endfor %}
   </div>
 
-  <form method="post" action="{% url 'platformhub:operations_desk_conversation' conversation.id %}" enctype="multipart/form-data" class="ops-composer cp-composer" id="desk-reply-form">
+  <form method="post" action="{% url 'platformhub:operations_desk_conversation' conversation.id %}" enctype="multipart/form-data" class="wa-composer-wrap" id="desk-reply-form">
     {% csrf_token %}
     <input type="hidden" name="action" value="reply">
     <input type="hidden" name="format" value="json">
     <input type="file" id="desk-file-input" name="attachments" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.ppt,.pptx,.png,.jpg,.jpeg,.webp,.gif,.txt,.zip,.mp3,.wav,.m4a,.ogg,.webm,.aac,.flac,audio/*" hidden>
 
-    <div class="cp-composer-card" id="desk-composer-card">
-      <!-- Live Voice Recording Banner inside card -->
-      <div class="cp-recording-banner" id="desk-recording-bar" hidden>
-        <div class="cp-recording-live">
-          <span class="cp-recording-dot"></span>
-          <span class="cp-recording-label">Recording voice note</span>
-          <div class="cp-audio-wave" aria-hidden="true">
-            <span class="cp-wave-bar"></span>
-            <span class="cp-wave-bar"></span>
-            <span class="cp-wave-bar"></span>
-            <span class="cp-wave-bar"></span>
-          </div>
-          <span class="cp-recording-timer" id="desk-recording-timer">00:00</span>
+    <!-- Live Voice Recording Banner -->
+    <div class="cp-recording-banner wa-recording-bar" id="desk-recording-bar" hidden>
+      <div class="cp-recording-live">
+        <span class="cp-recording-dot"></span>
+        <span class="cp-recording-label">Recording voice note</span>
+        <div class="cp-audio-wave" aria-hidden="true">
+          <span class="cp-wave-bar"></span>
+          <span class="cp-wave-bar"></span>
+          <span class="cp-wave-bar"></span>
+          <span class="cp-wave-bar"></span>
         </div>
-        <div class="cp-recording-actions">
-          <button type="button" class="cp-rec-btn cp-rec-stop" id="desk-record-stop" title="Stop and attach voice note">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"></rect></svg>
-            <span>Done &amp; attach</span>
-          </button>
-          <button type="button" class="cp-rec-btn cp-rec-cancel" id="desk-record-cancel" title="Discard recording">Cancel</button>
-        </div>
+        <span class="cp-recording-timer" id="desk-recording-timer">00:00</span>
+      </div>
+      <div class="cp-recording-actions">
+        <button type="button" class="cp-rec-btn cp-rec-stop" id="desk-record-stop" title="Stop and attach voice note">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"></rect></svg>
+          <span>Done &amp; attach</span>
+        </button>
+        <button type="button" class="cp-rec-btn cp-rec-cancel" id="desk-record-cancel" title="Discard recording">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Staged Attachments (Chips list) -->
+    <div class="wa-staged-files" id="desk-file-preview" hidden></div>
+
+    <!-- WhatsApp Composer Bottom Bar -->
+    <div class="wa-composer-bar" id="desk-composer-card">
+      <button type="button" class="wa-tool-btn" id="desk-attach-btn" title="Attach documents, images, or audio" aria-label="Attach file">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l7.9-7.89"></path>
+        </svg>
+      </button>
+
+      <button type="button" class="wa-tool-btn" id="desk-record-btn" title="Record voice note" aria-label="Record voice note">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+          <line x1="12" y1="19" x2="12" y2="22"></line>
+        </svg>
+      </button>
+
+      <div class="wa-input-pill">
+        <label for="desk-reply-input" class="sr-only">Type a message</label>
+        <textarea id="desk-reply-input" name="message" rows="1" maxlength="5000" placeholder="Type a message"></textarea>
       </div>
 
-      <!-- Staged Attachments (Chips list) -->
-      <div class="cp-staged-files ops-staged-files" id="desk-file-preview" hidden></div>
-
-      <!-- Textarea input body -->
-      <div class="cp-composer-body">
-        <label for="desk-reply-input" class="sr-only">Reply to {{ conversation.user.first_name|default:conversation.user.email }}</label>
-        <textarea id="desk-reply-input" name="message" rows="1" maxlength="5000" placeholder="Reply to {{ conversation.user.first_name|default:conversation.user.email }}… (Enter to send, Shift+Enter for new line)"></textarea>
-      </div>
-
-      <!-- Bottom toolbar controls -->
-      <div class="cp-composer-footer">
-        <div class="cp-composer-tools">
-          <button type="button" class="cp-icon-action-btn" id="desk-attach-btn" title="Attach documents, images, or audio" aria-label="Attach file">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l7.9-7.89"></path></svg>
-          </button>
-          <button type="button" class="cp-icon-action-btn" id="desk-record-btn" title="Record voice note" aria-label="Record voice note">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg>
-          </button>
-          <span class="cp-composer-hint" id="desk-reply-status">↵ send · ⇧↵ newline</span>
-        </div>
-        <div class="cp-composer-submit-wrap">
-          <button class="cp-send-action-btn" type="submit" id="desk-reply-submit" title="Send reply" aria-label="Send reply" disabled>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
-          </button>
-        </div>
-      </div>
+      <button class="wa-send-btn" type="submit" id="desk-reply-submit" title="Send" aria-label="Send message" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+        </svg>
+      </button>
     </div>
   </form>
 </section>

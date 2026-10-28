@@ -912,19 +912,76 @@ def _is_ajax_or_json(request):
     )
 
 
-def _serialize_message(item):
+def _compute_user_presence(user, latest_message_time=None):
+    from datetime import timedelta
+    now = timezone.now()
+    times = []
+    if user and getattr(user, "last_login", None):
+        times.append(user.last_login)
+    if latest_message_time:
+        times.append(latest_message_time)
+    if not times:
+        return {"is_online": False, "last_seen_display": "offline"}
+
+    last_active = max(times)
+    diff = now - last_active
+    if diff < timedelta(minutes=15):
+        return {"is_online": True, "last_seen_display": "online"}
+
+    local_active = timezone.localtime(last_active)
+    local_now = timezone.localtime(now)
+    time_str = local_active.strftime("%I:%M %p").lstrip("0")
+
+    if local_active.date() == local_now.date():
+        return {"is_online": False, "last_seen_display": f"last seen today at {time_str}"}
+    elif local_active.date() == (local_now - timedelta(days=1)).date():
+        return {"is_online": False, "last_seen_display": f"last seen yesterday at {time_str}"}
+    else:
+        return {"is_online": False, "last_seen_display": f"last seen {local_active.strftime('%b %d')} at {time_str}"}
+
+
+def _is_message_outgoing(item, current_user=None, conversation_user=None, is_desk_view=False):
+    if current_user and current_user.is_authenticated:
+        if item.author_id and item.author_id == current_user.id:
+            return True
+        if current_user.email and item.author and item.author.email and item.author.email.lower() == current_user.email.lower():
+            return True
+        # Explicit check for Valdace / owner accounts:
+        if current_user.email and current_user.email.lower() in ["valdaceai@gmail.com", "victormawira00@gmail.com"]:
+            if conversation_user and conversation_user.email and conversation_user.email.lower() in ["valdaceai@gmail.com", "victormawira00@gmail.com"]:
+                return item.sender == "client"
+
+    if is_desk_view:
+        if conversation_user and current_user and current_user.is_authenticated and conversation_user.id == current_user.id:
+            return item.sender == "client"
+        return item.sender == "admin"
+    else:
+        return item.sender == "client"
+
+
+def _serialize_message(item, current_user=None, conversation_user=None, is_desk_view=False):
     created_local = timezone.localtime(item.created_at)
     read_local = timezone.localtime(item.read_at) if item.read_at else None
+    is_outgoing = _is_message_outgoing(
+        item,
+        current_user=current_user,
+        conversation_user=conversation_user,
+        is_desk_view=is_desk_view,
+    )
+    time_display = created_local.strftime("%I:%M %p").lstrip("0")
     return {
         "id": str(item.id),
         "sender": item.sender,
         "sender_label": "Client" if item.sender == "client" else "InfiniAI",
+        "is_outgoing": is_outgoing,
         "body": item.body or "",
         "attachments": item.attachments or [],
         "created_at_iso": created_local.isoformat(),
         "created_at_display": created_local.strftime("%b %d, %Y · %H:%M").replace(" 0", " "),
+        "time_display": time_display,
+        "is_read": bool(item.read_at),
         "read_at_iso": read_local.isoformat() if read_local else None,
-        "read_at_display": read_local.strftime("%H:%M") if read_local else None,
+        "read_at_display": read_local.strftime("%I:%M %p").lstrip("0") if read_local else None,
     }
 
 
@@ -1020,12 +1077,18 @@ def client_chat(request):
             if is_ajax:
                 return JsonResponse({
                     "ok": True,
-                    "message": _serialize_message(msg),
+                    "message": _serialize_message(msg, current_user=request.user, conversation_user=conversation.user, is_desk_view=False),
                 })
             messages.success(request, "Message sent.")
             return redirect("platformhub:client_chat")
 
     conversation.messages.filter(sender="admin", read_at__isnull=True).update(read_at=timezone.now())
+
+    chat_msgs = list(conversation.messages.select_related("author").all())
+    for m in chat_msgs:
+        m.is_outgoing = _is_message_outgoing(m, current_user=request.user, conversation_user=conversation.user, is_desk_view=False)
+        m.time_display = timezone.localtime(m.created_at).strftime("%I:%M %p").lstrip("0")
+        m.is_read = bool(m.read_at)
 
     project_qs = ServiceRequest.objects.filter(user=chat_user)
     if chat_user.email:
@@ -1041,7 +1104,7 @@ def client_chat(request):
     return render(request, "platformhub/client_chat.html", {
         "chat_user": chat_user,
         "conversation": conversation,
-        "chat_messages": conversation.messages.select_related("author").all(),
+        "chat_messages": chat_msgs,
         "projects": projects,
         "invoices": invoices[:16],
         "open_invoices": open_invoices,
@@ -1082,7 +1145,10 @@ def client_chat_feed(request):
         "status": conversation.status,
         "status_display": conversation.get_status_display(),
         "client_email": conversation.user.email or conversation.user.username,
-        "messages": [_serialize_message(m) for m in conversation.messages.select_related("author").all()],
+        "messages": [
+            _serialize_message(m, current_user=request.user, conversation_user=conversation.user, is_desk_view=(role == "admin"))
+            for m in conversation.messages.select_related("author").all()
+        ],
         "invoices": [_serialize_invoice(inv) for inv in invoices[:16]],
     })
 
@@ -1125,6 +1191,7 @@ def operations_desk_more_threads(request):
         c_name = conv.user.get_full_name() or conv.user.email or "Client"
         last_m = conv_msgs[-1] if conv_msgs else None
         unread = sum(1 for m in conv_msgs if m.sender == "client" and m.read_at is None)
+        c_presence = _compute_user_presence(conv.user, last_m.created_at if last_m else None)
 
         preview = "No messages"
         if last_m:
@@ -1139,6 +1206,7 @@ def operations_desk_more_threads(request):
             "client_email": conv.user.email or "",
             "status": conv.status,
             "status_display": conv.get_status_display(),
+            "client_presence": c_presence,
             "updated_at_display": timezone.localtime(conv.updated_at).strftime("%b %d, %Y"),
             "updated_at_iso": timezone.localtime(conv.updated_at).isoformat(),
             "last_sender_prefix": (conv.user.first_name or "Client") + ":" if (last_m and last_m.sender == "client") else "You:",
@@ -1154,7 +1222,11 @@ def operations_desk_more_threads(request):
             "client_email": conv.user.email or "",
             "status": conv.status,
             "status_display": conv.get_status_display(),
-            "messages": [_serialize_message(m) for m in conv_msgs],
+            "client_presence": c_presence,
+            "messages": [
+                _serialize_message(m, current_user=request.user, conversation_user=conv.user, is_desk_view=True)
+                for m in conv_msgs
+            ],
         }
 
     return JsonResponse({
@@ -1187,6 +1259,13 @@ def operations_desk(request, conversation_id=None):
         active_conversation.messages.filter(sender="client", read_at__isnull=True).update(read_at=timezone.now())
         chat_msgs = list(active_conversation.messages.select_related("author").all())
         client_name = active_conversation.user.get_full_name() or active_conversation.user.email or "Client"
+        last_m = chat_msgs[-1] if chat_msgs else None
+        client_presence = _compute_user_presence(active_conversation.user, last_m.created_at if last_m else None)
+
+        for m in chat_msgs:
+            m.is_outgoing = _is_message_outgoing(m, current_user=request.user, conversation_user=active_conversation.user, is_desk_view=True)
+            m.time_display = timezone.localtime(m.created_at).strftime("%I:%M %p").lstrip("0")
+            m.is_read = bool(m.read_at)
 
         from django.template.loader import render_to_string
         chat_pane_html = render_to_string(
@@ -1194,6 +1273,7 @@ def operations_desk(request, conversation_id=None):
             context={
                 "conversation": active_conversation,
                 "chat_messages": chat_msgs,
+                "client_presence": client_presence,
                 "request": request,
             },
             request=request,
@@ -1206,7 +1286,11 @@ def operations_desk(request, conversation_id=None):
             "client_email": active_conversation.user.email or "",
             "status": active_conversation.status,
             "status_display": active_conversation.get_status_display(),
-            "messages": [_serialize_message(m) for m in chat_msgs],
+            "client_presence": client_presence,
+            "messages": [
+                _serialize_message(m, current_user=request.user, conversation_user=active_conversation.user, is_desk_view=True)
+                for m in chat_msgs
+            ],
             "chat_pane_html": chat_pane_html,
         })
 
@@ -1307,7 +1391,7 @@ def operations_desk(request, conversation_id=None):
             if is_ajax:
                 return JsonResponse({
                     "ok": True,
-                    "message": _serialize_message(msg),
+                    "message": _serialize_message(msg, current_user=request.user, conversation_user=active_conversation.user, is_desk_view=True),
                 })
             messages.success(request, "Reply sent.")
             return redirect("platformhub:operations_desk_conversation", conversation_id=active_conversation.id)
@@ -1342,6 +1426,7 @@ def operations_desk(request, conversation_id=None):
             or "Direct"
         )
         c_name = conv.user.get_full_name() or conv.user.email or "Client"
+        c_presence = _compute_user_presence(conv.user, conv.last_message.created_at if conv.last_message else None)
         initial_threads[str(conv.id)] = {
             "conversation_id": str(conv.id),
             "client_name": c_name,
@@ -1349,7 +1434,11 @@ def operations_desk(request, conversation_id=None):
             "client_email": conv.user.email or "",
             "status": conv.status,
             "status_display": conv.get_status_display(),
-            "messages": [_serialize_message(m) for m in conv_msgs],
+            "client_presence": c_presence,
+            "messages": [
+                _serialize_message(m, current_user=request.user, conversation_user=conv.user, is_desk_view=True)
+                for m in conv_msgs
+            ],
         }
 
     initial_threads_json = json.dumps(initial_threads)
@@ -1372,11 +1461,21 @@ def operations_desk(request, conversation_id=None):
         for code, item in SERVICE_INDEX.items()
     ]
 
+    active_msgs = list(active_conversation.messages.select_related("author").all())
+    for m in active_msgs:
+        m.is_outgoing = _is_message_outgoing(m, current_user=request.user, conversation_user=active_conversation.user, is_desk_view=True)
+        m.time_display = timezone.localtime(m.created_at).strftime("%I:%M %p").lstrip("0")
+        m.is_read = bool(m.read_at)
+
+    active_last_m = active_msgs[-1] if active_msgs else None
+    client_presence = _compute_user_presence(active_conversation.user, active_last_m.created_at if active_last_m else None)
+
     context = {
         **_operations_sidebar_context("inbox"),
         "conversations": conversations,
         "conversation": active_conversation,
-        "chat_messages": active_conversation.messages.select_related("author").all(),
+        "chat_messages": active_msgs,
+        "client_presence": client_presence,
         "client_invoices": client_invoices[:20],
         "client_payments": client_payments[:20],
         "client_requests": client_requests[:10],

