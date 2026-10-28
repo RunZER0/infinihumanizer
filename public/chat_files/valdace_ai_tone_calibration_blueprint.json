@@ -1,66 +1,36 @@
 {
-  "engine_version": "ValdaceAI-Core-v2.4.1",
-  "system_status": "PRODUCTION_CALIBRATED",
-  "entropy_parameters": {
-    "min_temperature": 0.45,
-    "max_temperature": 1.15,
-    "top_p_sampling": 0.92,
+  "engine": "InfiniAI-Humanizer-v3",
+  "version": "3.4.1",
+  "timestamp": "2026-09-29T14:28:44Z",
+  "parameters": {
+    "temperature": 0.72,
+    "top_p": 0.89,
     "frequency_penalty": 0.35,
-    "presence_penalty": 0.28
+    "presence_penalty": 0.28,
+    "lexical_variation_target": 0.68,
+    "sentence_length_variance": "high"
   },
-  "burstiness_metrics": {
-    "target_sentence_length_variance": 14.8,
-    "short_clause_ratio": 0.24,
-    "medium_clause_ratio": 0.52,
-    "complex_compound_ratio": 0.24,
-    "max_consecutive_similar_lengths": 2
-  },
-  "lexical_diversity_filters": {
-    "forbidden_ai_markers": [
+  "heuristics": {
+    "ban_cliches": [
+      "in today's fast-paced world",
       "delve into",
       "testament to",
-      "tapestry of",
-      "crucial role",
-      "beacon of",
-      "pivotal",
-      "in conclusion",
-      "furthermore",
-      "moreover",
-      "seamlessly integrated"
+      "revolutionize"
     ],
-    "replacement_diversity_threshold": 0.85
+    "allow_idioms": true,
+    "human_hesitation_markers": [
+      "honestly",
+      "actually",
+      "to be fair",
+      "let me double check"
+    ],
+    "active_voice_enforcement": 0.85
   },
-  "stylistic_profiles": {
-    "executive_boardroom": {
-      "reading_grade_level": 12.5,
-      "passive_voice_tolerance_pct": 5.0,
-      "metric_density_per_100_words": 3.2,
-      "primary_register": "authoritative_concise"
-    },
-    "academic_scholarly": {
-      "reading_grade_level": 15.2,
-      "passive_voice_tolerance_pct": 18.0,
-      "metric_density_per_100_words": 4.5,
-      "primary_register": "rigorous_third_person"
-    },
-    "editorial_creative": {
-      "reading_grade_level": 10.0,
-      "passive_voice_tolerance_pct": 3.0,
-      "metric_density_per_100_words": 1.5,
-      "primary_register": "sensory_narrative"
-    },
-    "regulatory_legal": {
-      "reading_grade_level": 14.8,
-      "passive_voice_tolerance_pct": 12.0,
-      "metric_density_per_100_words": 2.8,
-      "primary_register": "statutory_unambiguous"
-    }
-  },
-  "api_performance_benchmarks": {
-    "median_latency_ms": 740,
-    "p99_latency_ms": 1420,
-    "throughput_words_per_minute": 50000,
-    "memory_retention_policy": "EPHEMERAL_RAM_PURGED_ON_COMPLETE"
+  "calibration_benchmarks": {
+    "turnitin_ai_score_max": 0.04,
+    "gptzero_ai_score_max": 0.03,
+    "copy_leaks_probability": 0.02,
+    "readability_flesch_kincaid_grade": 9.4
   },
   "_schema_specification": {
     "version": "2.4.0",

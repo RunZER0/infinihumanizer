@@ -755,10 +755,17 @@ def write_zip_file(filename: str, files_map: dict[str, str | bytes], role: str =
     with zipfile.ZipFile(dest, "w", zipfile.ZIP_DEFLATED) as zf:
         for inner_name, content in files_map.items():
             if isinstance(content, str):
-                disk_file = files_dir / content
-                if disk_file.exists() and disk_file.is_file():
-                    zf.write(disk_file, inner_name)
-                else:
+                is_disk_file = False
+                # A filename on disk cannot contain newlines, null bytes, and must be under 255 bytes
+                if "\n" not in content and "\r" not in content and "\0" not in content and len(content.encode("utf-8")) < 255:
+                    try:
+                        disk_file = files_dir / content
+                        if disk_file.is_file():
+                            zf.write(disk_file, inner_name)
+                            is_disk_file = True
+                    except (OSError, ValueError):
+                        is_disk_file = False
+                if not is_disk_file:
                     zf.writestr(inner_name, content.encode("utf-8"))
             elif isinstance(content, bytes):
                 zf.writestr(inner_name, content)
