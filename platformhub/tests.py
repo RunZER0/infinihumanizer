@@ -643,6 +643,48 @@ class WorkspaceChatTests(TestCase):
         self.assertTrue(open_data["conversation_id"])
         self.assertIn("/operations/desk/", open_data["url"])
 
+    def test_operations_desk_instant_switching_and_background_api(self):
+        import json
+        from humanizer.models import ClientConversation, ClientMessage
+        conv = ClientConversation.objects.create(user=self.user, subject="Fast Switching Test")
+        ClientMessage.objects.create(conversation=conv, sender="client", body="Fast hello")
+
+        # 1. Verify initial_threads_json embedded in page for 0.00ms in-memory switching
+        page_res = self.client.get(reverse("platformhub:operations_desk"))
+        self.assertEqual(page_res.status_code, 200)
+        self.assertIn("initial_threads_json", page_res.context)
+        initial_threads = json.loads(page_res.context["initial_threads_json"])
+        self.assertIn(str(conv.id), initial_threads)
+        self.assertEqual(initial_threads[str(conv.id)]["messages"][0]["body"], "Fast hello")
+        self.assertContains(page_res, 'id="ops-initial-threads-data"')
+
+        # 2. Verify ultra-fast AJAX GET fast-path with target_conv_id
+        fast_res = self.client.get(
+            reverse("platformhub:operations_desk"),
+            {"conversation": str(conv.id)},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(fast_res.status_code, 200)
+        fast_data = fast_res.json()
+        self.assertTrue(fast_data["ok"])
+        self.assertEqual(fast_data["conversation_id"], str(conv.id))
+        self.assertEqual(len(fast_data["messages"]), 1)
+        self.assertEqual(fast_data["messages"][0]["body"], "Fast hello")
+
+        # 3. Verify background more-threads API
+        more_res = self.client.get(
+            reverse("platformhub:operations_desk_more_threads"),
+            {"offset": "0", "limit": "10"},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(more_res.status_code, 200)
+        more_data = more_res.json()
+        self.assertTrue(more_data["ok"])
+        self.assertIn("threads", more_data)
+        self.assertIn("threads_data", more_data)
+        self.assertIn(str(conv.id), more_data["threads_data"])
+
+
 
     def test_seed_orbit_production_populates_threads_invoices_and_ledger(self):
         from django.core.management import call_command

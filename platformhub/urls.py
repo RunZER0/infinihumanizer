@@ -27,6 +27,7 @@ urlpatterns = [
     path("workspace/chat/feed/", views.client_chat_feed, name="client_chat_feed"),
     path("workspace/chat/files/<str:filename>", views.chat_file_download, name="chat_file_download"),
     path("operations/desk/", views.operations_desk, name="operations_desk"),
+    path("operations/desk/api/more-threads/", views.operations_desk_more_threads, name="operations_desk_more_threads"),
     path("operations/desk/<uuid:conversation_id>/", views.operations_desk, name="operations_desk_conversation"),
     path("operations/invoices/", views.operations_invoices, name="operations_invoices"),
     path("operations/transactions/", views.operations_transactions, name="operations_transactions"),
