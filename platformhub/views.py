@@ -202,11 +202,34 @@ def request_service(request, service_code=None):
         conv.status = "open"
         conv.save(update_fields=["status", "updated_at"])
         request.session["conversation_id"] = str(conv.id)
+        brief_lines = [
+            "Project Brief Submitted via /request/",
+            "--------------------------------------------------",
+            f"Project Name: {item.title}",
+            f"Reference: {item.reference}",
+            f"Service: {service['name']} ({service['code']})",
+            f"Client: {required['full_name']} <{required['email']}>",
+        ]
+        if item.company:
+            brief_lines.append(f"Company / Team: {item.company}")
+        brief_lines.extend([
+            "",
+            "Objective:",
+            item.objective.strip(),
+            "",
+            "Current Materials & Scope:",
+            item.scope.strip(),
+            "",
+            "Requested Deliverables:",
+            item.deliverable.strip(),
+            "",
+            f"Turnaround: {item.turnaround.capitalize()} · Research: {item.research_depth.capitalize()} · Budget Band: {item.budget_band or 'Standard'}",
+        ])
         ClientMessage.objects.create(
             conversation=conv,
             author=target_user,
             sender="client",
-            body=f"Project Request [{item.reference}]: {item.title}\nService: {service['name']}\nScope: {item.scope}\nObjective: {item.objective}",
+            body="\n".join(brief_lines).strip(),
         )
         request.session.setdefault("infini_request_ids", [])
         ids = request.session["infini_request_ids"]
@@ -506,12 +529,24 @@ def consultation(request):
             conv.save(update_fields=["status", "updated_at"])
             request.session["conversation_id"] = str(conv.id)
 
-            company_info = f" ({item.company})" if item.company else ""
+            consult_lines = [
+                "Consultation Inquiry Submitted via /consultation/",
+                "--------------------------------------------------",
+                f"Reference: {item.reference}",
+                f"Client: {item.full_name} <{item.email}>",
+            ]
+            if item.company:
+                consult_lines.append(f"Company / Team: {item.company}")
+            consult_lines.extend([
+                "",
+                "Inquiry Details & Objective:",
+                topic.strip(),
+            ])
             ClientMessage.objects.create(
                 conversation=conv,
                 author=target_user,
                 sender="client",
-                body=f"Consultation Inquiry [{item.reference}]{company_info}:\n{topic}",
+                body="\n".join(consult_lines).strip(),
             )
 
             try:

@@ -49,6 +49,7 @@
     </aside>
 
     <div class="ops-main">
+      {% block topbar %}
       <header class="ops-topbar">
         <div class="ops-breadcrumbs">
           {% block breadcrumbs %}
@@ -59,6 +60,7 @@
           {% block topbar_actions %}{% endblock %}
         </div>
       </header>
+      {% endblock %}
 
       {% if messages %}
       <div class="ops-flash-list" aria-live="polite">

@@ -5724,10 +5724,52 @@ class Command(BaseCommand):
             conv.messages.all().delete()
             first_msg_dt = spec["messages"][0][1]
             last_msg_dt = spec["messages"][-1][1]
-            for msg_tuple in spec["messages"]:
+            for idx, msg_tuple in enumerate(spec["messages"]):
                 sender, msg_dt, body = msg_tuple[0], msg_tuple[1], msg_tuple[2]
                 att_keys = msg_tuple[3] if len(msg_tuple) > 3 else []
                 att_objs = [seed_files[k] for k in att_keys if k in seed_files]
+
+                if idx == 0 and spec.get("requests"):
+                    req = spec["requests"][0]
+                    from platformhub.catalog import SERVICE_INDEX
+                    svc = SERVICE_INDEX.get(req.get("service_code", ""), {})
+                    svc_name = svc.get("name") or req.get("service_code", "Custom Project")
+                    client_name = f"{spec.get('first_name', '')} {spec.get('last_name', '')}".strip() or "Client"
+
+                    brief_lines = [
+                        "Project Brief Submitted via /request/",
+                        "--------------------------------------------------",
+                        f"Project Name: {req.get('title', 'Service Request')}",
+                        f"Reference: {req.get('reference', 'INF-REQ')}",
+                        f"Service: {svc_name} ({req.get('service_code', '')})",
+                        f"Client: {client_name} <{primary_email}>",
+                    ]
+                    company = spec.get("company")
+                    if company:
+                        brief_lines.append(f"Company / Team: {company}")
+                    brief_lines.extend([
+                        "",
+                        "Objective:",
+                        req.get("objective", "").strip(),
+                        "",
+                        "Current Materials & Scope:",
+                        req.get("scope", "").strip(),
+                    ])
+                    if body:
+                        brief_lines.extend([
+                            "",
+                            "Intake Notes:",
+                            body.strip(),
+                        ])
+                    brief_lines.extend([
+                        "",
+                        "Requested Deliverables:",
+                        req.get("deliverable", "").strip(),
+                        "",
+                        f"Turnaround: Priority · Research: Standard · Estimated Band: USD {req.get('estimate_low', '25.00')}–{req.get('estimate_high', '50.00')}",
+                    ])
+                    body = "\n".join(brief_lines).strip()
+
                 msg = ClientMessage.objects.create(
                     conversation=conv,
                     author=user if sender == "client" else None,

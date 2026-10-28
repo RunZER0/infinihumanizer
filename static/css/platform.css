@@ -1698,6 +1698,10 @@ body.modal-open{overflow:hidden}
   overflow: hidden;
 }
 
+.ops-body-locked .ops-topbar {
+  display: none !important;
+}
+
 .ops-topbar {
   height: 56px;
   flex-shrink: 0;

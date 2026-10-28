@@ -3,17 +3,7 @@
 {% block body_class %}ops-body-locked{% endblock %}
 {% block viewport_class %}ops-viewport-locked{% endblock %}
 
-{% block breadcrumbs %}
-<a href="{% url 'platformhub:operations_desk' %}" class="ops-crumb-link">Inbox</a>
-<span class="ops-crumb-sep" aria-hidden="true">/</span>
-<strong class="ops-crumb-current">{{ conversation.user.get_full_name|default:conversation.user.email }}</strong>
-{% endblock %}
-
-{% block topbar_actions %}
-<button type="button" class="ops-btn ops-btn-primary" id="ops-open-invoice-modal">
-  Issue invoice
-</button>
-{% endblock %}
+{% block topbar %}{% endblock %}
 
 {% block content %}
 <div class="ops-inbox-workspace" data-desk-root data-conversation-id="{{ conversation.id }}" data-feed-url="{% url 'platformhub:client_chat_feed' %}">
@@ -1080,13 +1070,14 @@
     });
   }
 
-  if (openModalBtn && modal) {
-    openModalBtn.addEventListener("click", function () {
+  document.addEventListener("click", function (event) {
+    const trigger = event.target.closest("#ops-open-invoice-modal, .ops-open-invoice-trigger");
+    if (trigger && modal) {
       modal.hidden = false;
       const descInput = document.getElementById("invoice-description");
       if (descInput) descInput.focus();
-    });
-  }
+    }
+  });
 
   if (closeModalBtn && modal) {
     closeModalBtn.addEventListener("click", function () { modal.hidden = true; });

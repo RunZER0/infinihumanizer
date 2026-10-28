@@ -12,6 +12,9 @@
       <span class="ops-status-text {% if conversation.status == 'open' %}ops-state-open{% else %}ops-state-settled{% endif %}" id="desk-thread-status">
         {{ conversation.get_status_display }}
       </span>
+      <button type="button" class="ops-btn ops-btn-primary ops-btn-sm ops-open-invoice-trigger" id="ops-open-invoice-modal" title="Issue invoice to this client">
+        Issue invoice
+      </button>
       <form method="post" action="{% url 'platformhub:operations_desk_conversation' conversation.id %}" class="ops-inline-form" id="desk-toggle-status-form">
         {% csrf_token %}
         <input type="hidden" name="action" value="toggle_status">
