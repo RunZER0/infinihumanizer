@@ -544,7 +544,6 @@
     const replyForm = document.getElementById("desk-reply-form");
     const replyInput = document.getElementById("desk-reply-input");
     const replySubmit = document.getElementById("desk-reply-submit");
-    const replyStatus = document.getElementById("desk-reply-status");
     const fileInput = document.getElementById("desk-file-input");
     const attachBtn = document.getElementById("desk-attach-btn");
     const recordBtn = document.getElementById("desk-record-btn");
@@ -649,7 +648,6 @@
           replySubmit.disabled = true;
           replySubmit.classList.remove("is-active");
         }
-        if (replyStatus) replyStatus.textContent = "Sending…";
 
         const csrfInput = replyForm.querySelector('input[name="csrfmiddlewaretoken"]');
         const csrfToken = csrfInput ? csrfInput.value : "";
@@ -689,9 +687,8 @@
           }
           if (fileInput) fileInput.value = "";
           updateFilePreview();
-          if (replyStatus) replyStatus.textContent = "↵ send · ⇧↵ newline";
         } catch (err) {
-          if (replyStatus) replyStatus.textContent = err.message || "Could not send reply.";
+          console.error("Could not send reply:", err);
         } finally {
           updateSendButtonState();
         }
