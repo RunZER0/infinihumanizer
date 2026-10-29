@@ -47,6 +47,26 @@ class PublicJourneyTests(TestCase):
             response = self.client.get(reverse(name))
             self.assertEqual(response.status_code, 200, name)
 
+    def test_navigation_ribbon_and_footer_admin_links(self):
+        response = self.client.get(reverse("platformhub:home"))
+        self.assertEqual(response.status_code, 200)
+        content = response.content.decode("utf-8")
+
+        # Top ribbon navigation should not contain an Admin link
+        nav_start = content.find('<nav class="site-nav"')
+        self.assertNotEqual(nav_start, -1)
+        nav_end = content.find('</nav>', nav_start)
+        self.assertNotEqual(nav_end, -1)
+        nav_content = content[nav_start:nav_end]
+        self.assertNotIn("Admin", nav_content)
+        self.assertNotIn("/operations/desk/", nav_content)
+
+        # Bottom footer should contain the Admin login label
+        footer_start = content.find('<footer class="site-footer">')
+        self.assertNotEqual(footer_start, -1)
+        footer_content = content[footer_start:]
+        self.assertIn('<a href="/admin/">Admin login</a>', footer_content)
+
     def test_every_service_request_page_renders(self):
         for code in SERVICE_INDEX:
             response = self.client.get(reverse("platformhub:request_service_code", kwargs={"service_code": code}))

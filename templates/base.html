@@ -26,7 +26,6 @@
       <a href="{% url 'platformhub:services' %}">Services</a>
       <a href="{% url 'platformhub:pricing' %}">Pricing</a>
       <a href="{% url 'humanizer' %}">Text tool</a>
-      <a href="{% url 'platformhub:operations_desk' %}">Admin</a>
       {% if user.is_authenticated %}
       <a href="{% url 'platformhub:client_chat' %}">Messages</a>
       {% else %}
@@ -88,7 +87,7 @@
         <li><a href="{% url 'platformhub:privacy' %}">Privacy Policy</a></li>
         <li><a href="{% url 'platformhub:terms' %}">Terms of Service</a></li>
         <li><a href="{% url 'platformhub:disclaimer' %}">Disclaimer</a></li>
-        <li><a href="/admin/">Admin</a></li>
+        <li><a href="/admin/">Admin login</a></li>
       </ul>
     </div>
   </div>
