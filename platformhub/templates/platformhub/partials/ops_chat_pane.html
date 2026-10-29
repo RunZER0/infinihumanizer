@@ -5,8 +5,10 @@
       <div class="wa-header-avatar" id="desk-chat-avatar" aria-hidden="true">
         <span>{{ conversation.user.first_name|default:conversation.user.email|slice:":1"|upper }}</span>
       </div>
-      <div class="wa-header-info">
-        <h1 class="wa-header-name" id="desk-chat-title">{{ conversation.user.get_full_name|default:conversation.user.email }}</h1>
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <h1 class="wa-header-name" id="desk-chat-title">{{ conversation.user.get_full_name|default:conversation.user.email }}</h1>
+          <span class="ops-thread-ref-pill" id="desk-chat-ref" {% if not conversation.reference %}style="display:none;"{% endif %}>{{ conversation.reference }}</span>
+        </div>
         <div class="wa-header-status-row" id="desk-chat-presence-wrap">
           {% if client_presence.is_online %}
           <span class="wa-status-online" id="desk-chat-presence">online</span>
@@ -38,6 +40,11 @@
 
   <div class="ops-message-stream wa-message-stream" id="desk-message-thread" aria-live="polite">
     {% for item in chat_messages %}
+    {% if item.date_divider %}
+    <div class="wa-date-divider" role="separator">
+      <span class="wa-date-pill">{{ item.date_divider }}</span>
+    </div>
+    {% endif %}
     <article class="wa-msg {% if item.is_outgoing %}wa-msg-out{% else %}wa-msg-in{% endif %}" data-message-id="{{ item.id }}">
       <div class="wa-msg-bubble">
         {% if item.body %}

@@ -4000,6 +4000,11 @@ body.modal-open{overflow:hidden}
   box-sizing: border-box;
 }
 
+.wa-thread-row[hidden],
+.ops-thread-row[hidden] {
+  display: none !important;
+}
+
 .wa-thread-row:hover {
   background: #f5f6f6 !important;
 }
@@ -4007,6 +4012,62 @@ body.modal-open{overflow:hidden}
 .wa-thread-row.is-active {
   background: #f0f2f5 !important;
   box-shadow: inset 4px 0 0 #e25822 !important; /* Infini brand orange */
+}
+
+/* WhatsApp Date Separators */
+.wa-date-divider {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 14px 0 8px !important;
+  pointer-events: none !important;
+  width: 100% !important;
+}
+
+.wa-date-pill {
+  background: #ffffff !important;
+  color: #54656f !important;
+  font-size: 11.5px !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.35px !important;
+  padding: 5px 12px !important;
+  border-radius: 7.5px !important;
+  box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13) !important;
+  display: inline-block !important;
+  line-height: 1.2 !important;
+}
+
+/* Thread Reference Badges */
+.ops-thread-ref-badge {
+  display: inline-block;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: #e2e8f0;
+  color: #334155;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.ops-thread-row.is-active .ops-thread-ref-badge {
+  background: #cbd5e1;
+  color: #0f172a;
+}
+
+.ops-thread-ref-pill {
+  display: inline-block;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #dbeafe;
+  color: #1e40af;
+  margin-left: 6px;
+  vertical-align: middle;
 }
 
 .wa-thread-avatar {

@@ -704,6 +704,52 @@ class WorkspaceChatTests(TestCase):
         self.assertIn("threads_data", more_data)
         self.assertIn(str(conv.id), more_data["threads_data"])
 
+    def test_multiday_chat_messages_have_date_dividers(self):
+        from datetime import timedelta
+        from django.utils import timezone
+        from humanizer.models import ClientConversation, ClientMessage
+        from platformhub.views import _annotate_chat_messages
+
+        conv = ClientConversation.objects.create(user=self.user, subject="Multi-day project")
+        now = timezone.now()
+        day1 = now - timedelta(days=2)
+        day2 = now - timedelta(days=1)
+        day3 = now
+
+        m1 = ClientMessage.objects.create(conversation=conv, sender="client", body="Day 1 kick off")
+        ClientMessage.objects.filter(pk=m1.pk).update(created_at=day1)
+        m2 = ClientMessage.objects.create(conversation=conv, sender="admin", body="Day 1 reply")
+        ClientMessage.objects.filter(pk=m2.pk).update(created_at=day1 + timedelta(hours=1))
+
+        m3 = ClientMessage.objects.create(conversation=conv, sender="client", body="Day 2 review")
+        ClientMessage.objects.filter(pk=m3.pk).update(created_at=day2)
+
+        m4 = ClientMessage.objects.create(conversation=conv, sender="admin", body="Day 3 final close")
+        ClientMessage.objects.filter(pk=m4.pk).update(created_at=day3)
+
+        msgs = list(conv.messages.order_by("created_at"))
+        _annotate_chat_messages(msgs)
+
+        self.assertIsNotNone(msgs[0].date_divider)
+        self.assertIsNone(msgs[1].date_divider)
+        self.assertEqual(msgs[2].date_divider, "Yesterday")
+        self.assertEqual(msgs[3].date_divider, "Today")
+
+    def test_sequential_reference_calculation_by_user_initials(self):
+        from humanizer.models import ClientConversation
+
+        self.user.first_name = "Estella"
+        self.user.last_name = "Williams"
+        self.user.save()
+
+        c1 = ClientConversation.objects.create(user=self.user, subject="Job 1")
+        c2 = ClientConversation.objects.create(user=self.user, subject="Job 2")
+        c3 = ClientConversation.objects.create(user=self.user, subject="Job 3")
+
+        self.assertEqual(c1.reference, "EW01")
+        self.assertEqual(c2.reference, "EW02")
+        self.assertEqual(c3.reference, "EW03")
+
 
 
     def test_seed_orbit_production_populates_threads_invoices_and_ledger(self):
@@ -715,7 +761,16 @@ class WorkspaceChatTests(TestCase):
         self.assertEqual(PaymentRecord.objects.filter(status="success").count(), 51)
         self.assertEqual(PaymentRecord.objects.filter(invoice__isnull=False).count(), 51)
         self.assertEqual(Invoice.objects.count(), 40)
-        self.assertEqual(ClientConversation.objects.count(), 18)
+        self.assertEqual(ClientConversation.objects.count(), 22)
+        self.assertTrue(ClientConversation.objects.filter(reference="EW01").exists())
+        self.assertTrue(ClientConversation.objects.filter(reference="EW02").exists())
+        self.assertTrue(ClientConversation.objects.filter(reference="EW03").exists())
+        self.assertTrue(ClientConversation.objects.filter(reference="AB01").exists())
+        self.assertTrue(ClientConversation.objects.filter(reference="AB02").exists())
+        self.assertTrue(ClientConversation.objects.filter(reference="JJ01").exists())
+        self.assertTrue(ClientConversation.objects.filter(reference="JJ02").exists())
+        self.assertTrue(ClientConversation.objects.filter(reference="JC01").exists())
+        self.assertTrue(ClientConversation.objects.filter(reference="IC01").exists())
 
 
 

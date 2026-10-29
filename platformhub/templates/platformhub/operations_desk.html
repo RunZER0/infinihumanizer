@@ -36,14 +36,19 @@
         href="{% url 'platformhub:operations_desk_conversation' item.id %}"
         data-conversation-id="{{ item.id }}"
         data-thread-status="{{ item.status }}"
-        data-thread-search="{{ item.user.get_full_name|default:''|lower }} {{ item.user.email|lower }} {{ item.subject|lower }} {{ item.channel }}"
+        data-thread-search="{{ item.user.get_full_name|default:''|lower }} {{ item.user.email|lower }} {{ item.reference|default:''|lower }} {{ item.subject|lower }} {{ item.channel }}"
       >
         <div class="wa-thread-avatar" aria-hidden="true">
           <span>{{ item.user.first_name|default:item.user.email|slice:":1"|upper }}</span>
         </div>
         <div class="wa-thread-body">
           <div class="ops-thread-row-top wa-thread-row-top">
-            <strong class="ops-thread-name wa-thread-name">{{ item.user.get_full_name|default:item.user.email }}</strong>
+            <div style="display: flex; align-items: center; gap: 6px; min-width: 0;">
+              <strong class="ops-thread-name wa-thread-name">{{ item.user.get_full_name|default:item.user.email }}</strong>
+              {% if item.reference %}
+              <span class="ops-thread-ref-badge">{{ item.reference }}</span>
+              {% endif %}
+            </div>
             <time class="ops-thread-time wa-thread-time" datetime="{{ item.updated_at|date:'c' }}">{{ item.updated_at|date:"H:i" }}</time>
           </div>
           <div class="wa-thread-row-bottom">
@@ -740,6 +745,7 @@
               cached.status_display = data.status_display;
               syncCurrentCacheHtml();
             }
+            applyThreadFilters();
           }
         } catch (err) {
           console.error(err);
@@ -799,6 +805,12 @@
     if (titleEl) titleEl.textContent = data.client_name;
     const emailEl = document.getElementById("desk-chat-email");
     if (emailEl) emailEl.textContent = data.client_email || "";
+
+    const refEl = document.getElementById("desk-chat-ref");
+    if (refEl) {
+      refEl.textContent = data.reference || "";
+      refEl.style.display = data.reference ? "inline-block" : "none";
+    }
 
     const presenceEl = document.getElementById("desk-chat-presence");
     if (presenceEl && data.client_presence) {
@@ -879,6 +891,13 @@
       stream.innerHTML = "";
       if (Array.isArray(data.messages) && data.messages.length > 0) {
         data.messages.forEach(function (m) {
+          if (m.date_divider) {
+            const div = document.createElement("div");
+            div.className = "wa-date-divider";
+            div.setAttribute("role", "separator");
+            div.innerHTML = '<span class="wa-date-pill">' + escapeHtml(m.date_divider) + '</span>';
+            stream.appendChild(div);
+          }
           renderMessage(m);
         });
       } else {
@@ -1011,17 +1030,20 @@
         data.threads.forEach(function (t) {
           if (list.querySelector('[data-conversation-id="' + t.id + '"]')) return;
           const a = document.createElement("a");
-          a.className = "ops-thread-row";
+          a.className = "ops-thread-row wa-thread-row";
           a.href = t.url;
           a.setAttribute("data-conversation-id", t.id);
           a.setAttribute("data-thread-status", t.status);
-          a.setAttribute("data-thread-search", (t.client_name + " " + t.client_email).toLowerCase());
+          a.setAttribute("data-thread-search", (t.client_name + " " + t.client_email + " " + (t.reference || "") + " " + (t.subject || "")).toLowerCase());
           a.innerHTML =
-            '<div class="ops-thread-row-top">' +
-              '<strong class="ops-thread-name">' + escapeHtml(t.client_name) + '</strong>' +
-              '<time class="ops-thread-time" datetime="' + escapeHtml(t.updated_at_iso) + '">' + escapeHtml(t.updated_at_display) + '</time>' +
+            '<div class="ops-thread-row-top wa-thread-row-top">' +
+              '<div style="display: flex; align-items: center; gap: 6px; min-width: 0;">' +
+                '<strong class="ops-thread-name wa-thread-name">' + escapeHtml(t.client_name) + '</strong>' +
+                (t.reference ? '<span class="ops-thread-ref-badge">' + escapeHtml(t.reference) + '</span>' : '') +
+              '</div>' +
+              '<time class="ops-thread-time wa-thread-time" datetime="' + escapeHtml(t.updated_at_iso) + '">' + escapeHtml(t.updated_at_display) + '</time>' +
             '</div>' +
-            '<p class="ops-thread-preview">' +
+            '<p class="ops-thread-preview wa-thread-preview">' +
               '<span class="ops-thread-sender">' + escapeHtml(t.last_sender_prefix) + '</span> ' +
               escapeHtml(t.preview) +
             '</p>' +
@@ -1069,14 +1091,40 @@
 
   function applyThreadFilters() {
     const query = (searchInput ? searchInput.value : "").trim().toLowerCase();
-    threadRows.forEach(function (row) {
-      const status = row.getAttribute("data-thread-status");
+    const rows = document.querySelectorAll(".ops-thread-row");
+    let openCount = 0;
+    let closedCount = 0;
+    let totalCount = rows.length;
+
+    rows.forEach(function (row) {
+      const status = (row.getAttribute("data-thread-status") || "open").toLowerCase();
       const haystack = (row.getAttribute("data-thread-search") || "").toLowerCase();
       const matchesStatus = activeFilter === "all" || status === activeFilter;
       const matchesQuery = !query || haystack.indexOf(query) !== -1;
-      row.hidden = !(matchesStatus && matchesQuery);
+      const isVisible = matchesStatus && matchesQuery;
+
+      if (isVisible) {
+        row.removeAttribute("hidden");
+        row.style.setProperty("display", "flex", "important");
+      } else {
+        row.setAttribute("hidden", "hidden");
+        row.style.setProperty("display", "none", "important");
+      }
+
+      if (status === "open") openCount++;
+      if (status === "closed") closedCount++;
     });
+
+    const allBtn = document.querySelector('[data-thread-filter="all"]');
+    if (allBtn) allBtn.textContent = "All (" + totalCount + ")";
+    const openBtn = document.querySelector('[data-thread-filter="open"]');
+    if (openBtn) openBtn.textContent = "Open (" + openCount + ")";
+    const closedBtn = document.querySelector('[data-thread-filter="closed"]');
+    if (closedBtn) closedBtn.textContent = "Closed (" + closedCount + ")";
   }
+
+  // Initialize filters on page load
+  applyThreadFilters();
 
   if (searchInput) {
     searchInput.addEventListener("input", applyThreadFilters);

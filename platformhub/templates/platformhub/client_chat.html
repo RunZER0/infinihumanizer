@@ -9,21 +9,32 @@
   <section class="cp-chat-column" aria-label="Direct messages">
     <header class="cp-chat-head">
       <div class="cp-chat-head-info">
-        <h1 class="cp-chat-subject">{{ conversation.subject }}</h1>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <h1 class="cp-chat-subject">{{ conversation.subject }}</h1>
+          {% if conversation.reference %}
+          <span class="ops-thread-ref-badge">{{ conversation.reference }}</span>
+          {% endif %}
+        </div>
         <div class="cp-chat-meta">
           <span>{{ chat_user.get_full_name|default:chat_user.username }}</span>
           <span aria-hidden="true">·</span>
-          <span id="client-thread-status">{{ conversation.get_status_display }}</span>
-          {% if projects.0 %}
+          <span id="client-thread-status" class="{% if conversation.status == 'closed' %}ops-state-settled{% else %}ops-state-open{% endif %}">{{ conversation.get_status_display }}</span>
+          {% if conversation.reference %}
           <span aria-hidden="true">·</span>
-          <span class="cp-mono">{{ projects.0.reference }}</span>
+          <span class="cp-mono">{{ conversation.reference }}</span>
           {% endif %}
         </div>
       </div>
 
-      <button type="button" class="cp-sheet-trigger" id="cp-toggle-invoices" aria-expanded="false">
-        Invoices (<span id="cp-invoice-count">{{ invoices|length }}</span>)
-      </button>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <button type="button" class="cp-sheet-trigger" id="cp-toggle-threads" aria-expanded="false">
+          Threads (<span id="cp-thread-count">{{ user_conversations|length }}</span>)
+        </button>
+        <a class="cp-btn-outline cp-btn-sm" href="{% url 'platformhub:client_chat' %}?action=new_support" title="Open new support thread">+ Support</a>
+        <button type="button" class="cp-sheet-trigger" id="cp-toggle-invoices" aria-expanded="false">
+          Invoices (<span id="cp-invoice-count">{{ invoices|length }}</span>)
+        </button>
+      </div>
     </header>
 
     {% if open_invoices %}
@@ -39,8 +50,20 @@
     </div>
     {% endif %}
 
+    {% if conversation.status == "closed" %}
+    <div class="cp-closed-thread-banner" style="background:#f8fafc; border-bottom:1px solid var(--line-subtle); padding:10px 20px; font-size:13px; color:#475569; display:flex; justify-content:space-between; align-items:center;">
+      <span><strong>Job Completed:</strong> This job thread is marked as closed. Need something new? You can message us anytime via Support.</span>
+      <a class="cp-btn-primary cp-btn-sm" href="{% url 'platformhub:client_chat' %}?action=new_support">New Support Thread</a>
+    </div>
+    {% endif %}
+
     <div class="ops-message-stream wa-message-stream cp-message-stream" id="client-message-thread" aria-live="polite">
       {% for item in chat_messages %}
+      {% if item.date_divider %}
+      <div class="wa-date-divider" role="separator">
+        <span class="wa-date-pill">{{ item.date_divider }}</span>
+      </div>
+      {% endif %}
       <article class="wa-msg {% if item.is_outgoing %}wa-msg-out{% else %}wa-msg-in{% endif %}" data-message-id="{{ item.id }}">
         <div class="wa-msg-bubble">
           {% if item.body %}
@@ -209,6 +232,43 @@
       {% endfor %}
     </div>
   </aside>
+
+  <!-- Slide-over sheet for client threads -->
+  <aside class="cp-invoice-sheet" id="cp-threads-sheet" hidden aria-label="Account conversations">
+    <div class="cp-sheet-head">
+      <h2>Jobs &amp; Support Threads</h2>
+      <button type="button" class="cp-sheet-close" id="cp-close-threads">Close</button>
+    </div>
+    <div style="padding: 10px 16px; border-bottom: 1px solid var(--line-subtle); display: flex; gap: 8px; align-items: center;">
+      <button type="button" class="ops-segment is-active cp-thread-tab" data-cp-filter="all">All</button>
+      <button type="button" class="ops-segment cp-thread-tab" data-cp-filter="open">Open</button>
+      <button type="button" class="ops-segment cp-thread-tab" data-cp-filter="closed">Closed</button>
+      <a href="{% url 'platformhub:client_chat' %}?action=new_support" class="cp-btn-primary cp-btn-sm" style="margin-left: auto;">+ New Support</a>
+    </div>
+    <div class="cp-sheet-list" id="client-threads-list">
+      {% for c in user_conversations %}
+      <a href="{% url 'platformhub:client_chat' %}?conversation={{ c.id }}" class="cp-inv-row cp-thread-row-item {% if c.id == conversation.id %}is-active{% endif %}" data-status="{{ c.status }}" style="text-decoration: none; color: inherit; display: block;">
+        <div class="cp-inv-top">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span class="ops-thread-ref-badge">{{ c.reference }}</span>
+            <strong>{{ c.subject }}</strong>
+          </div>
+          <span class="{% if c.status == 'closed' %}cp-state-paid{% else %}cp-state-open{% endif %}">{{ c.get_status_display }}</span>
+        </div>
+        <p class="cp-inv-desc" style="margin-top: 4px;">
+          {% if c.last_message %}{{ c.last_message.body|truncatechars:70 }}{% else %}No messages yet{% endif %}
+        </p>
+        <div class="cp-inv-meta">
+          <span class="cp-mono" style="text-transform: capitalize;">{{ c.category }}</span>
+          <span aria-hidden="true">·</span>
+          <time class="cp-mono" datetime="{{ c.updated_at|date:'c' }}">{{ c.updated_at|date:"M j, Y H:i" }}</time>
+        </div>
+      </a>
+      {% empty %}
+      <p class="cp-sheet-empty">No threads yet.</p>
+      {% endfor %}
+    </div>
+  </aside>
 </div>
 {% endblock %}
 
@@ -233,6 +293,36 @@
   const sheet = document.getElementById("cp-invoice-sheet");
   const toggleSheetBtn = document.getElementById("cp-toggle-invoices");
   const closeSheetBtn = document.getElementById("cp-close-invoices");
+
+  const threadsSheet = document.getElementById("cp-threads-sheet");
+  const toggleThreadsBtn = document.getElementById("cp-toggle-threads");
+  const closeThreadsBtn = document.getElementById("cp-close-threads");
+  const cpFilterTabs = document.querySelectorAll(".cp-thread-tab");
+  const cpThreadRows = document.querySelectorAll(".cp-thread-row-item");
+
+  if (toggleThreadsBtn && threadsSheet) {
+    toggleThreadsBtn.addEventListener("click", function () {
+      threadsSheet.hidden = !threadsSheet.hidden;
+      if (sheet && !threadsSheet.hidden) sheet.hidden = true;
+    });
+  }
+  if (closeThreadsBtn && threadsSheet) {
+    closeThreadsBtn.addEventListener("click", function () {
+      threadsSheet.hidden = true;
+    });
+  }
+
+  cpFilterTabs.forEach(function (tab) {
+    tab.addEventListener("click", function () {
+      cpFilterTabs.forEach(function (t) { t.classList.remove("is-active"); });
+      tab.classList.add("is-active");
+      const f = tab.getAttribute("data-cp-filter") || "all";
+      cpThreadRows.forEach(function (r) {
+        const s = r.getAttribute("data-status") || "open";
+        r.style.display = (f === "all" || s === f) ? "block" : "none";
+      });
+    });
+  });
   const recordBtn = document.getElementById("client-record-btn");
   const recordingBar = document.getElementById("client-recording-bar");
   const recordingTimer = document.getElementById("client-recording-timer");
@@ -568,6 +658,14 @@
           tickHtml +
         '</div>' +
       '</div>';
+
+    if (item.date_divider) {
+      const div = document.createElement("div");
+      div.className = "wa-date-divider";
+      div.setAttribute("role", "separator");
+      div.innerHTML = '<span class="wa-date-pill">' + escapeHtml(item.date_divider) + '</span>';
+      thread.appendChild(div);
+    }
 
     thread.appendChild(article);
     scrollThreadToEnd();

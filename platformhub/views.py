@@ -959,6 +959,24 @@ def _is_message_outgoing(item, current_user=None, conversation_user=None, is_des
         return item.sender == "client"
 
 
+def _annotate_chat_messages(chat_msgs):
+    prev_date = None
+    today = timezone.localdate()
+    yesterday = today - timedelta(days=1)
+    for m in chat_msgs:
+        m_date = timezone.localtime(m.created_at).date()
+        if m_date != prev_date:
+            if m_date == today:
+                m.date_divider = "Today"
+            elif m_date == yesterday:
+                m.date_divider = "Yesterday"
+            else:
+                m.date_divider = m_date.strftime("%B %d, %Y")
+            prev_date = m_date
+        else:
+            m.date_divider = None
+
+
 def _serialize_message(item, current_user=None, conversation_user=None, is_desk_view=False):
     created_local = timezone.localtime(item.created_at)
     read_local = timezone.localtime(item.read_at) if item.read_at else None
@@ -979,6 +997,7 @@ def _serialize_message(item, current_user=None, conversation_user=None, is_desk_
         "created_at_iso": created_local.isoformat(),
         "created_at_display": created_local.strftime("%b %d, %Y · %H:%M").replace(" 0", " "),
         "time_display": time_display,
+        "date_divider": getattr(item, "date_divider", None),
         "is_read": bool(item.read_at),
         "read_at_iso": read_local.isoformat() if read_local else None,
         "read_at_display": read_local.strftime("%I:%M %p").lstrip("0") if read_local else None,
@@ -1040,8 +1059,44 @@ def client_chat(request):
     from .chat_files import save_uploaded_chat_files
 
     chat_user = request.user if request.user.is_authenticated else _resolve_chat_user(request)
-    conversation, _ = ClientConversation.objects.get_or_create(user=chat_user)
     is_ajax = _is_ajax_or_json(request)
+
+    # 1. Action: Client opens a new support thread
+    if request.method == "POST" and request.POST.get("action") == "new_support":
+        subject = request.POST.get("subject", "").strip() or "Support inquiry"
+        new_conv = ClientConversation.objects.create(
+            user=chat_user,
+            subject=subject,
+            category="support",
+            status="open",
+        )
+        if is_ajax:
+            return JsonResponse({"ok": True, "conversation_id": str(new_conv.id)})
+        return redirect(f"{reverse('platformhub:client_chat')}?conversation={new_conv.id}")
+
+    if request.method == "GET" and request.GET.get("action") == "new_support":
+        new_conv = ClientConversation.objects.create(
+            user=chat_user,
+            subject="Support inquiry",
+            category="support",
+            status="open",
+        )
+        return redirect(f"{reverse('platformhub:client_chat')}?conversation={new_conv.id}")
+
+    # 2. Resolve targeted or latest conversation
+    req_conv_id = request.GET.get("conversation", "").strip() or request.POST.get("conversation_id", "").strip()
+    conversation = None
+    if req_conv_id:
+        conversation = ClientConversation.objects.filter(user=chat_user, id=req_conv_id).first()
+    if not conversation:
+        conversation = ClientConversation.objects.filter(user=chat_user).order_by("-updated_at").first()
+    if not conversation:
+        conversation = ClientConversation.objects.create(
+            user=chat_user,
+            subject="Support inquiry",
+            category="support",
+            status="open",
+        )
 
     if request.method == "POST":
         body = request.POST.get("message", "").strip()
@@ -1050,12 +1105,12 @@ def client_chat(request):
             if is_ajax:
                 return JsonResponse({"error": "Write a message or attach a file before sending."}, status=400)
             messages.error(request, "Write a message or attach a file before sending.")
-            return redirect("platformhub:client_chat")
+            return redirect(f"{reverse('platformhub:client_chat')}?conversation={conversation.id}")
         elif len(body) > 5000:
             if is_ajax:
                 return JsonResponse({"error": "Keep each message under 5,000 characters."}, status=400)
             messages.error(request, "Keep each message under 5,000 characters.")
-            return redirect("platformhub:client_chat")
+            return redirect(f"{reverse('platformhub:client_chat')}?conversation={conversation.id}")
         else:
             try:
                 saved_attachments = save_uploaded_chat_files(uploaded_files) if uploaded_files else []
@@ -1063,7 +1118,7 @@ def client_chat(request):
                 if is_ajax:
                     return JsonResponse({"error": str(exc)}, status=400)
                 messages.error(request, str(exc))
-                return redirect("platformhub:client_chat")
+                return redirect(f"{reverse('platformhub:client_chat')}?conversation={conversation.id}")
 
             msg = ClientMessage.objects.create(
                 conversation=conversation,
@@ -1080,15 +1135,23 @@ def client_chat(request):
                     "message": _serialize_message(msg, current_user=request.user, conversation_user=conversation.user, is_desk_view=False),
                 })
             messages.success(request, "Message sent.")
-            return redirect("platformhub:client_chat")
+            return redirect(f"{reverse('platformhub:client_chat')}?conversation={conversation.id}")
 
     conversation.messages.filter(sender="admin", read_at__isnull=True).update(read_at=timezone.now())
 
     chat_msgs = list(conversation.messages.select_related("author").all())
+    _annotate_chat_messages(chat_msgs)
     for m in chat_msgs:
         m.is_outgoing = _is_message_outgoing(m, current_user=request.user, conversation_user=conversation.user, is_desk_view=False)
         m.time_display = timezone.localtime(m.created_at).strftime("%I:%M %p").lstrip("0")
         m.is_read = bool(m.read_at)
+
+    user_conversations = list(
+        ClientConversation.objects.filter(user=chat_user).prefetch_related("messages").order_by("-updated_at")
+    )
+    for c in user_conversations:
+        c_msgs = list(c.messages.all())
+        c.last_message = c_msgs[-1] if c_msgs else None
 
     project_qs = ServiceRequest.objects.filter(user=chat_user)
     if chat_user.email:
@@ -1105,6 +1168,7 @@ def client_chat(request):
         "chat_user": chat_user,
         "conversation": conversation,
         "chat_messages": chat_msgs,
+        "user_conversations": user_conversations,
         "projects": projects,
         "invoices": invoices[:16],
         "open_invoices": open_invoices,
@@ -1127,27 +1191,35 @@ def client_chat_feed(request):
                 user=request.user,
             )
         else:
-            conversation, _ = ClientConversation.objects.get_or_create(user=request.user)
+            conversation = ClientConversation.objects.filter(user=request.user).order_by("-updated_at").first()
+            if not conversation:
+                conversation = ClientConversation.objects.create(user=request.user, subject="Support inquiry", category="support")
     elif conv_id:
         conversation = get_object_or_404(ClientConversation.objects.select_related("user"), id=conv_id)
     else:
         chat_user = _resolve_chat_user(request)
-        conversation, _ = ClientConversation.objects.get_or_create(user=chat_user)
+        conversation = ClientConversation.objects.filter(user=chat_user).order_by("-updated_at").first()
+        if not conversation:
+            conversation = ClientConversation.objects.create(user=chat_user, subject="Support inquiry", category="support")
 
     if role == "admin":
         conversation.messages.filter(sender="client", read_at__isnull=True).update(read_at=timezone.now())
     else:
         conversation.messages.filter(sender="admin", read_at__isnull=True).update(read_at=timezone.now())
 
+    feed_msgs = list(conversation.messages.select_related("author").all())
+    _annotate_chat_messages(feed_msgs)
     invoices = _client_invoices(user=conversation.user, email=conversation.user.email, include_void=(role == "admin"))
     return JsonResponse({
         "conversation_id": str(conversation.id),
+        "reference": conversation.reference or "",
+        "subject": conversation.subject or "",
         "status": conversation.status,
         "status_display": conversation.get_status_display(),
         "client_email": conversation.user.email or conversation.user.username,
         "messages": [
             _serialize_message(m, current_user=request.user, conversation_user=conversation.user, is_desk_view=(role == "admin"))
-            for m in conversation.messages.select_related("author").all()
+            for m in feed_msgs
         ],
         "invoices": [_serialize_invoice(inv) for inv in invoices[:16]],
     })
@@ -1258,6 +1330,7 @@ def operations_desk(request, conversation_id=None):
 
         active_conversation.messages.filter(sender="client", read_at__isnull=True).update(read_at=timezone.now())
         chat_msgs = list(active_conversation.messages.select_related("author").all())
+        _annotate_chat_messages(chat_msgs)
         client_name = active_conversation.user.get_full_name() or active_conversation.user.email or "Client"
         last_m = chat_msgs[-1] if chat_msgs else None
         client_presence = _compute_user_presence(active_conversation.user, last_m.created_at if last_m else None)
@@ -1281,6 +1354,8 @@ def operations_desk(request, conversation_id=None):
         return JsonResponse({
             "ok": True,
             "conversation_id": str(active_conversation.id),
+            "reference": active_conversation.reference or "",
+            "subject": active_conversation.subject or "",
             "client_name": client_name,
             "client_first_name": active_conversation.user.first_name or client_name,
             "client_email": active_conversation.user.email or "",
@@ -1418,6 +1493,7 @@ def operations_desk(request, conversation_id=None):
     initial_threads = {}
     for conv in conversations:
         conv_msgs = list(conv.messages.all())
+        _annotate_chat_messages(conv_msgs)
         conv.unread_client_count = sum(1 for m in conv_msgs if m.sender == "client" and m.read_at is None)
         conv.last_message = conv_msgs[-1] if conv_msgs else None
         conv.channel = (
@@ -1429,6 +1505,9 @@ def operations_desk(request, conversation_id=None):
         c_presence = _compute_user_presence(conv.user, conv.last_message.created_at if conv.last_message else None)
         initial_threads[str(conv.id)] = {
             "conversation_id": str(conv.id),
+            "reference": conv.reference or "",
+            "subject": conv.subject or "",
+            "category": conv.category or "job",
             "client_name": c_name,
             "client_first_name": conv.user.first_name or c_name,
             "client_email": conv.user.email or "",
@@ -1462,6 +1541,7 @@ def operations_desk(request, conversation_id=None):
     ]
 
     active_msgs = list(active_conversation.messages.select_related("author").all())
+    _annotate_chat_messages(active_msgs)
     for m in active_msgs:
         m.is_outgoing = _is_message_outgoing(m, current_user=request.user, conversation_user=active_conversation.user, is_desk_view=True)
         m.time_display = timezone.localtime(m.created_at).strftime("%I:%M %p").lstrip("0")
@@ -1488,7 +1568,7 @@ def operations_desk(request, conversation_id=None):
 @require_http_methods(["GET"])
 def operations_invoices(request):
     invoices = list(
-        Invoice.objects.select_related("request", "user", "user__client_conversation")
+        Invoice.objects.select_related("request", "user")
         .exclude(status="void")
         .order_by("-created_at")
     )
@@ -1528,7 +1608,7 @@ def operations_invoices(request):
 def operations_transactions(request):
     all_payments = list(
         PaymentRecord.objects.filter(status="success", invoice__isnull=False)
-        .select_related("invoice", "request", "user", "user__client_conversation")
+        .select_related("invoice", "request", "user")
         .order_by("-created_at")
     )
     settled_usd = sum(

@@ -32,13 +32,19 @@ class ClientConversation(models.Model):
         ("open", "Open"),
         ("closed", "Closed"),
     ]
+    CATEGORY_CHOICES = [
+        ("job", "Job"),
+        ("support", "Support"),
+    ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="client_conversation",
+        related_name="client_conversations",
     )
+    reference = models.CharField(max_length=24, blank=True, db_index=True)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default="job")
     subject = models.CharField(max_length=220, default="Workspace chat")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="open")
     created_at = models.DateTimeField(auto_now_add=True)
@@ -48,7 +54,44 @@ class ClientConversation(models.Model):
         ordering = ["-updated_at"]
 
     def __str__(self):
-        return f"{self.user.email or self.user.username} · {self.get_status_display()}"
+        ref = f"[{self.reference}] " if self.reference else ""
+        return f"{ref}{self.user.email or self.user.username} · {self.get_status_display()}"
+
+    def compute_reference(self):
+        user = self.user
+        initials = ""
+        if user:
+            fn = (user.first_name or "").strip()
+            ln = (user.last_name or "").strip()
+            if fn and ln:
+                initials = f"{fn[0]}{ln[0]}".upper()
+            elif fn:
+                initials = fn[:2].upper()
+            elif user.username:
+                initials = user.username[:2].upper()
+            elif user.email:
+                initials = user.email.split("@")[0][:2].upper()
+        initials = (initials or "CL")[:2].upper()
+        if len(initials) == 1:
+            initials = f"{initials}X"
+        existing_refs = list(
+            ClientConversation.objects.filter(user_id=self.user_id)
+            .exclude(pk=self.pk)
+            .values_list("reference", flat=True)
+        )
+        max_num = 0
+        for r in existing_refs:
+            if r and r.startswith(initials):
+                suffix = r[len(initials):]
+                if suffix.isdigit():
+                    max_num = max(max_num, int(suffix))
+        next_num = max(max_num + 1, len(existing_refs) + 1)
+        return f"{initials}{next_num:02d}"
+
+    def save(self, *args, **kwargs):
+        if not self.reference and self.user_id:
+            self.reference = self.compute_reference()
+        super().save(*args, **kwargs)
 
 
 class ClientMessage(models.Model):
@@ -101,3 +144,14 @@ class AnonymousHumanizerUsage(models.Model):
 
     def __str__(self):
         return f"{self.day} · {self.words_used} words"
+
+
+from django.contrib.auth import get_user_model
+
+def _user_client_conversation(self):
+    return self.client_conversations.order_by("-updated_at").first()
+
+try:
+    get_user_model().client_conversation = property(_user_client_conversation)
+except Exception:
+    pass
