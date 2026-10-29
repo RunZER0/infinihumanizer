@@ -5,6 +5,7 @@
       <div class="wa-header-avatar" id="desk-chat-avatar" aria-hidden="true">
         <span>{{ conversation.user.first_name|default:conversation.user.email|slice:":1"|upper }}</span>
       </div>
+      <div class="wa-header-info">
         <div style="display: flex; align-items: center; gap: 6px;">
           <h1 class="wa-header-name" id="desk-chat-title">{{ conversation.user.get_full_name|default:conversation.user.email }}</h1>
           <span class="ops-thread-ref-pill" id="desk-chat-ref" {% if not conversation.reference %}style="display:none;"{% endif %}>{{ conversation.reference }}</span>

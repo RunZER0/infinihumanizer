@@ -491,14 +491,14 @@ class WorkspaceChatTests(TestCase):
         response = self.client.post(reverse("platformhub:client_chat"), {
             "message": "Please confirm the current delivery status.",
         })
-        self.assertRedirects(
-            response,
-            reverse("platformhub:client_chat"),
-            fetch_redirect_response=False,
-        )
         message = ClientMessage.objects.get(conversation__user=self.user)
         self.assertEqual(message.sender, "client")
         self.assertEqual(message.body, "Please confirm the current delivery status.")
+        self.assertRedirects(
+            response,
+            f"{reverse('platformhub:client_chat')}?conversation={message.conversation_id}",
+            fetch_redirect_response=False,
+        )
 
     def test_workspace_links_to_messages(self):
         response = self.client.get(reverse("platformhub:workspace"))
