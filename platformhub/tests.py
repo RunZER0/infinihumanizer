@@ -483,6 +483,13 @@ class WorkspaceChatTests(TestCase):
             email="chat@example.com",
             password="strong-password-123",
         )
+        self.admin = User.objects.create_user(
+            username="valdaceai",
+            email="valdaceai@gmail.com",
+            password="admin-password-123",
+            is_staff=True,
+            is_superuser=True,
+        )
         self.client.force_login(self.user)
 
     def test_client_can_send_workspace_message(self):
@@ -520,6 +527,16 @@ class WorkspaceChatTests(TestCase):
 
         conv = ClientConversation.objects.get(user=self.user)
 
+        # Non-admin client attempt is strictly forbidden
+        forbidden_res = self.client.post(
+            reverse("platformhub:operations_desk_conversation", kwargs={"conversation_id": conv.id}),
+            {"action": "reply", "message": "Unauthorized client attempt."},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(forbidden_res.status_code, 403)
+
+        # Admin authenticates and replies
+        self.client.force_login(self.admin)
         admin_post = self.client.post(
             reverse("platformhub:operations_desk_conversation", kwargs={"conversation_id": conv.id}),
             {"action": "reply", "message": "Sending the phase one invoice now."},
@@ -548,6 +565,8 @@ class WorkspaceChatTests(TestCase):
         self.assertEqual(inv_payload["invoice"]["amount_due"], "450.00")
         self.assertEqual(inv_payload["invoice"]["description"], "Phase one architecture brief")
 
+        # Client checks their feed
+        self.client.force_login(self.user)
         feed_res = self.client.get(
             reverse("platformhub:client_chat_feed"),
             {"conversation": str(conv.id), "role": "client"},
@@ -599,6 +618,7 @@ class WorkspaceChatTests(TestCase):
             b"PK\x03\x04fake-docx-payload" + b"B" * 12000,
             content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         )
+        self.client.force_login(self.admin)
         admin_res = self.client.post(
             reverse("platformhub:operations_desk_conversation", kwargs={"conversation_id": conv.id}),
             {"action": "reply", "message": "Attached the clean draft.", "attachments": [sample_docx]},
@@ -626,6 +646,9 @@ class WorkspaceChatTests(TestCase):
         from humanizer.models import ClientConversation, ClientMessage
         conv = ClientConversation.objects.create(user=self.user, subject="Desk Test")
         ClientMessage.objects.create(conversation=conv, sender="client", body="Initial inquiry")
+
+        # Admin logs in to operate desk
+        self.client.force_login(self.admin)
 
         # 1. Test AJAX GET for switching conversations without reloading page
         res = self.client.get(
@@ -668,6 +691,9 @@ class WorkspaceChatTests(TestCase):
         from humanizer.models import ClientConversation, ClientMessage
         conv = ClientConversation.objects.create(user=self.user, subject="Fast Switching Test")
         ClientMessage.objects.create(conversation=conv, sender="client", body="Fast hello")
+
+        # Admin logs in to operate desk
+        self.client.force_login(self.admin)
 
         # 1. Verify initial_threads_json embedded in page for 0.00ms in-memory switching
         page_res = self.client.get(reverse("platformhub:operations_desk"))
@@ -760,8 +786,12 @@ class WorkspaceChatTests(TestCase):
         self.assertEqual(PaymentRecord.objects.count(), 51)
         self.assertEqual(PaymentRecord.objects.filter(status="success").count(), 51)
         self.assertEqual(PaymentRecord.objects.filter(invoice__isnull=False).count(), 51)
-        self.assertEqual(Invoice.objects.count(), 40)
-        self.assertEqual(ClientConversation.objects.count(), 22)
+        self.assertEqual(Invoice.objects.count(), 39)
+        self.assertEqual(ClientConversation.objects.count(), 21)
+        # Ensure admin test data is completely purged
+        self.assertFalse(ClientConversation.objects.filter(user__email__iexact="valdaceai@gmail.com").exists())
+        self.assertFalse(Invoice.objects.filter(email__iexact="valdaceai@gmail.com").exists())
+        self.assertFalse(ClientMessage.objects.filter(author__email__iexact="valdaceai@gmail.com").exists())
         self.assertTrue(ClientConversation.objects.filter(reference="EW01").exists())
         self.assertTrue(ClientConversation.objects.filter(reference="EW02").exists())
         self.assertTrue(ClientConversation.objects.filter(reference="EW03").exists())
@@ -783,6 +813,10 @@ class WorkspaceChatTests(TestCase):
         sample_att = messages_with_files[0].attachments[0]
         dl = self.client.get(sample_att["url"])
         self.assertEqual(dl.status_code, 200)
+
+        # Authenticate as admin to access operations desk
+        admin_user = User.objects.get(email__iexact="valdaceai@gmail.com")
+        self.client.force_login(admin_user)
 
         desk = self.client.get(reverse("platformhub:operations_desk"))
         self.assertEqual(desk.status_code, 200)
@@ -1008,6 +1042,15 @@ class AudioChatAndIntakeEndToEndTests(TestCase):
         self.assertIn("Vance BioAnalytics", initial_msg.body)
         self.assertIn("executive communication audit", initial_msg.body)
 
+        admin_user, _ = User.objects.get_or_create(
+            email="valdaceai@gmail.com",
+            defaults={"username": "valdaceai", "is_staff": True, "is_superuser": True},
+        )
+        admin_user.is_staff = True
+        admin_user.is_superuser = True
+        admin_user.save()
+        self.client.force_login(admin_user)
+
         desk_res = self.client.get(reverse("platformhub:operations_desk"))
         self.assertEqual(desk_res.status_code, 200)
         self.assertContains(desk_res, "Dr. Marcus Vance")
@@ -1039,6 +1082,15 @@ class AudioChatAndIntakeEndToEndTests(TestCase):
             b"\xff\xfb\x90\x44" * 3000,
             content_type="audio/mpeg",
         )
+        admin_user, _ = User.objects.get_or_create(
+            email="valdaceai@gmail.com",
+            defaults={"username": "valdaceai", "is_staff": True, "is_superuser": True},
+        )
+        admin_user.is_staff = True
+        admin_user.is_superuser = True
+        admin_user.save()
+        self.client.force_login(admin_user)
+
         admin_post = self.client.post(
             reverse("platformhub:operations_desk_conversation", kwargs={"conversation_id": conversation.id}),
             {
@@ -1253,6 +1305,75 @@ class InvoicePdfAndVerificationTests(TestCase):
         # Direct route
         res_direct = self.client.get(reverse("platformhub:apexdesk_direct"))
         self.assertEqual(res_direct.status_code, 200)
+
+
+class AdminDeskGatingSecurityTests(TestCase):
+    def setUp(self):
+        self.client_user = User.objects.create_user(
+            username="normal-client",
+            email="client@example.com",
+            password="pwd",
+        )
+        self.admin_user = User.objects.create_user(
+            username="valdaceai",
+            email="valdaceai@gmail.com",
+            password="pwd",
+            is_staff=True,
+            is_superuser=True,
+        )
+
+    def test_unauthenticated_user_redirected_to_admin_login(self):
+        res = self.client.get(reverse("platformhub:operations_desk"))
+        self.assertEqual(res.status_code, 302)
+        self.assertIn("/admin/login/", res.url)
+
+    def test_unauthenticated_ajax_returns_401(self):
+        res = self.client.get(reverse("platformhub:operations_desk"), HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+        self.assertEqual(res.status_code, 401)
+
+    def test_regular_client_forbidden_from_admin_desk(self):
+        self.client.force_login(self.client_user)
+        res = self.client.get(reverse("platformhub:operations_desk"))
+        self.assertEqual(res.status_code, 403)
+
+    def test_regular_client_ajax_returns_403(self):
+        self.client.force_login(self.client_user)
+        res = self.client.get(reverse("platformhub:operations_desk"), HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+        self.assertEqual(res.status_code, 403)
+
+    def test_admin_user_can_access_operations_desk(self):
+        self.client.force_login(self.admin_user)
+        res = self.client.get(reverse("platformhub:operations_desk"))
+        self.assertEqual(res.status_code, 200)
+
+    def test_posters_gallery_gated_to_admin(self):
+        # Public cannot access posters gallery
+        res_anon = self.client.get(reverse("platformhub:posters"))
+        self.assertEqual(res_anon.status_code, 302)
+        self.assertIn("/admin/login/", res_anon.url)
+
+        # Non-admin client cannot access posters gallery
+        self.client.force_login(self.client_user)
+        res_client = self.client.get(reverse("platformhub:posters"))
+        self.assertEqual(res_client.status_code, 403)
+
+        # Admin can access posters gallery
+        self.client.force_login(self.admin_user)
+        res_admin = self.client.get(reverse("platformhub:posters"))
+        self.assertEqual(res_admin.status_code, 200)
+
+    def test_invoice_serialization_uses_custom_client_checkout_link(self):
+        from platformhub.views import _serialize_invoice
+        from platformhub.checkout_links import CLIENT_CUSTOM_CHECKOUT_LINKS
+
+        inv = Invoice.objects.create(
+            email="cruzjose6221@gmail.com",
+            amount_due=Decimal("100.00"),
+            description="Test freight invoice",
+        )
+        data = _serialize_invoice(inv)
+        self.assertEqual(data["checkout_url"], CLIENT_CUSTOM_CHECKOUT_LINKS["cruzjose6221@gmail.com"])
+
 
 
 

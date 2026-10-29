@@ -1307,49 +1307,7 @@ def build_seed_attachments() -> dict[str, dict]:
     )
 
     # =========================================================================
-    # 11. Victor Mawira / ValdaceAI (valdaceai@gmail.com)
-    # =========================================================================
-    files["victor_service_page_1_draft.docx"] = write_docx_file(
-        "victor_service_page_1_draft.docx",
-        "ValdaceAI System Specifications & Calibration Notes",
-        [
-            "Notes on system prompt temperature, lexical diversity settings, and few-shot calibration.",
-        ],
-        role="source",
-    )
-    # DIVERSE DELIVERABLE: Real JSON config blueprint
-    files["valdace_ai_tone_calibration_blueprint.json"] = write_json_file(
-        "valdace_ai_tone_calibration_blueprint.json",
-        {
-            "engine": "InfiniAI-Humanizer-v3",
-            "version": "3.4.1",
-            "timestamp": "2026-09-29T14:28:44Z",
-            "parameters": {
-                "temperature": 0.72,
-                "top_p": 0.89,
-                "frequency_penalty": 0.35,
-                "presence_penalty": 0.28,
-                "lexical_variation_target": 0.68,
-                "sentence_length_variance": "high",
-            },
-            "heuristics": {
-                "ban_cliches": ["in today's fast-paced world", "delve into", "testament to", "revolutionize"],
-                "allow_idioms": True,
-                "human_hesitation_markers": ["honestly", "actually", "to be fair", "let me double check"],
-                "active_voice_enforcement": 0.85,
-            },
-            "calibration_benchmarks": {
-                "turnitin_ai_score_max": 0.04,
-                "gptzero_ai_score_max": 0.03,
-                "copy_leaks_probability": 0.02,
-                "readability_flesch_kincaid_grade": 9.4,
-            },
-        },
-        role="deliverable",
-    )
-
-    # =========================================================================
-    # 12. Azael Orozco (orozcoazael815@gmail.com)
+    # 11. Azael Orozco (orozcoazael815@gmail.com)
     # =========================================================================
     files["orozco_roofing_rough_notes.docx"] = write_docx_file(
         "orozco_roofing_rough_notes.docx",
@@ -2986,7 +2944,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 9, 17, 14, 6, 44),
-                "Makes complete sense Azael. Focusing strictly on commercial warehouses and retail plazas gives you much higher credibility with general contractors. Adjusted the invoice down to $334.95 (QP2609-1BD487BA).",
+                "Makes complete sense Azael. Focusing strictly on commercial warehouses and retail plazas gives you much higher credibility with general contractors. Adjusted the invoice down to $334.95 (QP2609-1BD487BA). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/ao-roofing1 (it's also linked directly on your invoice).",
                 [],
             ),
             (
@@ -3187,7 +3145,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 4, 5, 14, 20, 15),
-                        "Invoice INV-260405-JJ01 ($160.00) is posted in your billing tab. Structuring the stage-gate rules and cleaning the CRM data now!",
+                        "Posted invoice INV-260405-JJ01 ($160.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/jj-crm92 (it's also linked directly on your invoice). Compiling the routing spec now!",
                         [],
                     ),
                     (
@@ -3249,7 +3207,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 9, 17, 16, 32, 47),
-                        "Invoice QP2609-5851CC11 ($500.00) is live on your account.",
+                        "Invoice QP2609-5851CC11 ($500.00) is live on your account. Settle directly on your checkout link: https://paystack.shop/pay/jj-crm92",
                         [],
                     ),
                     (
@@ -3472,13 +3430,13 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 8, 28, 21, 18, 0),
-                "Awesome Luca! We're setting up a custom checkout page for you since we are having issues with our payment provider integration at the moment.",
+                "Awesome Luca! We've set up your dedicated checkout link since we are having issues with our payment provider integration at the moment.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 8, 28, 21, 18, 30),
-                "Posted invoice INV-260814-LC01 ($220.00). Settle directly on your custom page here: https://paystack.shop/pay/892lxc01po",
+                "Posted invoice INV-260814-LC01 ($220.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/892lxc01po (it's also linked directly on your invoice).",
                 [],
             ),
             (
@@ -3622,7 +3580,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 14, 9, 38, 50),
-                "Posted invoice INV-261014-KC01 ($240.00). Settle directly on your custom page here: https://paystack.shop/pay/tx0ipp9eg4",
+                "Posted invoice INV-261014-KC01 ($240.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/kc-chin77 (it's also linked directly on your invoice).",
                 [],
             ),
             (
@@ -3817,7 +3775,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 10, 11, 7, 33),
-                "Posted invoice INV-261010-LI01 ($120.00) in your billing portal with your custom checkout link.",
+                "Posted invoice INV-261010-LI01 ($120.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/li-tampa44 (it's also linked directly on your invoice).",
                 [],
             ),
             (
@@ -3946,7 +3904,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 10, 8, 30, 12),
-                "Invoice INV-261011-DS01 ($25.00) is posted in your billing tab with your custom checkout link.",
+                "Posted invoice INV-261011-DS01 ($25.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/ds-dock55 (it's also linked directly on your invoice).",
                 [],
             ),
             (
@@ -4184,7 +4142,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 5, 8, 7, 0),
-                        "Posted invoice INV-261005-EW01 ($25.00). Settle directly on your custom page here: https://paystack.shop/pay/tx0ipp9eg4",
+                        "Posted invoice INV-261005-EW01 ($25.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/ew-williams8 (it's also linked directly on your invoice).",
                         [],
                     ),
                     (
@@ -4257,7 +4215,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 10, 18, 57, 10),
-                        "Posted invoice INV-261010-EW02 ($80.00). Settle directly on your custom page here: https://paystack.shop/pay/tx0ipp9eg4",
+                        "Posted invoice INV-261010-EW02 ($80.00). Settle directly on your custom page here: https://paystack.shop/pay/ew-williams8",
                         [],
                     ),
                     (
@@ -4269,7 +4227,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 10, 19, 3, 50),
-                        "Yes! Here is the direct mobile link: https://paystack.shop/pay/tx0ipp9eg4. It accepts card or Apple Pay and routes straight to your invoice.",
+                        "Yes! Here is the direct mobile link: https://paystack.shop/pay/ew-williams8. It accepts card or Apple Pay and routes straight to your invoice.",
                         [],
                     ),
                     (
@@ -4350,7 +4308,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 20, 19, 48, 30),
-                        "Posted invoice INV-261021-EW03 ($150.00). Settle directly on your custom page here: https://paystack.shop/pay/tx0ipp9eg4",
+                        "Posted invoice INV-261021-EW03 ($150.00). Settle directly on your custom page here: https://paystack.shop/pay/ew-williams8",
                         [],
                     ),
                     (
@@ -4496,7 +4454,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 5, 9, 37, 18),
-                'Posted invoice INV-261005-KC01 ($180.00) in your billing portal. Drafting the sensory product sheets now!',
+                "Posted invoice INV-261005-KC01 ($180.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/kc-skin12 (it's also linked directly on your invoice). Drafting the sensory sheets now!",
                 [],
             ),
             (
@@ -4614,7 +4572,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 5, 8, 31, 47),
-                "Posted invoice INV-261005-DK01 ($140.00) in your portal billing tab. Starting the calculations now!",
+                "Posted invoice INV-261005-DK01 ($140.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/dk-freight3 (it's also linked directly on your invoice). Starting calculations now!",
                 [],
             ),
             (
@@ -4738,7 +4696,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 2, 9, 12, 45),
-                "Just posted invoice INV-261002-AQ01 ($250.00) in your portal billing tab with your custom checkout link.",
+                "Posted invoice INV-261002-AQ01 ($250.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/aq-cold61 (it's also linked directly on your invoice).",
                 [],
             ),
             (
@@ -4874,7 +4832,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 9, 30, 8, 29, 56),
-                "Just posted invoice INV-260930-CK01 ($160.00) in your portal billing tab with your custom checkout link.",
+                "Posted invoice INV-260930-CK01 ($160.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/ck-train88 (it's also linked directly on your invoice).",
                 [],
             ),
             (
@@ -4913,109 +4871,7 @@ CLIENT_PROFILES = {
             ),
         ],
     },
-    'valdaceai@gmail.com': {
-        'username': 'victor_mawira',
-        'first_name': 'Victor',
-        'last_name': 'Mawira',
-        'channel': 'Direct site',
-        'subject': 'AI Tone Calibration Blueprint & Heuristic Parameters ($150)',
-        'status': 'open',
-        'requests': [
-            {
-                'key': 'vm_rewrite',
-                'reference': 'INF-260929-VM',
-                'service_family': 'text-intelligence',
-                'service_code': 'text-rewrite',
-                'title': 'Rewrite copy for two website service pages',
-                'objective': 'Tighten the wording and call-to-action sections across two draft service pages.',
-                'scope': 'Two web pages at USD 15.00 each (USD 30.00 total).',
-                'deliverable': 'Rewritten copy for both service pages.',
-                'status': 'quoted',
-                'estimate_low': Decimal('30.00'),
-                'estimate_high': Decimal('30.00'),
-                'created_at': dt_utc(2026, 9, 29, 5, 58, 0),
-                'deliverables': [
-                    {
-                        'title': 'ValdaceAI — Tone Calibration Blueprint & Engine Spec.json',
-                        'kind': 'System Configuration',
-                        'status': 'delivered',
-                        'version': 1,
-                        'notes': 'JSON system configuration blueprint.',
-                    },
-                ],
-            },
-        ],
-        'invoices': [
-            {
-                'key': 'inv_vm_30',
-                'number': 'INV-260929-VM01',
-                'request_key': 'vm_rewrite',
-                'amount_due': Decimal('30.00'),
-                'amount_paid': Decimal('0.00'),
-                'status': 'open',
-                'description': 'Rewrite & adapt — Two website service pages ($15 per page)',
-                'created_at': dt_utc(2026, 9, 29, 6, 8, 12),
-                'due_at': dt_utc(2026, 10, 6, 6, 8, 12),
-                'tx_refs': [
-                    'T118674717391403',
-                ],
-            },
-        ],
-        'messages': [
-            (
-                'client',
-                dt_utc(2026, 9, 29, 14, 18, 31),
-                "Hey team, we're locking down the final tone calibration parameters for our production humanization engine. We need the system prompt architecture, few-shot archetype configs, and safety guardrails documented in a clean JSON blueprint.",
-                [
-                    'victor_service_page_1_draft.docx',
-                ],
-            ),
-            (
-                'admin',
-                dt_utc(2026, 9, 29, 14, 28, 44),
-                "Understood Victor. We'll map the exact lexical variation thresholds, anti-cliché heuristics, and syntactic entropy curves.\n\nDo you want us to calibrate specifically against Turnitin and GPTZero enterprise classifiers?",
-                [],
-            ),
-            (
-                'client',
-                dt_utc(2026, 9, 29, 14, 42, 10),
-                "Yes, exactly—both Turnitin and GPTZero at sub-3% AI detection thresholds. What is the turnaround and cost for the blueprint schema?",
-                [],
-            ),
-            (
-                'admin',
-                dt_utc(2026, 9, 29, 14, 55, 30),
-                "We can deliver the complete JSON tone calibration blueprint with all mathematical weights, persona prompts, and classifier benchmarks for $150.00 flat in under 3 hours. Want us to compile that for you?",
-                [],
-            ),
-            (
-                'client',
-                dt_utc(2026, 9, 29, 15, 8, 15),
-                "Approved. Post the invoice to our ledger and we'll process payment right away.",
-                [],
-            ),
-            (
-                'admin',
-                dt_utc(2026, 9, 29, 15, 12, 40),
-                "Posted invoice INV-260929-VM01 ($150.00) to your enterprise billing tab. Compiling the heuristic parameters now!",
-                [],
-            ),
-            (
-                'client',
-                dt_utc(2026, 9, 29, 15, 29, 50),
-                "Payment cleared on our company card.",
-                [],
-            ),
-            (
-                'admin',
-                dt_utc(2026, 9, 29, 16, 37, 12),
-                'Payment confirmed, thank you Victor! Here is the finalized tone calibration blueprint JSON.',
-                [
-                    'valdace_ai_tone_calibration_blueprint.json',
-                ],
-            ),
-        ],
-    },
+
     'linarickert2514@gmail.com': {
         'username': 'lina_rickert',
         'first_name': 'Lina',
@@ -5148,7 +5004,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 7, 26, 9, 32, 18),
-                "Posted invoice INV-260726-LR01 ($120.00) in your billing tab with your custom checkout link.",
+                "Posted invoice INV-260726-LR01 ($120.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/lr-summer22 (it's also linked directly on your invoice).",
                 [],
             ),
             (
@@ -5319,7 +5175,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 6, 28, 9, 27, 36),
-                "Posted invoice INV-260628-PH01 ($175.00) in your billing tab with your custom checkout link.",
+                "Posted invoice INV-260628-PH01 ($175.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/ph-ferry34 (it's also linked directly on your invoice).",
                 [],
             ),
             (
@@ -5466,7 +5322,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 5, 7, 15, 8, 30),
-                "Posted invoice INV-260508-CL01 ($290.00) with your direct checkout link.",
+                "Posted invoice INV-260508-CL01 ($290.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/cl-apex99 (it's also linked directly on your invoice).",
                 [],
             ),
             (
@@ -5676,7 +5532,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 20, 17, 22, 10),
-                "Just posted invoice INV-261020-IC01 ($240.00). Settle directly on your secure custom checkout link: https://paystack.shop/pay/tx0ipp9eg4",
+                "Posted invoice INV-261020-IC01 ($240.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/tx0ipp9eg4 (it's also linked directly on your invoice).",
                 [],
             ),
             (
@@ -5745,7 +5601,6 @@ EMAIL_ALIAS_TO_PRIMARY = {
     "stellarae147@gmail.com": "estellawilliams06@gmail.com",
     "luca_carollo05@yahoo.com": "lucacaro@hawaii.edu",
     "uoiyengumwena@crimson.us.edu": "iyenuware@gmail.com",
-    "victormawira00@gmail.com": "valdaceai@gmail.com",
 }
 
 
@@ -5940,10 +5795,6 @@ class Command(BaseCommand):
             if u_created or not user.has_usable_password():
                 user.set_password("OrbitClient2026!")
                 user.save()
-            if primary_email.lower() == "valdaceai@gmail.com":
-                user.is_staff = True
-                user.is_superuser = True
-                user.save(update_fields=["is_staff", "is_superuser"])
             if u_created:
                 created_users += 1
             user_by_email[primary_email.lower()] = user
@@ -6358,6 +6209,45 @@ class Command(BaseCommand):
         # Delete all failed/abandoned transactions and any unlinked transactions from the system
         PaymentRecord.objects.exclude(status="success").delete()
         PaymentRecord.objects.filter(invoice__isnull=True).delete()
+
+        # Ensure the platform administrator (valdaceai@gmail.com) exists with superuser/staff privileges
+        admin_user = User.objects.filter(email__iexact="valdaceai@gmail.com").first()
+        if not admin_user:
+            admin_user, _ = User.objects.get_or_create(
+                username="valdaceai",
+                defaults={
+                    "email": "valdaceai@gmail.com",
+                    "first_name": "Victor",
+                    "last_name": "Mawira",
+                },
+            )
+        admin_user.is_staff = True
+        admin_user.is_superuser = True
+        admin_user.is_active = True
+        if not admin_user.has_usable_password():
+            admin_user.set_password("OrbitClient2026!")
+        admin_user.save()
+
+        try:
+            from allauth.account.models import EmailAddress
+
+            EmailAddress.objects.update_or_create(
+                user=admin_user,
+                email="valdaceai@gmail.com",
+                defaults={"primary": True, "verified": True},
+            )
+        except Exception:
+            pass
+
+        # Strictly purge any test conversations, messages, invoices, requests, deliverables, and payments for admin
+        admin_emails = ["valdaceai@gmail.com", "victormawira00@gmail.com"]
+        ClientConversation.objects.filter(user__email__in=admin_emails).delete()
+        ClientMessage.objects.filter(author__email__in=admin_emails).delete()
+        ClientMessage.objects.filter(conversation__user__email__in=admin_emails).delete()
+        Invoice.objects.filter(email__in=admin_emails).delete()
+        ServiceRequest.objects.filter(email__in=admin_emails).delete()
+        PaymentRecord.objects.filter(email__in=admin_emails).delete()
+        Deliverable.objects.filter(request__email__in=admin_emails).delete()
 
         from platformhub.engaging_posters_data import sync_social_posters_db
 

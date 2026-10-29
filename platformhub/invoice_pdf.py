@@ -3,6 +3,7 @@ from decimal import Decimal
 import qrcode
 
 from django.utils import timezone
+from platformhub.checkout_links import get_client_checkout_link
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import (
     SimpleDocTemplate,
@@ -383,7 +384,38 @@ def generate_invoice_pdf(invoice, base_url: str = "https://www.byinfini.online")
         ])
     )
     story.append(totals_wrapper)
-    story.append(Spacer(1, 12))
+    story.append(Spacer(1, 10))
+
+    custom_checkout = get_client_checkout_link(invoice.email)
+    if custom_checkout and not is_paid:
+        checkout_table = Table(
+            [
+                [
+                    Paragraph("<b>DIRECT ONLINE SETTLEMENT · CARD &amp; APPLE PAY CHECKOUT</b>", section_head),
+                ],
+                [
+                    Paragraph(
+                        f"Settle this invoice securely using your dedicated client checkout page:<br/>"
+                        f"<font color='#0284C7'><b>{custom_checkout}</b></font>",
+                        table_cell,
+                    ),
+                ],
+            ],
+            colWidths=[540],
+        )
+        checkout_table.setStyle(
+            TableStyle([
+                ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#F8FAFC")),
+                ("BOX", (0, 0), (-1, -1), 1, colors.HexColor("#CBD5E1")),
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ("TOPPADDING", (0, 0), (-1, -1), 6),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
+                ("LEFTPADDING", (0, 0), (-1, -1), 8),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 8),
+            ])
+        )
+        story.append(KeepTogether([checkout_table]))
+        story.append(Spacer(1, 10))
 
     # -------------------------------------------------------------------------
     # 5. Settlement / Audit Trail (if payments exist)

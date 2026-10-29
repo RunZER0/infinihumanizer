@@ -7,10 +7,12 @@ from datetime import datetime, timedelta
 from decimal import Decimal, InvalidOperation
 
 import requests
+from functools import wraps
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import redirect_to_login
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import FileResponse, Http404, HttpResponse, JsonResponse
 from django.core.exceptions import PermissionDenied, ValidationError
@@ -38,6 +40,7 @@ from accounts.verification import (
     verify_email_code,
 )
 from .payments import PaystackError, apply_gateway_transaction, ingest_webhook_transaction, initialize_transaction, valid_webhook_signature, verify_transaction
+from .checkout_links import get_client_checkout_link
 
 logger = logging.getLogger(__name__)
 
@@ -912,6 +915,45 @@ def _is_ajax_or_json(request):
     )
 
 
+ADMIN_EMAILS = {"valdaceai@gmail.com"}
+
+
+def is_admin_user(user):
+    """
+    Check if a user is the platform administrator.
+    The sole administrator is valdaceai@gmail.com.
+    """
+    if not (user and user.is_authenticated and user.is_active):
+        return False
+    user_email = (user.email or "").strip().lower()
+    user_username = (user.username or "").strip().lower()
+    if user_email in ADMIN_EMAILS or user_username in ("valdaceai", "valdaceai@gmail.com", "victor_mawira"):
+        return True
+    if user.is_superuser or user.is_staff:
+        return True
+    return False
+
+
+def admin_only_required(view_func):
+    """
+    Strictly gates access to the platform administrator (valdaceai@gmail.com).
+    Unauthenticated users are redirected to the admin login portal.
+    Unauthorized non-admin users receive a 403 Forbidden.
+    """
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            if _is_ajax_or_json(request):
+                return JsonResponse({"error": "Admin authentication required."}, status=401)
+            return redirect_to_login(request.get_full_path(), login_url="/admin/login/")
+        if not is_admin_user(request.user):
+            if _is_ajax_or_json(request):
+                return JsonResponse({"error": "Forbidden. Only platform administrator can access this area."}, status=403)
+            raise PermissionDenied("Access restricted to platform administrator.")
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view
+
+
 def _compute_user_presence(user, latest_message_time=None):
     from datetime import timedelta
     now = timezone.now()
@@ -1034,6 +1076,9 @@ def _serialize_invoice(inv):
     if not client_name:
         client_name = inv.email
 
+    custom_checkout = get_client_checkout_link(inv.email)
+    checkout_url = custom_checkout or f"{reverse('platformhub:checkout')}?invoice={inv.id}"
+
     return {
         "id": str(inv.id),
         "number": inv.number,
@@ -1048,7 +1093,7 @@ def _serialize_invoice(inv):
         "status_display": inv.get_status_display(),
         "created_at_iso": created_local.isoformat(),
         "created_at_display": created_local.strftime("%b %d, %Y · %H:%M").replace(" 0", " "),
-        "checkout_url": f"{reverse('platformhub:checkout')}?invoice={inv.id}",
+        "checkout_url": checkout_url,
         "pdf_url": reverse("platformhub:invoice_pdf_download", kwargs={"invoice_id": str(inv.id)}),
         "verify_url": reverse("platformhub:invoice_verify", kwargs={"invoice_id": str(inv.id)}),
     }
@@ -1242,6 +1287,7 @@ def _operations_sidebar_context(active_tab="inbox"):
     }
 
 
+@admin_only_required
 @require_http_methods(["GET"])
 def operations_desk_more_threads(request):
     try:
@@ -1311,6 +1357,7 @@ def operations_desk_more_threads(request):
     })
 
 
+@admin_only_required
 @require_http_methods(["GET", "POST"])
 def operations_desk(request, conversation_id=None):
     from .chat_files import save_uploaded_chat_files
@@ -1565,6 +1612,7 @@ def operations_desk(request, conversation_id=None):
     return render(request, "platformhub/operations_desk.html", context)
 
 
+@admin_only_required
 @require_http_methods(["GET"])
 def operations_invoices(request):
     invoices = list(
@@ -1604,6 +1652,7 @@ def operations_invoices(request):
     return render(request, "platformhub/operations_invoices.html", context)
 
 
+@admin_only_required
 @require_http_methods(["GET"])
 def operations_transactions(request):
     all_payments = list(
@@ -1644,6 +1693,7 @@ def operations_transactions(request):
     return render(request, "platformhub/operations_transactions.html", context)
 
 
+@admin_only_required
 @require_http_methods(["POST"])
 def admin_create_invoice(request):
     is_ajax = _is_ajax_or_json(request)
@@ -1776,12 +1826,20 @@ def admin_create_invoice(request):
 
     checkout_url = reverse("platformhub:checkout") + f"?invoice={invoice.id}"
     full_checkout_url = f"https://www.byinfini.online{checkout_url}"
+    custom_checkout_url = get_client_checkout_link(target_user.email) or full_checkout_url
 
     author = request.user if request.user.is_authenticated else None
-    notice_body = (
-        f"Invoice {invoice.number} ({invoice.currency} {invoice.amount_due:.2f}) — {invoice.description}\n\n"
-        f"Review and pay on your account: {full_checkout_url}"
-    )
+    is_first_invoice = Invoice.objects.filter(email__iexact=target_user.email).exclude(pk=invoice.pk).count() == 0
+    if is_first_invoice:
+        notice_body = (
+            f"Invoice {invoice.number} ({invoice.currency} {invoice.amount_due:.2f}) — {invoice.description}\n\n"
+            f"You can settle directly via Card or Apple Pay on your dedicated checkout page: {custom_checkout_url}"
+        )
+    else:
+        notice_body = (
+            f"Invoice {invoice.number} ({invoice.currency} {invoice.amount_due:.2f}) — {invoice.description}\n\n"
+            f"Direct payment link: {custom_checkout_url}"
+        )
     notice_msg = ClientMessage.objects.create(
         conversation=conversation,
         author=author,
@@ -1809,6 +1867,7 @@ def admin_create_invoice(request):
     return redirect("platformhub:operations_desk_conversation", conversation_id=conversation.id)
 
 
+@admin_only_required
 @require_http_methods(["POST"])
 def admin_invoice_status(request, invoice_id):
     is_ajax = _is_ajax_or_json(request)
@@ -2198,11 +2257,13 @@ def reconciliation(request):
     })
 
 
+@admin_only_required
 def posters_gallery(request):
     from platformhub.engaging_posters_data import ENGAGING_POSTERS
     return render(request, "platformhub/posters.html", {"posters": ENGAGING_POSTERS})
 
 
+@admin_only_required
 def operations_posters(request):
     from platformhub.models import SocialPoster
     from platformhub.engaging_posters_data import sync_social_posters_db
@@ -2250,6 +2311,7 @@ def _find_poster_file(filename):
     return None
 
 
+@admin_only_required
 def operations_download_poster(request, number, format_type):
     from django.http import FileResponse, Http404
 
@@ -2274,6 +2336,7 @@ def operations_download_poster(request, number, format_type):
     return response
 
 
+@admin_only_required
 def operations_download_all_posters(request):
     import io, zipfile
     from django.http import HttpResponse
