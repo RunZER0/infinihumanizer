@@ -3,6 +3,9 @@ set -euo pipefail
 export PYTHONUNBUFFERED=1
 PYTHON_BIN="$(command -v python3 || command -v python)"
 
+echo "Collecting static files..."
+"$PYTHON_BIN" manage.py collectstatic --noinput
+
 echo "Running database migrations..."
 "$PYTHON_BIN" manage.py migrate --noinput
 "$PYTHON_BIN" manage.py seed_orbit_production
