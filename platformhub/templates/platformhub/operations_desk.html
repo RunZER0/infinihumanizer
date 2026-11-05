@@ -176,7 +176,7 @@
     user-select: none;
   }
 </style>
-<script id="ops-initial-threads-data" type="application/json">{{ initial_threads_json|safe }}</script>
+{{ initial_threads|json_script:"ops-initial-threads-data" }}
 <script>
 (function () {
   const root = document.querySelector("[data-desk-root]");
@@ -663,7 +663,8 @@
           };
           if (csrfToken) headers["X-CSRFToken"] = csrfToken;
 
-          const response = await fetch(replyForm.action, {
+          const postUrl = replyForm.getAttribute("action") || window.location.pathname;
+          const response = await fetch(postUrl, {
             method: "POST",
             body: new FormData(replyForm),
             headers: headers
@@ -708,7 +709,8 @@
 
         const csrfInput = toggleStatusForm.querySelector('input[name="csrfmiddlewaretoken"]');
         try {
-          const response = await fetch(toggleStatusForm.action, {
+          const postUrl = toggleStatusForm.getAttribute("action") || window.location.pathname;
+          const response = await fetch(postUrl, {
             method: "POST",
             body: new FormData(toggleStatusForm),
             headers: {
@@ -842,7 +844,7 @@
     }
     const toggleForm = document.getElementById("desk-toggle-status-form");
     if (toggleForm) {
-      toggleForm.action = "/operations/desk/" + data.conversation_id + "/";
+      toggleForm.setAttribute("action", "/operations/desk/" + data.conversation_id + "/");
     }
 
     // 3. Update invoice modal form
@@ -854,7 +856,7 @@
     // 4. Update reply form
     const replyForm = document.getElementById("desk-reply-form");
     if (replyForm) {
-      replyForm.action = "/operations/desk/" + data.conversation_id + "/";
+      replyForm.setAttribute("action", "/operations/desk/" + data.conversation_id + "/");
     }
     const replyInput = document.getElementById("desk-reply-input");
     if (replyInput) {
@@ -1158,7 +1160,8 @@
       const formData = new FormData(newClientForm);
       const csrfInput = newClientForm.querySelector('input[name="csrfmiddlewaretoken"]');
       try {
-        const response = await fetch(newClientForm.action, {
+        const postUrl = newClientForm.getAttribute("action") || window.location.pathname;
+        const response = await fetch(postUrl, {
           method: "POST",
           body: formData,
           headers: {
@@ -1218,7 +1221,8 @@
         };
         if (csrfToken) headers["X-CSRFToken"] = csrfToken;
 
-        const response = await fetch(invoiceForm.action, {
+        const postUrl = invoiceForm.getAttribute("action") || window.location.pathname;
+        const response = await fetch(postUrl, {
           method: "POST",
           body: new FormData(invoiceForm),
           headers: headers

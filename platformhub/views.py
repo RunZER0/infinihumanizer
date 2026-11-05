@@ -1594,6 +1594,7 @@ def operations_desk(request, conversation_id=None):
         "client_payments": client_payments[:20],
         "client_requests": client_requests[:10],
         "service_choices": service_choices,
+        "initial_threads": initial_threads,
         "initial_threads_json": initial_threads_json,
     }
     return render(request, "platformhub/operations_desk.html", context)
