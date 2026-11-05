@@ -173,6 +173,7 @@
       <div class="wa-staged-files" id="client-file-preview" hidden></div>
 
       <!-- Bottom toolbar controls -->
+      <div id="client-send-status" style="padding: 4px 16px; font-size: 12px; color: var(--text-muted); min-height: 20px;" aria-live="polite"></div>
       <div class="wa-composer-bar" id="client-composer-card">
         <button type="button" class="wa-tool-btn" id="client-attach-btn" title="Attach documents, images, or audio" aria-label="Attach file">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -829,9 +830,9 @@
         }
         if (fileInput) fileInput.value = "";
         updateFilePreview();
-        statusEl.textContent = "";
+        if (statusEl) statusEl.textContent = "";
       } catch (err) {
-        statusEl.textContent = err.message || "Could not send message.";
+        if (statusEl) statusEl.textContent = err.message || "Could not send message.";
       } finally {
         updateSendButtonState();
       }
