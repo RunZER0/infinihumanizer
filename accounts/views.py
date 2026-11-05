@@ -17,23 +17,38 @@ except ImportError:
 from .forms import CustomLoginForm, SignUpForm
 from .models import Profile
 from .verification import session_email_is_verified
+from platformhub.views import is_admin_user
 
 
 logger = logging.getLogger(__name__)
 
 
 def _safe_next(request, default="platformhub:workspace"):
+    user = getattr(request, "user", None)
+    if user and user.is_authenticated and is_admin_user(user):
+        default = "platformhub:operations_desk"
     target = request.POST.get("next") or request.GET.get("next") or ""
     if target and url_has_allowed_host_and_scheme(
         url=target,
         allowed_hosts={request.get_host()},
         require_https=request.is_secure(),
     ):
+        if user and user.is_authenticated and is_admin_user(user) and "/workspace" in target:
+            return reverse("platformhub:operations_desk")
         return target
     return reverse(default)
 
 
 class VerifiedEmailLoginView(LoginView):
+    def get_success_url(self):
+        user = getattr(self.request, "user", None)
+        if user and user.is_authenticated and is_admin_user(user):
+            redirect_to = self.get_next_url()
+            if not redirect_to or "/workspace" in redirect_to:
+                return reverse("platformhub:operations_desk")
+            return redirect_to
+        return super().get_success_url()
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["signup_form"] = SignUpForm()

@@ -733,6 +733,8 @@ def _workspace_querysets(user):
 
 @login_required
 def workspace(request):
+    if is_admin_user(request.user):
+        return redirect("platformhub:operations_desk")
     items, invoices, payments = _workspace_querysets(request.user)
     profile = getattr(request.user, "profile", None)
     conversation = ClientConversation.objects.filter(user=request.user).first()
@@ -784,6 +786,8 @@ def workspace(request):
 
 @login_required
 def workspace_projects(request):
+    if is_admin_user(request.user):
+        return redirect("platformhub:operations_desk")
     items, _, _ = _workspace_querysets(request.user)
     return render(request, "platformhub/workspace_projects.html", {
         "requests": items[:50],
@@ -795,6 +799,8 @@ def workspace_projects(request):
 
 @login_required
 def workspace_billing(request):
+    if is_admin_user(request.user):
+        return redirect("platformhub:operations_invoices")
     _, invoices, payments = _workspace_querysets(request.user)
     return render(request, "platformhub/workspace_billing.html", {
         "invoices": invoices[:50],
@@ -1088,6 +1094,12 @@ def _serialize_invoice(inv):
 
 @require_http_methods(["GET", "POST"])
 def client_chat(request):
+    if request.user.is_authenticated and is_admin_user(request.user):
+        req_conv = request.GET.get("conversation", "").strip() or request.POST.get("conversation_id", "").strip()
+        if req_conv:
+            return redirect("platformhub:operations_desk_conversation", conversation_id=req_conv)
+        return redirect("platformhub:operations_desk")
+
     from .chat_files import save_uploaded_chat_files
 
     chat_user = request.user if request.user.is_authenticated else _resolve_chat_user(request)
@@ -1213,7 +1225,7 @@ def client_chat_feed(request):
     conv_id = request.GET.get("conversation", "").strip()
     role = request.GET.get("role", "client").strip().lower()
 
-    if role == "admin" and conv_id:
+    if (role == "admin" or (request.user.is_authenticated and is_admin_user(request.user))) and conv_id:
         conversation = get_object_or_404(ClientConversation.objects.select_related("user"), id=conv_id)
     elif request.user.is_authenticated:
         if conv_id:

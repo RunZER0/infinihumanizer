@@ -25,7 +25,11 @@
       <form method="post" action="{% url 'account_logout' %}" class="form-stack">
         {% csrf_token %}
         <button class="btn btn-primary" type="submit">Sign out</button>
+        {% if is_admin %}
+        <a class="btn" href="{% url 'platformhub:operations_desk' %}">Return to Operations Desk</a>
+        {% else %}
         <a class="btn" href="{% url 'platformhub:workspace' %}">Return to workspace</a>
+        {% endif %}
       </form>
       <p class="auth-legal"><a href="{% url 'platformhub:privacy' %}">Privacy</a> · <a href="{% url 'platformhub:terms' %}">Terms</a></p>
     </div>
