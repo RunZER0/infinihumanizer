@@ -2567,7 +2567,7 @@ body.modal-open{overflow:hidden}
 .cp-chat-shell {
   display: flex;
   width: 100%;
-  max-width: 900px;
+  max-width: 1040px;
   height: 100%;
   margin: 0 auto;
   position: relative;
@@ -2575,7 +2575,16 @@ body.modal-open{overflow:hidden}
   box-shadow: 0 0 0 1px var(--line-subtle);
 }
 
+@media (max-width: 1040px) {
+  .cp-chat-shell {
+    max-width: 100%;
+    box-shadow: none;
+  }
+}
+
 .cp-chat-column {
+  flex: 1;
+  min-width: 0;
   width: 100%;
   max-width: none;
   height: 100%;
