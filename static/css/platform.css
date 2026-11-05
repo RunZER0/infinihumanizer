@@ -2567,9 +2567,12 @@ body.modal-open{overflow:hidden}
 .cp-chat-shell {
   display: flex;
   width: 100%;
+  max-width: 900px;
   height: 100%;
+  margin: 0 auto;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 0 0 1px var(--line-subtle);
 }
 
 .cp-chat-column {
