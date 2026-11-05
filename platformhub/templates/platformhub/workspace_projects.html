@@ -1,49 +1,81 @@
-{% extends "base.html" %}
+{% extends "platformhub/client_portal_base.html" %}
 {% block title %}Projects — InfiniAI{% endblock %}
+{% block nav_projects %}is-active{% endblock %}
+
 {% block content %}
-<div class="page-shell account-section-head">
-  <div>
-    <div class="eyebrow">Workspace</div>
-    <h1 class="h1">Projects</h1>
-    <p class="lede">Open a project only when you need its detail.</p>
-  </div>
-  <div class="workspace-actions">
-    <a class="btn" href="{% url 'platformhub:workspace' %}">Workspace</a>
-    <a class="btn btn-primary" href="{% url 'platformhub:start' %}">Start work</a>
-  </div>
-</div>
-
-<section class="section account-list-section">
-  <div class="shell">
-    <div class="account-list">
-      {% for item in requests %}
-      <a class="account-list-row" href="{% url 'platformhub:project_detail' item.id %}">
-        <div>
-          <strong>{{ item.title }}</strong>
-          <small>{{ item.reference }} · {{ item.created_at|date:"M j, Y" }}</small>
-        </div>
-        <span class="status status-pending">{{ item.get_status_display }}</span>
-        <span aria-hidden="true">→</span>
-      </a>
-      {% empty %}
-      <div class="account-empty"><strong>No projects yet.</strong><p>Start work when you have something to send us.</p></div>
-      {% endfor %}
+<div class="cp-container">
+  <header class="cp-page-head">
+    <div>
+      <h1>Projects &amp; Deliverables</h1>
+      <p>{{ request.user.email }}</p>
     </div>
+    <a class="cp-pay-btn" href="{% url 'platformhub:start' %}">+ Start work</a>
+  </header>
 
-    {% if assurance_jobs %}
-    <details class="account-secondary-list">
-      <summary>Content assurance history</summary>
-      <div class="account-list">
-        {% for job in assurance_jobs %}
-        <a class="account-list-row" href="{% url 'platformhub:assurance_result' job.id %}">
-          <div><strong>{{ job.title }}</strong><small>{{ job.reference }} · {{ job.created_at|date:"M j, Y" }}</small></div>
-          <span class="status status-pending">{{ job.get_status_display }}</span>
-          <span aria-hidden="true">→</span>
-        </a>
-        {% endfor %}
-      </div>
-    </details>
-    {% endif %}
-  </div>
-</section>
+  <section class="cp-section" aria-label="Account projects">
+    <h2 class="cp-section-title">Projects</h2>
+    <div class="cp-table-wrap">
+      <table class="cp-table">
+        <thead>
+          <tr>
+            <th>Reference</th>
+            <th>Title</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th class="cp-actions">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in requests %}
+          <tr>
+            <td class="cp-mono"><strong>{{ item.reference }}</strong></td>
+            <td><strong>{{ item.title }}</strong></td>
+            <td class="cp-mono">{{ item.created_at|date:"M j, Y" }}</td>
+            <td><span class="cp-state-open">{{ item.get_status_display }}</span></td>
+            <td class="cp-actions">
+              <a class="cp-btn-outline cp-btn-sm" href="{% url 'platformhub:project_detail' item.id %}">View detail →</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="cp-empty-cell">No projects yet. Start work when you have something to send us.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  {% if assurance_jobs %}
+  <section class="cp-section" aria-label="Content assurance history">
+    <h2 class="cp-section-title">Content assurance history</h2>
+    <div class="cp-table-wrap">
+      <table class="cp-table">
+        <thead>
+          <tr>
+            <th>Reference</th>
+            <th>Title</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th class="cp-actions">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for job in assurance_jobs %}
+          <tr>
+            <td class="cp-mono"><strong>{{ job.reference }}</strong></td>
+            <td><strong>{{ job.title }}</strong></td>
+            <td class="cp-mono">{{ job.created_at|date:"M j, Y" }}</td>
+            <td><span class="cp-state-open">{{ job.get_status_display }}</span></td>
+            <td class="cp-actions">
+              <a class="cp-btn-outline cp-btn-sm" href="{% url 'platformhub:assurance_result' job.id %}">View report →</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+  {% endif %}
+</div>
 {% endblock %}
