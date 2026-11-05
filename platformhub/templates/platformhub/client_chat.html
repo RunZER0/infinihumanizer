@@ -303,13 +303,24 @@
 
   if (toggleThreadsBtn && threadsSheet) {
     toggleThreadsBtn.addEventListener("click", function () {
-      threadsSheet.hidden = !threadsSheet.hidden;
-      if (sheet && !threadsSheet.hidden) sheet.hidden = true;
+      const willOpen = threadsSheet.hasAttribute("hidden");
+      if (willOpen) {
+        threadsSheet.removeAttribute("hidden");
+        toggleThreadsBtn.setAttribute("aria-expanded", "true");
+        if (sheet) {
+          sheet.setAttribute("hidden", "");
+          if (toggleSheetBtn) toggleSheetBtn.setAttribute("aria-expanded", "false");
+        }
+      } else {
+        threadsSheet.setAttribute("hidden", "");
+        toggleThreadsBtn.setAttribute("aria-expanded", "false");
+      }
     });
   }
   if (closeThreadsBtn && threadsSheet) {
     closeThreadsBtn.addEventListener("click", function () {
-      threadsSheet.hidden = true;
+      threadsSheet.setAttribute("hidden", "");
+      if (toggleThreadsBtn) toggleThreadsBtn.setAttribute("aria-expanded", "false");
     });
   }
 
@@ -427,6 +438,10 @@
       if (willOpen) {
         sheet.removeAttribute("hidden");
         toggleSheetBtn.setAttribute("aria-expanded", "true");
+        if (threadsSheet) {
+          threadsSheet.setAttribute("hidden", "");
+          if (toggleThreadsBtn) toggleThreadsBtn.setAttribute("aria-expanded", "false");
+        }
       } else {
         sheet.setAttribute("hidden", "");
         toggleSheetBtn.setAttribute("aria-expanded", "false");

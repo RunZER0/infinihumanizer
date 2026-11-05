@@ -983,22 +983,9 @@ def _compute_user_presence(user, latest_message_time=None):
 
 
 def _is_message_outgoing(item, current_user=None, conversation_user=None, is_desk_view=False):
-    if current_user and current_user.is_authenticated:
-        if item.author_id and item.author_id == current_user.id:
-            return True
-        if current_user.email and item.author and item.author.email and item.author.email.lower() == current_user.email.lower():
-            return True
-        # Explicit check for Valdace / owner accounts:
-        if current_user.email and current_user.email.lower() in ["valdaceai@gmail.com", "victormawira00@gmail.com"]:
-            if conversation_user and conversation_user.email and conversation_user.email.lower() in ["valdaceai@gmail.com", "victormawira00@gmail.com"]:
-                return item.sender == "client"
-
     if is_desk_view:
-        if conversation_user and current_user and current_user.is_authenticated and conversation_user.id == current_user.id:
-            return item.sender == "client"
         return item.sender == "admin"
-    else:
-        return item.sender == "client"
+    return item.sender == "client"
 
 
 def _annotate_chat_messages(chat_msgs):
