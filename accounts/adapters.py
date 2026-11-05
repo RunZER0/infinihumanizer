@@ -10,3 +10,8 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         if request.user.is_authenticated and is_admin_user(request.user):
             return reverse("platformhub:operations_desk")
         return reverse("platformhub:workspace")
+
+    def post_login(self, request, user, **kwargs):
+        if is_admin_user(user):
+            kwargs["redirect_url"] = reverse("platformhub:operations_desk")
+        return super().post_login(request, user, **kwargs)
