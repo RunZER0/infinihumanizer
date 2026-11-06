@@ -1013,55 +1013,6 @@
     }
   }, true);
 
-  // Background loader: fetch older conversations beyond initial recent set (offset 25)
-  // Runs ONCE quietly after 2 seconds to not compete with user interactions
-  setTimeout(function () {
-    fetch("{% url 'platformhub:operations_desk_more_threads' %}?offset=25&limit=50", {
-      headers: { "X-Requested-With": "XMLHttpRequest", "Accept": "application/json" }
-    })
-    .then(function (res) { return res.ok ? res.json() : null; })
-    .then(function (data) {
-      if (!data || !data.ok) return;
-      if (data.threads_data) {
-        for (const [id, item] of Object.entries(data.threads_data)) {
-          if (!threadCache.has(id)) threadCache.set(id, item);
-        }
-      }
-      const list = document.getElementById("ops-thread-list");
-      if (list && Array.isArray(data.threads)) {
-        data.threads.forEach(function (t) {
-          if (list.querySelector('[data-conversation-id="' + t.id + '"]')) return;
-          const a = document.createElement("a");
-          a.className = "ops-thread-row wa-thread-row";
-          a.href = t.url;
-          a.setAttribute("data-conversation-id", t.id);
-          a.setAttribute("data-thread-status", t.status);
-          a.setAttribute("data-thread-search", (t.client_name + " " + t.client_email + " " + (t.reference || "") + " " + (t.subject || "")).toLowerCase());
-          a.innerHTML =
-            '<div class="ops-thread-row-top wa-thread-row-top">' +
-              '<div style="display: flex; align-items: center; gap: 6px; min-width: 0;">' +
-                '<strong class="ops-thread-name wa-thread-name">' + escapeHtml(t.client_name) + '</strong>' +
-                (t.reference ? '<span class="ops-thread-ref-badge">' + escapeHtml(t.reference) + '</span>' : '') +
-              '</div>' +
-              '<time class="ops-thread-time wa-thread-time" datetime="' + escapeHtml(t.updated_at_iso) + '">' + escapeHtml(t.updated_at_display) + '</time>' +
-            '</div>' +
-            '<p class="ops-thread-preview wa-thread-preview">' +
-              '<span class="ops-thread-sender">' + escapeHtml(t.last_sender_prefix) + '</span> ' +
-              escapeHtml(t.preview) +
-            '</p>' +
-            '<div class="ops-thread-meta">' +
-              '<span>' + escapeHtml(t.client_email) + '</span>' +
-              '<span aria-hidden="true">·</span>' +
-              '<span class="' + (t.status === "open" ? "ops-state-open" : "ops-state-settled") + '">' + escapeHtml(t.status_display) + '</span>' +
-              (t.unread_count ? '<span aria-hidden="true">·</span><strong class="ops-unread-text">' + t.unread_count + ' new</strong>' : '') +
-            '</div>';
-          list.appendChild(a);
-        });
-      }
-    })
-    .catch(function () {});
-  }, 2000);
-
   // Support browser forward/backward buttons
   window.addEventListener("popstate", function (e) {
     if (e.state && e.state.conversationId) {

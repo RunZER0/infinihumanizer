@@ -2460,7 +2460,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 18, 21, 33, 40),
-                "Spot on—calling out 3,500-lb tuck-under liftgate capacity proves you can handle heavy machinery without relying on their dock equipment. I'll get that worked into Email 2 right now. Here's the balance invoice link (INV-261018-JC02) for the remaining $24: https://paystack.shop/pay/4q5iounn6s",
+                "Spot on—calling out 3,500-lb tuck-under liftgate capacity proves you can handle heavy machinery without relying on their dock equipment. I'll get that worked into Email 2 right now. Here's the checkout link for the remaining $24: https://paystack.shop/pay/4q5iounn6s",
                 [],
             ),
             (
@@ -4132,7 +4132,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 5, 8, 6, 20),
-                        "Just set up the invoice for you: https://paystack.shop/pay/ew-williams8",
+                        "Here's the checkout link: https://paystack.shop/pay/ew-williams8",
                         [],
                     ),
                     (
@@ -4205,7 +4205,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 10, 18, 57, 10),
-                        "Here's the invoice link: https://paystack.shop/pay/ew-williams8",
+                        "Here's the checkout link: https://paystack.shop/pay/ew-williams8",
                         [],
                     ),
                     (
@@ -5973,6 +5973,7 @@ class Command(BaseCommand):
                     "request_key": spec["requests"][0]["key"] if spec.get("requests") else None,
                 }]
 
+            seeded_conv_ids = set()
             for cs in conv_specs:
                 c_ref = cs.get("reference")
                 c_subj = cs.get("subject", spec.get("subject", "Conversation"))
@@ -6008,6 +6009,8 @@ class Command(BaseCommand):
                     if not conv.reference:
                         conv.reference = conv.compute_reference()
                     conv.save()
+
+                seeded_conv_ids.add(conv.id)
 
                 conv.messages.all().delete()
                 first_msg_dt = c_msgs[0][1]
@@ -6090,6 +6093,13 @@ class Command(BaseCommand):
                     created_at=first_msg_dt,
                     updated_at=last_msg_dt,
                 )
+
+            # Prune any stale, unreferenced, or duplicate conversations for this client user
+            if seeded_conv_ids:
+                ClientConversation.objects.filter(user=user).exclude(id__in=seeded_conv_ids).delete()
+
+        # Prune any empty conversations with zero messages across the board
+        ClientConversation.objects.filter(messages__isnull=True).delete()
 
         # Map all remaining rows from ValdaceAi_transactions CSV with clean non-academic descriptions
         for ref, row in tx_by_ref.items():

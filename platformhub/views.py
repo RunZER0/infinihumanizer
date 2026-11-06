@@ -1444,9 +1444,9 @@ def operations_desk(request, conversation_id=None):
         default_user = _resolve_chat_user(request)
         ClientConversation.objects.get_or_create(user=default_user)
 
-    # Show top 25 most recent conversations first for ultra-fast initial load
+    # Load active conversations (up to 100) so all client threads are pre-cached in initial_threads for instant switching
     conversations = list(
-        ClientConversation.objects.select_related("user").prefetch_related("messages__author").order_by("-updated_at")[:25]
+        ClientConversation.objects.select_related("user").prefetch_related("messages__author").order_by("-updated_at")[:100]
     )
 
     if conversation_id:
