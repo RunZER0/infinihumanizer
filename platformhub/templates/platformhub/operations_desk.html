@@ -200,15 +200,8 @@
     console.error("Initial threads parse error:", err);
   }
 
-  // Pre-seed cache with initial active conversation HTML
-  const initialPane = document.getElementById("ops-chat-pane-root");
-  if (initialPane && currentConversationId) {
-    const existing = threadCache.get(currentConversationId) || {};
-    existing.chat_pane_html = initialPane.outerHTML;
-    existing.conversation_id = currentConversationId;
-    existing.client_name = clientLabel;
-    threadCache.set(currentConversationId, existing);
-  }
+  // Abort controller for pending conversation switches
+  let switchAbortController = null;
 
   // Voice Recording state
   let mediaRecorder = null;
@@ -470,15 +463,6 @@
     );
   }
 
-  function syncCurrentCacheHtml() {
-    if (!currentConversationId || !threadCache.has(currentConversationId)) return;
-    const currentPane = document.getElementById("ops-chat-pane-root");
-    if (currentPane) {
-      const cached = threadCache.get(currentConversationId);
-      cached.chat_pane_html = currentPane.outerHTML;
-    }
-  }
-
   function updateSidebarPreview(convId, text, isClient, senderName) {
     const row = document.querySelector('.ops-thread-row[data-conversation-id="' + convId + '"]')
       || document.querySelector('.ops-thread-row[href*="' + convId + '"]');
@@ -502,7 +486,7 @@
 
     const bodyHtml = item.body ? '<div class="wa-msg-text">' + linkify(item.body).replace(/\n/g, "<br>") + '</div>' : "";
     const attHtml = renderAttachmentsHtml(item.attachments);
-    const timeStr = escapeHtml(item.time_display || (item.created_at_display ? item.created_at_display.split("·")[1]?.trim() : "") || "Now");
+    const timeStr = escapeHtml(item.time_display || (item.created_at_display && item.created_at_display.includes("·") ? item.created_at_display.split("·")[1].trim() : (item.created_at_display || "Now")));
     const isRead = Boolean(item.is_read);
 
     let tickHtml = "";
@@ -531,7 +515,6 @@
 
     stream.appendChild(article);
     scrollThreadToEnd();
-    syncCurrentCacheHtml();
   }
 
   function autoResizeReplyTextarea() {
@@ -686,6 +669,11 @@
 
           renderMessage(data.message);
           updateSidebarPreview(currentConversationId, data.message.body || "Attachment sent", false);
+          if (threadCache.has(currentConversationId)) {
+            const cached = threadCache.get(currentConversationId);
+            if (!Array.isArray(cached.messages)) cached.messages = [];
+            cached.messages.push(data.message);
+          }
 
           if (replyInput) {
             replyInput.value = "";
@@ -745,7 +733,6 @@
               const cached = threadCache.get(currentConversationId);
               cached.status = data.status;
               cached.status_display = data.status_display;
-              syncCurrentCacheHtml();
             }
             applyThreadFilters();
           }
@@ -759,37 +746,6 @@
 
     scrollThreadToEnd();
     updateSendButtonState();
-  }
-
-  function parseHtmlConversation(htmlText, targetId) {
-    try {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(htmlText, "text/html");
-      const incomingPane = doc.getElementById("ops-chat-pane-root") || doc.querySelector(".ops-chat-pane");
-      if (!incomingPane) return null;
-
-      const crumb = doc.querySelector(".ops-crumb-current");
-      const clientName = crumb ? crumb.textContent.trim() : "Client";
-      const invEmail = doc.getElementById("invoice-email");
-      const clientEmail = invEmail ? invEmail.value : "";
-      const statusEl = doc.getElementById("desk-thread-status");
-      const statusDisplay = statusEl ? statusEl.textContent.trim() : "Open";
-      const isClosed = statusEl ? statusEl.classList.contains("ops-state-settled") : false;
-
-      return {
-        ok: true,
-        conversation_id: targetId,
-        client_name: clientName,
-        client_first_name: clientName.split(" ")[0] || clientName,
-        client_email: clientEmail,
-        status: isClosed ? "closed" : "open",
-        status_display: statusDisplay,
-        chat_pane_html: incomingPane.outerHTML,
-      };
-    } catch (e) {
-      console.error("DOMParser error:", e);
-      return null;
-    }
   }
 
   function applyConversationData(data) {
@@ -872,22 +828,7 @@
       filePreview.innerHTML = "";
     }
 
-    // 5. Render messages: swap full HTML if available, or render directly in-memory (0.00ms!)
-    if (data.chat_pane_html) {
-      const currentPane = document.getElementById("ops-chat-pane-root") || document.querySelector(".ops-chat-pane");
-      const wrapper = document.createElement("div");
-      wrapper.innerHTML = data.chat_pane_html.trim();
-      const newPane = wrapper.firstElementChild;
-      if (newPane && currentPane) {
-        currentPane.replaceWith(newPane);
-        bindChatPaneEvents();
-        const inp = document.getElementById("desk-reply-input");
-        if (inp) inp.focus();
-        scrollThreadToEnd();
-        return;
-      }
-    }
-
+    // 5. Cleanly render messages strictly from data.messages
     const stream = document.getElementById("desk-message-thread");
     if (stream) {
       stream.innerHTML = "";
@@ -912,15 +853,16 @@
     scrollThreadToEnd();
   }
 
-  async function fetchConversationData(targetId, targetUrl) {
+  async function fetchConversationData(targetId, targetUrl, signal) {
     let fetchUrl = targetUrl;
     if (!fetchUrl.includes("format=json")) {
       fetchUrl += (fetchUrl.includes("?") ? "&" : "?") + "format=json";
     }
     const response = await fetch(fetchUrl, {
+      signal: signal,
       headers: {
         "X-Requested-With": "XMLHttpRequest",
-        "Accept": "application/json, text/html;q=0.9, */*;q=0.8"
+        "Accept": "application/json"
       }
     });
 
@@ -928,23 +870,21 @@
       throw new Error("HTTP error " + response.status);
     }
 
-    const contentType = response.headers.get("content-type") || "";
-    if (contentType.includes("application/json")) {
-      const data = await response.json();
-      if (data && data.ok) return data;
-      throw new Error(data.error || "Failed to load thread JSON.");
-    }
-
-    const htmlText = await response.text();
-    const parsed = parseHtmlConversation(htmlText, targetId);
-    if (parsed) return parsed;
-    throw new Error("Could not parse conversation HTML.");
+    const data = await response.json();
+    if (data && data.ok) return data;
+    throw new Error(data.error || "Failed to load thread JSON.");
   }
 
   function switchConversation(targetId, targetUrl, pushHistory) {
     if (!targetId || targetId === currentConversationId) return;
 
     stopRecording(false);
+
+    // Cancel any in-flight switch fetch
+    if (switchAbortController) {
+      switchAbortController.abort();
+      switchAbortController = null;
+    }
 
     // 1. Instantly highlight active thread row in sidebar (< 1ms)
     const rows = document.querySelectorAll(".ops-thread-row");
@@ -982,7 +922,8 @@
     const currentPane = document.getElementById("ops-chat-pane-root") || document.querySelector(".ops-chat-pane");
     if (currentPane) currentPane.classList.add("is-switching");
 
-    fetchConversationData(targetId, targetUrl)
+    switchAbortController = new AbortController();
+    fetchConversationData(targetId, targetUrl, switchAbortController.signal)
       .then(function (data) {
         if (data && data.ok) {
           threadCache.set(targetId, data);
@@ -990,7 +931,9 @@
         }
       })
       .catch(function (err) {
-        console.error("Conversation switch error:", err);
+        if (err && err.name !== "AbortError") {
+          console.error("Conversation switch error:", err);
+        }
       })
       .finally(function () {
         const activePane = document.getElementById("ops-chat-pane-root") || document.querySelector(".ops-chat-pane");

@@ -2310,6 +2310,7 @@ CLIENT_PROFILES = {
         'first_name': 'Jose',
         'last_name': 'Cruz',
         'channel': 'Snapchat',
+        'reference': 'JC01',
         'subject': 'Dallas Metro Freight — Company Bio & 3 Cold Outreach Emails ($25)',
         'status': 'closed',
         'requests': [
@@ -2460,7 +2461,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 18, 21, 33, 40),
-                "Spot on—calling out 3,500-lb tuck-under liftgate capacity proves you can handle heavy machinery without relying on their dock equipment. I'll get that worked into Email 2 right now. Here's the checkout link for the remaining $24: https://paystack.shop/pay/4q5iounn6s",
+                "Spot on—calling out 3,500-lb tuck-under liftgate capacity proves you can handle heavy machinery without relying on their dock equipment. I'll get that worked into Email 2 right now. Here's the payment link for the remaining $24: https://paystack.shop/pay/4q5iounn6s",
                 [],
             ),
             (
@@ -2861,6 +2862,7 @@ CLIENT_PROFILES = {
         'first_name': 'Azael',
         'last_name': 'Orozco',
         'channel': 'Direct site',
+        'reference': 'AO01',
         'subject': 'Commercial Flat Roofing Website Copy & Bid Estimator ($300)',
         'status': 'closed',
         'requests': [
@@ -2950,7 +2952,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 9, 17, 14, 6, 44),
-                "Makes complete sense Azael. Focusing strictly on commercial warehouses and retail plazas gives you much higher credibility with general contractors. Adjusted the invoice down to $334.95 (QP2609-1BD487BA). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/ao-roofing1 (it's also linked directly on your invoice).",
+                "Makes complete sense Azael. Focusing strictly on commercial warehouses and retail plazas gives you much higher credibility with general contractors. Adjusted the invoice down to $334.95 (QP2609-1BD487BA). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/ao-roofing1 (it's also linked directly on your invoice).",
                 [],
             ),
             (
@@ -3146,7 +3148,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 4, 5, 14, 20, 15),
-                        "Posted invoice INV-260405-JJ01 ($160.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/jj-crm92 (it's also linked directly on your invoice). Compiling the routing spec now!",
+                        "Posted invoice INV-260405-JJ01 ($160.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/jj-crm92 (it's also linked directly on your invoice). Compiling the routing spec now!",
                         [],
                     ),
                     (
@@ -3203,7 +3205,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 9, 17, 16, 32, 47),
-                        "Invoice QP2609-5851CC11 ($500.00) is live on your account. Settle directly on your checkout link: https://paystack.shop/pay/jj-crm92",
+                        "Invoice QP2609-5851CC11 ($500.00) is live on your account. Settle directly on your payment link: https://paystack.shop/pay/jj-crm92",
                         [],
                     ),
                     (
@@ -3257,6 +3259,7 @@ CLIENT_PROFILES = {
         'first_name': 'Luca',
         'last_name': 'Carollo',
         'channel': 'Colleague referral',
+        'reference': 'LC01',
         'subject': 'Honolulu Property Cash Flow & Catamaran Charter Deck ($480)',
         'status': 'closed',
         'requests': [
@@ -3426,13 +3429,13 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 8, 28, 21, 18, 0),
-                "Awesome Luca! We've set up your dedicated checkout link since we are having issues with our payment provider integration at the moment.",
+                "Awesome Luca! We've set up your dedicated payment link since we are having issues with our payment provider integration at the moment.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 8, 28, 21, 18, 30),
-                "Posted invoice INV-260814-LC01 ($220.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/892lxc01po (it's also linked directly on your invoice).",
+                "Posted invoice INV-260814-LC01 ($220.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/892lxc01po (it's also linked directly on your invoice).",
                 [],
             ),
             (
@@ -3481,6 +3484,7 @@ CLIENT_PROFILES = {
         'first_name': 'Keegan',
         'last_name': 'Chin',
         'channel': 'Web search',
+        'reference': 'KC01',
         'subject': 'Landed Cost & SKU Margin Calculator with Warehouse SOP ($240)',
         'status': 'closed',
         'requests': [
@@ -3576,7 +3580,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 14, 9, 38, 50),
-                "Posted invoice INV-261014-KC01 ($240.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/kc-chin77 (it's also linked directly on your invoice).",
+                "Posted invoice INV-261014-KC01 ($240.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/kc-chin77 (it's also linked directly on your invoice).",
                 [],
             ),
             (
@@ -3634,6 +3638,7 @@ CLIENT_PROFILES = {
         'first_name': 'Liza',
         'last_name': 'Iza',
         'channel': 'Direct site',
+        'reference': 'LI01',
         'subject': 'Tampa Medical Plaza RFP Proposal & Commercial Rate Card ($420)',
         'status': 'closed',
         'requests': [
@@ -3771,7 +3776,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 10, 11, 7, 33),
-                "Posted invoice INV-261010-LI01 ($120.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/li-tampa44 (it's also linked directly on your invoice).",
+                "Posted invoice INV-261010-LI01 ($120.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/li-tampa44 (it's also linked directly on your invoice).",
                 [],
             ),
             (
@@ -3814,6 +3819,7 @@ CLIENT_PROFILES = {
         'first_name': 'Drako',
         'last_name': 'Santa Ana',
         'channel': 'Web search',
+        'reference': 'DS01',
         'subject': 'Supply Chain & Warehouse Supervisor Resume Rewrite ($150)',
         'status': 'closed',
         'requests': [
@@ -3900,7 +3906,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 10, 8, 30, 12),
-                "Posted invoice INV-261011-DS01 ($25.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/ds-dock55 (it's also linked directly on your invoice).",
+                "Posted invoice INV-261011-DS01 ($25.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/ds-dock55 (it's also linked directly on your invoice).",
                 [],
             ),
             (
@@ -4132,7 +4138,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 5, 8, 6, 20),
-                        "Here's the checkout link: https://paystack.shop/pay/ew-williams8",
+                        "Here's the payment link: https://paystack.shop/pay/ew-williams8",
                         [],
                     ),
                     (
@@ -4205,7 +4211,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 10, 18, 57, 10),
-                        "Here's the checkout link: https://paystack.shop/pay/ew-williams8",
+                        "Here's the payment link: https://paystack.shop/pay/ew-williams8",
                         [],
                     ),
                     (
@@ -4369,6 +4375,7 @@ CLIENT_PROFILES = {
         'first_name': 'Kaylee',
         'last_name': 'Cabreros',
         'channel': 'Snapchat',
+        'reference': 'KB01',
         'subject': 'Sensory Skincare Product Descriptions & 4-Part Welcome Flow ($180)',
         'status': 'open',
         'requests': [
@@ -4391,7 +4398,7 @@ CLIENT_PROFILES = {
         'invoices': [
             {
                 'key': 'inv_kc_15',
-                'number': 'INV-260930-KC01',
+                'number': 'INV-260930-KB01',
                 'request_key': 'kc_rewrite',
                 'amount_due': Decimal('15.00'),
                 'amount_paid': Decimal('0.00'),
@@ -4405,7 +4412,7 @@ CLIENT_PROFILES = {
             },
             {
                 'key': 'inv_kc_30',
-                'number': 'INV-261005-KC02',
+                'number': 'INV-261005-KB02',
                 'request_key': 'kc_rewrite',
                 'amount_due': Decimal('30.00'),
                 'amount_paid': Decimal('0.00'),
@@ -4456,7 +4463,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 5, 9, 37, 18),
-                "Posted invoice INV-261005-KC01 ($180.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/kc-skin12 (it's also linked directly on your invoice). Drafting the sensory sheets now!",
+                "Posted invoice INV-261005-KB01 ($180.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/kc-skin12 (it's also linked directly on your invoice). Drafting the sensory sheets now!",
                 [],
             ),
             (
@@ -4487,6 +4494,7 @@ CLIENT_PROFILES = {
         'first_name': 'Dennis',
         'last_name': 'Kiragu',
         'channel': 'Direct site',
+        'reference': 'DK01',
         'subject': 'Mombasa-Nairobi Freight Corridor Reconciliation ($140)',
         'status': 'open',
         'requests': [
@@ -4574,7 +4582,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 5, 8, 31, 47),
-                "Posted invoice INV-261005-DK01 ($140.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/dk-freight3 (it's also linked directly on your invoice). Starting calculations now!",
+                "Posted invoice INV-261005-DK01 ($140.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/dk-freight3 (it's also linked directly on your invoice). Starting calculations now!",
                 [],
             ),
             (
@@ -4605,6 +4613,7 @@ CLIENT_PROFILES = {
         'first_name': 'Alexa',
         'last_name': 'Quintero',
         'channel': 'Colleague referral',
+        'reference': 'AQ01',
         'subject': 'Angel Investor 10-Slide Pitch Presentation & CAC Model ($250)',
         'status': 'closed',
         'requests': [
@@ -4698,7 +4707,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 2, 9, 12, 45),
-                "Posted invoice INV-261002-AQ01 ($250.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/aq-cold61 (it's also linked directly on your invoice).",
+                "Posted invoice INV-261002-AQ01 ($250.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/aq-cold61 (it's also linked directly on your invoice).",
                 [],
             ),
             (
@@ -4749,6 +4758,7 @@ CLIENT_PROFILES = {
         'first_name': 'Cami',
         'last_name': 'Kurtz',
         'channel': 'Web search',
+        'reference': 'CK01',
         'subject': 'Executive Discovery Interview Synthesis & Action Sheet ($160)',
         'status': 'closed',
         'requests': [
@@ -4828,13 +4838,13 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 9, 30, 8, 29, 20),
-                "We're setting up a custom checkout page for you on our portal since we're currently upgrading our payment provider integration.",
+                "We're setting up a custom payment page for you on our portal since we're currently upgrading our payment provider integration.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 9, 30, 8, 29, 56),
-                "Posted invoice INV-260930-CK01 ($160.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/ck-train88 (it's also linked directly on your invoice).",
+                "Posted invoice INV-260930-CK01 ($160.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/ck-train88 (it's also linked directly on your invoice).",
                 [],
             ),
             (
@@ -4879,6 +4889,7 @@ CLIENT_PROFILES = {
         'first_name': 'Lina',
         'last_name': 'Rickert',
         'channel': 'Snapchat',
+        'reference': 'LR01',
         'subject': 'Summer Campaign Email Retention Sequence ($120)',
         'status': 'closed',
         'requests': [
@@ -5006,7 +5017,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 7, 26, 9, 32, 18),
-                "Posted invoice INV-260726-LR01 ($120.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/lr-summer22 (it's also linked directly on your invoice).",
+                "Posted invoice INV-260726-LR01 ($120.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/lr-summer22 (it's also linked directly on your invoice).",
                 [],
             ),
             (
@@ -5049,6 +5060,7 @@ CLIENT_PROFILES = {
         'first_name': 'Patrick',
         'last_name': 'Hyland',
         'channel': 'Web search',
+        'reference': 'PH01',
         'subject': 'Newfoundland Freight Dispatch & Fuel Surcharge Model ($175)',
         'status': 'closed',
         'requests': [
@@ -5171,13 +5183,13 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 6, 28, 9, 27, 0),
-                "We're setting up a custom checkout page for you on our portal since we're currently upgrading our payment provider integration.",
+                "We're setting up a custom payment page for you on our portal since we're currently upgrading our payment provider integration.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 6, 28, 9, 27, 36),
-                "Posted invoice INV-260628-PH01 ($175.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/ph-ferry34 (it's also linked directly on your invoice).",
+                "Posted invoice INV-260628-PH01 ($175.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/ph-ferry34 (it's also linked directly on your invoice).",
                 [],
             ),
             (
@@ -5220,6 +5232,7 @@ CLIENT_PROFILES = {
         'first_name': 'Carter',
         'last_name': 'Lemburg',
         'channel': 'Colleague referral',
+        'reference': 'CL01',
         'subject': 'Hardware Storefront Launch Copy & Interactive Prototype ($220)',
         'status': 'closed',
         'requests': [
@@ -5324,7 +5337,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 5, 7, 15, 8, 30),
-                "Posted invoice INV-260508-CL01 ($290.00). Settle via Card or Apple Pay on your direct checkout link: https://paystack.shop/pay/cl-apex99 (it's also linked directly on your invoice).",
+                "Posted invoice INV-260508-CL01 ($290.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/cl-apex99 (it's also linked directly on your invoice).",
                 [],
             ),
             (
@@ -5394,6 +5407,7 @@ CLIENT_PROFILES = {
         'first_name': 'Issa',
         'last_name': 'Cuevas',
         'channel': 'Audrey Brown referral',
+        'reference': 'IC01',
         'subject': 'Pediatric Clinic Intake Agreement & Parent Disclosure Pack ($240)',
         'status': 'closed',
         'requests': [
@@ -5552,7 +5566,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 20, 17, 22, 0),
-                "Here's the checkout link: https://paystack.shop/pay/tx0ipp9eg4",
+                "Here's the payment link: https://paystack.shop/pay/tx0ipp9eg4",
                 [],
             ),
             (
@@ -5984,7 +5998,9 @@ class Command(BaseCommand):
                     continue
 
                 if c_ref:
-                    conv = ClientConversation.objects.filter(user=user, reference=c_ref).first()
+                    conv = ClientConversation.objects.filter(reference=c_ref).first()
+                    if not conv:
+                        conv = ClientConversation.objects.filter(user=user, reference=c_ref).first()
                     if not conv:
                         conv = ClientConversation(
                             user=user,
@@ -5995,6 +6011,8 @@ class Command(BaseCommand):
                         )
                         conv.save()
                     else:
+                        conv.user = user
+                        conv.reference = c_ref
                         conv.subject = c_subj
                         conv.status = c_status
                         conv.category = c_cat
