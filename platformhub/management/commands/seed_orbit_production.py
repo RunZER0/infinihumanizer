@@ -2498,8 +2498,8 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 19, 14, 25, 0),
-                "We shall now mark this job as closed, but if anything comes up you can always let us know by texting us via Support in your app.",
+                dt_utc(2026, 10, 20, 16, 0, 0),
+                "Anytime Jose! Stay safe out on the road 👊",
                 [],
             ),
         ],
@@ -2686,11 +2686,11 @@ CLIENT_PROFILES = {
                         [],
                     ),
                     (
-                        'admin',
-                        dt_utc(2026, 10, 2, 11, 45, 10),
-                        "We shall now mark this job as closed, but if anything comes up you can always let us know by texting us via Support in your app.",
-                        [],
-                    ),
+                'admin',
+                dt_utc(2026, 10, 20, 16, 0, 0),
+                "So glad it helped Audrey! Looking forward to diving into the 3 pages once your designer finishes the mockups.",
+                [],
+            ),
                     (
                         'client',
                         dt_utc(2026, 10, 2, 11, 47, 30),
@@ -2790,8 +2790,20 @@ CLIENT_PROFILES = {
                     ),
                     (
                         'admin',
+                        dt_utc(2026, 10, 17, 8, 42, 10),
+                        "Saw the payment clear, thank you Audrey! And yes, absolutely—those tier names sound much better. Let me get those swapped into the copy deck and the HTML prototype this morning.",
+                        [],
+                    ),
+                    (
+                        'client',
+                        dt_utc(2026, 10, 17, 8, 47, 30),
+                        "Awesome, thank you!",
+                        [],
+                    ),
+                    (
+                        'admin',
                         dt_utc(2026, 10, 17, 14, 21, 19),
-                        "Payment confirmed, thank you Audrey! I updated the package names on the Services page and switched booking hours to Mon–Fri.\n\nAttached is your final Word copy deck, the interactive HTML prototype you can test right in your browser, and the booking wireframe diagram.\n\nHope the launch goes amazingly with your designer! If you know any creative peers or local clinics losing clients on confusing sites, send them our way and we'll take great care of them.",
+                        "All updated! Attached is the final copy deck, the interactive browser prototype, and the booking wireframe:",
                         [
                             'audrey_3page_website_copy_final.docx',
                             'audrey_studio_brown_website_prototype.html',
@@ -2989,12 +3001,7 @@ CLIENT_PROFILES = {
                 "De nada Azael! Good luck closing that Pharr warehouse bid. Reach out anytime if you need commercial bid submittals drafted.",
                 [],
             ),
-            (
-                'admin',
-                dt_utc(2026, 9, 21, 14, 15, 0),
-                "We shall now mark this job as closed, but if anything comes up you can always let us know by texting us via Support in your app.",
-                [],
-            ),
+            
         ],
     },
     'jackjohnson0533@gmail.com': {
@@ -3157,12 +3164,7 @@ CLIENT_PROFILES = {
                             'johnson_crm_pipeline_export_clean.csv',
                         ],
                     ),
-                    (
-                        'admin',
-                        dt_utc(2026, 4, 6, 15, 42, 0),
-                        "We shall now mark this job as closed, but if anything comes up you can always let us know by texting us via Support in your app.",
-                        [],
-                    ),
+                    
                     (
                         'client',
                         dt_utc(2026, 4, 6, 15, 45, 0),
@@ -3241,11 +3243,11 @@ CLIENT_PROFILES = {
                         [],
                     ),
                     (
-                        'admin',
-                        dt_utc(2026, 9, 19, 16, 8, 30),
-                        "We shall now mark this job as closed, but if anything comes up you can always let us know by texting us via Support in your app.",
-                        [],
-                    ),
+                'admin',
+                dt_utc(2026, 10, 20, 16, 0, 0),
+                "That is fantastic Jack! Good luck tomorrow, rooting for you guys.",
+                [],
+            ),
                 ],
             },
         ],
@@ -3468,8 +3470,8 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 8, 31, 10, 20, 0),
-                "We shall now mark this job as closed, but if anything comes up you can always let us know by texting us via Support in your app.",
+                dt_utc(2026, 10, 20, 16, 0, 0),
+                "Mahalo Luca! Glad your accountant is happy. Have a great charter season!",
                 [],
             ),
         ],
@@ -3621,8 +3623,8 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 15, 11, 26, 30),
-                "We shall now mark this job as closed, but if anything comes up you can always let us know by texting us via Support in your app.",
+                dt_utc(2026, 10, 20, 16, 0, 0),
+                "Awesome to hear Keegan! Reach out anytime if you need more SKU sheets built.",
                 [],
             ),
         ],
@@ -3801,8 +3803,8 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 11, 9, 35, 0),
-                "We shall now mark this job as closed, but if anything comes up you can always let us know by texting us via Support in your app.",
+                dt_utc(2026, 10, 20, 16, 0, 0),
+                "Wonderful news Liza! Good luck with the procurement committee today!",
                 [],
             ),
         ],
@@ -3944,8 +3946,8 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 12, 9, 20, 0),
-                "We shall now mark this job as closed, but if anything comes up you can always let us know by texting us via Support in your app.",
+                dt_utc(2026, 10, 20, 16, 0, 0),
+                "You earned it man. Best of luck with regional HR, hope you get the role!",
                 [],
             ),
         ],
@@ -4240,8 +4242,20 @@ CLIENT_PROFILES = {
                     ),
                     (
                         'admin',
+                        dt_utc(2026, 10, 12, 9, 26, 15),
+                        "Good catch on the tooling! Swapping in Datadog and Postman now, will have the clean PDF over this afternoon.",
+                        [],
+                    ),
+                    (
+                        'client',
+                        dt_utc(2026, 10, 12, 9, 30, 40),
+                        "Sounds great, thanks!",
+                        [],
+                    ),
+                    (
+                        'admin',
                         dt_utc(2026, 10, 12, 15, 16, 39),
-                        "Updated with Datadog and Postman! Attached is the clean final PDF handbook.",
+                        "All set! Attached is the clean final PDF handbook with Datadog and Postman locked in.",
                         [
                             'estella_4role_onboarding_sops_final.pdf',
                         ],
@@ -4724,8 +4738,8 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 3, 14, 35, 0),
-                "We shall now mark this job as closed, but if anything comes up you can always let us know by texting us via Support in your app.",
+                dt_utc(2026, 10, 20, 16, 0, 0),
+                "So excited for you Alexa! Knock that pitch out of the park!",
                 [],
             ),
         ],
@@ -4853,8 +4867,8 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 1, 8, 50, 0),
-                "We shall now mark this job as closed, but if anything comes up you can always let us know by texting us via Support in your app.",
+                dt_utc(2026, 10, 20, 16, 0, 0),
+                "Glad it hit the mark Cami! Have a great rest of your week!",
                 [],
             ),
         ],
@@ -5024,8 +5038,8 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 7, 27, 16, 25, 0),
-                "We shall now mark this job as closed, but if anything comes up you can always let us know by texting us via Support in your app.",
+                dt_utc(2026, 10, 20, 16, 0, 0),
+                "Love hearing that Lina! Hope the campaign converts like crazy!",
                 [],
             ),
         ],
@@ -5195,8 +5209,8 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 6, 29, 14, 20, 0),
-                "We shall now mark this job as closed, but if anything comes up you can always let us know by texting us via Support in your app.",
+                dt_utc(2026, 10, 20, 16, 0, 0),
+                "That's what we love to hear Patrick! Cheers and talk soon!",
                 [],
             ),
         ],
@@ -5341,8 +5355,20 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
+                dt_utc(2026, 5, 8, 13, 50, 25),
+                "Love 'Lifetime Unibody Guarantee'—way stronger. Updating the badge copy and the Qi2 subtotal in the prototype now, will have the full launch kit over shortly.",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 5, 8, 13, 54, 10),
+                "Awesome, appreciate it!",
+                [],
+            ),
+            (
+                'admin',
                 dt_utc(2026, 5, 8, 15, 30, 22),
-                "Love the 'Lifetime Unibody Guarantee'—that signals uncompromising aerospace build quality immediately. Subtotal logic is locked in with live magnetic module calculations.\n\nAttached is your complete launch deliverable package: your standalone interactive HTML landing page prototype ready to open and test live in any browser, the finalized 28-point pre-launch QA checklist, and the full digital asset ZIP pack.",
+                "All locked in! Attached is your launch package: the browser prototype, the pre-launch checklist, and the asset ZIP kit:",
                 [
                     'carter_landing_page_prototype.html',
                     'carter_storefront_assets_and_launch_kit.zip',
@@ -5358,7 +5384,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 5, 8, 16, 25, 0),
-                "We shall now mark this job as closed, but if anything comes up you can always let us know by texting us via Support in your app.",
+                "Haha love to hear that! Glad the builder feels so smooth. Good luck with the Shopify rollout!",
                 [],
             ),
         ],
@@ -5501,8 +5527,20 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
+                dt_utc(2026, 10, 17, 9, 24, 15),
+                "On it! Adding that 1st-of-the-month superbill note to both the emails and the main agreement.",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 17, 9, 29, 30),
+                "Great, thank you.",
+                [],
+            ),
+            (
+                'admin',
                 dt_utc(2026, 10, 17, 14, 28, 49),
-                "Done! Added the 1st-of-the-month superbill schedule to both Section 6 of the agreement and the parent welcome email script so parents know exactly when to expect their insurance reimbursement paperwork. Everything is locked in.",
+                "All locked in! Updated the schedule in Section 6 and the welcome templates. Ready for your final sign-off whenever you get a minute.",
                 [],
             ),
             (
