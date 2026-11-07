@@ -4368,13 +4368,13 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 5, 9, 16, 30),
-                        "Haha glad to hear! Always happy to help. Good luck with the LPs!",
+                        "Glad to hear that, Estella! Since the revised newsletter is confirmed and sent out to your LPs, I'll go ahead and mark this conversation as closed. If you need another pass for next month's update or anything new, just open a new thread anytime. Good luck with the investor circular!",
                         [],
                     ),
                     (
                         'client',
                         dt_utc(2026, 10, 5, 9, 18, 10),
-                        "Thanks again, talk soon!",
+                        "Perfect, thanks so much! Talk soon.",
                         [],
                     ),
                 ],
@@ -4470,7 +4470,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 12, 17, 31, 0),
-                        "Awesome! Really glad it hit the mark. Let me know whenever the next batch of hires comes up!",
+                        "Awesome! Since all 4 role handbooks are confirmed and approved by your hiring team, I'll go ahead and close this conversation thread. Whenever your next hiring batch or new roles open up, just open a new thread and we'll take care of it. Best of luck with the onboarding ramp!",
                         [],
                     ),
                     (
@@ -4546,7 +4546,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 21, 7, 55, 12),
-                        "So glad to hear that! You guys have got this. Go crush the presentation!",
+                        "So glad to hear that! Since the deck and memo are finalized and confirmed, I'll go ahead and close this conversation thread. Go crush the presentation and let us know whenever you need the next deck!",
                         [],
                     ),
                     (
@@ -4558,7 +4558,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 21, 8, 4, 15),
-                        "Rooting for you guys! Let me know how it goes 💪",
+                        "Rooting for you guys! Thread closed—knock it out of the park 💪",
                         [],
                     ),
                 ],
@@ -5807,13 +5807,13 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 20, 18, 49, 15),
-                "Haha hey surviving your edits made the docs 10x better! Glad it's all ready for Monday. Have a good evening with your patient!",
+                "Haha hey surviving your edits made the docs airtight! Since all agreements, policies, and intake scripts are confirmed and in your clinic drive, I'll go ahead and mark this conversation as closed. If you ever add new therapy specialties or need policy updates, feel free to open a new thread anytime. Have a good evening with your patient!",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 10, 20, 18, 53, 2),
-                "You too! Heading in now.",
+                "Will do, thanks again! Heading in now.",
                 [],
             ),
         ],
@@ -6306,6 +6306,12 @@ class Command(BaseCommand):
             # Prune any stale, unreferenced, or duplicate conversations for this client user
             if seeded_conv_ids:
                 ClientConversation.objects.filter(user=user).exclude(id__in=seeded_conv_ids).delete()
+
+            # Set realistic account-level last_login for the client user (14 mins after latest message)
+            user_last_m = ClientMessage.objects.filter(conversation__user=user).order_by("-created_at").first()
+            if user_last_m:
+                user.last_login = user_last_m.created_at + timedelta(minutes=14, seconds=18)
+                user.save(update_fields=["last_login"])
 
         # Prune any empty conversations with zero messages across the board
         ClientConversation.objects.filter(messages__isnull=True).delete()

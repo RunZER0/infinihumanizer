@@ -970,16 +970,18 @@ def _compute_user_presence(user, latest_message_time=None):
 
     # Harmonize client presence: presence is an account-level attribute of the user,
     # pulling from the latest activity across all interactions for that client.
+    # A user does not immediately disappear the exact second a message is sent;
+    # offset by a realistic window (e.g. 14 minutes) for authentic presence.
     if user and getattr(user, "pk", None):
         from humanizer.models import ClientMessage
         latest_user_activity = ClientMessage.objects.filter(
             conversation__user=user
         ).aggregate(m=Max("created_at"))["m"]
         if latest_user_activity:
-            times.append(latest_user_activity)
+            times.append(latest_user_activity + timedelta(minutes=14))
 
     if latest_message_time:
-        times.append(latest_message_time)
+        times.append(latest_message_time + timedelta(minutes=14))
     if not times:
         return {"is_online": False, "last_seen_display": "offline"}
 
