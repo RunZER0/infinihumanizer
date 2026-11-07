@@ -172,9 +172,20 @@
       <!-- Staged Attachments (Chips list) -->
       <div class="wa-staged-files" id="client-file-preview" hidden></div>
 
+      <!-- Closed banner when marked as closed -->
+      <div class="wa-closed-banner client-closed-banner" id="client-closed-banner" {% if conversation.status == 'open' %}hidden{% endif %}>
+        <div class="wa-closed-info">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <span>This conversation was marked as closed.</span>
+        </div>
+      </div>
+
       <!-- Bottom toolbar controls -->
       <div id="client-send-status" style="padding: 4px 16px; font-size: 12px; color: var(--text-muted); display: none;" aria-live="polite"></div>
-      <div class="wa-composer-bar" id="client-composer-card">
+      <div class="wa-composer-bar" id="client-composer-card" {% if conversation.status == 'closed' %}hidden{% endif %}>
         <button type="button" class="wa-tool-btn" id="client-attach-btn" title="Attach documents, images, or audio" aria-label="Attach file">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l7.9-7.89"></path>
@@ -867,6 +878,18 @@
       });
       if (!response.ok) return;
       const data = await response.json();
+      if (data && data.status) {
+        const isClosed = data.status === "closed";
+        const closedBanner = document.getElementById("client-closed-banner");
+        const composerCard = document.getElementById("client-composer-card");
+        if (closedBanner) closedBanner.hidden = !isClosed;
+        if (composerCard) composerCard.hidden = isClosed;
+        const statusEl = document.getElementById("client-thread-status");
+        if (statusEl) {
+          statusEl.textContent = data.status_display || (isClosed ? "Closed" : "Open");
+          statusEl.className = isClosed ? "ops-state-settled" : "ops-state-open";
+        }
+      }
       if (Array.isArray(data.messages)) {
         data.messages.forEach(renderMessage);
       }

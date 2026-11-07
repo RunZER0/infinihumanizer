@@ -545,6 +545,19 @@
     const recordCancelBtn = document.getElementById("desk-record-cancel");
     const deskComposerCard = document.getElementById("desk-composer-card");
     const toggleStatusForm = document.getElementById("desk-toggle-status-form");
+    const reopenComposerBtn = document.getElementById("desk-reopen-composer-btn");
+
+    if (reopenComposerBtn && toggleStatusForm) {
+      reopenComposerBtn.onclick = function (e) {
+        if (e) e.preventDefault();
+        const btn = document.getElementById("desk-toggle-status-btn");
+        if (btn) {
+          btn.click();
+        } else {
+          toggleStatusForm.requestSubmit();
+        }
+      };
+    }
 
     if (recordBtn) {
       recordBtn.onclick = function () {
@@ -724,6 +737,14 @@
             if (btn) {
               btn.textContent = isClosed ? "Reopen" : "Close thread";
             }
+            const closedBanner = document.getElementById("desk-closed-banner");
+            const composerCard = document.getElementById("desk-composer-card");
+            if (closedBanner) closedBanner.hidden = !isClosed;
+            if (composerCard) composerCard.hidden = isClosed;
+            if (!isClosed) {
+              const replyInput = document.getElementById("desk-reply-input");
+              if (replyInput) replyInput.focus();
+            }
             // Update status on active sidebar row
             const activeRow = document.querySelector('.ops-thread-row[data-conversation-id="' + currentConversationId + '"]')
               || document.querySelector(".ops-thread-row.is-active");
@@ -809,6 +830,11 @@
       toggleForm.setAttribute("action", "/operations/desk/" + data.conversation_id + "/");
     }
 
+    const closedBanner = document.getElementById("desk-closed-banner");
+    const composerCard = document.getElementById("desk-composer-card");
+    if (closedBanner) closedBanner.hidden = !isClosed;
+    if (composerCard) composerCard.hidden = isClosed;
+
     // 3. Update invoice modal form
     const invConv = document.querySelector('#desk-invoice-form input[name="conversation_id"]');
     if (invConv) invConv.value = data.conversation_id;
@@ -859,8 +885,7 @@
     scrollThreadToEnd();
   }
 
-  // Abort controller and strict target lock for conversation switches
-  let switchAbortController = null;
+  // Strict target lock for conversation switches
   let activeSwitchTargetId = null;
 
   async function fetchConversationData(targetId, targetUrl, signal) {

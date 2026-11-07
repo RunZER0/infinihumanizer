@@ -1228,6 +1228,12 @@ def client_chat(request):
         )
 
     if request.method == "POST":
+        if conversation.status == "closed":
+            if is_ajax:
+                return JsonResponse({"error": "This conversation was marked as closed."}, status=400)
+            messages.error(request, "This conversation was marked as closed.")
+            return redirect(f"{reverse('platformhub:client_chat')}?conversation={conversation.id}")
+
         body = request.POST.get("message", "").strip()
         uploaded_files = request.FILES.getlist("attachments")
         if not body and not uploaded_files:
@@ -1582,8 +1588,13 @@ def operations_desk(request, conversation_id=None):
 
     if request.method == "POST":
         action = request.POST.get("action", "reply").strip()
-        if action == "toggle_status":
-            active_conversation.status = "closed" if active_conversation.status == "open" else "open"
+        if action in ["toggle_status", "close", "reopen"]:
+            if action == "close":
+                active_conversation.status = "closed"
+            elif action == "reopen":
+                active_conversation.status = "open"
+            else:
+                active_conversation.status = "closed" if active_conversation.status == "open" else "open"
             active_conversation.save(update_fields=["status", "updated_at"])
             if is_ajax:
                 return JsonResponse({
