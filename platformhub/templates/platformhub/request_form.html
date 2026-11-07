@@ -4,7 +4,7 @@
 {% block content %}
 <div class="page-shell"><div class="eyebrow">Project brief</div><h1 class="h1">Tell us what you need.</h1><p class="lede">A few details are enough to start.</p></div>
 <section class="section"><div class="shell form-layout">
-<form method="post" class="form-stack">{% csrf_token %}
+<form method="post" enctype="multipart/form-data" class="form-stack">{% csrf_token %}
   <div class="field"><label for="service_code">What is closest?</label><select name="service_code" id="service_code" required><option value="">Choose a service</option>
   {% for family_slug,family in families.items %}<optgroup label="{{ family.name }}">{% for service in family.services %}<option value="{{ service.code }}" {% if selected_code == service.code or values.service_code == service.code %}selected{% endif %}>{{ service.name }}</option>{% endfor %}</optgroup>{% endfor %}
   </select></div>
@@ -14,6 +14,8 @@
   <div class="field"><label for="objective">What do you need this work to achieve?</label><textarea id="objective" name="objective" required>{{ values.objective }}</textarea></div>
   <div class="field"><label for="audience">Who is it for?</label><textarea id="audience" name="audience">{{ values.audience }}</textarea></div>
   <div class="field"><label for="scope">What do you already have?</label><textarea id="scope" name="scope" required>{{ values.scope }}</textarea></div>
+  <div class="field"><label for="intake_notes">Intake notes / initial inquiry <span class="help">(optional)</span></label><textarea id="intake_notes" name="intake_notes" placeholder="Any specific requirements, tool preferences, or questions...">{{ values.intake_notes }}</textarea></div>
+  <div class="field"><label for="attachments">Attach source materials / rough notes <span class="help">(optional, docx, pdf, xlsx, txt, zip)</span></label><input type="file" id="attachments" name="attachments" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.ppt,.pptx,.png,.jpg,.jpeg,.webp,.gif,.txt,.zip"></div>
   <div class="field"><label for="deliverable">What should we deliver?</label><textarea id="deliverable" name="deliverable" required placeholder="Report, deck, website copy, reviewed document, dataset, model…">{{ values.deliverable }}</textarea></div>
   <div class="form-grid-2">
     <div class="field"><label for="research_depth">Research</label><select id="research_depth" name="research_depth"><option value="none">None</option><option value="light">Light</option><option value="standard" selected>Standard</option><option value="deep">Deep</option></select></div>

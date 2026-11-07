@@ -198,13 +198,22 @@ def request_service(request, service_code=None):
                 "preferred_contact": request.POST.get("preferred_contact", "email"),
             },
         )
-        conv, _ = ClientConversation.objects.get_or_create(
+        # Create a dedicated new conversation thread for this project
+        conv = ClientConversation.objects.create(
             user=target_user,
-            defaults={"subject": f"Project · {item.reference}"},
+            subject=item.title,
+            category="job",
+            status="open",
         )
-        conv.status = "open"
-        conv.save(update_fields=["status", "updated_at"])
         request.session["conversation_id"] = str(conv.id)
+
+        # Handle uploaded attachments if provided on the brief
+        saved_attachments = []
+        uploaded_files = request.FILES.getlist("attachments")
+        if uploaded_files:
+            from .chat_files import save_uploaded_chat_files
+            saved_attachments = save_uploaded_chat_files(uploaded_files)
+
         brief_lines = [
             "Project Brief Submitted via /request/",
             "--------------------------------------------------",
@@ -219,9 +228,26 @@ def request_service(request, service_code=None):
             "",
             "Objective:",
             item.objective.strip(),
+        ])
+        if item.audience:
+            brief_lines.extend([
+                "",
+                "Audience:",
+                item.audience.strip(),
+            ])
+        brief_lines.extend([
             "",
             "Current Materials & Scope:",
             item.scope.strip(),
+        ])
+        intake_notes = request.POST.get("intake_notes", "").strip() or request.POST.get("notes", "").strip()
+        if intake_notes:
+            brief_lines.extend([
+                "",
+                "Intake Notes:",
+                intake_notes,
+            ])
+        brief_lines.extend([
             "",
             "Requested Deliverables:",
             item.deliverable.strip(),
@@ -233,6 +259,7 @@ def request_service(request, service_code=None):
             author=target_user,
             sender="client",
             body="\n".join(brief_lines).strip(),
+            attachments=saved_attachments,
         )
         request.session.setdefault("infini_request_ids", [])
         ids = request.session["infini_request_ids"]
@@ -261,7 +288,8 @@ def request_success(request, request_id):
         visible = True
     if not visible:
         return redirect("platformhub:home")
-    return render(request, "platformhub/request_success.html", {"item": item})
+    conv = ClientConversation.objects.filter(user=item.user).order_by("-updated_at").first()
+    return render(request, "platformhub/request_success.html", {"item": item, "conversation": conv})
 
 
 def _consultation_state(request, *, submitted=False, feedback="", feedback_level=""):
