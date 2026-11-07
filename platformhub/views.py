@@ -1552,6 +1552,34 @@ def operations_desk(request, conversation_id=None):
         if not active_conversation:
             active_conversation = conversations[0]
 
+    # Fast-path JSON endpoint for instantaneous asynchronous thread loading
+    if request.method == "GET" and (
+        request.GET.get("format") == "json"
+        or (is_ajax and "application/json" in request.headers.get("accept", ""))
+    ):
+        conv_msgs = list(active_conversation.messages.select_related("author").all())
+        _annotate_chat_messages(conv_msgs)
+        c_name = active_conversation.user.get_full_name() or active_conversation.user.email or "Client"
+        last_m = conv_msgs[-1] if conv_msgs else None
+        c_presence = _compute_user_presence(active_conversation.user, last_m.created_at if last_m else None)
+        return JsonResponse({
+            "ok": True,
+            "conversation_id": str(active_conversation.id),
+            "reference": active_conversation.reference or "",
+            "subject": active_conversation.subject or "",
+            "category": active_conversation.category or "job",
+            "client_name": c_name,
+            "client_first_name": active_conversation.user.first_name or c_name,
+            "client_email": active_conversation.user.email or "",
+            "status": active_conversation.status,
+            "status_display": active_conversation.get_status_display(),
+            "client_presence": c_presence,
+            "messages": [
+                _serialize_message(m, current_user=request.user, conversation_user=active_conversation.user, is_desk_view=True)
+                for m in conv_msgs
+            ],
+        })
+
     if request.method == "POST":
         action = request.POST.get("action", "reply").strip()
         if action == "toggle_status":

@@ -186,6 +186,7 @@
   let clientLabel = "{{ conversation.user.get_full_name|default:conversation.user.email|escapejs }}";
   const feedUrl = root.dataset.feedUrl;
   const threadCache = new Map();
+  window.__opsThreadCache = threadCache;
 
   // 1. Immediately hydrate threadCache with all recent threads (0.00ms instantaneous switches)
   try {
@@ -527,7 +528,12 @@
     replyInput.style.overflowY = scrollH > 140 ? "auto" : "hidden";
   }
 
+  let chatPaneEventsBound = false;
+
   function bindChatPaneEvents() {
+    if (chatPaneEventsBound) return;
+    chatPaneEventsBound = true;
+
     const thread = document.getElementById("desk-message-thread");
     const replyForm = document.getElementById("desk-reply-form");
     const replyInput = document.getElementById("desk-reply-input");
@@ -853,8 +859,12 @@
     scrollThreadToEnd();
   }
 
+  // Abort controller and strict target lock for conversation switches
+  let switchAbortController = null;
+  let activeSwitchTargetId = null;
+
   async function fetchConversationData(targetId, targetUrl, signal) {
-    let fetchUrl = targetUrl;
+    let fetchUrl = targetUrl || ("/operations/desk/" + targetId + "/");
     if (!fetchUrl.includes("format=json")) {
       fetchUrl += (fetchUrl.includes("?") ? "&" : "?") + "format=json";
     }
@@ -878,15 +888,16 @@
   function switchConversation(targetId, targetUrl, pushHistory) {
     if (!targetId || targetId === currentConversationId) return;
 
+    activeSwitchTargetId = targetId;
     stopRecording(false);
 
-    // Cancel any in-flight switch fetch
+    // Cancel any pending switch fetch immediately
     if (switchAbortController) {
       switchAbortController.abort();
       switchAbortController = null;
     }
 
-    // 1. Instantly highlight active thread row in sidebar (< 1ms)
+    // 1. Instantly highlight target row in sidebar (< 1ms)
     const rows = document.querySelectorAll(".ops-thread-row");
     rows.forEach(function (row) {
       const rowId = row.dataset.conversationId;
@@ -912,7 +923,7 @@
       window.history.pushState({ conversationId: targetId }, "", "{% url 'platformhub:operations_desk' %}");
     }
 
-    // 3. INSTANT SWAP: Check memory cache (< 1ms, zero network lag, zero delay)
+    // 3. INSTANT ATOMIC SWAP: Check memory cache (< 1ms, zero network lag, zero delay)
     if (threadCache.has(targetId)) {
       applyConversationData(threadCache.get(targetId));
       return;
@@ -925,6 +936,8 @@
     switchAbortController = new AbortController();
     fetchConversationData(targetId, targetUrl, switchAbortController.signal)
       .then(function (data) {
+        // Strict guard: ignore stale response if user clicked another client in the meantime
+        if (activeSwitchTargetId !== targetId) return;
         if (data && data.ok) {
           threadCache.set(targetId, data);
           applyConversationData(data);
@@ -936,8 +949,10 @@
         }
       })
       .finally(function () {
-        const activePane = document.getElementById("ops-chat-pane-root") || document.querySelector(".ops-chat-pane");
-        if (activePane) activePane.classList.remove("is-switching");
+        if (activeSwitchTargetId === targetId) {
+          const activePane = document.getElementById("ops-chat-pane-root") || document.querySelector(".ops-chat-pane");
+          if (activePane) activePane.classList.remove("is-switching");
+        }
       });
   }
 
@@ -951,15 +966,15 @@
 
     const href = row.getAttribute("href");
     const targetId = row.dataset.conversationId || (href && (href.match(/\/operations\/desk\/([a-f0-9\-]+)\//i) || [])[1]);
-    if (targetId && href) {
-      switchConversation(targetId, href, true);
+    if (targetId) {
+      switchConversation(targetId, href || ("/operations/desk/" + targetId + "/"), true);
     }
   }, true);
 
   // Support browser forward/backward buttons
   window.addEventListener("popstate", function (e) {
     if (e.state && e.state.conversationId) {
-      switchConversation(e.state.conversationId, window.location.pathname, false);
+      switchConversation(e.state.conversationId, "/operations/desk/" + e.state.conversationId + "/", false);
     } else {
       const match = window.location.pathname.match(/\/operations\/desk\/([a-f0-9\-]+)\//i);
       if (match && match[1]) {
@@ -1160,12 +1175,15 @@
 
   async function pollFeed() {
     if (!feedUrl || !currentConversationId) return;
+    const pollingConvId = currentConversationId;
     try {
-      const response = await fetch(feedUrl + "?conversation=" + encodeURIComponent(currentConversationId) + "&role=admin", {
+      const response = await fetch(feedUrl + "?conversation=" + encodeURIComponent(pollingConvId) + "&role=admin", {
         headers: {"X-Requested-With": "XMLHttpRequest"}
       });
       if (!response.ok) return;
+      if (pollingConvId !== currentConversationId) return;
       const data = await response.json();
+      if (pollingConvId !== currentConversationId) return;
       if (Array.isArray(data.messages)) {
         data.messages.forEach(renderMessage);
       }
