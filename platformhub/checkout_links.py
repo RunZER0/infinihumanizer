@@ -9,7 +9,7 @@ CLIENT_CUSTOM_CHECKOUT_LINKS = {
     "audreymbrown2007@gmail.com": "https://paystack.shop/pay/ppiajw3f1-",
     "orozcoazael815@gmail.com": "https://paystack.shop/pay/ao-roofing1",
     "jackjohnson0533@gmail.com": "https://paystack.shop/pay/jj-crm92",
-    "lucacaro@hawaii.edu": "https://paystack.shop/pay/892lxc01po",
+    "lucacaro@gmail.com": "https://paystack.shop/pay/892lxc01po",
     "kchin444@gmail.com": "https://paystack.shop/pay/kc-chin77",
     "vickyizad@gmail.com": "https://paystack.shop/pay/li-tampa44",
     "drako.santaana.glz@gmail.com": "https://paystack.shop/pay/ds-dock55",
@@ -26,7 +26,8 @@ CLIENT_CUSTOM_CHECKOUT_LINKS = {
 
 EMAIL_ALIASES = {
     "stellarae147@gmail.com": "estellawilliams06@gmail.com",
-    "luca_carollo05@yahoo.com": "lucacaro@hawaii.edu",
+    "luca_carollo05@yahoo.com": "lucacaro@gmail.com",
+    "lucacaro@hawaii.edu": "lucacaro@gmail.com",
 }
 
 

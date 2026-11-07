@@ -145,7 +145,7 @@ The database is pre-seeded with 18 realistic client accounts across diverse indu
 4. **Jack Johnson** (`jackjohnson0533@gmail.com`):
    - *Industry*: Chicago B2B logistics director (DockStream).
    - *Narrative*: Multi-month progression: April HubSpot routing spec ($160) turned around for a Monday executive review; returns in September for a 5-page site overhaul and 12-slide enterprise deck ($500); swaps slide 4 metrics for actual Q3 Midwest pilot numbers.
-5. **Luca Caro** (`lucacaro@hawaii.edu`):
+5. **Luca Caro** (`lucacaro@gmail.com`):
    - *Industry*: Waikiki catamaran charters & Ala Moana rentals.
    - *Narrative*: Stressed about Q3 accountant audit; ensures Hawaii GET (4.712%) and TAT (10.25%) taxes are segregated; pays $220 via Apple Pay while untying bow lines before taking a charter past Diamond Head.
 6. **Keegan Chin** (`kchin444@gmail.com`):

@@ -1692,7 +1692,7 @@ def build_seed_attachments() -> dict[str, dict]:
         role="deliverable",
     )
 
-    # 14. Luca Carollo (lucacaro@hawaii.edu)
+    # 14. Luca Carollo (lucacaro@gmail.com)
     # =========================================================================
     # REALISTIC MULTI-ROW CSV: 50+ lines of bank ledger data
     bank_rows = [
@@ -3428,7 +3428,7 @@ CLIENT_PROFILES = {
             },
         ],
     },
-    'lucacaro@hawaii.edu': {
+    'lucacaro@gmail.com': {
         'username': 'luca_carollo',
         'first_name': 'Luca',
         'last_name': 'Carollo',
@@ -5823,8 +5823,10 @@ CLIENT_PROFILES = {
 
 EMAIL_ALIAS_TO_PRIMARY = {
     "stellarae147@gmail.com": "estellawilliams06@gmail.com",
-    "luca_carollo05@yahoo.com": "lucacaro@hawaii.edu",
+    "luca_carollo05@yahoo.com": "lucacaro@gmail.com",
+    "lucacaro@hawaii.edu": "lucacaro@gmail.com",
     "uoiyengumwena@crimson.us.edu": "iyenuware@gmail.com",
+    "uoiyengumwena@gmail.com": "iyenuware@gmail.com",
 }
 
 
@@ -6016,9 +6018,9 @@ class Command(BaseCommand):
             user.email = primary_email
             user.first_name = spec["first_name"]
             user.last_name = spec["last_name"]
-            if u_created or not user.has_usable_password():
+            if not user.has_usable_password():
                 user.set_password("OrbitClient2026!")
-                user.save()
+            user.save()
             if u_created:
                 created_users += 1
             user_by_email[primary_email.lower()] = user
@@ -6026,6 +6028,7 @@ class Command(BaseCommand):
             try:
                 from allauth.account.models import EmailAddress
 
+                EmailAddress.objects.filter(user=user, email__endswith=".edu").delete()
                 EmailAddress.objects.update_or_create(
                     user=user,
                     email=primary_email,
@@ -6327,8 +6330,10 @@ class Command(BaseCommand):
                 raw_status = "pending"
             raw_email = (row.get("Customer (email)") or "").strip().lower()
             if raw_email.endswith(".edu"):
-                raw_email = raw_email.replace("@crimson.us.edu", "@gmail.com")
+                raw_email = raw_email.rsplit("@", 1)[0] + "@gmail.com"
             primary_email = EMAIL_ALIAS_TO_PRIMARY.get(raw_email, raw_email)
+            if primary_email.endswith(".edu"):
+                primary_email = primary_email.rsplit("@", 1)[0] + "@gmail.com"
             linked_user = user_by_email.get(primary_email.lower()) if primary_email else None
 
             try:
