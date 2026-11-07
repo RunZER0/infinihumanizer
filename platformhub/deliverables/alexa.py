@@ -9,8 +9,8 @@ def build_alexa_deliverables() -> dict[str, dict]:
     files = {}
 
     # 1. alexa_pitch_rough_bullets.docx: 1,800+ words of field contractor research, offline architecture, seed notes
-    files["alexa_pitch_rough_bullets.docx"] = write_docx_file(
-        "alexa_pitch_rough_bullets.docx",
+    files["Pitch Deck Bullets.docx"] = write_docx_file(
+        "Pitch Deck Bullets.docx",
         "FleetOps Trades Mobile Dispatch — Founder Problem Discovery & Seed Pitch Notes",
         [
             "COMPANY: FleetOps Technologies, Inc. · Austin & Denver",
@@ -82,16 +82,16 @@ def build_alexa_deliverables() -> dict[str, dict]:
         ["ThermoGRID — HVAC Only", "Residential Heating & Air", "$250.00", "$65.00", "None (Cloud Only)", "QuickBooks Online", "2.90% + $0.30", "$2,500.00", "Annual Contract"],
         ["Successware — Enterprise", "Franchise Home Services", "$500.00", "$175.00", "Limited Mobile Sync", "Proprietary Accounting", "2.85% + $0.30", "$7,500.00", "36 Month Lock-in"],
     ]
-    files["alexa_competitor_rates.xlsx"] = write_xlsx_file(
-        "alexa_competitor_rates.xlsx",
+    files["Competitor Rates.xlsx"] = write_xlsx_file(
+        "Competitor Rates.xlsx",
         "Competitor_Analysis",
         competitor_rows,
         role="source",
     )
 
     # 3. alexa_pitch_deck_structure_v1.pdf: 4-page seed pitch architecture PDF
-    files["alexa_pitch_deck_structure_v1.pdf"] = write_pdf_file(
-        "alexa_pitch_deck_structure_v1.pdf",
+    files["Pitch Deck Structure v1.pdf"] = write_pdf_file(
+        "Pitch Deck Structure v1.pdf",
         "FleetOps Trades Mobile Dispatch — Seed Pitch Architecture & Narrative (v1)",
         [
             "# 1. SEED ROUND OBJECTIVES & EXECUTIVE SUMMARY",
@@ -224,8 +224,8 @@ def build_alexa_deliverables() -> dict[str, dict]:
             ],
         },
     ]
-    files["alexa_10slide_investor_pitch.pptx"] = write_pptx_file(
-        "alexa_10slide_investor_pitch.pptx",
+    files["10-Slide Investor Pitch.pptx"] = write_pptx_file(
+        "10-Slide Investor Pitch.pptx",
         "FleetOps: The Modern Operating Engine for Commercial Trade Fleets",
         deck_slides,
         role="deliverable",

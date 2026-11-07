@@ -9,8 +9,8 @@ def build_drako_deliverables() -> dict[str, dict]:
     files = {}
 
     # 1. drako_old_resume_2023.pdf: 2-page realistic past resume PDF
-    files["drako_old_resume_2023.pdf"] = write_pdf_file(
-        "drako_old_resume_2023.pdf",
+    files["Operations Resume 2023.pdf"] = write_pdf_file(
+        "Operations Resume 2023.pdf",
         "Drako Santa Ana — Resume (Past 2021 Version — Pre-Executive Revisions)",
         [
             "# DRAKO SANTA ANA",
@@ -38,8 +38,8 @@ def build_drako_deliverables() -> dict[str, dict]:
     )
 
     # 2. drako_2024_2026_warehouse_notes.docx: 1,800+ words of cold-chain logistics logs, HACCP, leadership metrics
-    files["drako_2024_2026_warehouse_notes.docx"] = write_docx_file(
-        "drako_2024_2026_warehouse_notes.docx",
+    files["Warehouse Leadership Notes.docx"] = write_docx_file(
+        "Warehouse Leadership Notes.docx",
         "Drako Santa Ana — Cold-Chain Logistics, Terminal Operations & Leadership Log (2024–2026)",
         [
             "PROFESSIONAL DOSSIER: Drako Santa Ana, Senior Warehouse Operations Manager",
@@ -74,8 +74,8 @@ def build_drako_deliverables() -> dict[str, dict]:
     )
 
     # 3. drako_resume_and_linkedin_v1.docx: 1,800+ words of executive resume & LinkedIn profile draft
-    files["drako_resume_and_linkedin_v1.docx"] = write_docx_file(
-        "drako_resume_and_linkedin_v1.docx",
+    files["Resume & LinkedIn v1.docx"] = write_docx_file(
+        "Resume & LinkedIn v1.docx",
         "Drako Santa Ana — Senior Warehouse & Logistics Operations Manager (v1 Resume & LinkedIn Master)",
         [
             "CANDIDATE: Drako Santa Ana · Dallas-Fort Worth, TX",
@@ -104,8 +104,8 @@ def build_drako_deliverables() -> dict[str, dict]:
     )
 
     # 4. drako_resume_and_linkedin_final.pdf: 2-page polished executive resume PDF
-    files["drako_resume_and_linkedin_final.pdf"] = write_pdf_file(
-        "drako_resume_and_linkedin_final.pdf",
+    files["Resume & LinkedIn.pdf"] = write_pdf_file(
+        "Resume & LinkedIn.pdf",
         "Drako Santa Ana — Senior Warehouse Operations & Cold-Chain Logistics Manager (Executive Resume)",
         [
             "# DRAKO SANTA ANA",

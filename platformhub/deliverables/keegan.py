@@ -57,16 +57,16 @@ def build_keegan_deliverables() -> dict[str, dict]:
         ["PHG-WD-09", "Office & Desk", "Solid Walnut Magnetic Cable Block", "Walnut with Neodymium Magnets", 60, "32 x 24 x 20", 0.0154, 8.4, 2.80, "4420.90.8000", 3.2, 1000],
         ["PHG-ST-04", "Decor Accents", "Rattan Woven Wastebasket with Lid", "Natural Hand-Woven Rattan", 8, "48 x 48 x 52", 0.1198, 12.0, 8.20, "4602.12.0500", 4.5, 300],
     ]
-    files["keegan_raw_sku_list.xlsx"] = write_xlsx_file(
-        "keegan_raw_sku_list.xlsx",
+    files["Raw SKU Inventory.xlsx"] = write_xlsx_file(
+        "Raw SKU Inventory.xlsx",
         "Raw_SKU_Import",
         supplier_skus,
         role="source",
     )
 
     # 2. keegan_freight_duty_rates.pdf: 3-page ocean freight rate sheet & customs advisory
-    files["keegan_freight_duty_rates.pdf"] = write_pdf_file(
-        "keegan_freight_duty_rates.pdf",
+    files["Freight Duty Rates.pdf"] = write_pdf_file(
+        "Freight Duty Rates.pdf",
         "Trans-Pacific LCL Ocean Freight & Customs Broker Rate Sheet — Pacific Heritage Goods",
         [
             "# 1. OCEAN FREIGHT SERVICE SPECIFICATIONS",
@@ -134,8 +134,8 @@ def build_keegan_deliverables() -> dict[str, dict]:
         ["PHG-BA-03", "Stone Bath Mat", 6.90, 1.15, 1.69, 0.32, 10.06, 9.20, 7.20, 24.00, 48.00, 58.1],
         ["PHG-WD-06", "Teak Coaster Set (4pk)", 2.10, 0.08, 0.51, 0.06, 2.75, 3.40, 3.00, 7.50, 20.00, 63.3],
     ]
-    files["keegan_sku_margin_calculator_v1.xlsx"] = write_xlsx_file(
-        "keegan_sku_margin_calculator_v1.xlsx",
+    files["SKU Margin Calculator v1.xlsx"] = write_xlsx_file(
+        "SKU Margin Calculator v1.xlsx",
         "Margin_Calculator_v1",
         margin_rows,
         role="source",

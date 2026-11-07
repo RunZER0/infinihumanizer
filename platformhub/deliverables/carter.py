@@ -9,8 +9,8 @@ def build_carter_deliverables() -> dict[str, dict]:
     files = {}
 
     # 1. carter_storefront_launch_notes.docx: 1,800+ words of hardware DTC launch notes
-    files["carter_storefront_launch_notes.docx"] = write_docx_file(
-        "carter_storefront_launch_notes.docx",
+    files["Storefront Launch Notes.docx"] = write_docx_file(
+        "Storefront Launch Notes.docx",
         "ApexDesk Hardware — Direct-to-Consumer Storefront Launch Architecture & Merchandising Notes",
         [
             "COMPANY: ApexDesk Hardware Technologies LLC · Austin & San Jose",
@@ -89,15 +89,15 @@ def build_carter_deliverables() -> dict[str, dict]:
     }
 
     # Add the actual HTML prototype and PDF audit if they exist in files_dir
-    html_proto = files_dir / "carter_landing_page_prototype.html"
+    html_proto = files_dir / "Storefront Prototype.html"
     if html_proto.exists():
-        zip_manifest["ApexDesk_Storefront_Prototype.html"] = "carter_landing_page_prototype.html"
-    pdf_audit = files_dir / "carter_website_launch_checklist_final.pdf"
+        zip_manifest["ApexDesk_Storefront_Prototype.html"] = "Storefront Prototype.html"
+    pdf_audit = files_dir / "Website Launch Checklist.pdf"
     if pdf_audit.exists():
-        zip_manifest["ApexDesk_Launch_Audit_Report.pdf"] = "carter_website_launch_checklist_final.pdf"
+        zip_manifest["ApexDesk_Launch_Audit_Report.pdf"] = "Website Launch Checklist.pdf"
 
-    files["carter_storefront_assets_and_launch_kit.zip"] = write_zip_file(
-        "carter_storefront_assets_and_launch_kit.zip",
+    files["Storefront Assets Kit.zip"] = write_zip_file(
+        "Storefront Assets Kit.zip",
         zip_manifest,
         role="deliverable",
     )

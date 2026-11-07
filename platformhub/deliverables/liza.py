@@ -9,8 +9,8 @@ def build_liza_deliverables() -> dict[str, dict]:
     files = {}
 
     # 1. liza_15p_service_proposal_messy.docx: Authentic 15-page medical plaza RFP draft
-    files["liza_15p_service_proposal_messy.docx"] = write_docx_file(
-        "liza_15p_service_proposal_messy.docx",
+    files["Service Proposal Notes.docx"] = write_docx_file(
+        "Service Proposal Notes.docx",
         "Tampa Bay Medical Plaza RFP Response — 15 Pages (Client Working Draft & Scramble)",
         [
             "RFP SOLICITATION: Commercial Janitorial, Environmental Infection Control & Biohazard Services",
@@ -81,8 +81,8 @@ def build_liza_deliverables() -> dict[str, dict]:
     )
 
     # 2. liza_15p_service_proposal_v1.docx: v1 edited technical RFP draft
-    files["liza_15p_service_proposal_v1.docx"] = write_docx_file(
-        "liza_15p_service_proposal_v1.docx",
+    files["Service Proposal v1.docx"] = write_docx_file(
+        "Service Proposal v1.docx",
         "Tampa Bay Medical Plaza RFP Response — 15 Pages (v1 Edited Technical Proposal)",
         [
             "CLIENT: Tampa Bay Healthcare Real Estate Group, LLC",
@@ -114,8 +114,8 @@ def build_liza_deliverables() -> dict[str, dict]:
     )
 
     # 3. liza_vendor_packet_draft.docx: Vendor packet draft
-    files["liza_vendor_packet_draft.docx"] = write_docx_file(
-        "liza_vendor_packet_draft.docx",
+    files["Vendor Packet Draft.docx"] = write_docx_file(
+        "Vendor Packet Draft.docx",
         "Coastal Shine Commercial Cleaning — Commercial Vendor Prequalification Packet (Draft)",
         [
             "COMPANY: Coastal Shine Commercial Cleaning LLC · Tampa, Florida",
@@ -152,8 +152,8 @@ def build_liza_deliverables() -> dict[str, dict]:
     )
 
     # 4. liza_vendor_packet_clean.pdf: 3-page clean vendor packet
-    files["liza_vendor_packet_clean.pdf"] = write_pdf_file(
-        "liza_vendor_packet_clean.pdf",
+    files["Vendor Agreement Packet.pdf"] = write_pdf_file(
+        "Vendor Agreement Packet.pdf",
         "Coastal Shine Commercial Cleaning — Master Vendor Compliance Packet (Clean Final)",
         [
             "# 1. VENDOR PREQUALIFICATION OVERVIEW",
@@ -197,8 +197,8 @@ def build_liza_deliverables() -> dict[str, dict]:
         ["Carpet Care: Hot Water Extraction", "Per 1,000 sq ft", "One-Time Project", 280.00, 0.280, "Low-Moisture Detergent", "No", "CRI Certified Deep Clean"],
         ["Emergency Biohazard Response", "Per incident", "On-Demand (24/7)", 450.00, 125.00, "Bio-Remediation Pack", "Yes (Mandatory)", "60-Minute Response Time"],
     ]
-    files["liza_rate_card_final.xlsx"] = write_xlsx_file(
-        "liza_rate_card_final.xlsx",
+    files["Commercial Rate Card.xlsx"] = write_xlsx_file(
+        "Commercial Rate Card.xlsx",
         "Commercial Rate Card",
         rate_card_rows,
         role="deliverable",

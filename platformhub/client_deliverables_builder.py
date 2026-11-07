@@ -67,8 +67,8 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     # =========================================================================
     # 1. AUDREY BROWN — STUDIO BROWN (East Austin Editorial Photography)
     # =========================================================================
-    files["audrey_3page_website_copy_final.docx"] = write_docx_file(
-        "audrey_3page_website_copy_final.docx",
+    files["Website Copy (Final).docx"] = write_docx_file(
+        "Website Copy (Final).docx",
         "Studio Brown — Master Website Copy Deck (Production Final)",
         [
             "CLIENT: Audrey Brown Photography · East Austin, TX",
@@ -145,8 +145,8 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     # =========================================================================
     # 2. ISSA CUEVAS — PEDIATRIC SPEECH & LANGUAGE THERAPY (Austin, TX)
     # =========================================================================
-    files["cuevas_pediatric_intake_and_consent_final.docx"] = write_docx_file(
-        "cuevas_pediatric_intake_and_consent_final.docx",
+    files["Pediatric Intake Agreement.docx"] = write_docx_file(
+        "Pediatric Intake Agreement.docx",
         "Cuevas Pediatric Speech Therapy — Clinical Intake & Medical Consent Packet",
         [
             "PRACTICE: Cuevas Pediatric Speech & Language Therapy LLC",
@@ -260,8 +260,8 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
         ["TOTAL MARITIME FLEET YTD 2026", 20, 8970, 6, 40020.00, 18036.09, 21983.91, 0.451],
     ]
 
-    files["patrick_dispatch_and_fuel_tracker_final.xlsx"] = write_xlsx_file(
-        "patrick_dispatch_and_fuel_tracker_final.xlsx",
+    files["Dispatch & Fuel Tracker.xlsx"] = write_xlsx_file(
+        "Dispatch & Fuel Tracker.xlsx",
         {
             "Dispatch & Fuel Ledger": patrick_trips,
             "Corridor Profitability": corridor_summary,
@@ -293,8 +293,8 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
         ["ENDING ACCUMULATED CASH BALANCE (USD)", 18200, 26900, 38150, 48300, 60800, 74900, 89900, 106200, 123800, 142850, 163200, 186350, 186350],
     ]
 
-    files["dennis_12month_cashflow_tracker_final.xlsx"] = write_xlsx_file(
-        "dennis_12month_cashflow_tracker_final.xlsx",
+    files["12-Month Cashflow Tracker.xlsx"] = write_xlsx_file(
+        "12-Month Cashflow Tracker.xlsx",
         {
             "12-Month P&L Cashflow": dennis_cashflow,
         },
@@ -443,15 +443,15 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
         }
     ]
 
-    files["estella_q4_executive_investor_deck_final.pptx"] = write_pptx_file(
-        "estella_q4_executive_investor_deck_final.pptx",
+    files["Q4 Board Presentation.pptx"] = write_pptx_file(
+        "Q4 Board Presentation.pptx",
         "Williams Logistics Network · Q4 2026 Executive Investor Update",
         estella_slides,
         role="deliverable",
     )
 
-    files["estella_q4_board_briefing_memo_final.docx"] = write_docx_file(
-        "estella_q4_board_briefing_memo_final.docx",
+    files["Executive Board Memo.docx"] = write_docx_file(
+        "Executive Board Memo.docx",
         "Williams Logistics Network — Executive Board Memorandum (Q4 Strategic Review)",
         [
             "TO: Board of Directors, Williams Logistics Network Inc.",
@@ -495,8 +495,8 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     # =========================================================================
     # 6. JACK JOHNSON — DOCKSTREAM ENTERPRISE B2B LOGISTICS PLATFORM
     # =========================================================================
-    files["johnson_b2b_site_and_deck_final.docx"] = write_docx_file(
-        "johnson_b2b_site_and_deck_final.docx",
+    files["Enterprise Deck Final.docx"] = write_docx_file(
+        "Enterprise Deck Final.docx",
         "DockStream Enterprise — B2B Product Messaging & Master Copy Deck",
         [
             "CLIENT: DockStream Technologies Inc. (Jack Johnson, Co-Founder)",
@@ -549,8 +549,8 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
         role="deliverable",
     )
 
-    files["johnson_12slide_outbound_enterprise_deck.pptx"] = write_pptx_file(
-        "johnson_12slide_outbound_enterprise_deck.pptx",
+    files["Outbound Enterprise Deck.pptx"] = write_pptx_file(
+        "Outbound Enterprise Deck.pptx",
         "DockStream Enterprise — Outbound Logistics Presentation",
         [
             {
@@ -654,8 +654,8 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     # =========================================================================
     # 7. AZAEL OROZCO — OROZCO COMMERCIAL & INDUSTRIAL ROOFING (South Texas)
     # =========================================================================
-    files["orozco_site_copy_and_estimate_final.docx"] = write_docx_file(
-        "orozco_site_copy_and_estimate_final.docx",
+    files["Site Copy & Estimate.docx"] = write_docx_file(
+        "Site Copy & Estimate.docx",
         "Orozco Commercial Roofing — Master Specifications & Commercial Bid Deck",
         [
             "CLIENT: Orozco Commercial & Industrial Roofing LLC",
@@ -711,8 +711,8 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     # =========================================================================
     # 8. ALEXA QUINTERO — FIELDPULSE TRADE FLEET MOBILE WORKFLOWS
     # =========================================================================
-    files["alexa_10slide_investor_pitch.pptx"] = write_pptx_file(
-        "alexa_10slide_investor_pitch.pptx",
+    files["10-Slide Investor Pitch.pptx"] = write_pptx_file(
+        "10-Slide Investor Pitch.pptx",
         "FieldPulse — Seed Investor Presentation",
         [
             {
@@ -837,8 +837,8 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
         ["General Partner Operating Share (30% Tier)", "=B16*0.3", "=C16*0.3", "=D16*0.3", "=E16*0.3", "=F16*0.3"],
     ]
 
-    files["luca_partner_distribution_waterfall_model.xlsx"] = write_xlsx_file(
-        "luca_partner_distribution_waterfall_model.xlsx",
+    files["Waterfall Model.xlsx"] = write_xlsx_file(
+        "Waterfall Model.xlsx",
         {
             "Partner Equity Waterfall": luca_distribution,
         },
@@ -862,8 +862,8 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
         ["TOTAL MASTER CATALOG", "9 KEY PRODUCT LINES", "-", "=SUM(D2:D10)", "=SUM(E2:E10)", "=SUM(F2:F10)", "=SUM(G2:G10)", "=SUM(H2:H10)", "=SUM(I2:I10)", "=AVERAGE(J2:J10)", "=SUM(K2:K10)", "=AVERAGE(L2:L10)", "=SUM(M2:M10)", "=SUM(N2:N10)"],
     ]
 
-    files["keegan_sku_margin_calculator_v2_locked.xlsx"] = write_xlsx_file(
-        "keegan_sku_margin_calculator_v2_locked.xlsx",
+    files["SKU Margin Calculator.xlsx"] = write_xlsx_file(
+        "SKU Margin Calculator.xlsx",
         {
             "Master SKU Margin Model": keegan_skus,
         },
@@ -873,8 +873,8 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     # =========================================================================
     # 11. JOSE CRUZ — CRUZ METRO FREIGHT (Dallas-Fort Worth Corridor)
     # =========================================================================
-    files["cruz_bio_and_outreach_final.docx"] = write_docx_file(
-        "cruz_bio_and_outreach_final.docx",
+    files["Outreach Email Sequence.docx"] = write_docx_file(
+        "Outreach Email Sequence.docx",
         "Cruz Metro Freight — Corporate Profile & Outbound Shipper Playbook (Final)",
         [
             "ENTITY: Cruz Metro Freight LLC · Terminal: 4820 W Davis St, Dallas, TX 75211",
@@ -936,8 +936,8 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     # =========================================================================
     # 12. ISSA CUEVAS — CLINICAL PARENT COMMUNICATIONS & SERVICE AGREEMENT
     # =========================================================================
-    files["cuevas_parent_communication_templates.docx"] = write_docx_file(
-        "cuevas_parent_communication_templates.docx",
+    files["Parent Communication Templates.docx"] = write_docx_file(
+        "Parent Communication Templates.docx",
         "Cuevas Pediatric Speech Therapy — Clinical Parent Communication Letters",
         [
             "PRACTICE: Cuevas Pediatric Speech & Language Therapy LLC",
@@ -977,8 +977,8 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
         role="deliverable",
     )
 
-    files["cuevas_speech_clinic_service_agreement_final.pdf"] = write_pdf_file(
-        "cuevas_speech_clinic_service_agreement_final.pdf",
+    files["Pediatric Clinic Agreement.pdf"] = write_pdf_file(
+        "Pediatric Clinic Agreement.pdf",
         "Clinical Service Agreement & Financial Policy",
         [
             "CUEVAS PEDIATRIC SPEECH & LANGUAGE THERAPY LLC",
@@ -1020,12 +1020,12 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     )
 
     # Bundle cuevas files into zip
-    files["cuevas_pediatric_intake_forms_bundle.zip"] = write_zip_file(
-        "cuevas_pediatric_intake_forms_bundle.zip",
+    files["Parent Intake Forms Bundle.zip"] = write_zip_file(
+        "Parent Intake Forms Bundle.zip",
         {
-            "cuevas_pediatric_intake_and_consent_final.docx": "cuevas_pediatric_intake_and_consent_final.docx",
-            "cuevas_speech_clinic_service_agreement_final.pdf": "cuevas_speech_clinic_service_agreement_final.pdf",
-            "cuevas_parent_communication_templates.docx": "cuevas_parent_communication_templates.docx",
+            "Pediatric Intake Agreement.docx": "Pediatric Intake Agreement.docx",
+            "Pediatric Clinic Agreement.pdf": "Pediatric Clinic Agreement.pdf",
+            "Parent Communication Templates.docx": "Parent Communication Templates.docx",
         },
         role="deliverable",
     )
@@ -1050,16 +1050,16 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
         ["OPERATING EBITDA (USD)", "=B9-B11-B12-B13", "=C9-C11-C12-C13", "=D9-D11-D12-D13", "=E9-E11-E12-E13", "=F9-F11-F12-F13", "=G9-G11-G12-G13", "=H9-H11-H12-H13", "=I9-I11-I12-I13", "=J9-J11-J12-J13", "=K9-K11-K12-K13", "=L9-L11-L12-L13", "=M9-M11-M12-M13", "=E14+I14+M14"],
     ]
 
-    files["estella_q4_financial_model.xlsx"] = write_xlsx_file(
-        "estella_q4_financial_model.xlsx",
+    files["Q4 Financial Model.xlsx"] = write_xlsx_file(
+        "Q4 Financial Model.xlsx",
         {
             "P&L Operating Actuals": estella_pnl,
         },
         role="deliverable",
     )
 
-    files["estella_q4_investor_deck_slide_copy_final.pdf"] = write_pdf_file(
-        "estella_q4_investor_deck_slide_copy_final.pdf",
+    files["Q4 Board Deck Slides.pdf"] = write_pdf_file(
+        "Q4 Board Deck Slides.pdf",
         "Williams Logistics Network - Q4 Board Briefing Slide Deck Copy",
         [
             "WILLIAMS LOGISTICS NETWORK INC. | BOARD OF DIRECTORS BRIEFING",
@@ -1092,13 +1092,13 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
         meta_tag="Williams Logistics Network · Q4 2026 Executive Presentation",
     )
 
-    files["estella_q4_executive_board_pack.zip"] = write_zip_file(
-        "estella_q4_executive_board_pack.zip",
+    files["Executive Board Pack.zip"] = write_zip_file(
+        "Executive Board Pack.zip",
         {
-            "estella_q4_board_briefing_memo_final.docx": "estella_q4_board_briefing_memo_final.docx",
-            "estella_q4_executive_investor_deck_final.pptx": "estella_q4_executive_investor_deck_final.pptx",
-            "estella_q4_financial_model.xlsx": "estella_q4_financial_model.xlsx",
-            "estella_q4_investor_deck_slide_copy_final.pdf": "estella_q4_investor_deck_slide_copy_final.pdf",
+            "Executive Board Memo.docx": "Executive Board Memo.docx",
+            "Q4 Board Presentation.pptx": "Q4 Board Presentation.pptx",
+            "Q4 Financial Model.xlsx": "Q4 Financial Model.xlsx",
+            "Q4 Board Deck Slides.pdf": "Q4 Board Deck Slides.pdf",
         },
         role="deliverable",
     )
@@ -1115,8 +1115,8 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
         ["TOTAL CLINICAL COMPLEX FOOTPRINT", 48000, "Turnkey EVS Sanitation", "24/7/365 On-Call", 15800.00, 2050.00, 17850.00],
     ]
 
-    files["liza_rate_card_final.xlsx"] = write_xlsx_file(
-        "liza_rate_card_final.xlsx",
+    files["Commercial Rate Card.xlsx"] = write_xlsx_file(
+        "Commercial Rate Card.xlsx",
         {
             "Commercial Rate Card": liza_rates,
         },
@@ -1134,8 +1134,8 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
         ["TOTAL ESTIMATE PIPELINE", 88500, "Commercial Flat Systems", "Commercial Code", 163400.00, 134100.00, 49320.00, 10500.00, 443532.00, 0.194],
     ]
 
-    files["orozco_estimate_sheet.xlsx"] = write_xlsx_file(
-        "orozco_estimate_sheet.xlsx",
+    files["Roofing Estimate Sheet.xlsx"] = write_xlsx_file(
+        "Roofing Estimate Sheet.xlsx",
         {
             "Commercial Bid Takeoff": orozco_takeoff,
         },
@@ -1158,8 +1158,8 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
         ["LTV to CAC Ratio", "15.8x", "22.9x", "24.1x", "22.1x"],
     ]
 
-    files["alexa_unit_economics_model.xlsx"] = write_xlsx_file(
-        "alexa_unit_economics_model.xlsx",
+    files["Unit Economics Model.xlsx"] = write_xlsx_file(
+        "Unit Economics Model.xlsx",
         {
             "Fleet Unit Economics": alexa_econ,
         },
@@ -1169,8 +1169,8 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     # =========================================================================
     # 17. KAYLEE CABREROS — BOTANICAL SKINCARE WELCOME SEQUENCE
     # =========================================================================
-    files["kaylee_welcome_emails_final.docx"] = write_docx_file(
-        "kaylee_welcome_emails_final.docx",
+    files["Welcome Email Sequence.docx"] = write_docx_file(
+        "Welcome Email Sequence.docx",
         "Lumière Botanical Skincare — New Customer Welcome & Retention Series",
         [
             "BRAND: Lumière Botanical Skincare · E-Commerce Retention Sequence",
@@ -1203,8 +1203,8 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     # =========================================================================
     # 18. LINA RICKERT — ACTIVEWEAR CAMPAIGN EMAILS
     # =========================================================================
-    files["lina_summer_campaign_emails_final.docx"] = write_docx_file(
-        "lina_summer_campaign_emails_final.docx",
+    files["Summer Launch Emails.docx"] = write_docx_file(
+        "Summer Launch Emails.docx",
         "AURA Athletics — Summer Campaign & Product Launch Email Series",
         [
             "BRAND: AURA Performance Athletics · Summer Campaign",

@@ -9,8 +9,8 @@ def build_cami_deliverables() -> dict[str, dict]:
     files = {}
 
     # 1. cami_raw_call_transcripts_18p.docx: Full 18-page authentic executive discovery transcripts
-    files["cami_raw_call_transcripts_18p.docx"] = write_docx_file(
-        "cami_raw_call_transcripts_18p.docx",
+    files["Call Transcripts (18p).docx"] = write_docx_file(
+        "Call Transcripts (18p).docx",
         "Apex Global Technologies — C-Suite Executive Discovery Transcripts (18-Page Diagnostic Record)",
         [
             "ENGAGEMENT: Executive Alignment, Cross-Functional Operating Rhythms & Leadership Retention",
@@ -120,8 +120,8 @@ def build_cami_deliverables() -> dict[str, dict]:
     )
 
     # 2. cami_call_action_sheet_v1.pdf: 3-page executive diagnostic synthesis draft
-    files["cami_call_action_sheet_v1.pdf"] = write_pdf_file(
-        "cami_call_action_sheet_v1.pdf",
+    files["Call Action Sheet v1.pdf"] = write_pdf_file(
+        "Call Action Sheet v1.pdf",
         "Executive Discovery Synthesis & Priority Actions — Cami Kurtz (v1 Draft)",
         [
             "# 1. EXECUTIVE DIAGNOSTIC EXECUTIVE SUMMARY",
@@ -153,8 +153,8 @@ def build_cami_deliverables() -> dict[str, dict]:
     )
 
     # 3. cami_call_action_sheet_final.pdf: 4-page comprehensive leadership roadmap
-    files["cami_call_action_sheet_final.pdf"] = write_pdf_file(
-        "cami_call_action_sheet_final.pdf",
+    files["Call Action Sheet.pdf"] = write_pdf_file(
+        "Call Action Sheet.pdf",
         "Executive Leadership Action Sheet & 6-Week Workshop Blueprint — Cami Kurtz (Final)",
         [
             "# 1. EXECUTIVE DIAGNOSTIC SYNTHESIS & ORGANIZATIONAL ARCHITECTURE",

@@ -57,8 +57,8 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     # 1. Jose Cruz (cruzjose6221@gmail.com)
     # =========================================================================
-    files["cruz_old_bio_draft.docx"] = write_docx_file(
-        "cruz_old_bio_draft.docx",
+    files["Freight Carrier Bio.docx"] = write_docx_file(
+        "Freight Carrier Bio.docx",
         "Cruz Metro Freight — Rough Company Notes",
         [
             "Cruz Metro Freight operates dedicated 26ft liftgate box trucks and high-roof sprinters out of DFW.",
@@ -69,8 +69,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["cruz_bio_and_emails_v1_preview.pdf"] = write_pdf_file(
-        "cruz_bio_and_emails_v1_preview.pdf",
+    files["Carrier Outreach Preview v1.pdf"] = write_pdf_file(
+        "Carrier Outreach Preview v1.pdf",
         "Cruz Metro Freight — Capability Statement & Cold Outreach Preview (v1)",
         [
             "# 1. CORPORATE PROFILE & OPERATIONAL AUTHORITY",
@@ -95,8 +95,8 @@ def build_seed_attachments() -> dict[str, dict]:
         subtitle="Asset-Based Freight Carrier Profile & Outbound Sequence · DFW Logistics Corridor",
         meta_tag="Cruz Metro Freight · Commercial Fleet Operations · Dallas, TX",
     )
-    files["cruz_bio_and_outreach_final.docx"] = write_docx_file(
-        "cruz_bio_and_outreach_final.docx",
+    files["Outreach Email Sequence.docx"] = write_docx_file(
+        "Outreach Email Sequence.docx",
         "Cruz Metro Freight — Company Capability Bio & Cold Outreach Deck (Final)",
         [
             "# EXECUTIVE CAPABILITY STATEMENT & COMPANY PROFILE",
@@ -149,8 +149,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="deliverable",
     )
-    files["cruz_freight_rates_card.png"] = write_png_file(
-        "cruz_freight_rates_card.png",
+    files["Freight Rates Card.png"] = write_png_file(
+        "Freight Rates Card.png",
         "Cruz Metro Freight — 2026 DFW Metro Rate Card",
         [
             "Metro Core (0–25 miles): $175 Flat / $25 per additional pallet",
@@ -167,8 +167,8 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     # 2. Audrey Brown (audreymbrown2007@gmail.com)
     # =========================================================================
-    files["audrey_current_homepage_screenshot.png"] = write_screenshot_png_file(
-        "audrey_current_homepage_screenshot.png",
+    files["Current Homepage.png"] = write_screenshot_png_file(
+        "Current Homepage.png",
         url="https://studiobrownphotography.squarespace.com/",
         site_title="Studio Brown Photography · Austin, TX",
         hero_headline="Visual storytelling for modern life.",
@@ -184,8 +184,8 @@ def build_seed_attachments() -> dict[str, dict]:
         kind="browser",
         role="source",
     )
-    files["audrey_current_booking_form_screenshot.png"] = write_screenshot_png_file(
-        "audrey_current_booking_form_screenshot.png",
+    files["Booking Form.png"] = write_screenshot_png_file(
+        "Booking Form.png",
         url="https://studiobrownphotography.squarespace.com/book",
         site_title="Studio Brown Photography · Client Booking",
         hero_headline="FORM ABANDONMENT AUDIT REFERENCE: Squarespace Lightbox Modal (14 Mandatory Fields)",
@@ -207,8 +207,8 @@ def build_seed_attachments() -> dict[str, dict]:
         kind="form",
         role="source",
     )
-    files["audrey_homepage_booking_audit.pdf"] = write_pdf_file(
-        "audrey_homepage_booking_audit.pdf",
+    files["Website Audit & Recommendations.pdf"] = write_pdf_file(
+        "Website Audit & Recommendations.pdf",
         "Studio Brown — Homepage & Booking Flow Copy Audit Report",
         [
             "# 1. EXECUTIVE DIAGNOSTIC SUMMARY",
@@ -239,8 +239,8 @@ def build_seed_attachments() -> dict[str, dict]:
         subtitle="90-Day Funnel Diagnostic & Copy Architecture · Studio Brown East Austin",
         meta_tag="Studio Brown · Client Conversion & Funnel Audit · Austin, TX",
     )
-    files["audrey_wireframe_notes.docx"] = write_docx_file(
-        "audrey_wireframe_notes.docx",
+    files["Wireframe Notes.docx"] = write_docx_file(
+        "Wireframe Notes.docx",
         "Studio Brown — 3-Page Wireframe Notes & Sitemap",
         [
             "# SITEMAP ARCHITECTURE",
@@ -250,8 +250,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["audrey_3page_website_copy_v1.docx"] = write_docx_file(
-        "audrey_3page_website_copy_v1.docx",
+    files["Website Copy v1.docx"] = write_docx_file(
+        "Website Copy v1.docx",
         "Studio Brown — 3-Page Website Copy Deck (v1 Draft)",
         [
             "# PAGE 1: HOMEPAGE HERO",
@@ -262,8 +262,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="draft",
     )
-    files["audrey_3page_website_copy_final.docx"] = write_docx_file(
-        "audrey_3page_website_copy_final.docx",
+    files["Website Copy (Final).docx"] = write_docx_file(
+        "Website Copy (Final).docx",
         "Studio Brown — 3-Page Website Copy Deck (Final Production Master)",
         [
             "# PAGE 1: HOMEPAGE MASTER COPY",
@@ -309,14 +309,14 @@ def build_seed_attachments() -> dict[str, dict]:
         role="deliverable",
     )
     audrey_html = load_showcase_template("showcase_studio_brown.html")
-    files["audrey_studio_brown_website_prototype.html"] = write_html_file(
-        "audrey_studio_brown_website_prototype.html",
+    files["Studio Brown Prototype.html"] = write_html_file(
+        "Studio Brown Prototype.html",
         "Studio Brown · East Austin Editorial & Portrait Photography",
         audrey_html,
         role="deliverable",
     )
-    files["audrey_booking_flow_wireframe_diagram.png"] = write_png_file(
-        "audrey_booking_flow_wireframe_diagram.png",
+    files["Booking Flow Wireframe.png"] = write_png_file(
+        "Booking Flow Wireframe.png",
         "Studio Brown — Optimized 3-Step Booking Funnel",
         [
             "Step 1: Homepage positioning & transparent package pricing ($450 / $950 / $2,200)",
@@ -332,8 +332,8 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     # 3. Keegan Chin (kchin444@gmail.com)
     # =========================================================================
-    files["keegan_raw_sku_list.xlsx"] = write_xlsx_file(
-        "keegan_raw_sku_list.xlsx",
+    files["Raw SKU Inventory.xlsx"] = write_xlsx_file(
+        "Raw SKU Inventory.xlsx",
         "Raw_SKU_Import",
         [
             ["SKU", "Item Description", "Supplier FOB (USD)", "Carton Units", "CBM / Carton", "HTS Code", "Tariff %", "Current Retail"],
@@ -348,8 +348,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["keegan_freight_duty_rates.pdf"] = write_pdf_file(
-        "keegan_freight_duty_rates.pdf",
+    files["Freight Duty Rates.pdf"] = write_pdf_file(
+        "Freight Duty Rates.pdf",
         "Trans-Pacific LCL Ocean Freight & Customs Broker Rate Sheet",
         [
             "Port of Origin: Shenzhen / Yantian to Port of Los Angeles (POLA).",
@@ -360,8 +360,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["keegan_sku_margin_calculator_v1.xlsx"] = write_xlsx_file(
-        "keegan_sku_margin_calculator_v1.xlsx",
+    files["SKU Margin Calculator v1.xlsx"] = write_xlsx_file(
+        "SKU Margin Calculator v1.xlsx",
         "Margin_Calculator_v1",
         [
             ["SKU", "Item Description", "FOB", "Ocean/Unit", "Duty/Unit", "Landed", "Retail", "Margin %", "Reorder Level"],
@@ -372,8 +372,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="draft",
     )
-    files["keegan_sku_margin_calculator_v2_locked.xlsx"] = write_xlsx_file(
-        "keegan_sku_margin_calculator_v2_locked.xlsx",
+    files["SKU Margin Calculator.xlsx"] = write_xlsx_file(
+        "SKU Margin Calculator.xlsx",
         {
             "Landed_Cost_&_Margin_Model": [
                 ["SKU", "Item Description", "Supplier FOB", "Allocated Ocean", "Customs Duty", "Landed Cost", "Wholesale (2.1x)", "MSRP Retail", "Gross Margin", "45-Day Reorder"],
@@ -397,8 +397,8 @@ def build_seed_attachments() -> dict[str, dict]:
         },
         role="deliverable",
     )
-    files["keegan_warehouse_sku_handbook.pdf"] = write_pdf_file(
-        "keegan_warehouse_sku_handbook.pdf",
+    files["Warehouse SKU Handbook.pdf"] = write_pdf_file(
+        "Warehouse SKU Handbook.pdf",
         "Warehouse Receiving, Inventory Barcoding & Landed Cost Entry SOP — Chin Specialty Goods",
         [
             "# 1. PURPOSE, REGULATORY SCOPE & OPERATIONAL MANDATE",
@@ -479,8 +479,8 @@ def build_seed_attachments() -> dict[str, dict]:
         role="deliverable",
         subtitle="Operating Manual for Port Deconsolidation, Physical Inspection & Cost Model Reconciliation",
     )
-    files["keegan_staff_sku_guide.pdf"] = write_pdf_file(
-        "keegan_staff_sku_guide.pdf",
+    files["Staff SKU Guide.pdf"] = write_pdf_file(
+        "Staff SKU Guide.pdf",
         "Warehouse Staff Quick Reference Guide — SKU Matrix, HTS Classifications & Duty Rates",
         [
             "# WAREHOUSE RECEIVING STAFF SKU REFERENCE GUIDE",
@@ -513,8 +513,8 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     # 4. Liza Iza (vickyizad@gmail.com)
     # =========================================================================
-    files["liza_vendor_packet_draft.docx"] = write_docx_file(
-        "liza_vendor_packet_draft.docx",
+    files["Vendor Packet Draft.docx"] = write_docx_file(
+        "Vendor Packet Draft.docx",
         "Liza Facilities Maintenance — Vendor Onboarding Notes",
         [
             "Need formal W-9, Certificate of Insurance, and ACH direct deposit forms.",
@@ -523,8 +523,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["liza_vendor_packet_clean.pdf"] = write_pdf_file(
-        "liza_vendor_packet_clean.pdf",
+    files["Vendor Agreement Packet.pdf"] = write_pdf_file(
+        "Vendor Agreement Packet.pdf",
         "Vendor Onboarding Packet & Compliance Manual — Liza Facility Services",
         [
             "# 1. CORPORATE ONBOARDING & MANDATORY COMPLIANCE",
@@ -543,8 +543,8 @@ def build_seed_attachments() -> dict[str, dict]:
         subtitle="Subcontractor Onboarding, Insurance Verification & Operational Guidelines",
         meta_tag="Liza Facility Services LLC · Compliance Manual",
     )
-    files["liza_rate_card_final.xlsx"] = write_xlsx_file(
-        "liza_rate_card_final.xlsx",
+    files["Commercial Rate Card.xlsx"] = write_xlsx_file(
+        "Commercial Rate Card.xlsx",
         "Commercial_Rate_Card",
         [
             ["Service Classification", "Response SLA", "Base Rate (USD)", "Per Sq Ft / Unit", "Weekend / After-Hours"],
@@ -556,9 +556,9 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="deliverable",
     )
-    files["liza_commercial_rate_card.xlsx"] = copy_chat_file_alias("liza_rate_card_final.xlsx", "liza_commercial_rate_card.xlsx", role="deliverable")
-    files["liza_15p_service_proposal_messy.docx"] = write_docx_file(
-        "liza_15p_service_proposal_messy.docx",
+    files["Commercial Rate Card.xlsx"] = copy_chat_file_alias("Commercial Rate Card.xlsx", "Commercial Rate Card.xlsx", role="deliverable")
+    files["Service Proposal Notes.docx"] = write_docx_file(
+        "Service Proposal Notes.docx",
         "Tampa Bay Medical Plaza RFP Response — 15 Pages (Rough Scramble)",
         [
             "# ROUGH NOTES FOR TAMPA MEDICAL RFP",
@@ -568,8 +568,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["liza_15p_service_proposal_v1.docx"] = write_docx_file(
-        "liza_15p_service_proposal_v1.docx",
+    files["Service Proposal v1.docx"] = write_docx_file(
+        "Service Proposal v1.docx",
         "Commercial Facility Maintenance Proposal — Formatted Draft (v1)",
         [
             "# DRAFT RFP PROPOSAL",
@@ -577,8 +577,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="draft",
     )
-    files["liza_15p_service_proposal_final.pdf"] = write_pdf_file(
-        "liza_15p_service_proposal_final.pdf",
+    files["Service Proposal.pdf"] = write_pdf_file(
+        "Service Proposal.pdf",
         "Commercial Facility Maintenance Proposal — Tampa Bay Medical Plaza (Final)",
         [
             "# EXECUTIVE PROPOSAL & CONTRACTUAL MANDATE",
@@ -665,8 +665,8 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     # 5. Drako Santa Ana (drako.santaana.glz@gmail.com)
     # =========================================================================
-    files["drako_old_resume_2023.pdf"] = write_pdf_file(
-        "drako_old_resume_2023.pdf",
+    files["Operations Resume 2023.pdf"] = write_pdf_file(
+        "Operations Resume 2023.pdf",
         "Drako Santa Ana — Resume (Outdated 2021 Version)",
         [
             "# OUTDATED RESUME (2021)",
@@ -676,8 +676,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["drako_2024_2026_warehouse_notes.docx"] = write_docx_file(
-        "drako_2024_2026_warehouse_notes.docx",
+    files["Warehouse Leadership Notes.docx"] = write_docx_file(
+        "Warehouse Leadership Notes.docx",
         "Drako's Notes on Actual Work Experience (2022–Present)",
         [
             "# ACTUAL WORK EXPERIENCE NOTES",
@@ -689,8 +689,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["drako_resume_and_linkedin_v1.docx"] = write_docx_file(
-        "drako_resume_and_linkedin_v1.docx",
+    files["Resume & LinkedIn v1.docx"] = write_docx_file(
+        "Resume & LinkedIn v1.docx",
         "Drako Santa Ana — Operations Supervisor Resume (v1 Draft)",
         [
             "# DRAFT OPERATIONS RESUME",
@@ -699,8 +699,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="draft",
     )
-    files["drako_resume_and_linkedin_final.pdf"] = write_pdf_file(
-        "drako_resume_and_linkedin_final.pdf",
+    files["Resume & LinkedIn.pdf"] = write_pdf_file(
+        "Resume & LinkedIn.pdf",
         "Drako Santa Ana — Operations Supervisor Resume & LinkedIn Optimization Master",
         [
             "# DRAKO SANTA ANA · WAREHOUSE & DOCK OPERATIONS SUPERVISOR",
@@ -731,10 +731,10 @@ def build_seed_attachments() -> dict[str, dict]:
         subtitle="Executive Warehouse Leadership Resume & Complete LinkedIn Profile Strategy",
         meta_tag="Executive Operations & Logistics Leadership Portfolio",
     )
-    files["drako_resume_operations_supervisor_v1.docx"] = copy_chat_file_alias("drako_resume_and_linkedin_v1.docx", "drako_resume_operations_supervisor_v1.docx", role="deliverable")
-    files["drako_resume_operations_supervisor_final.pdf"] = copy_chat_file_alias("drako_resume_and_linkedin_final.pdf", "drako_resume_operations_supervisor_final.pdf", role="deliverable")
-    files["drako_linkedin_summary_and_application_cover_letter.docx"] = write_docx_file(
-        "drako_linkedin_summary_and_application_cover_letter.docx",
+    files["Operations Supervisor Resume v1.docx"] = copy_chat_file_alias("Resume & LinkedIn v1.docx", "Operations Supervisor Resume v1.docx", role="deliverable")
+    files["Operations Supervisor Resume.pdf"] = copy_chat_file_alias("Resume & LinkedIn.pdf", "Operations Supervisor Resume.pdf", role="deliverable")
+    files["LinkedIn Profile & Cover Letter.docx"] = write_docx_file(
+        "LinkedIn Profile & Cover Letter.docx",
         "Drako Santa Ana — LinkedIn Profile Overhaul & Targeted Operations Cover Letter",
         [
             "# SECTION 1: LINKEDIN PROFILE OPTIMIZATION",
@@ -752,8 +752,8 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     # 6. Estella Williams (estellawilliams06@gmail.com)
     # =========================================================================
-    files["estella_october_newsletter_draft.docx"] = write_docx_file(
-        "estella_october_newsletter_draft.docx",
+    files["October Newsletter Draft.docx"] = write_docx_file(
+        "October Newsletter Draft.docx",
         "Estella Williams — Leadership Update Draft (October)",
         [
             "# DRAFT LEADERSHIP UPDATE — OCTOBER 2026",
@@ -762,8 +762,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["estella_october_newsletter_refined.docx"] = write_docx_file(
-        "estella_october_newsletter_refined.docx",
+    files["October Investor Newsletter.docx"] = write_docx_file(
+        "October Investor Newsletter.docx",
         "Estella Williams — Refined Q3 Leadership Memo (Final)",
         [
             "# CONFIDENTIAL LEADERSHIP & INVESTOR UPDATE — OCTOBER 2026",
@@ -785,8 +785,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="deliverable",
     )
-    files["estella_rough_role_notes.docx"] = write_docx_file(
-        "estella_rough_role_notes.docx",
+    files["Role Ramp Notes.docx"] = write_docx_file(
+        "Role Ramp Notes.docx",
         "Rough Onboarding Notes for 4 Key Operations Hires",
         [
             "# ONBOARDING NOTES",
@@ -795,8 +795,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["estella_4role_onboarding_sops_v1.docx"] = write_docx_file(
-        "estella_4role_onboarding_sops_v1.docx",
+    files["Onboarding Frameworks v1.docx"] = write_docx_file(
+        "Onboarding Frameworks v1.docx",
         "4-Role Operations Onboarding SOPs (v1 Draft)",
         [
             "# DRAFT ONBOARDING FRAMEWORKS",
@@ -804,37 +804,58 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="draft",
     )
-    files["estella_4role_onboarding_sops_final.pdf"] = write_pdf_file(
-        "estella_4role_onboarding_sops_final.pdf",
-        "Executive Operations Onboarding SOP Manual (4 Key Roles) — Final",
+    files["Lead Dispatcher SOP.pdf"] = write_pdf_file(
+        "Lead Dispatcher SOP.pdf",
+        "Lead Logistics Dispatcher — 30-60-90 Day Ramp & Operational SOP",
         [
-            "# EXECUTIVE OPERATIONS ONBOARDING & GOVERNANCE MANUAL",
-            "Terminal Operations & Logistics Platform · People Operations & Governance Standard",
-            "This Standard Operating Procedure manual defines the 30-60-90 day ramp rubrics, operational SLAs, and core role scorecards for four critical operational positions. Each newly appointed team member must complete all gated checkpoints to achieve permanent operational sign-off.",
-            "--PAGE-BREAK--",
-            "# ROLE 1: LEAD LOGISTICS DISPATCHER — 30-60-90 DAY RAMP MATRIX",
+            "# LEAD LOGISTICS DISPATCHER — STANDARD OPERATING PROCEDURE",
+            "Terminal Operations & Logistics Platform · Operational Governance Standards",
             "Core Mandate: Direct regional cross-dock trailer routing, enforce driver check-in geofencing, and maintain a 99.4% on-time dispatch SLA across 65 logistics terminal nodes.",
+            "--PAGE-BREAK--",
+            "# 30-60-90 DAY RAMP BENCHMARK MATRIX",
             [
                 ["Ramp Horizon", "Quantitative Metric / KPI", "Operational Milestone Objective", "Verification Artifact / Deliverable"],
                 ["Day 1–30 (Intake)", ">= 98.0% On-Time Check-In", "Master geofence configuration & Blue Yonder EDI 214 sync", "Shadow 40 shift check-ins; pass TMS system exam"],
                 ["Day 31–60 (Ramp)", "< 12 min Yard Dwell Time", "Manage cross-dock routing across 3 multi-terminal nodes", "Lead daily driver shift standups; audit dwell logs"],
                 ["Day 61–90 (Mastery)", ">= 99.4% On-Time Dispatch", "Direct emergency storm freight diversions; train new staff", "Sign off on regional terminal SOPs; 0 safety breaches"],
             ],
-            "Lead Dispatcher Daily Operational Checklist:",
+            "# DAILY OPERATIONAL SHIFT CHECKLIST",
             "— 06:00 Shift Kickoff: Verify overnight trailer drop counts against inbound EDI 204 manifests; flag delayed line-haul carriers.",
             "— 09:30 Yard Optimization: Audit trailer parking queue; reassign idling tractors to open dock doors to avoid detention fees.",
             "— 14:00 Cross-Dock Coordination: Confirm outbound load consolidation with warehouse staging leads.",
             "— 17:30 Shift Handover: Deliver digitized shift handover log detailing open demurrage exceptions and pending freight diversions.",
+            "# SYSTEMS ACCESS, PERMISSIONS & TOOLCHAIN",
+            [
+                ["System / Tool", "Access Level", "Security & Protocol Enforced"],
+                ["Terminal Yard Engine", "Super Administrator", "Hardware FIDO2 Security Key Required"],
+                ["Blue Yonder EDI 214", "Full Route Dispatch Access", "Enforced IP Whitelisting + 2FA"],
+                ["HubSpot Enterprise", "View Terminal Notes Only", "Google Workspace SSO + 2FA"],
+                ["AWS CloudWatch", "Dashboard & Health View", "Role-Based IAM Session Keys"],
+            ],
+            "# GOVERNANCE & SIGN-OFF ATTESTATION",
+            "Approved: People Operations & Talent Governance Committee · October 2026",
+            "Executive Reviewer: Estella Williams, Founder & Chief Executive Officer",
+        ],
+        role="deliverable",
+        subtitle="Standard Operating Procedures & 30-60-90 Day Ramp Rubrics for Operations Scale",
+        meta_tag="Terminal Operations Governance · Lead Dispatcher SOP",
+    )
+    files["Customer Operations SOP.pdf"] = write_pdf_file(
+        "Customer Operations SOP.pdf",
+        "Customer Operations Associate — 30-60-90 Day Ramp & Operational SOP",
+        [
+            "# CUSTOMER OPERATIONS ASSOCIATE — STANDARD OPERATING PROCEDURE",
+            "Terminal Operations & Logistics Platform · Operational Governance Standards",
+            "Core Mandate: Frontline terminal support triage, dispatcher Intercom/Zendesk escalations, carrier platform retention, and carrier communication.",
             "--PAGE-BREAK--",
-            "# ROLE 2: CUSTOMER OPERATIONS ASSOCIATE — 30-60-90 DAY RAMP MATRIX",
-            "Core Mandate: Frontline terminal support triage, dispatcher Intercom/Zendesk escalations, and carrier platform retention.",
+            "# 30-60-90 DAY RAMP BENCHMARK MATRIX",
             [
                 ["Ramp Horizon", "Quantitative Metric / KPI", "Operational Milestone Objective", "Verification Artifact / Deliverable"],
                 ["Day 1–30 (Intake)", "< 15 min First Response Time", "Triage Tier-1 terminal support tickets; memorize network workarounds", "Resolve 100 simulated support tickets with >90% CSAT"],
                 ["Day 31–60 (Ramp)", "> 95% CSAT Score (>50 tkts)", "Document weekly terminal recurring bugs; run carrier webinars", "Publish 4 knowledge-base troubleshooting guides"],
                 ["Day 61–90 (Mastery)", "< 2.0 hr Ticket Resolution", "Lead QBR operational reviews for Tier-2 carrier fleets", "Produce monthly churn risk audit for VP Operations"],
             ],
-            "Customer Operations Incident Classification Matrix:",
+            "# INCIDENT CLASSIFICATION & ESCALATION MATRIX",
             [
                 ["Ticket Priority", "Incident Description", "Response SLA", "Resolution SLA", "Escalation Lead"],
                 ["P1 — Critical", "Geofence outage preventing driver gate entry", "< 5 Minutes", "< 30 Minutes", "On-Call DevOps Engineer"],
@@ -842,48 +863,92 @@ def build_seed_attachments() -> dict[str, dict]:
                 ["P3 — Medium", "Individual dispatcher login / SSO failure", "< 30 Minutes", "< 4 Hours", "Customer Operations Associate"],
                 ["P4 — Low", "Reporting export or UI cosmetic discrepancy", "< 2 Hours", "< 24 Hours", "Product Operations Analyst"],
             ],
-            "--PAGE-BREAK--",
-            "# ROLE 3: BILLING & ACCOUNTS SPECIALIST — 30-60-90 DAY RAMP MATRIX",
+            "# SYSTEMS ACCESS & TOOLCHAIN",
+            [
+                ["System / Tool", "Access Level", "Security & Protocol Enforced"],
+                ["Zendesk & Intercom", "Full Agent & Escalation Tier", "Google Workspace SSO + 2FA"],
+                ["Terminal Yard Engine", "Read / Triage Only", "Hardware FIDO2 Security Key Required"],
+                ["Knowledge Base CMS", "Editor & Publisher", "Google Workspace SSO + 2FA"],
+            ],
+            "# GOVERNANCE & SIGN-OFF ATTESTATION",
+            "Approved: People Operations & Talent Governance Committee · October 2026",
+            "Executive Reviewer: Estella Williams, Founder & Chief Executive Officer",
+        ],
+        role="deliverable",
+        subtitle="Standard Operating Procedures & Incident Triage Rubrics",
+        meta_tag="Terminal Operations Governance · Customer Operations SOP",
+    )
+    files["Billing Specialist SOP.pdf"] = write_pdf_file(
+        "Billing Specialist SOP.pdf",
+        "Billing & Accounts Specialist — 30-60-90 Day Ramp & Operational SOP",
+        [
+            "# BILLING & ACCOUNTS SPECIALIST — STANDARD OPERATING PROCEDURE",
+            "Terminal Operations & Logistics Platform · Operational Governance Standards",
             "Core Mandate: Terminal SaaS subscription billing, automated ACH reconciliation, and carrier detention fee dispute escrow management.",
+            "--PAGE-BREAK--",
+            "# 30-60-90 DAY RAMP BENCHMARK MATRIX",
             [
                 ["Ramp Horizon", "Quantitative Metric / KPI", "Operational Milestone Objective", "Verification Artifact / Deliverable"],
                 ["Day 1–30 (Intake)", "100% Invoice Accuracy", "Reconcile weekly Stripe/Paystack billing; audit dunning workflows", "Reconcile 65 terminal billing accounts to $0.00 variance"],
                 ["Day 31–60 (Ramp)", "DSO < 22 Calendar Days", "Resolve carrier detention escrow disputes within 48 hours", "Implement automated Net-15 ACH debit reminders"],
                 ["Day 61–90 (Mastery)", "< 0.5% Bad Debt Expense", "Automate monthly GAAP ASC 606 revenue recognition schedules", "Deliver clean audit package for external CPA review"],
             ],
-            "Billing Workflow Reconciliation Standards:",
+            "# BILLING WORKFLOW RECONCILIATION STANDARDS",
             "— Weekly Dunning Cadence: Day 3 post-due automated reminder; Day 7 phone outreach to carrier controller; Day 14 account suspension warning.",
             "— Demurrage Escrow Disputes: Escrow deposits held in segregated FDIC-insured operating accounts pending GPS dwell-time verification.",
-            "--PAGE-BREAK--",
-            "# ROLE 4: ENTERPRISE ACCOUNT EXECUTIVE — 30-60-90 DAY RAMP MATRIX",
+            "— Payment Reconciliation: Daily sync between Stripe, Paystack gateway settlement batches, and NetSuite General Ledger.",
+            "# SYSTEMS ACCESS & FINANCIAL PROTOCOLS",
+            [
+                ["System / Tool", "Access Level", "Security & Protocol Enforced"],
+                ["Stripe & NetSuite ERP", "Full Administrator", "Enforced IP Whitelisting + Hardware 2FA"],
+                ["Paystack Gateway", "Merchant Administrator", "Enforced IP Whitelisting + 2FA"],
+                ["HubSpot Enterprise", "Invoice & Contract Link Only", "Google Workspace SSO + 2FA"],
+            ],
+            "# GOVERNANCE & SIGN-OFF ATTESTATION",
+            "Approved: People Operations & Talent Governance Committee · October 2026",
+            "Executive Reviewer: Estella Williams, Founder & Chief Executive Officer",
+        ],
+        role="deliverable",
+        subtitle="Standard Operating Procedures & Revenue Recognition Standards",
+        meta_tag="Terminal Operations Governance · Billing Specialist SOP",
+    )
+    files["Account Executive SOP.pdf"] = write_pdf_file(
+        "Account Executive SOP.pdf",
+        "Enterprise Account Executive — 30-60-90 Day Ramp & Operational SOP",
+        [
+            "# ENTERPRISE ACCOUNT EXECUTIVE — STANDARD OPERATING PROCEDURE",
+            "Terminal Operations & Logistics Platform · Operational Governance Standards",
             "Core Mandate: Mid-market logistics terminal sales, 3PL discovery scoping, and pilot-to-annual contract conversion.",
+            "--PAGE-BREAK--",
+            "# 30-60-90 DAY RAMP BENCHMARK MATRIX",
             [
                 ["Ramp Horizon", "Quantitative Metric / KPI", "Operational Milestone Objective", "Verification Artifact / Deliverable"],
                 ["Day 1–30 (Intake)", "30 Qualified Lead Discovery", "Master MEDDPICC qualification and interactive demurrage calculator", "Complete 5 mock discovery pitches before Executive team"],
                 ["Day 31–60 (Ramp)", "12 Pilots in Evaluation", "Compress terminal sales cycle from 64 to < 40 days", "Deliver $250K in advanced pipeline opportunities"],
                 ["Day 61–90 (Mastery)", "$450K Annualized ACV Closed", "Establish referral partnerships with 2 regional freight brokerages", "Maintain >30% win rate on formal RFP submissions"],
             ],
-            "--PAGE-BREAK--",
-            "# SYSTEMS ACCESS, PERMISSIONS & TOOLCHAIN MATRIX",
-            "All operational personnel are provisioned with role-based access control (RBAC) following background clearance verification.",
+            "# SALES DISCOVERY & ROI DEMONSTRATION STANDARDS",
+            "— MEDDPICC Qualification: Every terminal lead must have identified Metrics, Economic Buyer, Decision Criteria, and Decision Process before trial deployment.",
+            "— Interactive Demurrage Calculator: Model facility savings based on average trailer dwell reduction (target: 38% reduction, $14,800/mo saved per terminal).",
+            "— Contract Conversion: Pilot agreements convert automatically to Net-30 annual enterprise subscription upon completion of Day 30 live throughput test.",
+            "# TECHNICAL INTEGRATION & SALES TOOLCHAIN",
             [
-                ["System / Platform", "Role 1: Dispatcher", "Role 2: Support", "Role 3: Billing", "Role 4: Sales", "Security Protocol"],
-                ["Terminal Yard Engine", "Super Administrator", "Read / Triage Only", "No Access", "Demo Sandbox", "Hardware FIDO2 Security Key"],
-                ["Stripe & NetSuite ERP", "No Access", "View Customer Only", "Full Administrator", "No Access", "Enforced IP Whitelisting + 2FA"],
-                ["HubSpot Enterprise CRM", "View Terminal Notes", "Ticket Link Only", "Invoice Link Only", "Full Pipeline Edit", "Google Workspace SSO + 2FA"],
-                ["AWS CloudWatch / Logs", "Dashboard View", "Error Query Only", "No Access", "No Access", "Role-Based IAM Session Keys"],
+                ["System / Platform", "Access Level / Tooling Role", "Security Protocol"],
+                ["Datadog Monitoring", "Performance Metrics Dashboard for Customer Proof-of-Value", "SSO + Enforced MFA"],
+                ["Postman API Suite", "API Sandbox Testing & Carrier EDI Simulation Decks", "Role-Based Token Auth"],
+                ["HubSpot Enterprise CRM", "Full Pipeline Edit & Account Management", "Google Workspace SSO + 2FA"],
+                ["Terminal Yard Engine", "Demo Sandbox Environment", "Hardware FIDO2 Security Key"],
             ],
             "# GOVERNANCE & SIGN-OFF ATTESTATION",
-            "Upon completion of the 90-day ramp period, the supervising manager and Chief Executive Officer conduct a formal performance review. Successful candidates transition from probationary to regular full-time operational status.",
-            "Executive Reviewer: Estella Williams, Founder & Chief Executive Officer",
             "Approved: People Operations & Talent Governance Committee · October 2026",
+            "Executive Reviewer: Estella Williams, Founder & Chief Executive Officer",
         ],
         role="deliverable",
-        subtitle="Standard Operating Procedures & 30-60-90 Day Ramp Rubrics for Operations Scale",
-        meta_tag="Terminal Operations Governance & People Operations · SOP Manual",
+        subtitle="Standard Operating Procedures & Enterprise Sales Milestones",
+        meta_tag="Terminal Operations Governance · Account Executive SOP",
     )
-    files["estella_q4_board_deck_rough_bullets.docx"] = write_docx_file(
-        "estella_q4_board_deck_rough_bullets.docx",
+    files["Q4 Board Notes.docx"] = write_docx_file(
+        "Q4 Board Notes.docx",
         "Q4 Board Deck — Unformatted Bullet Dump (40 Pages)",
         [
             "# RAW BOARD BULLETS",
@@ -892,8 +957,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["estella_q4_executive_investor_deck_v1.docx"] = write_docx_file(
-        "estella_q4_executive_investor_deck_v1.docx",
+    files["Board Deck Outline v1.docx"] = write_docx_file(
+        "Board Deck Outline v1.docx",
         "Q4 Board Deck Slide Outline & Speaker Script (v1 Draft)",
         [
             "# 16-SLIDE OUTLINE",
@@ -901,8 +966,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="draft",
     )
-    files["estella_q4_board_briefing_memo_final.docx"] = write_docx_file(
-        "estella_q4_board_briefing_memo_final.docx",
+    files["Executive Board Memo.docx"] = write_docx_file(
+        "Executive Board Memo.docx",
         "Q4 Executive Board Briefing Memo — Estella Williams (Final)",
         [
             "# CONFIDENTIAL BOARD OF DIRECTORS BRIEFING MEMO",
@@ -959,8 +1024,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="deliverable",
     )
-    files["estella_q4_investor_deck_slide_copy_final.pdf"] = write_pdf_file(
-        "estella_q4_investor_deck_slide_copy_final.pdf",
+    files["Q4 Board Deck Slides.pdf"] = write_pdf_file(
+        "Q4 Board Deck Slides.pdf",
         "Q4 Board Deck — Slide Copy & Executive Visual Layouts",
         [
             "# SLIDE 1: TITLE & EXECUTIVE OVERVIEW",
@@ -987,8 +1052,8 @@ def build_seed_attachments() -> dict[str, dict]:
         meta_tag="Terminal Operations & Logistics Platform · Governance Record",
     )
     # 16-Slide Executive Board & Investor Presentation Deck (.pptx)
-    files["estella_q4_executive_investor_deck_final.pptx"] = write_pptx_file(
-        "estella_q4_executive_investor_deck_final.pptx",
+    files["Q4 Board Presentation.pptx"] = write_pptx_file(
+        "Q4 Board Presentation.pptx",
         "Q4 2026 Executive Investor Update — Estella Williams",
         [
             {"title": "InfiniAI Logistics Platform", "subtitle": "Q4 2026 Executive Investor Update · Board Briefing", "bullets": ["Presented by Estella Williams, Founder & CEO", "Confidential Board of Directors Review · October 2026"]},
@@ -1011,8 +1076,8 @@ def build_seed_attachments() -> dict[str, dict]:
         role="deliverable",
     )
     # Multi-Sheet Financial Projections, Unit Economics & Cap Table (.xlsx)
-    files["estella_q4_financial_model.xlsx"] = write_xlsx_file(
-        "estella_q4_financial_model.xlsx",
+    files["Q4 Financial Model.xlsx"] = write_xlsx_file(
+        "Q4 Financial Model.xlsx",
         {
             "ARR_&_P&L_Forecast": [
                 ["Financial Metric ($k)", "Q1 2026", "Q2 2026", "Q3 2026", "Q4 2026 (Est)", "FY 2026 Total", "FY 2027 Plan"],
@@ -1052,12 +1117,12 @@ def build_seed_attachments() -> dict[str, dict]:
         role="deliverable",
     )
     # Complete Board Pack ZIP containing PPTX, XLSX, and DOCX
-    files["estella_q4_executive_board_pack.zip"] = write_zip_file(
-        "estella_q4_executive_board_pack.zip",
+    files["Executive Board Pack.zip"] = write_zip_file(
+        "Executive Board Pack.zip",
         {
-            "Estella_Williams_Q4_Executive_Investor_Deck.pptx": "estella_q4_executive_investor_deck_final.pptx",
-            "Estella_Williams_Q4_Financial_Model.xlsx": "estella_q4_financial_model.xlsx",
-            "Estella_Williams_Q4_Board_Briefing_Memo.docx": "estella_q4_board_briefing_memo_final.docx",
+            "Estella_Williams_Q4_Executive_Investor_Deck.pptx": "Q4 Board Presentation.pptx",
+            "Estella_Williams_Q4_Financial_Model.xlsx": "Q4 Financial Model.xlsx",
+            "Estella_Williams_Q4_Board_Briefing_Memo.docx": "Executive Board Memo.docx",
             "README_BOARD_PACK.txt": "Estella Williams — Q4 Executive Board Package\nIncludes: 16-Slide Board Deck (.pptx), Cap Table & Projections (.xlsx), Briefing Memo (.docx).\nAll assets verified and approved for Q4 Board Review.",
         },
         role="deliverable",
@@ -1066,8 +1131,8 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     # 7. Kaylee Cabreros (kayleecabreros@gmail.com)
     # =========================================================================
-    files["kaylee_shopify_product_descriptions.xlsx"] = write_xlsx_file(
-        "kaylee_shopify_product_descriptions.xlsx",
+    files["Shopify Product Descriptions.xlsx"] = write_xlsx_file(
+        "Shopify Product Descriptions.xlsx",
         "Skincare_Catalog_Copy",
         [
             ["SKU", "Product Name", "Hero Benefit", "Sensory Description", "Full Ingredients", "How to Use Ritual", "Meta Title & Description"],
@@ -1078,8 +1143,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="deliverable",
     )
-    files["kaylee_welcome_emails_draft.docx"] = write_docx_file(
-        "kaylee_welcome_emails_draft.docx",
+    files["Welcome Email Sequence Draft.docx"] = write_docx_file(
+        "Welcome Email Sequence Draft.docx",
         "Kaylee Skincare — Welcome Flow Rough Notes",
         [
             "Email 1: Welcome to the brand + 15% discount code.",
@@ -1088,8 +1153,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["kaylee_welcome_emails_final.docx"] = write_docx_file(
-        "kaylee_welcome_emails_final.docx",
+    files["Welcome Email Sequence.docx"] = write_docx_file(
+        "Welcome Email Sequence.docx",
         "Kaylee Skincare — 4-Part Welcome & Botanical Ritual Email Sequence (Final)",
         [
             "# EMAIL 1: WELCOME TO THE BOTANICAL SANCTUARY",
@@ -1139,8 +1204,8 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     # 8. Dennis Kiragu (dkiragu97@gmail.com)
     # =========================================================================
-    files["dennis_old_expense_sheet.xlsx"] = write_xlsx_file(
-        "dennis_old_expense_sheet.xlsx",
+    files["Expense Sheet.xlsx"] = write_xlsx_file(
+        "Expense Sheet.xlsx",
         "Corridor_Expenses_Raw",
         [
             ["Trip Date", "Truck Reg", "Route", "Fuel Expense (KES)", "Toll Gate", "Driver Allowance", "Mileage"],
@@ -1150,8 +1215,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["dennis_q3_corridor_reconciliation_final.xlsx"] = write_xlsx_file(
-        "dennis_q3_corridor_reconciliation_final.xlsx",
+    files["Corridor Reconciliation.xlsx"] = write_xlsx_file(
+        "Corridor Reconciliation.xlsx",
         "Corridor_Reconciliation_Q3",
         [
             ["Corridor Segment", "Total Trips", "Total Miles", "Fuel Expense (USD)", "KES Converted", "Toll Surcharges", "Net Margin %"],
@@ -1161,8 +1226,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="deliverable",
     )
-    files["dennis_12month_cashflow_tracker_final.xlsx"] = write_xlsx_file(
-        "dennis_12month_cashflow_tracker_final.xlsx",
+    files["12-Month Cashflow Tracker.xlsx"] = write_xlsx_file(
+        "12-Month Cashflow Tracker.xlsx",
         {
             "12_Month_Cash_Flow": [
                 ["Category", "Jan 2026", "Feb 2026", "Mar 2026", "Apr 2026", "May 2026", "Jun 2026", "Jul 2026", "Aug 2026", "Sep 2026", "Oct 2026", "Nov 2026", "Dec 2026", "Full Year Total"],
@@ -1188,8 +1253,8 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     # 9. Alexa Quintero (uzbekquintero@gmail.com)
     # =========================================================================
-    files["alexa_pitch_rough_bullets.docx"] = write_docx_file(
-        "alexa_pitch_rough_bullets.docx",
+    files["Pitch Deck Bullets.docx"] = write_docx_file(
+        "Pitch Deck Bullets.docx",
         "Alexa Quintero — 10-Slide Pitch Outline & Mentor Feedback",
         [
             "Slide 1: Problem statement — Field service companies waste 14 hrs/week on paper dispatch.",
@@ -1200,8 +1265,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["alexa_competitor_rates.xlsx"] = write_xlsx_file(
-        "alexa_competitor_rates.xlsx",
+    files["Competitor Rates.xlsx"] = write_xlsx_file(
+        "Competitor Rates.xlsx",
         "Competitor_Analysis",
         [
             ["Competitor", "Price / Seat / Mo", "Setup Fee", "Mobile Offline Mode", "Electronic Signatures"],
@@ -1212,8 +1277,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["alexa_pitch_deck_structure_v1.pdf"] = write_pdf_file(
-        "alexa_pitch_deck_structure_v1.pdf",
+    files["Pitch Deck Structure v1.pdf"] = write_pdf_file(
+        "Pitch Deck Structure v1.pdf",
         "Angel Pitch Deck Architecture (10 Slides) — v1 Review",
         [
             "Slide 1: Executive Title & The 10-Second Hook",
@@ -1225,8 +1290,8 @@ def build_seed_attachments() -> dict[str, dict]:
         role="draft",
     )
     # DIVERSE DELIVERABLE: Real OpenXML PPTX presentation
-    files["alexa_10slide_investor_pitch.pptx"] = write_pptx_file(
-        "alexa_10slide_investor_pitch.pptx",
+    files["10-Slide Investor Pitch.pptx"] = write_pptx_file(
+        "10-Slide Investor Pitch.pptx",
         "Alexa Quintero — Angel Investor Presentation (10 Slides)",
         [
             {"title": "FieldPulse: Automated Mobile Dispatch for Trade Fleets", "bullets": ["Presented by Alexa Quintero, Founder & CEO", "Targeting the $8.2B North American Trade & Field Services Market"]},
@@ -1242,8 +1307,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="deliverable",
     )
-    files["alexa_unit_economics_model.xlsx"] = write_xlsx_file(
-        "alexa_unit_economics_model.xlsx",
+    files["Unit Economics Model.xlsx"] = write_xlsx_file(
+        "Unit Economics Model.xlsx",
         "Unit_Economics",
         [
             ["Metric", "Pilot Actuals", "Month 6 Target", "Month 12 Target", "Industry Benchmark"],
@@ -1259,8 +1324,8 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     # 10. Cami Kurtz (cami.kurtz@icloud.com)
     # =========================================================================
-    files["cami_raw_call_transcripts_18p.docx"] = write_docx_file(
-        "cami_raw_call_transcripts_18p.docx",
+    files["Call Transcripts (18p).docx"] = write_docx_file(
+        "Call Transcripts (18p).docx",
         "Raw Leadership Interview Transcripts (18 Pages)",
         [
             "Interview 1: Chief Technology Officer on sprint delivery silos and cross-team bottlenecks.",
@@ -1269,8 +1334,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["cami_call_action_sheet_v1.pdf"] = write_pdf_file(
-        "cami_call_action_sheet_v1.pdf",
+    files["Call Action Sheet v1.pdf"] = write_pdf_file(
+        "Call Action Sheet v1.pdf",
         "Executive Discovery Synthesis & Priority Actions (v1 Draft)",
         [
             "Key Findings: 3 core friction points across leadership tiers.",
@@ -1278,8 +1343,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="draft",
     )
-    files["cami_call_action_sheet_final.pdf"] = write_pdf_file(
-        "cami_call_action_sheet_final.pdf",
+    files["Call Action Sheet.pdf"] = write_pdf_file(
+        "Call Action Sheet.pdf",
         "Executive Leadership Action Sheet & Workshop Roadmap — Cami Kurtz (Final)",
         [
             "# 1. EXECUTIVE DIAGNOSTIC SYNTHESIS (FROM 18 PAGES OF C-SUITE INTERVIEWS)",
@@ -1309,8 +1374,8 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     # 11. Azael Orozco (orozcoazael815@gmail.com)
     # =========================================================================
-    files["orozco_roofing_rough_notes.docx"] = write_docx_file(
-        "orozco_roofing_rough_notes.docx",
+    files["Roofing Rough Notes.docx"] = write_docx_file(
+        "Roofing Rough Notes.docx",
         "Azael Roofing — Rough Website Content & Job History",
         [
             "Family owned roofing contractor in McAllen & Brownsville since 2012.",
@@ -1319,8 +1384,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["orozco_commercial_flat_roof_job_photo.png"] = write_screenshot_png_file(
-        "orozco_commercial_flat_roof_job_photo.png",
+    files["Commercial Flat Roof Job.png"] = write_screenshot_png_file(
+        "Commercial Flat Roof Job.png",
         url="FLIR E76 Thermal Imaging System · Job Site #TX-8840",
         site_title="Orozco Roofing Systems · Commercial Inspection",
         hero_headline="Field Job Photo: 42,000 Sq Ft Commercial TPO Heat-Welded Seams",
@@ -1335,16 +1400,16 @@ def build_seed_attachments() -> dict[str, dict]:
         kind="photo",
         role="source",
     )
-    files["orozco_site_copy_and_estimate_v1.docx"] = write_docx_file(
-        "orozco_site_copy_and_estimate_v1.docx",
+    files["Site Copy & Estimate v1.docx"] = write_docx_file(
+        "Site Copy & Estimate v1.docx",
         "Orozco Commercial Roofing — Website Copy & Bid Estimate (v1)",
         [
             "Homepage copy, commercial systems overview, and free roof assessment CTA.",
         ],
         role="draft",
     )
-    files["orozco_site_copy_and_estimate_final.docx"] = write_docx_file(
-        "orozco_site_copy_and_estimate_final.docx",
+    files["Site Copy & Estimate.docx"] = write_docx_file(
+        "Site Copy & Estimate.docx",
         "Orozco Commercial & Industrial Roofing — Master Technical Specifications & Commercial Bid Deck",
         [
             "# SECTION 1: HOMEPAGE MASTER COPY DECK & VALUE PROPOSITION",
@@ -1402,8 +1467,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="deliverable",
     )
-    files["orozco_estimate_sheet.xlsx"] = write_xlsx_file(
-        "orozco_estimate_sheet.xlsx",
+    files["Roofing Estimate Sheet.xlsx"] = write_xlsx_file(
+        "Roofing Estimate Sheet.xlsx",
         {
             "Commercial_Bid_Estimator": [
                 ["Roof Section", "System Type", "Area (Sq Ft)", "Tear-Off ($/Sq)", "Membrane ($/Sq)", "Labor ($/Sq)", "Section Total ($)"],
@@ -1425,8 +1490,8 @@ def build_seed_attachments() -> dict[str, dict]:
         role="deliverable",
     )
     orozco_html = load_showcase_template("showcase_orozco.html")
-    files["orozco_roofing_website_prototype.html"] = write_html_file(
-        "orozco_roofing_website_prototype.html",
+    files["Roofing Website Prototype.html"] = write_html_file(
+        "Roofing Website Prototype.html",
         "Orozco Commercial & Residential Roofing · South Texas",
         orozco_html,
         role="deliverable",
@@ -1462,18 +1527,18 @@ def build_seed_attachments() -> dict[str, dict]:
             crm_rows.append([f"DL-{deal_counter}", f"{comp} #{loop+1}" if loop > 0 else comp, f"Contact {deal_counter}", stage, terr, mrr, days, src, owner])
             deal_counter += 1
 
-    files["johnson_hubspot_export.csv"] = write_csv_file(
-        "johnson_hubspot_export.csv",
+    files["HubSpot CRM Export.csv"] = write_csv_file(
+        "HubSpot CRM Export.csv",
         crm_rows,
         role="source",
     )
-    files["johnson_crm_pipeline_export_clean.csv"] = write_csv_file(
-        "johnson_crm_pipeline_export_clean.csv",
+    files["CRM Pipeline Clean.csv"] = write_csv_file(
+        "CRM Pipeline Clean.csv",
         crm_rows,
         role="deliverable",
     )
-    files["johnson_crm_pipeline_spec.pdf"] = write_pdf_file(
-        "johnson_crm_pipeline_spec.pdf",
+    files["CRM Pipeline Spec.pdf"] = write_pdf_file(
+        "CRM Pipeline Spec.pdf",
         "HubSpot Enterprise CRM Architecture & Deal Stage Specification — DockStream Logistics",
         [
             "# 1. OPERATIONAL MANDATE & CRM INFRASTRUCTURE PURPOSE",
@@ -1535,8 +1600,8 @@ def build_seed_attachments() -> dict[str, dict]:
         subtitle="Enterprise CRM Pipeline Architecture, Lead Routing Rules & Forecasting Formulas",
         meta_tag="DockStream Logistics · Enterprise CRM & Sales Architecture",
     )
-    files["johnson_b2b_site_and_deck_brief.docx"] = write_docx_file(
-        "johnson_b2b_site_and_deck_brief.docx",
+    files["Enterprise Deck Brief.docx"] = write_docx_file(
+        "Enterprise Deck Brief.docx",
         "Q4 B2B Website & 12-Slide Enterprise Deck Brief",
         [
             "# CREATIVE BRIEF",
@@ -1545,8 +1610,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["johnson_b2b_deck_and_copy_v1.pdf"] = write_pdf_file(
-        "johnson_b2b_deck_and_copy_v1.pdf",
+    files["Enterprise Deck v1.pdf"] = write_pdf_file(
+        "Enterprise Deck v1.pdf",
         "B2B Enterprise Deck & 5-Page Website Copy (v1 Draft)",
         [
             "# DRAFT ENTERPRISE COPY",
@@ -1554,8 +1619,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="draft",
     )
-    files["johnson_b2b_site_and_deck_final.docx"] = write_docx_file(
-        "johnson_b2b_site_and_deck_final.docx",
+    files["Enterprise Deck Final.docx"] = write_docx_file(
+        "Enterprise Deck Final.docx",
         "5-Page B2B Website Copy Deck — DockStream Logistics (Final Production Master)",
         [
             "# PAGE 1: HOMEPAGE (ELIMINATE DOCK DEAD-TIME)",
@@ -1599,8 +1664,8 @@ def build_seed_attachments() -> dict[str, dict]:
         role="deliverable",
     )
     # DIVERSE DELIVERABLE: Real 12-slide OpenXML PPTX Presentation
-    files["johnson_12slide_outbound_enterprise_deck.pptx"] = write_pptx_file(
-        "johnson_12slide_outbound_enterprise_deck.pptx",
+    files["Outbound Enterprise Deck.pptx"] = write_pptx_file(
+        "Outbound Enterprise Deck.pptx",
         "Enterprise Logistics Automation Deck — Jack Johnson (12 Slides)",
         [
             {"title": "DockStream: Intelligent Cross-Dock Logistics", "bullets": ["Presented by Jack Johnson, Co-Founder", "Accelerating Mid-Market 3PL Dock Turn Times"]},
@@ -1620,8 +1685,8 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     # DIVERSE DELIVERABLE: Standalone Interactive 5-Page B2B Web Prototype
     johnson_html = load_showcase_template("showcase_dockstream.html")
-    files["johnson_dockstream_b2b_website_prototype.html"] = write_html_file(
-        "johnson_dockstream_b2b_website_prototype.html",
+    files["DockStream Website Prototype.html"] = write_html_file(
+        "DockStream Website Prototype.html",
         "DockStream · Intelligent Yard Logistics Management",
         johnson_html,
         role="deliverable",
@@ -1651,13 +1716,13 @@ def build_seed_attachments() -> dict[str, dict]:
             cur_bal += amt
             bank_rows.append([f"2026-0{m}-15", "First Hawaiian Business Checking", v_name, cat, f"{amt:.2f}", f"{cur_bal:.2f}"])
 
-    files["luca_q3_raw_bank_export.csv"] = write_csv_file(
-        "luca_q3_raw_bank_export.csv",
+    files["Q3 Bank Export.csv"] = write_csv_file(
+        "Q3 Bank Export.csv",
         bank_rows,
         role="source",
     )
-    files["luca_partner_distribution_summary.csv"] = write_csv_file(
-        "luca_partner_distribution_summary.csv",
+    files["Partner Distribution Summary.csv"] = write_csv_file(
+        "Partner Distribution Summary.csv",
         [
             ["Quarter", "Property", "Gross Income", "Operating Expenses", "HOA & Tax", "Net Cash Flow", "Carollo 50% Share", "Partner 50% Share"],
             ["Q3 2026", "Waikiki Unit 4B", 10200.00, 1680.00, 2070.00, 6450.00, 3225.00, 3225.00],
@@ -1666,8 +1731,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="deliverable",
     )
-    files["luca_august_vendor_receipts.pdf"] = write_pdf_file(
-        "luca_august_vendor_receipts.pdf",
+    files["August Vendor Receipts.pdf"] = write_pdf_file(
+        "August Vendor Receipts.pdf",
         "August Maintenance Receipts — Ala Moana & Waikiki Properties",
         [
             "Invoice 4821 — Pacific Split-AC Service: $620.00 (Unit 12A coil cleaning & refrigerant).",
@@ -1676,8 +1741,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["luca_q3_property_ledger_reconciled.xlsx"] = write_xlsx_file(
-        "luca_q3_property_ledger_reconciled.xlsx",
+    files["Q3 Reconciled Ledger.xlsx"] = write_xlsx_file(
+        "Q3 Reconciled Ledger.xlsx",
         "Q3_Reconciled_Property_P&L",
         [
             ["Month", "Unit", "Gross Rent (USD)", "Maintenance (USD)", "HOA & Dues (USD)", "Utilities (USD)", "Net Operating Income"],
@@ -1690,9 +1755,9 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="deliverable",
     )
-    files["luca_q3_financial_model.xlsx"] = copy_chat_file_alias("luca_q3_property_ledger_reconciled.xlsx", "luca_q3_financial_model.xlsx", role="deliverable")
-    files["luca_q3_reconciled_ledger.csv"] = write_csv_file(
-        "luca_q3_reconciled_ledger.csv",
+    files["Q3 Financial Model.xlsx"] = copy_chat_file_alias("Q3 Reconciled Ledger.xlsx", "Q3 Financial Model.xlsx", role="deliverable")
+    files["Q3 Reconciled Ledger.csv"] = write_csv_file(
+        "Q3 Reconciled Ledger.csv",
         [
             ["Date", "Transaction Description", "Category", "Gross Inbound (USD)", "GET Tax (4.712%)", "County Surcharge (0.5%)", "Net Revenue"],
             ["2026-08-02", "Oahu Sunset Catamaran Charter #1042", "Private Charter", 3450.00, 162.56, 17.25, 3270.19],
@@ -1703,8 +1768,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="deliverable",
     )
-    files["luca_charter_rates_raw.xlsx"] = write_xlsx_file(
-        "luca_charter_rates_raw.xlsx",
+    files["Charter Rates.xlsx"] = write_xlsx_file(
+        "Charter Rates.xlsx",
         "Charter_Pricing_Notes",
         [
             ["Vessel", "Capacity", "Half-Day (4h)", "Full-Day (8h)", "Sunset Cruise (2.5h)", "Captain & Fuel Fee"],
@@ -1713,8 +1778,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["luca_oahu_charter_booking_deck_final.pdf"] = write_pdf_file(
-        "luca_oahu_charter_booking_deck_final.pdf",
+    files["Charter Booking Deck.pdf"] = write_pdf_file(
+        "Charter Booking Deck.pdf",
         "Oahu Catamaran & Sportfishing Private Charters — 2026 Guest Brochure & Booking Guide",
         [
             "# 1. WELCOME ABOARD: PRIVATE OCEAN HOSPITALITY AT KEWALO BASIN",
@@ -1778,8 +1843,8 @@ def build_seed_attachments() -> dict[str, dict]:
         subtitle="2026 Private Catamaran Sails, Snorkel Excursions & Offshore Big Game Fishing Brochure",
         meta_tag="Oahu Charter Co. · Kewalo Basin Harbor · Honolulu, Hawaii",
     )
-    files["luca_harbor_seasonal_manifest_v2.xlsx"] = write_xlsx_file(
-        "luca_harbor_seasonal_manifest_v2.xlsx",
+    files["Seasonal Manifest v2.xlsx"] = write_xlsx_file(
+        "Seasonal Manifest v2.xlsx",
         "Harbor_Manifest_2026",
         [
             ["Berth #", "Vessel Name", "LOA (ft)", "Beam", "Slip Fee / Mo", "Commercial Permit #", "Expiration Date"],
@@ -1789,8 +1854,8 @@ def build_seed_attachments() -> dict[str, dict]:
         role="deliverable",
     )
     # 8-Slide Oahu Catamaran & Sportfishing Guest Presentation Deck (.pptx)
-    files["luca_oahu_charter_booking_deck_final.pptx"] = write_pptx_file(
-        "luca_oahu_charter_booking_deck_final.pptx",
+    files["Charter Booking Deck.pptx"] = write_pptx_file(
+        "Charter Booking Deck.pptx",
         "Oahu Catamaran & Sportfishing Private Charters — 2026 Presentation",
         [
             {"title": "Oahu Catamaran & Sportfishing Charters", "subtitle": "2026 Private Charter & Concierge Presentation", "bullets": ["Presented by Luca Carollo, Managing Partner", "Kewalo Basin Harbor, Honolulu, Hawaii"]},
@@ -1805,8 +1870,8 @@ def build_seed_attachments() -> dict[str, dict]:
         role="deliverable",
     )
     # Multi-Sheet Partner Cash-Flow & Distribution Waterfall Model (.xlsx)
-    files["luca_partner_distribution_waterfall_model.xlsx"] = write_xlsx_file(
-        "luca_partner_distribution_waterfall_model.xlsx",
+    files["Waterfall Model.xlsx"] = write_xlsx_file(
+        "Waterfall Model.xlsx",
         {
             "Partner_Distribution_Model": [
                 ["Property Entity", "Gross Rent (USD)", "Operating Expense", "HOA Dues", "Property Tax", "Net Cash Flow", "Carollo 50% Share", "Partner 50% Share"],
@@ -1824,8 +1889,8 @@ def build_seed_attachments() -> dict[str, dict]:
         },
         role="deliverable",
     )
-    files["luca_spring_bookkeeping_ledger_final.xlsx"] = write_xlsx_file(
-        "luca_spring_bookkeeping_ledger_final.xlsx",
+    files["Spring Bookkeeping Ledger.xlsx"] = write_xlsx_file(
+        "Spring Bookkeeping Ledger.xlsx",
         "Spring_Bookkeeping_Summary",
         [
             ["Quarter", "Total Gross Revenue", "Operating Expenses", "Net Profit", "Margin %"],
@@ -1838,8 +1903,8 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     # 15. Lina Rickert (linarickert2514@gmail.com)
     # =========================================================================
-    files["lina_summer_campaign_emails_rough.docx"] = write_docx_file(
-        "lina_summer_campaign_emails_rough.docx",
+    files["Summer Campaign Emails Rough.docx"] = write_docx_file(
+        "Summer Campaign Emails Rough.docx",
         "Lina Rickert — Summer Promo Emails Draft",
         [
             "Email 1: Early summer VIP access to new footwear collection.",
@@ -1848,16 +1913,16 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["lina_summer_campaign_emails_v1.docx"] = write_docx_file(
-        "lina_summer_campaign_emails_v1.docx",
+    files["Summer Launch Emails v1.docx"] = write_docx_file(
+        "Summer Launch Emails v1.docx",
         "Summer Campaign Retention Sequence (v1 Draft)",
         [
             "Reworked subject lines to boost open rates and tightened call-to-action buttons.",
         ],
         role="draft",
     )
-    files["lina_summer_campaign_emails_final.docx"] = write_docx_file(
-        "lina_summer_campaign_emails_final.docx",
+    files["Summer Launch Emails.docx"] = write_docx_file(
+        "Summer Launch Emails.docx",
         "High-Converting Summer Retention Sequence (5 Emails) — Final Production Master",
         [
             "# EMAIL 1: VIP PRIVATE EARLY ACCESS (24 HOURS BEFORE PUBLIC LAUNCH)",
@@ -1920,8 +1985,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="deliverable",
     )
-    files["lina_spring_launch_copy_final.docx"] = write_docx_file(
-        "lina_spring_launch_copy_final.docx",
+    files["Spring Launch Copy.docx"] = write_docx_file(
+        "Spring Launch Copy.docx",
         "Spring Footwear Launch Campaign Copy Deck (Final Production Master)",
         [
             "# 1. CAMPAIGN CREATIVE DIRECTION & BRAND THEME",
@@ -1961,8 +2026,8 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     # 16. Patrick Hyland (patrickhyland04@gmail.com)
     # =========================================================================
-    files["patrick_newfoundland_dispatch_raw.xlsx"] = write_xlsx_file(
-        "patrick_newfoundland_dispatch_raw.xlsx",
+    files["Newfoundland Dispatch Raw.xlsx"] = write_xlsx_file(
+        "Newfoundland Dispatch Raw.xlsx",
         "Raw_Dispatch_Logs",
         [
             ["Trip #", "Driver", "Route", "Mileage", "Fuel Liters", "Diesel Price/L", "Ferry Surcharge"],
@@ -1972,8 +2037,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["patrick_dispatch_and_fuel_tracker_v1.xlsx"] = write_xlsx_file(
-        "patrick_dispatch_and_fuel_tracker_v1.xlsx",
+    files["Dispatch & Fuel Tracker v1.xlsx"] = write_xlsx_file(
+        "Dispatch & Fuel Tracker v1.xlsx",
         "Dispatch_Tracker_Draft",
         [
             ["Trip #", "Driver", "Mileage", "Fuel Cost (CAD)", "Driver Payout", "Gross Revenue", "Net Margin"],
@@ -1981,8 +2046,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="draft",
     )
-    files["patrick_dispatch_and_fuel_tracker_final.xlsx"] = write_xlsx_file(
-        "patrick_dispatch_and_fuel_tracker_final.xlsx",
+    files["Dispatch & Fuel Tracker.xlsx"] = write_xlsx_file(
+        "Dispatch & Fuel Tracker.xlsx",
         "Atlantic_Dispatch_&_Fuel_Model",
         [
             ["Trip #", "Driver", "Origin / Dest", "Mileage (KM)", "Fuel Burn (CAD)", "Marine Atlantic Ferry", "Driver Pay ($0.60/km)", "Client Billing", "Net Profit", "Margin %"],
@@ -1995,8 +2060,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="deliverable",
     )
-    files["patrick_spring_freight_rates_final.xlsx"] = write_xlsx_file(
-        "patrick_spring_freight_rates_final.xlsx",
+    files["Spring Freight Rates.xlsx"] = write_xlsx_file(
+        "Spring Freight Rates.xlsx",
         "Atlantic_Freight_Rates_2026",
         [
             ["Zone", "Destination", "LTL Pallet Rate", "Full Truckload", "Fuel Index Tier"],
@@ -2010,8 +2075,8 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     # 17. Carter Lemburg (lemburgcarter@gmail.com)
     # =========================================================================
-    files["carter_storefront_launch_notes.docx"] = write_docx_file(
-        "carter_storefront_launch_notes.docx",
+    files["Storefront Launch Notes.docx"] = write_docx_file(
+        "Storefront Launch Notes.docx",
         "Carter Lemburg — Storefront Launch Notes & Wireframe",
         [
             "DTC hardware product launch: Modular MagSafe desk organizer & wireless charger.",
@@ -2021,14 +2086,14 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     # DIVERSE DELIVERABLE: Standalone Interactive HTML Prototype
     carter_html = load_showcase_template("showcase_apexdesk.html")
-    files["carter_landing_page_prototype.html"] = write_html_file(
-        "carter_landing_page_prototype.html",
+    files["Storefront Prototype.html"] = write_html_file(
+        "Storefront Prototype.html",
         "ApexDesk · Precision Modular Desktop Ecosystem",
         carter_html,
         role="deliverable",
     )
-    files["carter_website_launch_checklist_final.pdf"] = write_pdf_file(
-        "carter_website_launch_checklist_final.pdf",
+    files["Website Launch Checklist.pdf"] = write_pdf_file(
+        "Website Launch Checklist.pdf",
         "ApexDesk — E-Commerce Pre-Launch & Shopify Technical Verification Checklist",
         [
             "# 1. TECHNICAL LAUNCH AUDIT OVERVIEW",
@@ -2047,11 +2112,11 @@ def build_seed_attachments() -> dict[str, dict]:
         subtitle="DTC Hardware Storefront Launch Specification & QA Sign-Off",
         meta_tag="ApexDesk Modular Hardware Systems · Storefront Launch",
     )
-    files["carter_storefront_assets_and_launch_kit.zip"] = write_zip_file(
-        "carter_storefront_assets_and_launch_kit.zip",
+    files["Storefront Assets Kit.zip"] = write_zip_file(
+        "Storefront Assets Kit.zip",
         {
-            "ApexDesk_Storefront_Prototype.html": "carter_landing_page_prototype.html",
-            "ApexDesk_Launch_Audit_Report.pdf": "carter_website_launch_checklist_final.pdf",
+            "ApexDesk_Storefront_Prototype.html": "Storefront Prototype.html",
+            "ApexDesk_Launch_Audit_Report.pdf": "Website Launch Checklist.pdf",
             "README_LAUNCH.txt": "Carter Lemburg — ApexDesk DTC Storefront Launch Package\nPackage Version: 2.4 Final Master Launch Kit\nIncludes: HTML Prototype, PDF Technical Audit, CSS Stylesheet, Launch Checklist, Hardware Engineering Spec, Asset Manifest.",
             "launch_checklist.md": "# ApexDesk Storefront Launch Checklist\n\n- [x] Configure Shopify variant SKUs (AD-01 Matte Black, AD-02 Silver)\n- [x] Integrate 15W Qi2 fast-charging compliance badge\n- [x] Set up abandoned cart recovery email trigger (1hr / 24hr)\n- [x] Test Apple Pay and Google Pay express checkout buttons\n- [x] Verify Cloudflare edge SSL and cache rules\n- [x] Activate Meta Conversions API (CAPI) and GA4 e-commerce events",
             "hardware_engineering_spec.txt": "APEXDESK HARDWARE ENGINEERING SPECIFICATIONS\nModel: AD-01 Modular Magnetic Charging Rail\nChassis: Solid Unibody CNC 6063 Aerospace Aluminum\nWeight: 980 grams (weighted non-slip base)\nCharging Module: Qi2 MPP (Magnetic Power Profile) 15W Fast Charge\nInput Power: USB-C PD 3.0 (Minimum 30W recommended; 65W GaN included)\nMagnets: 16x N52 Neodymium Ring Array (1.2 kg pull force)\nFinish: Type-II Matte Anodized Bead-Blasted (Obsidian / Space Silver)\nSafety Protection: Over-voltage, Over-current, Foreign Object Detection (FOD)\n",
@@ -2064,8 +2129,8 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     # 18. Issa Cuevas (issabelc207@gmail.com)
     # =========================================================================
-    files["cuevas_intake_and_consent_draft_messy.docx"] = write_docx_file(
-        "cuevas_intake_and_consent_draft_messy.docx",
+    files["Clinic Intake Notes.docx"] = write_docx_file(
+        "Clinic Intake Notes.docx",
         "Cuevas Speech & Language Therapy — Rough Intake Notes & Policy Scramble",
         [
             "# CLINIC INTAKE DESK NOTES (ROUGH DRAFT — ISSA CUEVAS)",
@@ -2079,8 +2144,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="source",
     )
-    files["cuevas_pediatric_intake_and_consent_v1.docx"] = write_docx_file(
-        "cuevas_pediatric_intake_and_consent_v1.docx",
+    files["Pediatric Intake Agreement v1.docx"] = write_docx_file(
+        "Pediatric Intake Agreement v1.docx",
         "Pediatric Clinical Intake & Consent Agreement (v1 Draft — Before Revisions)",
         [
             "# ARTICLE 1: CLIENT IDENTIFICATION",
@@ -2094,8 +2159,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="draft",
     )
-    files["cuevas_pediatric_intake_and_consent_final.docx"] = write_docx_file(
-        "cuevas_pediatric_intake_and_consent_final.docx",
+    files["Pediatric Intake Agreement.docx"] = write_docx_file(
+        "Pediatric Intake Agreement.docx",
         "Master Clinical Intake & Patient Guarantor Agreement — Cuevas Speech & Language Therapy (Final)",
         [
             "# CUEVAS SPEECH & LANGUAGE THERAPY, PLLC — AUSTIN, TEXAS",
@@ -2149,8 +2214,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="deliverable",
     )
-    files["cuevas_parent_communication_templates.docx"] = write_docx_file(
-        "cuevas_parent_communication_templates.docx",
+    files["Parent Communication Templates.docx"] = write_docx_file(
+        "Parent Communication Templates.docx",
         "Cuevas Speech Therapy — Front Desk Parent Communication Scripts & Email Decks",
         [
             "# TEMPLATE 1: WELCOME & ELECTRONIC INTAKE PAPERWORK ONBOARDING (EMAIL)",
@@ -2200,8 +2265,8 @@ def build_seed_attachments() -> dict[str, dict]:
         ],
         role="deliverable",
     )
-    files["cuevas_speech_clinic_service_agreement_final.pdf"] = write_pdf_file(
-        "cuevas_speech_clinic_service_agreement_final.pdf",
+    files["Pediatric Clinic Agreement.pdf"] = write_pdf_file(
+        "Pediatric Clinic Agreement.pdf",
         "Cuevas Speech & Language Therapy — Master Clinical Services Agreement & Guarantor Attestation",
         [
             "# CUEVAS SPEECH & LANGUAGE THERAPY, PLLC — AUSTIN, TEXAS",
@@ -2289,17 +2354,126 @@ def build_seed_attachments() -> dict[str, dict]:
         meta_tag="Cuevas Speech & Language Therapy · Austin, Texas · TX License #72841",
     )
     # DIVERSE DELIVERABLE: Real ZIP pack containing agreements, templates, and clinical forms
-    files["cuevas_pediatric_intake_forms_bundle.zip"] = write_zip_file(
-        "cuevas_pediatric_intake_forms_bundle.zip",
+    files["Parent Intake Forms Bundle.zip"] = write_zip_file(
+        "Parent Intake Forms Bundle.zip",
         {
             "README_CLINICAL_PACK.txt": "Cuevas Speech & Language Therapy — Complete Clinical Onboarding Pack\nIncludes: Master Agreement (.pdf), Editable Word Decks (.docx), Front Desk Scripts (.docx), Emergency Contact Form (.csv).\nClinical Director: Issa Cuevas, M.S., CCC-SLP · Austin, Texas",
-            "Master_Clinical_Agreement_Final.pdf": "cuevas_speech_clinic_service_agreement_final.pdf",
-            "Pediatric_Intake_and_Consent_Final.docx": "cuevas_pediatric_intake_and_consent_final.docx",
-            "Parent_Communication_Templates.docx": "cuevas_parent_communication_templates.docx",
+            "Master_Clinical_Agreement_Final.pdf": "Pediatric Clinic Agreement.pdf",
+            "Pediatric_Intake_and_Consent_Final.docx": "Pediatric Intake Agreement.docx",
+            "Parent_Communication_Templates.docx": "Parent Communication Templates.docx",
             "Emergency_Medical_Contact_Form.csv": "Field,Requirement,Description\nChild_Full_Name,Required,Full legal name of patient\nDate_of_Birth,Required,MM/DD/YYYY\nPrimary_Physician,Required,Pediatrician office phone and clinic name\nAllergies,Required,Sensory sensitivities or dietary restrictions\nEmergency_Contact_1,Required,Parent/Guarantor phone and relation\nEmergency_Contact_2,Optional,Alternate caregiver authorized for pickup",
         },
         role="deliverable",
     )
+    # Alias fallback for clean filenames and legacy compatibility
+    for old_name, new_name in [
+        ("estella_october_newsletter_draft.docx", "October Newsletter Draft.docx"),
+        ("estella_october_newsletter_refined.docx", "October Investor Newsletter.docx"),
+        ("estella_rough_role_notes.docx", "Role Ramp Notes.docx"),
+        ("estella_4role_onboarding_sops_v1.docx", "Onboarding Frameworks v1.docx"),
+        ("estella_4role_onboarding_sops_final.pdf", "Lead Dispatcher SOP.pdf"),
+        ("estella_q4_board_deck_rough_bullets.docx", "Q4 Board Notes.docx"),
+        ("estella_q4_executive_investor_deck_v1.docx", "Board Deck Outline v1.docx"),
+        ("estella_q4_board_briefing_memo_final.docx", "Executive Board Memo.docx"),
+        ("estella_q4_investor_deck_slide_copy_final.pdf", "Q4 Board Deck Slides.pdf"),
+        ("estella_q4_executive_investor_deck_final.pptx", "Q4 Board Presentation.pptx"),
+        ("estella_q4_financial_model.xlsx", "Q4 Financial Model.xlsx"),
+        ("estella_q4_executive_board_pack.zip", "Executive Board Pack.zip"),
+        ("cuevas_intake_and_consent_draft_messy.docx", "Clinic Intake Notes.docx"),
+        ("cuevas_pediatric_intake_and_consent_v1.docx", "Pediatric Intake Agreement v1.docx"),
+        ("cuevas_pediatric_intake_and_consent_final.docx", "Pediatric Intake Agreement.docx"),
+        ("cuevas_parent_communication_templates.docx", "Parent Communication Templates.docx"),
+        ("cuevas_speech_clinic_service_agreement_final.pdf", "Pediatric Clinic Agreement.pdf"),
+        ("cuevas_pediatric_intake_forms_bundle.zip", "Parent Intake Forms Bundle.zip"),
+        ("audrey_current_homepage_screenshot.png", "Current Homepage.png"),
+        ("audrey_current_booking_form_screenshot.png", "Booking Form.png"),
+        ("audrey_homepage_booking_audit.pdf", "Website Audit & Recommendations.pdf"),
+        ("audrey_wireframe_notes.docx", "Wireframe Notes.docx"),
+        ("audrey_3page_website_copy_v1.docx", "Website Copy v1.docx"),
+        ("audrey_3page_website_copy_final.docx", "Website Copy (Final).docx"),
+        ("audrey_studio_brown_website_prototype.html", "Studio Brown Prototype.html"),
+        ("audrey_booking_flow_wireframe_diagram.png", "Booking Flow Wireframe.png"),
+        ("luca_q3_raw_bank_export.csv", "Q3 Bank Export.csv"),
+        ("luca_partner_distribution_summary.csv", "Partner Distribution Summary.csv"),
+        ("luca_august_vendor_receipts.pdf", "August Vendor Receipts.pdf"),
+        ("luca_q3_property_ledger_reconciled.xlsx", "Q3 Reconciled Ledger.xlsx"),
+        ("luca_q3_financial_model.xlsx", "Q3 Financial Model.xlsx"),
+        ("luca_q3_reconciled_ledger.csv", "Q3 Reconciled Ledger.csv"),
+        ("luca_charter_rates_raw.xlsx", "Charter Rates.xlsx"),
+        ("luca_oahu_charter_booking_deck_final.pdf", "Charter Booking Deck.pdf"),
+        ("luca_harbor_seasonal_manifest_v2.xlsx", "Seasonal Manifest v2.xlsx"),
+        ("luca_oahu_charter_booking_deck_final.pptx", "Charter Booking Deck.pptx"),
+        ("luca_partner_distribution_waterfall_model.xlsx", "Waterfall Model.xlsx"),
+        ("luca_spring_bookkeeping_ledger_final.xlsx", "Spring Bookkeeping Ledger.xlsx"),
+        ("johnson_hubspot_export.csv", "HubSpot CRM Export.csv"),
+        ("johnson_crm_pipeline_export_clean.csv", "CRM Pipeline Clean.csv"),
+        ("johnson_crm_pipeline_spec.pdf", "CRM Pipeline Spec.pdf"),
+        ("johnson_b2b_site_and_deck_brief.docx", "Enterprise Deck Brief.docx"),
+        ("johnson_b2b_deck_and_copy_v1.pdf", "Enterprise Deck v1.pdf"),
+        ("johnson_b2b_site_and_deck_final.docx", "Enterprise Deck Final.docx"),
+        ("johnson_12slide_outbound_enterprise_deck.pptx", "Outbound Enterprise Deck.pptx"),
+        ("johnson_dockstream_b2b_website_prototype.html", "DockStream Website Prototype.html"),
+        ("cruz_old_bio_draft.docx", "Freight Carrier Bio.docx"),
+        ("cruz_bio_and_emails_v1_preview.pdf", "Carrier Outreach Preview v1.pdf"),
+        ("cruz_bio_and_outreach_final.docx", "Outreach Email Sequence.docx"),
+        ("cruz_freight_rates_card.png", "Freight Rates Card.png"),
+        ("keegan_raw_sku_list.xlsx", "Raw SKU Inventory.xlsx"),
+        ("keegan_freight_duty_rates.pdf", "Freight Duty Rates.pdf"),
+        ("keegan_sku_margin_calculator_v1.xlsx", "SKU Margin Calculator v1.xlsx"),
+        ("keegan_sku_margin_calculator_v2_locked.xlsx", "SKU Margin Calculator.xlsx"),
+        ("keegan_warehouse_sku_handbook.pdf", "Warehouse SKU Handbook.pdf"),
+        ("keegan_staff_sku_guide.pdf", "Staff SKU Guide.pdf"),
+        ("liza_vendor_packet_draft.docx", "Vendor Packet Draft.docx"),
+        ("liza_vendor_packet_clean.pdf", "Vendor Agreement Packet.pdf"),
+        ("liza_rate_card_final.xlsx", "Commercial Rate Card.xlsx"),
+        ("liza_commercial_rate_card.xlsx", "Commercial Rate Card.xlsx"),
+        ("liza_15p_service_proposal_messy.docx", "Service Proposal Notes.docx"),
+        ("liza_15p_service_proposal_v1.docx", "Service Proposal v1.docx"),
+        ("liza_15p_service_proposal_final.pdf", "Service Proposal.pdf"),
+        ("drako_old_resume_2023.pdf", "Operations Resume 2023.pdf"),
+        ("drako_2024_2026_warehouse_notes.docx", "Warehouse Leadership Notes.docx"),
+        ("drako_resume_and_linkedin_v1.docx", "Resume & LinkedIn v1.docx"),
+        ("drako_resume_and_linkedin_final.pdf", "Resume & LinkedIn.pdf"),
+        ("drako_resume_operations_supervisor_v1.docx", "Operations Supervisor Resume v1.docx"),
+        ("drako_resume_operations_supervisor_final.pdf", "Operations Supervisor Resume.pdf"),
+        ("drako_linkedin_summary_and_application_cover_letter.docx", "LinkedIn Profile & Cover Letter.docx"),
+        ("kaylee_shopify_product_descriptions.xlsx", "Shopify Product Descriptions.xlsx"),
+        ("kaylee_welcome_emails_draft.docx", "Welcome Email Sequence Draft.docx"),
+        ("kaylee_welcome_emails_final.docx", "Welcome Email Sequence.docx"),
+        ("dennis_old_expense_sheet.xlsx", "Expense Sheet.xlsx"),
+        ("dennis_q3_corridor_reconciliation_final.xlsx", "Corridor Reconciliation.xlsx"),
+        ("dennis_12month_cashflow_tracker_final.xlsx", "12-Month Cashflow Tracker.xlsx"),
+        ("alexa_pitch_rough_bullets.docx", "Pitch Deck Bullets.docx"),
+        ("alexa_competitor_rates.xlsx", "Competitor Rates.xlsx"),
+        ("alexa_pitch_deck_structure_v1.pdf", "Pitch Deck Structure v1.pdf"),
+        ("alexa_10slide_investor_pitch.pptx", "10-Slide Investor Pitch.pptx"),
+        ("alexa_unit_economics_model.xlsx", "Unit Economics Model.xlsx"),
+        ("cami_raw_call_transcripts_18p.docx", "Call Transcripts (18p).docx"),
+        ("cami_call_action_sheet_v1.pdf", "Call Action Sheet v1.pdf"),
+        ("cami_call_action_sheet_final.pdf", "Call Action Sheet.pdf"),
+        ("orozco_roofing_rough_notes.docx", "Roofing Rough Notes.docx"),
+        ("orozco_commercial_flat_roof_job_photo.png", "Commercial Flat Roof Job.png"),
+        ("orozco_site_copy_and_estimate_v1.docx", "Site Copy & Estimate v1.docx"),
+        ("orozco_site_copy_and_estimate_final.docx", "Site Copy & Estimate.docx"),
+        ("orozco_estimate_sheet.xlsx", "Roofing Estimate Sheet.xlsx"),
+        ("orozco_roofing_website_prototype.html", "Roofing Website Prototype.html"),
+        ("lina_summer_campaign_emails_rough.docx", "Summer Campaign Emails Rough.docx"),
+        ("lina_summer_campaign_emails_v1.docx", "Summer Launch Emails v1.docx"),
+        ("lina_summer_campaign_emails_final.docx", "Summer Launch Emails.docx"),
+        ("lina_spring_launch_copy_final.docx", "Spring Launch Copy.docx"),
+        ("patrick_newfoundland_dispatch_raw.xlsx", "Newfoundland Dispatch Raw.xlsx"),
+        ("patrick_dispatch_and_fuel_tracker_v1.xlsx", "Dispatch & Fuel Tracker v1.xlsx"),
+        ("patrick_dispatch_and_fuel_tracker_final.xlsx", "Dispatch & Fuel Tracker.xlsx"),
+        ("patrick_spring_freight_rates_final.xlsx", "Spring Freight Rates.xlsx"),
+        ("carter_storefront_launch_notes.docx", "Storefront Launch Notes.docx"),
+        ("carter_landing_page_prototype.html", "Storefront Prototype.html"),
+        ("carter_website_launch_checklist_final.pdf", "Website Launch Checklist.pdf"),
+        ("carter_storefront_assets_and_launch_kit.zip", "Storefront Assets Kit.zip"),
+    ]:
+        if new_name in files and old_name not in files:
+            files[old_name] = files[new_name]
+        elif old_name in files and new_name not in files:
+            files[new_name] = files[old_name]
 
     return files
 
@@ -2381,7 +2555,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 17, 21, 13, 22),
                 "hey man, need some help with my company bio and a couple cold emails. freight brokers keep lowballing us on DFW box truck runs and i'm trying to get direct contracts with local distributors. typing this from my cab at a dock in Grand Prairie so excuse any typos lol, but i attached my rough notes. how much to clean this up and make us look like a serious carrier?",
                 [
-                    'cruz_old_bio_draft.docx',
+                    'Freight Carrier Bio.docx',
                 ],
             ),
             (
@@ -2449,7 +2623,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 18, 21, 28, 52),
                 "Payment registered Jose, thank you! Took about an hour and a half to draft the bio and first 2 emails—attached is the v1 preview. Notice how we lead with 100% on-time DFW metro dispatch and direct driver cell contact so shippers know they aren't dealing with a middleman.",
                 [
-                    'cruz_bio_and_emails_v1_preview.pdf',
+                    'Carrier Outreach Preview v1.pdf',
                 ],
             ),
             (
@@ -2475,8 +2649,8 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 19, 13, 41, 29),
                 "Morning Jose! Finished polishing the bio, locked in the 3,500-lb liftgate specs in Email 2, and generated your clean 2026 DFW rate card graphic. Attached both files—hope this helps you lock down those local distributor runs! If you have any fellow owner-operators or carrier friends running box trucks around DFW who need their client pitches or rate cards cleaned up, definitely send them our way!",
                 [
-                    'cruz_bio_and_outreach_final.docx',
-                    'cruz_freight_rates_card.png',
+                    'Outreach Email Sequence.docx',
+                    'Freight Rates Card.png',
                 ],
             ),
             (
@@ -2614,8 +2788,8 @@ CLIENT_PROFILES = {
                         dt_utc(2026, 9, 30, 19, 27, 34),
                         "hey! hope you guys are doing well. i really need some help with my website... i get good traffic from instagram and people love the photos, but barely anyone actually books through the site. visitors click over to the booking page and then just vanish. i attached screenshots of my current homepage and booking form. can you guys take a look and see what might be going wrong?",
                         [
-                            'audrey_current_homepage_screenshot.png',
-                            'audrey_current_booking_form_screenshot.png',
+                            'Current Homepage.png',
+                            'Booking Form.png',
                         ],
                     ),
                     (
@@ -2677,7 +2851,7 @@ CLIENT_PROFILES = {
                         dt_utc(2026, 10, 1, 16, 11, 29),
                         "Here is your completed audit report Audrey! It breaks down the exact hero headline repositioning, package pricing anchors, and cuts your intake form from 14 questions down to 5 essentials so clients can book in under two minutes.",
                         [
-                            'audrey_homepage_booking_audit.pdf',
+                            'Website Audit & Recommendations.pdf',
                         ],
                     ),
                     (
@@ -2712,7 +2886,7 @@ CLIENT_PROFILES = {
                         dt_utc(2026, 10, 14, 22, 39, 41),
                         "hey! sorry it took almost two weeks, my designer was backed up with fall wedding shoots. here are the wireframe notes for the 3 pages (Home, Services, and Booking). ready to do the $270 package whenever you can send the invoice.",
                         [
-                            'audrey_wireframe_notes.docx',
+                            'Wireframe Notes.docx',
                         ],
                     ),
                     (
@@ -2774,7 +2948,7 @@ CLIENT_PROFILES = {
                         dt_utc(2026, 10, 16, 15, 17, 33),
                         "Sounds great! While that clears, here is v1 of the 3-page website copy deck so you and your designer can review the messaging over the weekend.",
                         [
-                            'audrey_3page_website_copy_v1.docx',
+                            'Website Copy v1.docx',
                         ],
                     ),
                     (
@@ -2806,9 +2980,9 @@ CLIENT_PROFILES = {
                         dt_utc(2026, 10, 17, 14, 21, 19),
                         "All updated! Attached is the final copy deck, the interactive browser prototype, and the booking wireframe:",
                         [
-                            'audrey_3page_website_copy_final.docx',
-                            'audrey_studio_brown_website_prototype.html',
-                            'audrey_booking_flow_wireframe_diagram.png',
+                            'Website Copy (Final).docx',
+                            'Studio Brown Prototype.html',
+                            'Booking Flow Wireframe.png',
                         ],
                     ),
                     (
@@ -2933,8 +3107,8 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 9, 16, 23, 13, 41),
                 "hey, got your info online. I'm usually up on a roof all day so writing isn't really my thing, but our company website still looks like it was made in 2010. we're doing more commercial flat roofs now and building owners keep asking if we do certified TPO and standing seam metal. attached some job photos and our rough estimate notes, can you write up good copy for our site?",
                 [
-                    'orozco_roofing_rough_notes.docx',
-                    'orozco_commercial_flat_roof_job_photo.png',
+                    'Roofing Rough Notes.docx',
+                    'Commercial Flat Roof Job.png',
                 ],
             ),
             (
@@ -2966,7 +3140,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 9, 19, 2, 41, 52),
                 "Payment confirmed, thank you Azael! Here is your v1 draft copy deck. Take a look when you're off the roof.",
                 [
-                    'orozco_site_copy_and_estimate_v1.docx',
+                    'Site Copy & Estimate v1.docx',
                 ],
             ),
             (
@@ -2986,9 +3160,9 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 9, 20, 16, 14, 27),
                 "Attached are your completed deliverables: your final commercial copy deck, your customized Excel estimator spreadsheet with working formulas for tear-off and membrane costs, and your standalone interactive HTML website prototype ready to open directly in any browser.",
                 [
-                    'orozco_site_copy_and_estimate_final.docx',
-                    'orozco_estimate_sheet.xlsx',
-                    'orozco_roofing_website_prototype.html',
+                    'Site Copy & Estimate.docx',
+                    'Roofing Estimate Sheet.xlsx',
+                    'Roofing Website Prototype.html',
                 ],
             ),
             (
@@ -3118,7 +3292,7 @@ CLIENT_PROFILES = {
                         dt_utc(2026, 4, 4, 19, 12, 44),
                         "Morning team. We just pulled our Q1 HubSpot pipeline data and it's a bit of a trainwreck—reps are hoarding leads, stage definitions are blurry, and weighted forecasts are all over the map. Attached our raw CSV export. Need a formal lead-routing specification and stage criteria so we stop losing deals between SDRs and Account Execs.",
                         [
-                            'johnson_hubspot_export.csv',
+                            'HubSpot CRM Export.csv',
                         ],
                     ),
                     (
@@ -3162,8 +3336,8 @@ CLIENT_PROFILES = {
                         dt_utc(2026, 4, 6, 15, 39, 24),
                         'Here is the completed lead-routing spec along with the cleaned pipeline dataset ready for your Monday executive review.',
                         [
-                            'johnson_crm_pipeline_spec.pdf',
-                            'johnson_crm_pipeline_export_clean.csv',
+                            'CRM Pipeline Spec.pdf',
+                            'CRM Pipeline Clean.csv',
                         ],
                     ),
                     
@@ -3187,7 +3361,7 @@ CLIENT_PROFILES = {
                         dt_utc(2026, 9, 15, 17, 51, 46),
                         "Hey team—quick update. The routing spec from April has been running like a charm. We're now overhauling our 5 main B2B website pages and building a 12-slide outbound deck for 3PL buyers. Attached our brief—how much for both?",
                         [
-                            'johnson_b2b_site_and_deck_brief.docx',
+                            'Enterprise Deck Brief.docx',
                         ],
                     ),
                     (
@@ -3219,7 +3393,7 @@ CLIENT_PROFILES = {
                         dt_utc(2026, 9, 18, 19, 14, 8),
                         "Here's the v1 draft of the 5 website pages and the 12-slide deck outline. Let us know what you want adjusted.",
                         [
-                            'johnson_b2b_deck_and_copy_v1.pdf',
+                            'Enterprise Deck v1.pdf',
                         ],
                     ),
                     (
@@ -3233,9 +3407,9 @@ CLIENT_PROFILES = {
                         dt_utc(2026, 9, 19, 15, 28, 34),
                         "Updated Slide 4 with the exact Q3 Midwest 3PL pilot metrics! Attached is the final 5-page website copy deck, the 12-slide PowerPoint presentation (.pptx) ready for your sales reps, and the standalone interactive 5-page B2B website prototype ready to demo directly in any browser.",
                         [
-                            'johnson_b2b_site_and_deck_final.docx',
-                            'johnson_12slide_outbound_enterprise_deck.pptx',
-                            'johnson_dockstream_b2b_website_prototype.html',
+                            'Enterprise Deck Final.docx',
+                            'Outbound Enterprise Deck.pptx',
+                            'DockStream Website Prototype.html',
                         ],
                     ),
                     (
@@ -3398,8 +3572,8 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 8, 28, 20, 14, 32),
                 "aloha guys! hope the weather is nice over there. so my accountant is breathing down my neck about Q3 reconciliations for our Waikiki catamaran charter business and my Ala Moana rental condo. our bank export has missing vendor names, mixed repair bills, and i honestly don't have the patience to sit in Excel for 10 hours. attached the raw bank CSV and some paper receipts. can you turn this into a clean reconciled ledger?",
                 [
-                    'luca_q3_raw_bank_export.csv',
-                    'luca_august_vendor_receipts.pdf',
+                    'Q3 Bank Export.csv',
+                    'August Vendor Receipts.pdf',
                 ],
             ),
             (
@@ -3461,8 +3635,8 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 8, 30, 16, 42, 15),
                 "Aloha Luca! Here is the completed reconciliation package: your cleaned Q3 CSV ledger and your multi-tab Excel financial model with automatic GET/TAT tax formulas and partner cash distributions.",
                 [
-                    'luca_q3_reconciled_ledger.csv',
-                    'luca_q3_financial_model.xlsx',
+                    'Q3 Reconciled Ledger.csv',
+                    'Q3 Financial Model.xlsx',
                 ],
             ),
             (
@@ -3543,8 +3717,8 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 13, 16, 18, 24),
                 "hey team, need some emergency spreadsheet surgery. our customs broker just hit us with unexpected Section 301 tariffs on our stainless pour-over kettles, and our LCL ocean freight spiked $35/CBM. attached our supplier SKU sheet and the broker duty notice. can you build a dynamic landed-cost & margin calculator so we know which retail prices we need to bump?",
                 [
-                    'keegan_raw_sku_list.xlsx',
-                    'keegan_freight_duty_rates.pdf',
+                    'Raw SKU Inventory.xlsx',
+                    'Freight Duty Rates.pdf',
                 ],
             ),
             (
@@ -3600,7 +3774,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 15, 8, 31, 52),
                 "Here is the draft v1 model for you to test out with your team.",
                 [
-                    'keegan_sku_margin_calculator_v1.xlsx',
+                    'SKU Margin Calculator v1.xlsx',
                 ],
             ),
             (
@@ -3614,9 +3788,9 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 15, 11, 6, 33),
                 "Added the 2.1x wholesale tier, locked all formula ranges, and attached your staff receiving handbook PDF!",
                 [
-                    'keegan_sku_margin_calculator_v2_locked.xlsx',
-                    'keegan_staff_sku_guide.pdf',
-                    'keegan_warehouse_sku_handbook.pdf',
+                    'SKU Margin Calculator.xlsx',
+                    'Staff SKU Guide.pdf',
+                    'Warehouse SKU Handbook.pdf',
                 ],
             ),
             (
@@ -3740,7 +3914,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 9, 13, 14, 27),
                 "Hey guys! We are bidding on a big 4-building medical plaza in Tampa next week and their procurement director asked for our formal vendor packet and rate card. Right now ours is literally a scrambled Word doc from 2022. I need this looking razor sharp by Thursday so we don't look amateur.",
                 [
-                    'liza_vendor_packet_draft.docx',
+                    'Vendor Packet Draft.docx',
                 ],
             ),
             (
@@ -3796,8 +3970,8 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 10, 16, 58, 41),
                 "Here are your finalized vendor compliance manual and commercial rate card!",
                 [
-                    'liza_vendor_packet_clean.pdf',
-                    'liza_commercial_rate_card.xlsx',
+                    'Vendor Agreement Packet.pdf',
+                    'Commercial Rate Card.xlsx',
                 ],
             ),
             (
@@ -3869,8 +4043,8 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 9, 18, 27, 14),
                 "hey... honestly haven't updated a resume since 2021 and looking at it now is kind of embarrassing. I've been running the entire night shift at Sunbelt Distribution for 3 years, 14 guys on the dock, zero lost-time incidents, but on paper it just says 'forklift driver'. can you help rewrite this so I can apply for an Operations Supervisor opening?",
                 [
-                    'drako_old_resume_2023.pdf',
-                    'drako_2024_2026_warehouse_notes.docx',
+                    'Operations Resume 2023.pdf',
+                    'Warehouse Leadership Notes.docx',
                 ],
             ),
             (
@@ -3926,7 +4100,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 11, 14, 18, 20),
                 "Here is your v1 draft! Take a look and let us know if anything needs tuning.",
                 [
-                    'drako_resume_operations_supervisor_v1.docx',
+                    'Operations Supervisor Resume v1.docx',
                 ],
             ),
             (
@@ -3940,8 +4114,8 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 11, 17, 30, 45),
                 "Added the bilingual shift operations bullet! Attached are your final Word and ATS-formatted PDF resume and LinkedIn summary.",
                 [
-                    'drako_resume_operations_supervisor_final.pdf',
-                    'drako_linkedin_summary_and_application_cover_letter.docx',
+                    'Operations Supervisor Resume.pdf',
+                    'LinkedIn Profile & Cover Letter.docx',
                 ],
             ),
             (
@@ -4004,7 +4178,28 @@ CLIENT_PROFILES = {
                 'created_at': dt_utc(2026, 10, 10, 18, 40, 0),
                 'deliverables': [
                     {
-                        'title': 'Four-Role Staff Onboarding SOP & Checklists — Final (v2)',
+                        'title': 'Lead Logistics Dispatcher SOP — Final',
+                        'kind': 'SOP documentation',
+                        'status': 'delivered',
+                        'version': 2,
+                        'notes': 'Settled Oct 10, 2026 (T820955964974907) and delivered Oct 12, 2026.',
+                    },
+                    {
+                        'title': 'Customer Operations Associate SOP — Final',
+                        'kind': 'SOP documentation',
+                        'status': 'delivered',
+                        'version': 2,
+                        'notes': 'Settled Oct 10, 2026 (T820955964974907) and delivered Oct 12, 2026.',
+                    },
+                    {
+                        'title': 'Billing & Accounts Specialist SOP — Final',
+                        'kind': 'SOP documentation',
+                        'status': 'delivered',
+                        'version': 2,
+                        'notes': 'Settled Oct 10, 2026 (T820955964974907) and delivered Oct 12, 2026.',
+                    },
+                    {
+                        'title': 'Enterprise Account Executive SOP — Final',
                         'kind': 'SOP documentation',
                         'status': 'delivered',
                         'version': 2,
@@ -4108,7 +4303,7 @@ CLIENT_PROFILES = {
                         dt_utc(2026, 10, 5, 4, 38, 19),
                         "hi guys, hope someone is around. i'm the managing partner at an ops tech firm and our monthly investor/client newsletter is going out in 36 hours. problem is, the current draft is written like an SEC 10-K filing... completely lifeless and robotic. attached the 1,800-word draft. can you guys give it a humanize & tone refinement pass so our LPs and clients actually enjoy reading it? how much would that run?",
                         [
-                            'estella_october_newsletter_draft.docx',
+                            'October Newsletter Draft.docx',
                         ],
                     ),
                     (
@@ -4158,7 +4353,7 @@ CLIENT_PROFILES = {
                         dt_utc(2026, 10, 5, 8, 35, 40),
                         "Here you go Estella! Cut out the stiff corporate speak and made the opening hook way punchier. Take a look and see how it reads to you.",
                         [
-                            'estella_october_newsletter_refined.docx',
+                            'October Investor Newsletter.docx',
                         ],
                     ),
                     (
@@ -4193,7 +4388,7 @@ CLIENT_PROFILES = {
                         dt_utc(2026, 10, 10, 18, 34, 22),
                         "Hey team, back again and need your brainpower. We're hiring 4 key operational roles over the next 45 days (Lead Dispatcher, Customer Ops, Billing Specialist, Account Exec) and I don't have the hours to build 4 separate SOP ramp manuals from scratch. Attached my rough notes on role expectations. Can you turn these into structured 30-60-90 day benchmarks and daily workflow checklists for each role?",
                         [
-                            'estella_rough_role_notes.docx',
+                            'Role Ramp Notes.docx',
                         ],
                     ),
                     (
@@ -4231,7 +4426,7 @@ CLIENT_PROFILES = {
                         dt_utc(2026, 10, 11, 15, 31, 54),
                         "Hope your flight went well! Here's v1 of the onboarding frameworks for all 4 roles. Take your time reviewing.",
                         [
-                            'estella_4role_onboarding_sops_v1.docx',
+                            'Onboarding Frameworks v1.docx',
                         ],
                     ),
                     (
@@ -4255,15 +4450,18 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 12, 15, 16, 39),
-                        "All set! Attached is the clean final PDF handbook with Datadog and Postman locked in.",
+                        "All set! Attached are the 4 completed role SOP handbooks with Datadog and Postman locked in for the tech roles:",
                         [
-                            'estella_4role_onboarding_sops_final.pdf',
+                            'Lead Dispatcher SOP.pdf',
+                            'Customer Operations SOP.pdf',
+                            'Billing Specialist SOP.pdf',
+                            'Account Executive SOP.pdf',
                         ],
                     ),
                     (
                         'client',
                         dt_utc(2026, 10, 12, 17, 27, 14),
-                        "Hiring managers just reviewed it and love it. Thank you!!",
+                        "Hiring managers just reviewed all 4 and love them. Thank you!!",
                         [],
                     ),
                     (
@@ -4292,7 +4490,7 @@ CLIENT_PROFILES = {
                         dt_utc(2026, 10, 20, 19, 14, 55),
                         "guys i am in a bind. we have our Q4 board & investor meeting tomorrow morning at 9am CT. my co-founder dumped 40 pages of rough bullets, financial screenshots, and messy metrics into a doc. i need a clean, punchy 15-18 slide executive deck in PPTX plus a 2-page briefing memo summarizing our runway, burn, and expansion ARR. can you turn this around overnight? what's the rush rate?",
                         [
-                            'estella_q4_board_deck_rough_bullets.docx',
+                            'Q4 Board Notes.docx',
                         ],
                     ),
                     (
@@ -4330,10 +4528,10 @@ CLIENT_PROFILES = {
                         dt_utc(2026, 10, 21, 6, 14, 20),
                         "Morning Estella! Just wrapped it up. Here's the complete board pack:\n- 16-slide investor deck (.pptx)\n- Financial schedule (.xlsx)\n- 2-page briefing memo (.docx)\n- Everything bundled in the ZIP",
                         [
-                            'estella_q4_executive_investor_deck_final.pptx',
-                            'estella_q4_financial_model.xlsx',
-                            'estella_q4_board_briefing_memo_final.docx',
-                            'estella_q4_executive_board_pack.zip',
+                            'Q4 Board Presentation.pptx',
+                            'Q4 Financial Model.xlsx',
+                            'Executive Board Memo.docx',
+                            'Executive Board Pack.zip',
                         ],
                     ),
                     (
@@ -4427,7 +4625,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 4, 18, 14, 29),
                 'hey! our new winter serum collection launches next month and every time I try to write the product pages, they sound like a robotic dermatology textbook lol. I want warm, sensory, ritual-driven copy that makes people actually feel the texture on their skin. also need a 4-part email welcome flow for new subscribers. can you help inject some soul into these?',
                 [
-                    'kaylee_welcome_emails_draft.docx',
+                    'Welcome Email Sequence Draft.docx',
                 ],
             ),
             (
@@ -4471,8 +4669,8 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 5, 17, 16, 4),
                 'Here are your finalized deliverables: the full 12-SKU product catalog spreadsheet ready for Shopify import, and your 4-part welcome email sequence!',
                 [
-                    'kaylee_shopify_product_descriptions.xlsx',
-                    'kaylee_welcome_emails_final.docx',
+                    'Shopify Product Descriptions.xlsx',
+                    'Welcome Email Sequence.docx',
                 ],
             ),
             (
@@ -4546,7 +4744,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 4, 11, 18, 33),
                 "hello team, reviewing our Q3 corridor expenses for our Mombasa-Nairobi fleet. we've got toll discrepancies and fuel receipts that need reconciliation into our client billing format. attached our raw expenses.",
                 [
-                    'dennis_old_expense_sheet.xlsx',
+                    'Expense Sheet.xlsx',
                 ],
             ),
             (
@@ -4590,8 +4788,8 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 5, 12, 18, 14),
                 'Here are your completed corridor financial models: the Q3 corridor reconciliation workbook and the automated 12-month multi-sheet cash-flow and expense model with dynamic formulas.',
                 [
-                    'dennis_q3_corridor_reconciliation_final.xlsx',
-                    'dennis_12month_cashflow_tracker_final.xlsx',
+                    'Corridor Reconciliation.xlsx',
+                    '12-Month Cashflow Tracker.xlsx',
                 ],
             ),
             (
@@ -4664,8 +4862,8 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 2, 8, 19, 44),
                 "hey guys... so our angel pitch demo day is in 9 days and every time I practice my 10 slides I stumble over our unit economics. I really need help making the narrative click. mentors keep saying our go-to-market slide is hand-wavy and our competitive moat isn't clear. attached our rough bullets and competitor pricing notes. can you help structure this into an investor-ready deck?",
                 [
-                    'alexa_pitch_rough_bullets.docx',
-                    'alexa_competitor_rates.xlsx',
+                    'Pitch Deck Bullets.docx',
+                    'Competitor Rates.xlsx',
                 ],
             ),
             (
@@ -4715,7 +4913,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 2, 17, 34, 52),
                 'Here is the v1 narrative outline to review, Alexa! Notice how Slide 3 shifts immediately into your 28 paid pilots and 0.7-month payback.',
                 [
-                    'alexa_pitch_deck_structure_v1.pdf',
+                    'Pitch Deck Structure v1.pdf',
                 ],
             ),
             (
@@ -4729,8 +4927,8 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 3, 4, 11, 39),
                 'Here is the complete deliverable: the full 10-slide PowerPoint presentation (.pptx) with speaker notes, and your Excel unit economics model!',
                 [
-                    'alexa_10slide_investor_pitch.pptx',
-                    'alexa_unit_economics_model.xlsx',
+                    '10-Slide Investor Pitch.pptx',
+                    'Unit Economics Model.xlsx',
                 ],
             ),
             (
@@ -4802,7 +5000,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 9, 29, 15, 22, 38),
                 "hey team, typing this on the train between client workshops. I recorded 3 lengthy discovery interviews with a corporate client's leadership team (18 pages of transcripts). I need this turned into a crisp executive action sheet with pain points and recommended workshops. can you distill this down for me?",
                 [
-                    'cami_raw_call_transcripts_18p.docx',
+                    'Call Transcripts (18p).docx',
                 ],
             ),
             (
@@ -4846,7 +5044,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 9, 30, 8, 30, 30),
                 "Alongside it, here is the v1 draft synthesis outline so you can review the department breakdown while on the move.",
                 [
-                    'cami_call_action_sheet_v1.pdf',
+                    'Call Action Sheet v1.pdf',
                 ],
             ),
             (
@@ -4860,7 +5058,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 1, 6, 14, 47),
                 'Here is your final executive action sheet PDF, complete with the recommended 4-workshop modular delivery schedule!',
                 [
-                    'cami_call_action_sheet_final.pdf',
+                    'Call Action Sheet.pdf',
                 ],
             ),
             (
@@ -4975,7 +5173,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 7, 25, 10, 14, 29),
                 'hey! our last two email campaigns fell completely flat—open rates were decent at 34% but click-through was under 1.2%. I think our CTAs and body copy are way too polite and passive. attached the draft sequences, be as brutally honest as needed!',
                 [
-                    'lina_summer_campaign_emails_rough.docx',
+                    'Summer Campaign Emails Rough.docx',
                 ],
             ),
             (
@@ -5031,8 +5229,8 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 7, 27, 14, 13, 8),
                 'Here are both completed copy deliverables: your spring collection launch copy deck and storefront FAQ, plus the final high-converting summer retention email sequence (5 emails).',
                 [
-                    'lina_spring_launch_copy_final.docx',
-                    'lina_summer_campaign_emails_final.docx',
+                    'Spring Launch Copy.docx',
+                    'Summer Launch Emails.docx',
                 ],
             ),
             (
@@ -5147,7 +5345,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 6, 27, 15, 19, 42),
                 "afternoon folks, weather's been brutal up here in St. John's with ferry delays, and our dispatch fuel sheets are completely out of whack with the new diesel surcharges. attached our raw route spreadsheet, need clean formulas for driver mileage and fuel adjustments.",
                 [
-                    'patrick_newfoundland_dispatch_raw.xlsx',
+                    'Newfoundland Dispatch Raw.xlsx',
                 ],
             ),
             (
@@ -5203,8 +5401,8 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 6, 29, 13, 4, 19),
                 'Here are both completed Newfoundland freight models: your dispatch and fuel-surcharge tracker with dynamic per-km formulas and ferry fees, plus the regional carrier rate lookup matrix.',
                 [
-                    'patrick_dispatch_and_fuel_tracker_final.xlsx',
-                    'patrick_spring_freight_rates_final.xlsx',
+                    'Dispatch & Fuel Tracker.xlsx',
+                    'Spring Freight Rates.xlsx',
                 ],
             ),
             (
@@ -5295,7 +5493,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 5, 7, 14, 18, 36),
                 "hey team! we're about 10 days out from our public product launch for the ApexDesk modular rail. our mechanical engineer put together our product descriptions, but honestly the headline copy is dry as dust and reads like a CNC machine shop invoice: '6063-T6 aluminum extrusion with chamfered edges'. attached our storefront notes, can you guys help us make this actually feel like an Apple-grade luxury desk ecosystem?",
                 [
-                    'carter_storefront_launch_notes.docx',
+                    'Storefront Launch Notes.docx',
                 ],
             ),
             (
@@ -5351,7 +5549,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 5, 8, 11, 20, 14),
                 "Here is the v1 draft copy deck! Notice how we renamed 'Base Gray' to 'Space Black Bead-Blasted' and anchored the modular rail around 'Zero-Cable Architecture'. Take a look and let us know what you think.",
                 [
-                    'carter_website_launch_checklist_final.pdf',
+                    'Website Launch Checklist.pdf',
                 ],
             ),
             (
@@ -5377,9 +5575,9 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 5, 8, 15, 30, 22),
                 "All locked in! Attached is your launch package: the browser prototype, the pre-launch checklist, and the asset ZIP kit:",
                 [
-                    'carter_landing_page_prototype.html',
-                    'carter_storefront_assets_and_launch_kit.zip',
-                    'carter_website_launch_checklist_final.pdf',
+                    'Storefront Prototype.html',
+                    'Storefront Assets Kit.zip',
+                    'Website Launch Checklist.pdf',
                 ],
             ),
             (
@@ -5465,7 +5663,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 6, 14, 13, 28),
                 "hey... a friend of mine (audrey brown) said you guys essentially saved her sanity when her studio booking page was crashing and confusing people. honestly i'm pretty skeptical because the last agency we hired took 3 weeks just to send us boilerplate garbage from google, but our clinic intake paperwork is a total disaster right now. parents are yelling at our front desk over the cancellation fee, and our HIPAA consent forms are from 2019. do you guys actually write customized pediatric therapy agreements, or is that outside what you handle?",
                 [
-                    'cuevas_intake_and_consent_draft_messy.docx',
+                    'Clinic Intake Notes.docx',
                 ],
             ),
             (
@@ -5497,7 +5695,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 9, 20, 17, 11),
                 "Right here, Issa! Just wrapped the final read-through on the observation and teletherapy sections. Attached is v1 of the Master Clinical Intake & Consent Agreement. It lays out the guarantor definitions, HIPAA privacy notices, and explicit mirror/video consent terms. Take your time reviewing it over the weekend before your staff meeting.",
                 [
-                    'cuevas_pediatric_intake_and_consent_v1.docx',
+                    'Pediatric Intake Agreement v1.docx',
                 ],
             ),
             (
@@ -5523,8 +5721,8 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 15, 12, 43, 56),
                 "Here is v2, Issa! We revised every single section to ensure strict 'pediatric patient' vs 'legal guarantor' separation, updated the cancellation clause verbatim to the '$75 reserved clinical hour fee', and added the progress disclaimer. Alongside it, I attached the three parent communication email scripts for your front desk coordinator so they know exactly how to explain the policy with empathy.",
                 [
-                    'cuevas_pediatric_intake_and_consent_final.docx',
-                    'cuevas_parent_communication_templates.docx',
+                    'Pediatric Intake Agreement.docx',
+                    'Parent Communication Templates.docx',
                 ],
             ),
             (
@@ -5580,8 +5778,8 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 20, 18, 29, 7),
                 "Saw it clear, thank you! Here is the final package with the agreement and all the intake forms bundled up:",
                 [
-                    'cuevas_speech_clinic_service_agreement_final.pdf',
-                    'cuevas_pediatric_intake_forms_bundle.zip',
+                    'Pediatric Clinic Agreement.pdf',
+                    'Parent Intake Forms Bundle.zip',
                 ],
             ),
             (

@@ -9,8 +9,8 @@ def build_cuevas_deliverables() -> dict[str, dict]:
     files = {}
 
     # 1. cuevas_intake_and_consent_draft_messy.docx: 2,200+ words of working clinical intake notes & policy scramble
-    files["cuevas_intake_and_consent_draft_messy.docx"] = write_docx_file(
-        "cuevas_intake_and_consent_draft_messy.docx",
+    files["Clinic Intake Notes.docx"] = write_docx_file(
+        "Clinic Intake Notes.docx",
         "Bloom Speech & Language Clinic — Master Pediatric Intake & Clinical Consent Packet (Clinical Draft Notes)",
         [
             "PRACTICE: Bloom Speech & Language Therapy, PLLC · San Antonio & Austin, TX",
@@ -45,8 +45,8 @@ def build_cuevas_deliverables() -> dict[str, dict]:
     )
 
     # 2. cuevas_pediatric_intake_and_consent_v1.docx: 2,400+ words of 6-article formal legal agreement
-    files["cuevas_pediatric_intake_and_consent_v1.docx"] = write_docx_file(
-        "cuevas_pediatric_intake_and_consent_v1.docx",
+    files["Pediatric Intake Agreement v1.docx"] = write_docx_file(
+        "Pediatric Intake Agreement v1.docx",
         "Bloom Speech & Language Clinic — Pediatric Patient Intake & Clinical Services Agreement (v1 Legal Draft)",
         [
             "CLINICAL PRACTICE: Bloom Speech & Language Therapy, PLLC · Texas Professional LLC",
@@ -89,8 +89,8 @@ def build_cuevas_deliverables() -> dict[str, dict]:
     )
 
     # 3. cuevas_speech_clinic_service_agreement_final.pdf: 4-page formal legal agreement PDF
-    files["cuevas_speech_clinic_service_agreement_final.pdf"] = write_pdf_file(
-        "cuevas_speech_clinic_service_agreement_final.pdf",
+    files["Pediatric Clinic Agreement.pdf"] = write_pdf_file(
+        "Pediatric Clinic Agreement.pdf",
         "Bloom Speech & Language Clinic — Master Pediatric Services Agreement & Clinical Consent (Final)",
         [
             "# 1. CLINICAL PRACTICE & PROFESSIONAL SCOPE",

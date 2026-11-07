@@ -9,8 +9,8 @@ def build_audrey_deliverables() -> dict[str, dict]:
     files = {}
 
     # 1. audrey_wireframe_notes.docx: Studio Brown IA & client onboarding workflow notes
-    files["audrey_wireframe_notes.docx"] = write_docx_file(
-        "audrey_wireframe_notes.docx",
+    files["Wireframe Notes.docx"] = write_docx_file(
+        "Wireframe Notes.docx",
         "Studio Brown — Website Information Architecture & Client Experience Brief",
         [
             "CLIENT: Audrey Brown, Founder & Creative Director · Studio Brown",
@@ -61,8 +61,8 @@ def build_audrey_deliverables() -> dict[str, dict]:
     )
 
     # 2. audrey_3page_website_copy_v1.docx: v1 working draft website copy with client redlines
-    files["audrey_3page_website_copy_v1.docx"] = write_docx_file(
-        "audrey_3page_website_copy_v1.docx",
+    files["Website Copy v1.docx"] = write_docx_file(
+        "Website Copy v1.docx",
         "Studio Brown — 3-Page Website Copy Deck (v1 Working Draft with Client Notes)",
         [
             "CLIENT: Studio Brown · Audrey Brown Photography",
@@ -91,8 +91,8 @@ def build_audrey_deliverables() -> dict[str, dict]:
     )
 
     # 3. audrey_current_homepage_screenshot.png: Desktop Squarespace Homepage Capture
-    files["audrey_current_homepage_screenshot.png"] = write_screenshot_png_file(
-        "audrey_current_homepage_screenshot.png",
+    files["Current Homepage.png"] = write_screenshot_png_file(
+        "Current Homepage.png",
         url="https://studiobrownphotography.squarespace.com/",
         site_title="Studio Brown Photography · Austin, TX",
         hero_headline="Visual storytelling for modern life.",
@@ -110,8 +110,8 @@ def build_audrey_deliverables() -> dict[str, dict]:
     )
 
     # 4. audrey_current_booking_form_screenshot.png: Squarespace 14-Question Intake Form Capture
-    files["audrey_current_booking_form_screenshot.png"] = write_screenshot_png_file(
-        "audrey_current_booking_form_screenshot.png",
+    files["Booking Form.png"] = write_screenshot_png_file(
+        "Booking Form.png",
         url="https://studiobrownphotography.squarespace.com/book",
         site_title="Studio Brown Photography · Client Booking",
         hero_headline="FORM ABANDONMENT AUDIT REFERENCE: Squarespace Lightbox Modal (14 Mandatory Fields)",
@@ -135,8 +135,8 @@ def build_audrey_deliverables() -> dict[str, dict]:
     )
 
     # 4. audrey_homepage_booking_audit.pdf: 4-page conversion architecture audit PDF
-    files["audrey_homepage_booking_audit.pdf"] = write_pdf_file(
-        "audrey_homepage_booking_audit.pdf",
+    files["Website Audit & Recommendations.pdf"] = write_pdf_file(
+        "Website Audit & Recommendations.pdf",
         "Studio Brown — Homepage & Booking Conversion Audit (Comprehensive 4-Page Report)",
         [
             "# 1. COMPREHENSIVE CONVERSION ARCHITECTURE EVALUATION",

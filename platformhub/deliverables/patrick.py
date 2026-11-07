@@ -36,8 +36,8 @@ def build_patrick_deliverables() -> dict[str, dict]:
             m_ref, c_date, dep_port, arr_port, vessel, tractor, trailer, cargo, weight, fare, fsc, weather, total
         ])
 
-    files["patrick_newfoundland_dispatch_raw.xlsx"] = write_xlsx_file(
-        "patrick_newfoundland_dispatch_raw.xlsx",
+    files["Newfoundland Dispatch Raw.xlsx"] = write_xlsx_file(
+        "Newfoundland Dispatch Raw.xlsx",
         "Raw_Dispatch_Logs",
         ferry_rows,
         role="source",
@@ -72,8 +72,8 @@ def build_patrick_deliverables() -> dict[str, dict]:
             t_id, t_date, origin, dest, miles, empty, gals, fuel_cost, tolls, driver_pay, rev, profit
         ])
 
-    files["patrick_dispatch_and_fuel_tracker_v1.xlsx"] = write_xlsx_file(
-        "patrick_dispatch_and_fuel_tracker_v1.xlsx",
+    files["Dispatch & Fuel Tracker v1.xlsx"] = write_xlsx_file(
+        "Dispatch & Fuel Tracker v1.xlsx",
         "Dispatch_Tracker_v1",
         tracker_rows,
         role="draft",
@@ -102,8 +102,8 @@ def build_patrick_deliverables() -> dict[str, dict]:
             l_code, orig, dst, equip, days, base, fsc_pct, ferry_inc, cust_fee, all_in
         ])
 
-    files["patrick_spring_freight_rates_final.xlsx"] = write_xlsx_file(
-        "patrick_spring_freight_rates_final.xlsx",
+    files["Spring Freight Rates.xlsx"] = write_xlsx_file(
+        "Spring Freight Rates.xlsx",
         "Atlantic_Freight_Rates_2026",
         rate_rows,
         role="deliverable",

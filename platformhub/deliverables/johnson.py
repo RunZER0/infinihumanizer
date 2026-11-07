@@ -9,8 +9,8 @@ def build_johnson_deliverables() -> dict[str, dict]:
     files = {}
 
     # 1. johnson_b2b_site_and_deck_brief.docx: 2,200+ words of B2B marketing strategy, ICP, objection handling
-    files["johnson_b2b_site_and_deck_brief.docx"] = write_docx_file(
-        "johnson_b2b_site_and_deck_brief.docx",
+    files["Enterprise Deck Brief.docx"] = write_docx_file(
+        "Enterprise Deck Brief.docx",
         "DockStream Yard Management — B2B Enterprise Marketing Brief & Positioning Strategy",
         [
             "COMPANY: DockStream Software Technologies, Inc. · Austin & Chicago",
@@ -56,8 +56,8 @@ def build_johnson_deliverables() -> dict[str, dict]:
     )
 
     # 2. johnson_b2b_deck_and_copy_v1.pdf: 4-page enterprise deck companion PDF
-    files["johnson_b2b_deck_and_copy_v1.pdf"] = write_pdf_file(
-        "johnson_b2b_deck_and_copy_v1.pdf",
+    files["Enterprise Deck v1.pdf"] = write_pdf_file(
+        "Enterprise Deck v1.pdf",
         "DockStream Yard Management — B2B Enterprise Sales Deck Companion & ROI Model (v1)",
         [
             "# 1. THE ENTERPRISE TERMINAL CONGESTION CRISIS",
@@ -205,8 +205,8 @@ def build_johnson_deliverables() -> dict[str, dict]:
             ],
         },
     ]
-    files["johnson_12slide_outbound_enterprise_deck.pptx"] = write_pptx_file(
-        "johnson_12slide_outbound_enterprise_deck.pptx",
+    files["Outbound Enterprise Deck.pptx"] = write_pptx_file(
+        "Outbound Enterprise Deck.pptx",
         "DockStream: Autonomous Terminal Orchestration",
         deck_slides,
         role="deliverable",

@@ -9,8 +9,8 @@ def build_kaylee_deliverables() -> dict[str, dict]:
     files = {}
 
     # 1. kaylee_welcome_emails_draft.docx: 1,800+ words of 4-part email marketing sequence
-    files["kaylee_welcome_emails_draft.docx"] = write_docx_file(
-        "kaylee_welcome_emails_draft.docx",
+    files["Welcome Email Sequence Draft.docx"] = write_docx_file(
+        "Welcome Email Sequence Draft.docx",
         "Lumina Botanical Skincare — Automated Email Welcome Journey (v1 Copy Draft & Flow Architecture)",
         [
             "BRAND: Lumina Botanical Skincare LLC · San Diego & Ojai, CA",
@@ -78,8 +78,8 @@ def build_kaylee_deliverables() -> dict[str, dict]:
         ["LUM-OL-02", "Prickly Pear Seed Rejuvenating Oil", "Face Oils", "Organic Moroccan Prickly Pear", "Mature / Fine Lines", 30, 84.00, "Opuntia Ficus-Indica Seed Oil (Pure Cold-Pressed)", "Highest concentration of natural vitamin E in plant kingdom", "Gently pat into skin around eyes, mouth, and forehead", "Pure Moroccan Prickly Pear Seed Oil | Lumina", "The crown jewel of botanical oils: ultra-potent prickly pear seed oil."],
         ["LUM-KIT-01", "The 4-Step Barrier Restoration Discovery Set", "Sets & Kits", "Cleanser, Mist, Serum & Cream", "All Skin Types (Trial)", 80, 54.00, "Travel sizes of LUM-CL-01, LUM-MS-01, LUM-SR-01, LUM-CR-01", "Complete 30-day clinical barrier transformation trial", "Follow steps 1 through 4 morning and evening", "Botanical Skincare Discovery Trial Kit | Lumina", "Curated 4-piece introductory ritual kit for glowing, resilient skin."],
     ]
-    files["kaylee_shopify_product_descriptions.xlsx"] = write_xlsx_file(
-        "kaylee_shopify_product_descriptions.xlsx",
+    files["Shopify Product Descriptions.xlsx"] = write_xlsx_file(
+        "Shopify Product Descriptions.xlsx",
         "Skincare_Catalog_Copy",
         skincare_skus,
         role="deliverable",

@@ -9,8 +9,8 @@ def build_orozco_deliverables() -> dict[str, dict]:
     files = {}
 
     # 1. orozco_roofing_rough_notes.docx: 1,800+ words of field technical notes, membrane specs, estimating
-    files["orozco_roofing_rough_notes.docx"] = write_docx_file(
-        "orozco_roofing_rough_notes.docx",
+    files["Roofing Rough Notes.docx"] = write_docx_file(
+        "Roofing Rough Notes.docx",
         "Orozco Commercial Roofing — South Texas Technical Notes, Membrane Specs & Bid Estimating",
         [
             "COMPANY: Orozco Commercial Roofing LLC · McAllen & Brownsville, TX",
@@ -50,8 +50,8 @@ def build_orozco_deliverables() -> dict[str, dict]:
     )
 
     # 2. orozco_site_copy_and_estimate_v1.docx: 2,000+ words of v1 website copy & commercial bid takeoff
-    files["orozco_site_copy_and_estimate_v1.docx"] = write_docx_file(
-        "orozco_site_copy_and_estimate_v1.docx",
+    files["Site Copy & Estimate v1.docx"] = write_docx_file(
+        "Site Copy & Estimate v1.docx",
         "Orozco Commercial Roofing — Website Technical Copy & Commercial Bid Takeoff (v1 Working Draft)",
         [
             "CLIENT: Orozco Commercial Roofing LLC · McAllen, TX",
@@ -110,8 +110,8 @@ def build_orozco_deliverables() -> dict[str, dict]:
         ["FEE-WARR-20", "Carlisle 20-Year NDL Manufacturer Inspection", "Carlisle Technical Rep", "Commercial Inspection", 1.0, 1450.00, 1450.00, 0.0, 0.00, 1450.00],
         ["SAFETY-GUARD", "Rooftop Edge Warning Lines & Guardrail Post", "Guardian Fall Protection", "Kit Package", 4.0, 280.00, 1120.00, 1.0, 45.00, 1300.00],
     ]
-    files["orozco_estimate_sheet.xlsx"] = write_xlsx_file(
-        "orozco_estimate_sheet.xlsx",
+    files["Roofing Estimate Sheet.xlsx"] = write_xlsx_file(
+        "Roofing Estimate Sheet.xlsx",
         "Commercial Bid Takeoff",
         roof_materials,
         role="deliverable",

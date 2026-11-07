@@ -9,8 +9,8 @@ def build_lina_deliverables() -> dict[str, dict]:
     files = {}
 
     # 1. lina_summer_campaign_emails_rough.docx: 1,600+ words of raw activewear campaign notes
-    files["lina_summer_campaign_emails_rough.docx"] = write_docx_file(
-        "lina_summer_campaign_emails_rough.docx",
+    files["Summer Campaign Emails Rough.docx"] = write_docx_file(
+        "Summer Campaign Emails Rough.docx",
         "Verve Activewear — High-Summer Campaign Launch Architecture & Email Copy Notes",
         [
             "BRAND: Verve Activewear LLC · Los Angeles, CA",
@@ -41,8 +41,8 @@ def build_lina_deliverables() -> dict[str, dict]:
     )
 
     # 2. lina_summer_campaign_emails_v1.docx: 2,000+ words of complete 4-email sequence copy
-    files["lina_summer_campaign_emails_v1.docx"] = write_docx_file(
-        "lina_summer_campaign_emails_v1.docx",
+    files["Summer Launch Emails v1.docx"] = write_docx_file(
+        "Summer Launch Emails v1.docx",
         "Verve Activewear — Summer 2026 Promotional Email Sequence (v1 Production Copy)",
         [
             "CAMPAIGN: Verve Summer Drop · 'Solar Movement'",

@@ -9,8 +9,8 @@ def build_cruz_deliverables() -> dict[str, dict]:
     files = {}
 
     # 1. cruz_old_bio_draft.docx: 1,600+ words of raw carrier notes, authority, fleet specs, detention
-    files["cruz_old_bio_draft.docx"] = write_docx_file(
-        "cruz_old_bio_draft.docx",
+    files["Freight Carrier Bio.docx"] = write_docx_file(
+        "Freight Carrier Bio.docx",
         "Cruz Metro Freight — Carrier Capabilities, Fleet Operating Profile & Rate Scramble",
         [
             "COMPANY: Cruz Metro Freight LLC · Dallas, Texas",
@@ -64,8 +64,8 @@ def build_cruz_deliverables() -> dict[str, dict]:
     )
 
     # 2. cruz_bio_and_emails_v1_preview.pdf: 3-page capability statement preview PDF
-    files["cruz_bio_and_emails_v1_preview.pdf"] = write_pdf_file(
-        "cruz_bio_and_emails_v1_preview.pdf",
+    files["Carrier Outreach Preview v1.pdf"] = write_pdf_file(
+        "Carrier Outreach Preview v1.pdf",
         "Cruz Metro Freight — Carrier Capability Statement & Cold Outreach Preview (v1)",
         [
             "# 1. CORPORATE PROFILE & OPERATING AUTHORITY",

@@ -64,22 +64,24 @@ def format_file_size(size_bytes: int) -> str:
 
 def sanitize_filename(name: str) -> str:
     base = os.path.basename(name or "attachment")
-    cleaned = re.sub(r"[^A-Za-z0-9._-]+", "_", base).strip("._")
+    cleaned = re.sub(r"[^A-Za-z0-9._() -]+", "", base).strip(". ")
     return cleaned or "attachment.bin"
 
 
 def build_attachment_meta(filename: str, display_name: str = "", role: str = "file") -> dict:
+    import urllib.parse
     files_dir = get_chat_files_dir()
     file_path = files_dir / filename
     size_bytes = file_path.stat().st_size if file_path.exists() else 0
     ext = Path(filename).suffix.lstrip(".").upper() or "FILE"
     dot_ext = Path(filename).suffix.lower()
     is_audio = dot_ext in AUDIO_EXTENSIONS
+    safe_url_name = urllib.parse.quote(filename)
     return {
         "name": display_name or filename,
         "filename": filename,
-        "url": f"/workspace/chat/files/{filename}",
-        "download_url": f"/workspace/chat/files/{filename}?download=1",
+        "url": f"/workspace/chat/files/{safe_url_name}",
+        "download_url": f"/workspace/chat/files/{safe_url_name}?download=1",
         "ext": ext,
         "kind": "AUDIO" if is_audio else ext,
         "is_audio": is_audio,
@@ -1367,7 +1369,7 @@ def copy_chat_file_alias(source_name: str, alias_name: str, role: str = "file") 
     files_dir = get_chat_files_dir()
     src = files_dir / source_name
     dst = files_dir / alias_name
-    if src.exists():
+    if src.exists() and src.resolve() != dst.resolve():
         import shutil
         shutil.copyfile(src, dst)
     return build_attachment_meta(alias_name, role=role)

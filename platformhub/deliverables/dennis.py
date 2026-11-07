@@ -46,8 +46,8 @@ def build_dennis_deliverables() -> dict[str, dict]:
             t_id, truck, driver, dep_date, origin, dest, weight, litres, fuel_kes, station, stamp, toll_kes, per_diem, repair_kes, total_trip
         ])
 
-    files["dennis_old_expense_sheet.xlsx"] = write_xlsx_file(
-        "dennis_old_expense_sheet.xlsx",
+    files["Expense Sheet.xlsx"] = write_xlsx_file(
+        "Expense Sheet.xlsx",
         "Corridor_Expenses_Raw",
         expense_rows,
         role="source",
@@ -74,8 +74,8 @@ def build_dennis_deliverables() -> dict[str, dict]:
             t_id, truck, driver, hrs, planned_litres, act_litres, var_kes, invoice_kes, margin, status
         ])
 
-    files["dennis_q3_corridor_reconciliation_final.xlsx"] = write_xlsx_file(
-        "dennis_q3_corridor_reconciliation_final.xlsx",
+    files["Corridor Reconciliation.xlsx"] = write_xlsx_file(
+        "Corridor Reconciliation.xlsx",
         "Corridor_Reconciliation_Q3",
         recon_rows,
         role="deliverable",

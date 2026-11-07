@@ -9,8 +9,8 @@ def build_estella_deliverables() -> dict[str, dict]:
     files = {}
 
     # 1. estella_4role_onboarding_sops_v1.docx: Master role onboarding SOPs (v1 working draft)
-    files["estella_4role_onboarding_sops_v1.docx"] = write_docx_file(
-        "estella_4role_onboarding_sops_v1.docx",
+    files["Onboarding Frameworks v1.docx"] = write_docx_file(
+        "Onboarding Frameworks v1.docx",
         "Apex Fleet Operations — Master Role Onboarding SOPs (v1 Operational Working Draft)",
         [
             "ORGANIZATION: Apex Logistics & Fleet Systems LLC · Operations Division",
@@ -53,8 +53,8 @@ def build_estella_deliverables() -> dict[str, dict]:
     )
 
     # 2. estella_rough_role_notes.docx: Working role staffing notes
-    files["estella_rough_role_notes.docx"] = write_docx_file(
-        "estella_rough_role_notes.docx",
+    files["Role Ramp Notes.docx"] = write_docx_file(
+        "Role Ramp Notes.docx",
         "Apex Fleet Operations — Terminal Staffing Requirements, Role Descriptions & KPI Benchmarks",
         [
             "AUTHOR: Estella Williams, VP Fleet Operations",
@@ -82,8 +82,8 @@ def build_estella_deliverables() -> dict[str, dict]:
     )
 
     # 3. estella_october_newsletter_draft.docx: Internal monthly operating dispatch
-    files["estella_october_newsletter_draft.docx"] = write_docx_file(
-        "estella_october_newsletter_draft.docx",
+    files["October Newsletter Draft.docx"] = write_docx_file(
+        "October Newsletter Draft.docx",
         "Apex Logistics Monthly Operating Dispatch — October 2026 (Internal Working Draft)",
         [
             "NEWSLETTER: Apex Operating Dispatch · Volume 8, Issue 10 · October 2026",
@@ -110,8 +110,8 @@ def build_estella_deliverables() -> dict[str, dict]:
     )
 
     # 4. estella_q4_board_deck_rough_bullets.docx: Raw board review bullets from CEO & CFO
-    files["estella_q4_board_deck_rough_bullets.docx"] = write_docx_file(
-        "estella_q4_board_deck_rough_bullets.docx",
+    files["Q4 Board Notes.docx"] = write_docx_file(
+        "Q4 Board Notes.docx",
         "Apex Logistics Q4 Executive Board Review — Raw Operational Bullets & Financial Notes",
         [
             "CONFIDENTIAL: Board of Directors Briefing Notes",
@@ -139,8 +139,8 @@ def build_estella_deliverables() -> dict[str, dict]:
     )
 
     # 5. estella_q4_executive_investor_deck_v1.docx: v1 investor deck narrative copy
-    files["estella_q4_executive_investor_deck_v1.docx"] = write_docx_file(
-        "estella_q4_executive_investor_deck_v1.docx",
+    files["Board Deck Outline v1.docx"] = write_docx_file(
+        "Board Deck Outline v1.docx",
         "Apex Fleet & Logistics — Q4 Executive Investor Update Deck (v1 Narrative Copy)",
         [
             "DOCUMENT: Investor Update Slide Copy & Narrative Architecture (v1 Draft)",
@@ -168,8 +168,8 @@ def build_estella_deliverables() -> dict[str, dict]:
     )
 
     # 6. estella_q4_investor_deck_slide_copy_final.pdf: 4-page investor deck executive companion PDF
-    files["estella_q4_investor_deck_slide_copy_final.pdf"] = write_pdf_file(
-        "estella_q4_investor_deck_slide_copy_final.pdf",
+    files["Q4 Board Deck Slides.pdf"] = write_pdf_file(
+        "Q4 Board Deck Slides.pdf",
         "Apex Logistics — Q4 Executive Investor Deck Companion & Financial Memorandum (Final)",
         [
             "# 1. EXECUTIVE INVESTMENT MEMORANDUM",

@@ -42,8 +42,8 @@ def build_luca_deliverables() -> dict[str, dict]:
         ["PKG-OAH-29", "Blue Horizon", "38ft Fountain Pajot Cat", "Midday Sailing Masterclass", 8, 4.0, 1850.00, 400.00, 120.00, 85.00, 380.00, 2835.00],
         ["PKG-OAH-30", "Kai Lani", "60ft Horizon Motor Yacht", "New Year's Eve Fireworks Gala", 24, 5.0, 11000.00, 1800.00, 850.00, 500.00, 3500.00, 17650.00],
     ]
-    files["luca_charter_rates_raw.xlsx"] = write_xlsx_file(
-        "luca_charter_rates_raw.xlsx",
+    files["Charter Rates.xlsx"] = write_xlsx_file(
+        "Charter Rates.xlsx",
         "Charter_Pricing_Notes",
         charter_rows,
         role="source",
@@ -73,16 +73,16 @@ def build_luca_deliverables() -> dict[str, dict]:
             s_id, harbor, tier, vessel, f"{loa} ft", f"{beam} ft", f"{draft} ft", fee, elec, permit, ins_exp, owner
         ])
 
-    files["luca_harbor_seasonal_manifest_v2.xlsx"] = write_xlsx_file(
-        "luca_harbor_seasonal_manifest_v2.xlsx",
+    files["Seasonal Manifest v2.xlsx"] = write_xlsx_file(
+        "Seasonal Manifest v2.xlsx",
         "Harbor_Manifest_2026",
         manifest_rows,
         role="deliverable",
     )
 
     # 3. luca_august_vendor_receipts.pdf: 3-page consolidated marine receipts PDF
-    files["luca_august_vendor_receipts.pdf"] = write_pdf_file(
-        "luca_august_vendor_receipts.pdf",
+    files["August Vendor Receipts.pdf"] = write_pdf_file(
+        "August Vendor Receipts.pdf",
         "Pacific Oasis Charters — August Marine Maintenance & Vendor Disbursement Audit",
         [
             "# 1. MONTHLY MARINE OPERATING SUMMARY",
@@ -114,8 +114,8 @@ def build_luca_deliverables() -> dict[str, dict]:
     )
 
     # 4. luca_oahu_charter_booking_deck_final.pdf: 4-page charter booking deck PDF
-    files["luca_oahu_charter_booking_deck_final.pdf"] = write_pdf_file(
-        "luca_oahu_charter_booking_deck_final.pdf",
+    files["Charter Booking Deck.pdf"] = write_pdf_file(
+        "Charter Booking Deck.pdf",
         "Pacific Oasis Luxury Yacht Charters — Oahu Fleet Portfolio & Private Excursions",
         [
             "# 1. PACIFIC OASIS LUXURY CHARTERS",
@@ -169,8 +169,8 @@ def build_luca_deliverables() -> dict[str, dict]:
                 ref, q_label, p_name, f"{sh}%", gross, prio, carry, tax, net, wire, date
             ])
 
-    files["luca_partner_distribution_summary.csv"] = write_csv_file(
-        "luca_partner_distribution_summary.csv",
+    files["Partner Distribution Summary.csv"] = write_csv_file(
+        "Partner Distribution Summary.csv",
         dist_rows,
         role="deliverable",
     )
