@@ -3486,7 +3486,7 @@ CLIENT_PROFILES = {
         'channel': 'Web search',
         'reference': 'KC01',
         'subject': 'Landed Cost & SKU Margin Calculator with Warehouse SOP ($240)',
-        'status': 'closed',
+        'status': 'open',
         'requests': [
             {
                 'key': 'kch_tech',
@@ -4105,7 +4105,7 @@ CLIENT_PROFILES = {
                 'messages': [
                     (
                         'client',
-                        dt_utc(2026, 10, 4, 22, 48, 19),
+                        dt_utc(2026, 10, 5, 4, 38, 19),
                         "hi guys, hope someone is around. i'm the managing partner at an ops tech firm and our monthly investor/client newsletter is going out in 36 hours. problem is, the current draft is written like an SEC 10-K filing... completely lifeless and robotic. attached the 1,800-word draft. can you guys give it a humanize & tone refinement pass so our LPs and clients actually enjoy reading it? how much would that run?",
                         [
                             'estella_october_newsletter_draft.docx',
@@ -4113,49 +4113,49 @@ CLIENT_PROFILES = {
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 5, 7, 48, 15),
+                        dt_utc(2026, 10, 5, 4, 48, 15),
                         "Hey Estella! Yeah we can definitely clean this up. Investor updates shouldn't read like compliance memos lol. Looked at the draft — the numbers are solid, it's just buried in passive phrasing.\n\nIs this mostly going to your LPs, or do enterprise clients get it too?",
                         [],
                     ),
                     (
                         'client',
-                        dt_utc(2026, 10, 5, 7, 56, 30),
+                        dt_utc(2026, 10, 5, 4, 56, 30),
                         "Both, which is why our ops lead panicked and made it sound super corporate. Lead VC mostly cares about our ARR growth and runway. How fast could you get a version back to me?",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 5, 8, 2, 10),
+                        dt_utc(2026, 10, 5, 5, 2, 10),
                         "It's about 1,800 words so standard $25 pass. Can have it back to you in about 3 or 4 hours if you want us to start now.",
                         [],
                     ),
                     (
                         'client',
-                        dt_utc(2026, 10, 5, 8, 4, 45),
+                        dt_utc(2026, 10, 5, 5, 4, 45),
                         "Lifesaver. Yes please, let's do it!",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 5, 8, 6, 20),
+                        dt_utc(2026, 10, 5, 5, 6, 20),
                         "Here's the payment link: https://paystack.shop/pay/ew-williams8",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 5, 8, 7, 0),
+                        dt_utc(2026, 10, 5, 5, 7, 0),
                         "Takes card or Apple Pay. Opening up the draft now!",
                         [],
                     ),
                     (
                         'client',
-                        dt_utc(2026, 10, 5, 8, 14, 22),
+                        dt_utc(2026, 10, 5, 5, 9, 35),
                         "paid with our company card! let me know when it's ready",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 5, 12, 35, 40),
+                        dt_utc(2026, 10, 5, 8, 35, 40),
                         "Here you go Estella! Cut out the stiff corporate speak and made the opening hook way punchier. Take a look and see how it reads to you.",
                         [
                             'estella_october_newsletter_refined.docx',
@@ -4163,19 +4163,19 @@ CLIENT_PROFILES = {
                     ),
                     (
                         'client',
-                        dt_utc(2026, 10, 5, 14, 12, 8),
+                        dt_utc(2026, 10, 5, 9, 12, 8),
                         "this is 10x better than what we had lol. sent it out right after lunch and already got great replies from our lead investor. thanks a ton!",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 5, 14, 16, 30),
+                        dt_utc(2026, 10, 5, 9, 16, 30),
                         "Haha glad to hear! Always happy to help. Good luck with the LPs!",
                         [],
                     ),
                     (
                         'client',
-                        dt_utc(2026, 10, 5, 14, 18, 10),
+                        dt_utc(2026, 10, 5, 9, 18, 10),
                         "Thanks again, talk soon!",
                         [],
                     ),
@@ -4216,19 +4216,13 @@ CLIENT_PROFILES = {
                     ),
                     (
                         'client',
-                        dt_utc(2026, 10, 10, 19, 1, 45),
-                        "trying to pay on my phone right now while waiting for a flight at DFW, airport wifi is being annoying. let me retry on cellular",
-                        [],
-                    ),
-                    (
-                        'client',
-                        dt_utc(2026, 10, 10, 19, 3, 50),
+                        dt_utc(2026, 10, 10, 19, 4, 15),
                         "ok worked with apple pay, $80 went through. will check back when I land tonight!",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 10, 19, 4, 42),
+                        dt_utc(2026, 10, 10, 19, 5, 0),
                         "Saw it come through, thanks! Safe flight, we'll have v1 ready for you tomorrow.",
                         [],
                     ),
@@ -4760,7 +4754,7 @@ CLIENT_PROFILES = {
         'channel': 'Web search',
         'reference': 'CK01',
         'subject': 'Executive Discovery Interview Synthesis & Action Sheet ($160)',
-        'status': 'closed',
+        'status': 'open',
         'requests': [
             {
                 'key': 'ck_review',
@@ -5577,20 +5571,8 @@ CLIENT_PROFILES = {
             ),
             (
                 'client',
-                dt_utc(2026, 10, 20, 17, 41, 9),
-                "Trying on my clinic iPad now... wait, Safari dropped the connection when I tried autofilling my card. Let me retry.",
-                [],
-            ),
-            (
-                'client',
-                dt_utc(2026, 10, 20, 18, 23, 44),
-                "Ugh, clinic wifi is being terrible in the back treatment rooms. Just switching over to Apple Pay on my phone instead.",
-                [],
-            ),
-            (
-                'client',
                 dt_utc(2026, 10, 20, 18, 26, 12),
-                "Alright, Apple Pay went through smoothly! $240 paid. Send over the final package when you have a sec!",
+                "paid! went through on apple pay, $240 cleared. send over the final package when you have a sec!",
                 [],
             ),
             (

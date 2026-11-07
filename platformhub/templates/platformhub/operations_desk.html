@@ -907,9 +907,9 @@
       }
     });
 
-    // 2. Push history state so back/forward works
+    // 2. Keep main section URL in address bar without exposing raw UUID storage address
     if (pushHistory && window.history && window.history.pushState) {
-      window.history.pushState({ conversationId: targetId }, "", targetUrl);
+      window.history.pushState({ conversationId: targetId }, "", "{% url 'platformhub:operations_desk' %}");
     }
 
     // 3. INSTANT SWAP: Check memory cache (< 1ms, zero network lag, zero delay)

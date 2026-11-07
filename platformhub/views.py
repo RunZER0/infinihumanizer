@@ -1254,6 +1254,7 @@ def client_chat_feed(request):
     feed_msgs = list(conversation.messages.select_related("author").all())
     _annotate_chat_messages(feed_msgs)
     invoices = _client_invoices(user=conversation.user, email=conversation.user.email, include_void=(role == "admin"))
+    presence = _compute_user_presence(conversation.user, feed_msgs[-1].created_at if feed_msgs else None)
     return JsonResponse({
         "conversation_id": str(conversation.id),
         "reference": conversation.reference or "",
@@ -1261,6 +1262,7 @@ def client_chat_feed(request):
         "status": conversation.status,
         "status_display": conversation.get_status_display(),
         "client_email": conversation.user.email or conversation.user.username,
+        "client_presence": presence,
         "messages": [
             _serialize_message(m, current_user=request.user, conversation_user=conversation.user, is_desk_view=(role == "admin"))
             for m in feed_msgs

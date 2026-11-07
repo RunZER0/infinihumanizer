@@ -40,9 +40,7 @@
       </nav>
 
       <div class="ops-sidebar-foot">
-        <a href="{% url 'platformhub:home' %}" class="ops-foot-link">Public site</a>
         {% if user.is_authenticated %}
-        <span class="ops-foot-sep" aria-hidden="true">·</span>
         <a href="{% url 'account_logout' %}" class="ops-foot-link">Sign out</a>
         {% endif %}
       </div>
