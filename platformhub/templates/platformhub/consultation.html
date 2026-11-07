@@ -40,7 +40,8 @@
     }
 
     try {
-      const response = await fetch(form.action || window.location.href, {
+      const targetUrl = form.getAttribute("action") || window.location.href;
+      const response = await fetch(targetUrl, {
         method: "POST",
         body: new FormData(form),
         headers: {

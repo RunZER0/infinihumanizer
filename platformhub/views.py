@@ -333,9 +333,22 @@ def _consultation_state(request, *, submitted=False, feedback="", feedback_level
         if consultation_id
         else None
     )
+    conversation_id = request.session.get("conversation_id")
+    conversation = (
+        ClientConversation.objects.filter(id=conversation_id).first()
+        if conversation_id
+        else None
+    )
+    if not conversation and recent_consultation and recent_consultation.user:
+        conversation = (
+            ClientConversation.objects.filter(user=recent_consultation.user)
+            .order_by("-updated_at")
+            .first()
+        )
 
     return {
         "recent_consultation": recent_consultation,
+        "conversation": conversation,
         "consult_step": step,
         "consult_name": full_name,
         "consult_email": email,
@@ -518,6 +531,19 @@ def consultation(request):
                     feedback_level="error",
                 )
 
+            saved_attachments = []
+            uploaded_files = request.FILES.getlist("attachments")
+            if uploaded_files:
+                from .chat_files import save_uploaded_chat_files
+                try:
+                    saved_attachments = save_uploaded_chat_files(uploaded_files)
+                except ValueError as err:
+                    return _consultation_reply(
+                        request,
+                        feedback=str(err),
+                        feedback_level="error",
+                    )
+
             User = get_user_model()
             target_user = request.user if request.user.is_authenticated else User.objects.filter(email__iexact=email).first()
             if not target_user:
@@ -552,12 +578,12 @@ def consultation(request):
             request.session["consultation_reference"] = item.reference
             request.session["consultation_id"] = str(item.id)
 
-            conv, _ = ClientConversation.objects.get_or_create(
+            conv = ClientConversation.objects.create(
                 user=target_user,
-                defaults={"subject": f"Inquiry · {item.reference}"},
+                subject=f"Inquiry · {item.reference}",
+                category="consultation",
+                status="open",
             )
-            conv.status = "open"
-            conv.save(update_fields=["status", "updated_at"])
             request.session["conversation_id"] = str(conv.id)
 
             consult_lines = [
@@ -578,22 +604,39 @@ def consultation(request):
                 author=target_user,
                 sender="client",
                 body="\n".join(consult_lines).strip(),
+                attachments=saved_attachments,
             )
 
             try:
+                body_lines = [
+                    f"Name: {item.full_name}",
+                    f"Email: {item.email}",
+                    f"Company: {item.company or '-'}",
+                    f"Reference: {item.reference}",
+                ]
+                if saved_attachments:
+                    att_labels = ", ".join(
+                        a.get("display_name", a.get("filename", "file"))
+                        for a in saved_attachments
+                    )
+                    body_lines.append(f"Attachments: {att_labels}")
+                body_lines.extend(["", f"{item.topic}"])
+
                 message = EmailMessage(
                     subject=f"InfiniAI enquiry {item.reference}: {item.full_name}",
-                    body=(
-                        f"Name: {item.full_name}\n"
-                        f"Email: {item.email}\n"
-                        f"Company: {item.company or '-'}\n"
-                        f"Reference: {item.reference}\n\n"
-                        f"{item.topic}"
-                    ),
+                    body="\n".join(body_lines),
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     to=[settings.SUPPORT_EMAIL],
                     reply_to=[item.email],
                 )
+                if saved_attachments:
+                    from .chat_files import get_chat_files_dir
+
+                    files_dir = get_chat_files_dir()
+                    for att in saved_attachments:
+                        att_path = files_dir / att["filename"]
+                        if att_path.exists():
+                            message.attach_file(str(att_path))
                 message.send(fail_silently=False)
             except Exception:
                 logger.exception(

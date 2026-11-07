@@ -77,7 +77,7 @@
       Your inquiry is now live in our Operations Desk. You can continue the exchange directly, attach documents, or send audio voice notes.
     </p>
     <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;">
-      <a href="{% url 'platformhub:client_chat' %}" class="btn btn-primary" id="open-consultation-chat">Open Workspace Chat →</a>
+      <a href="{% url 'platformhub:client_chat' %}{% if conversation %}?conversation={{ conversation.id }}{% endif %}" class="btn btn-primary" id="open-consultation-chat">Open Workspace Chat →</a>
       <a href="{% url 'platformhub:home' %}" class="btn">Back to Home</a>
     </div>
   </div>
@@ -95,16 +95,20 @@
     </div>
 
     <h2>Your message</h2>
-    <form method="post" class="form-stack contact-step-form" data-contact-form>
+    <form method="post" enctype="multipart/form-data" class="form-stack contact-step-form" data-contact-form>
       {% csrf_token %}
       <input type="hidden" name="action" value="submit_note">
       <div class="field">
         <label for="contact-topic">Message</label>
-        <textarea id="contact-topic" name="topic" required autofocus></textarea>
+        <textarea id="contact-topic" name="topic" required autofocus placeholder="Tell us about your project, timeline, or what you need help with..."></textarea>
       </div>
       <div class="field">
         <label for="contact-company">Company or team <span class="help">(optional)</span></label>
         <input id="contact-company" name="company" autocomplete="organization">
+      </div>
+      <div class="field">
+        <label for="contact-attachments">Attach documents or notes <span class="help">(optional — PDF, DOCX, XLSX, CSV, PPTX, images, TXT, audio, ZIP)</span></label>
+        <input type="file" id="contact-attachments" name="attachments" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.ppt,.pptx,.png,.jpg,.jpeg,.webp,.gif,.txt,.md,.zip,.wav,.mp3,.m4a">
       </div>
       <button class="btn btn-primary" type="submit">Send</button>
     </form>
