@@ -4147,7 +4147,8 @@ CLIENT_PROFILES = {
                 'service_code': 'text-humanize',
                 'title': 'Humanize & refine — Client newsletter rewrite and Pro access',
                 'objective': 'Refine a 1,800-word newsletter draft so it reads naturally without stiff phrasing.',
-                'scope': 'Humanize & refine pass plus Pro plan access ($25.00).',
+                'scope': '1,800-word draft and tone refinement pass.',
+                'budget_band': 'Standard',
                 'deliverable': 'Refined newsletter copy (.docx).',
                 'status': 'delivered',
                 'estimate_low': Decimal('25.00'),
@@ -4170,7 +4171,8 @@ CLIENT_PROFILES = {
                 'service_code': 'studio-technical',
                 'title': 'Four-role staff onboarding SOP and checklist package',
                 'objective': 'Write clear step-by-step onboarding checklists and daily workflow SOPs for four team roles.',
-                'scope': 'Four role checklists at USD 20.00 per role (USD 80.00 total).',
+                'scope': 'Four operational role frameworks (Lead Dispatcher, Customer Ops, Billing Specialist, Account Executive).',
+                'budget_band': 'Standard ($50–$60)',
                 'deliverable': 'Four-part staff onboarding SOP document (.docx & .pdf).',
                 'status': 'delivered',
                 'estimate_low': Decimal('80.00'),
@@ -4214,7 +4216,8 @@ CLIENT_PROFILES = {
                 'service_code': 'studio-presentations',
                 'title': 'Q4 Executive board briefing memo and 16-slide investor update deck',
                 'objective': 'Prepare executive presentation deck and confidential board briefing memo summarizing Q3 KPI performance, bridge financing terms, and 2027 regional expansion milestones.',
-                'scope': 'Comprehensive 16-slide investor update deck and a 4-page executive board memorandum ($150.00).',
+                'scope': 'Comprehensive 16-slide investor update deck and a 4-page executive board memorandum.',
+                'budget_band': 'Overnight Priority',
                 'deliverable': '16-slide presentation deck and executive memo (.docx & .pdf).',
                 'status': 'delivered',
                 'estimate_low': Decimal('150.00'),
@@ -4386,7 +4389,7 @@ CLIENT_PROFILES = {
                     (
                         'client',
                         dt_utc(2026, 10, 10, 18, 34, 22),
-                        "Hey team, back again and need your brainpower. We're hiring 4 key operational roles over the next 45 days (Lead Dispatcher, Customer Ops, Billing Specialist, Account Exec) and I don't have the hours to build 4 separate SOP ramp manuals from scratch. Attached my rough notes on role expectations. Can you turn these into structured 30-60-90 day benchmarks and daily workflow checklists for each role?",
+                        "Hey team, back again and need your brainpower. We're hiring 4 key operational roles over the next 45 days (Lead Dispatcher, Customer Ops, Billing Specialist, Account Exec) and I don't have the hours to build 4 separate SOP ramp manuals from scratch. Attached my rough notes on role expectations. Thought we could bundle all four under the standard $50 operational tier—can you turn these into structured 30-60-90 day benchmarks and daily workflow checklists for each role?",
                         [
                             'Role Ramp Notes.docx',
                         ],
@@ -4394,13 +4397,13 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 10, 18, 52, 14),
-                        "Hey Estella, good to see you back! Yeah we can put together the onboarding manuals and 30-60-90 checklists for the 4 roles. Standard $80 ($20/role). Can get a first draft to you by tomorrow afternoon, sound good?",
+                        "Hey Estella, good to see you back! Took a look through your role notes. Because you've got 4 completely distinct operational tracks here (Dispatch, Customer Ops, Billing, and AE) each requiring dedicated 30-60-90 benchmarks and daily checklists, it comes out to 4 separate handbooks. That scope is $80 total ($20 per role) rather than the single-role $50 tier. Can have the first complete draft over to you by tomorrow afternoon—sound good?",
                         [],
                     ),
                     (
                         'client',
                         dt_utc(2026, 10, 10, 18, 55, 30),
-                        "yes please! send the invoice over",
+                        "Ah yeah that makes total sense, each role really is its own beast. $80 works, send the invoice over!",
                         [],
                     ),
                     (
@@ -5610,7 +5613,8 @@ CLIENT_PROFILES = {
                 'service_code': 'studio-technical',
                 'title': 'Pediatric speech clinic intake agreement, parent disclosure forms, and HIPAA consent pack',
                 'objective': 'Draft comprehensive clinical service agreements, parent fee disclosures, cancellation policies, and HIPAA-compliant consent documents for pediatric speech therapy practice.',
-                'scope': 'Four specialized clinical documents: Master Clinical Service Agreement, Parent Financial & Cancellation Disclosure, HIPAA Teletherapy & In-Clinic Consent, and Intake Encounter Scripts ($240.00 total).',
+                'scope': 'Four specialized clinical documents: Master Clinical Service Agreement, Parent Financial & Cancellation Disclosure, HIPAA Teletherapy & In-Clinic Consent, and Intake Encounter Scripts.',
+                'budget_band': 'Standard ($150–$160)',
                 'deliverable': 'Clinical agreement and parent intake documentation pack (.docx & .pdf).',
                 'status': 'delivered',
                 'estimate_low': Decimal('240.00'),
@@ -5675,13 +5679,19 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 10, 7, 8, 29, 14),
-                "Ok good, because I don't have patience for fluff. If we do this, it has to be legally airtight and pediatric-specific. Our therapists work with non-verbal toddlers and sensory integration, so the observation mirror and video consent have to be spelled out explicitly. When could I see a first draft?",
+                "Ok good, because I don't have patience for fluff. If we do this, it has to be legally airtight and pediatric-specific. Our therapists work with non-verbal toddlers and sensory integration, so the observation mirror and video consent have to be spelled out explicitly. When could I see a first draft? On the intake form I selected the $160 tier, does that cover all four clinical documents?",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 7, 11, 18, 37),
-                "We can handle the entire clinical agreement overhaul plus the front-desk parent scripts for $240 flat. We'll dive right into the mirror and video clauses and have v1 in your hands by Friday afternoon.",
+                "Hey Issa, completely understand being direct about what you need. Because pediatric clinical paperwork needs distinct guarantor terms, HIPAA teletherapy, observation mirror consents, plus the front-desk parent cancellation scripts across 4 custom documents, that falls under our full $240 clinical documentation pack rather than the $160 single-policy tier. We don't cut corners on clinical language. We can have v1 in your hands by Friday afternoon.",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 7, 11, 42, 10),
+                "Fair enough—I'd rather pay the $240 and have it done right than deal with another audit nightmare. Let's see what you come up with by Friday.",
                 [],
             ),
             (
@@ -6267,12 +6277,13 @@ class Command(BaseCommand):
                                 "Intake Notes:",
                                 body.strip(),
                             ])
+                        req_budget = (req.get("budget_band") if isinstance(req, dict) else getattr(req, "budget_band", None)) or "Standard"
                         brief_lines.extend([
                             "",
                             "Requested Deliverables:",
                             str(req_deliv).strip(),
                             "",
-                            f"Turnaround: Priority · Research: Standard · Estimated Band: USD {req_est_low}–{req_est_high}",
+                            f"Turnaround: Priority · Research: Standard · Budget Band: {req_budget}",
                         ])
                         body = "\n".join(brief_lines).strip()
 

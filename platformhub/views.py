@@ -962,10 +962,22 @@ def admin_only_required(view_func):
 
 def _compute_user_presence(user, latest_message_time=None):
     from datetime import timedelta
+    from django.db.models import Max
     now = timezone.now()
     times = []
     if user and getattr(user, "last_login", None):
         times.append(user.last_login)
+
+    # Harmonize client presence: presence is an account-level attribute of the user,
+    # pulling from the latest activity across all interactions for that client.
+    if user and getattr(user, "pk", None):
+        from humanizer.models import ClientMessage
+        latest_user_activity = ClientMessage.objects.filter(
+            conversation__user=user
+        ).aggregate(m=Max("created_at"))["m"]
+        if latest_user_activity:
+            times.append(latest_user_activity)
+
     if latest_message_time:
         times.append(latest_message_time)
     if not times:
