@@ -4978,6 +4978,437 @@ body.modal-open{overflow:hidden}
   font-weight: 500;
 }
 
+/* ==========================================================================
+   Modern Project Brief Intake Form & File Uploader
+   ========================================================================== */
+.brief-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 30px 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: border-color 0.15s ease;
+}
+
+.brief-card:hover {
+  border-color: #cbd5e1;
+}
+
+.brief-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.brief-card-num {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--action-primary);
+  background: rgba(200, 65, 50, 0.08);
+  border-radius: 6px;
+  padding: 4px 8px;
+  line-height: 1.2;
+}
+
+.brief-card-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 4px;
+  color: #0f172a;
+}
+
+.brief-card-desc {
+  font-size: 0.86rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.field-hint {
+  display: block;
+  font-size: 0.82rem;
+  color: #64748b;
+  margin-top: -2px;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.req {
+  color: #e11d48;
+  margin-left: 2px;
+  font-weight: 700;
+}
+
+.brief-input {
+  width: 100%;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  padding: 10px 14px;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+}
+
+.brief-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  outline: none;
+}
+
+.brief-input::placeholder {
+  color: #94a3b8;
+}
+
+.form-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .form-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Modern Dropzone */
+.modern-dropzone {
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  background: #f8fafc;
+  padding: 32px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.1s ease;
+  user-select: none;
+}
+
+.modern-dropzone:hover {
+  border-color: #94a3b8;
+  background: #f1f5f9;
+}
+
+.modern-dropzone:focus-visible {
+  border-color: #2563eb;
+  outline: 3px solid rgba(37, 99, 235, 0.2);
+}
+
+.modern-dropzone.is-dragover {
+  border-color: #2563eb;
+  background: #eff6ff;
+  transform: scale(1.005);
+}
+
+.dropzone-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.dropzone-icon {
+  color: #64748b;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.dropzone-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dropzone-prompt {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.dropzone-browse-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #2563eb;
+  font-size: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.dropzone-browse-btn:hover {
+  color: #1d4ed8;
+}
+
+.dropzone-hint {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+/* Staged Files Container & Cards */
+.staged-files-container {
+  margin-top: 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px 18px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.staged-files-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.staged-files-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+}
+
+.staged-clear-all {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.15s ease;
+}
+
+.staged-clear-all:hover {
+  background: #fee2e2;
+}
+
+.staged-files-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 10px;
+}
+
+.staged-file-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.staged-file-card:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+}
+
+.file-badge {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.72rem;
+  font-weight: 800;
+  border-radius: 6px;
+  padding: 5px 7px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.badge-docx { background: #e0f2fe; color: #0284c7; }
+.badge-xlsx { background: #dcfce7; color: #16a34a; }
+.badge-pptx { background: #ffedd5; color: #ea580c; }
+.badge-pdf { background: #fee2e2; color: #dc2626; }
+.badge-img { background: #f3e8ff; color: #9333ea; }
+.badge-zip { background: #f1f5f9; color: #475569; }
+.badge-audio { background: #ede9fe; color: #7c3aed; }
+.badge-doc { background: #f1f5f9; color: #334155; }
+
+.staged-file-meta {
+  min-width: 0;
+  flex: 1;
+}
+
+.staged-file-name {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: #0f172a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.staged-file-sub {
+  font-size: 0.76rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.staged-ready-tag {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.staged-remove-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.staged-remove-btn:hover {
+  background: #fee2e2;
+  color: #dc2626;
+  transform: scale(1.05);
+}
+
+/* Bottom Actions */
+.form-bottom-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 10px;
+}
+
+.btn-submit-brief {
+  min-height: 48px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  padding: 12px 28px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(200, 65, 50, 0.25);
+  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+  align-self: flex-start;
+}
+
+.btn-submit-brief:hover {
+  box-shadow: 0 4px 12px rgba(200, 65, 50, 0.35);
+}
+
+.form-bottom-note {
+  font-size: 0.83rem;
+  color: #64748b;
+  line-height: 1.45;
+}
+
+/* Summary Rail */
+.brief-summary-rail {
+  position: sticky;
+  top: 90px;
+}
+
+.brief-summary-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.brief-summary-heading {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin: 0 0 16px;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+}
+
+.brief-summary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.brief-summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 0.86rem;
+}
+
+.summary-label {
+  color: #64748b;
+}
+
+.summary-value {
+  font-weight: 700;
+  color: #0f172a;
+  text-align: right;
+  max-width: 170px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.brief-summary-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 16px;
+  font-size: 0.82rem;
+  color: #475569;
+}
+
+.summary-step-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.4;
+}
+
+.step-num {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--action-primary);
+  background: rgba(200, 65, 50, 0.08);
+  border-radius: 4px;
+  padding: 2px 6px;
+  line-height: 1.2;
+}
+
+.rail-guarantee {
+  font-size: 0.78rem;
+  color: #64748b;
+  text-align: center;
+  margin: 12px 0 0;
+  font-weight: 500;
+}
+
+
 
 
 

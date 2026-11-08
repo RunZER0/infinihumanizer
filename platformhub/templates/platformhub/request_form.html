@@ -1,30 +1,525 @@
-
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Project brief — InfiniAI{% endblock %}
 {% block content %}
-<div class="page-shell"><div class="eyebrow">Project brief</div><h1 class="h1">Tell us what you need.</h1><p class="lede">A few details are enough to start.</p></div>
-<section class="section"><div class="shell form-layout">
-<form method="post" enctype="multipart/form-data" class="form-stack">{% csrf_token %}
-  <div class="field"><label for="service_code">What is closest?</label><select name="service_code" id="service_code" required><option value="">Choose a service</option>
-  {% for family_slug,family in families.items %}<optgroup label="{{ family.name }}">{% for service in family.services %}<option value="{{ service.code }}" {% if selected_code == service.code or values.service_code == service.code %}selected{% endif %}>{{ service.name }}</option>{% endfor %}</optgroup>{% endfor %}
-  </select></div>
-  <div class="form-grid-2"><div class="field"><label for="full_name">Your name</label><input id="full_name" name="full_name" required value="{{ values.full_name|default:initial_name }}"></div><div class="field"><label for="email">Email</label><input id="email" type="email" name="email" required value="{{ values.email|default:initial_email }}"></div></div>
-  <div class="field"><label for="company">Company / team <span class="help">(optional)</span></label><input id="company" name="company" value="{{ values.company }}"></div>
-  <div class="field"><label for="title">Project name</label><input id="title" name="title" required value="{{ values.title }}" placeholder="e.g. Q4 market-entry report"></div>
-  <div class="field"><label for="objective">What do you need this work to achieve?</label><textarea id="objective" name="objective" required>{{ values.objective }}</textarea></div>
-  <div class="field"><label for="audience">Who is it for?</label><textarea id="audience" name="audience">{{ values.audience }}</textarea></div>
-  <div class="field"><label for="scope">What do you already have?</label><textarea id="scope" name="scope" required>{{ values.scope }}</textarea></div>
-  <div class="field"><label for="intake_notes">Intake notes / initial inquiry <span class="help">(optional)</span></label><textarea id="intake_notes" name="intake_notes" placeholder="Any specific requirements, tool preferences, or questions...">{{ values.intake_notes }}</textarea></div>
-  <div class="field"><label for="attachments">Attach source materials / rough notes <span class="help">(optional, docx, pdf, xlsx, txt, zip)</span></label><input type="file" id="attachments" name="attachments" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.ppt,.pptx,.png,.jpg,.jpeg,.webp,.gif,.txt,.zip"></div>
-  <div class="field"><label for="deliverable">What should we deliver?</label><textarea id="deliverable" name="deliverable" required placeholder="Report, deck, website copy, reviewed document, dataset, model…">{{ values.deliverable }}</textarea></div>
-  <div class="form-grid-2">
-    <div class="field"><label for="research_depth">Research</label><select id="research_depth" name="research_depth"><option value="none">None</option><option value="light">Light</option><option value="standard" selected>Standard</option><option value="deep">Deep</option></select></div>
-    <div class="field"><label for="turnaround">Timing</label><select id="turnaround" name="turnaround"><option value="flexible">Flexible</option><option value="standard" selected>Standard</option><option value="priority">Priority</option></select></div>
+<div class="page-shell">
+  <div class="eyebrow">Project brief & scope intake</div>
+  <h1 class="h1">Initiate a project brief.</h1>
+  <p class="lede">Provide your project details, materials, and target deliverables. Our team reviews every brief before issuing a binding quote.</p>
+</div>
+
+<section class="section" style="padding-top: 0;">
+  <div class="shell form-layout">
+    <form method="post" enctype="multipart/form-data" class="form-stack" id="brief-intake-form" novalidate>
+      {% csrf_token %}
+
+      <!-- Section 1: Service & Project Title -->
+      <div class="brief-card">
+        <div class="brief-card-header">
+          <span class="brief-card-num">01</span>
+          <div>
+            <h2 class="brief-card-title">Service & Project Name</h2>
+            <p class="brief-card-desc">Choose the closest service category and give your project a clear working title.</p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="service_code">Service <span class="req">*</span></label>
+          <span class="field-hint">Select the service that best describes the work.</span>
+          <select name="service_code" id="service_code" required class="brief-input">
+            <option value="">Choose a service package...</option>
+            {% for family_slug, family in families.items %}
+              <optgroup label="{{ family.name }}">
+                {% for service in family.services %}
+                  <option value="{{ service.code }}" data-name="{{ service.name }}" data-family="{{ family.name }}" {% if selected_code == service.code or values.service_code == service.code %}selected{% endif %}>
+                    {{ service.name }} ({{ service.code }})
+                  </option>
+                {% endfor %}
+              </optgroup>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="field" style="margin-top: 18px;">
+          <label for="title">Project name <span class="req">*</span></label>
+          <span class="field-hint">A descriptive name for this job thread (e.g. Q4 Executive board briefing memo).</span>
+          <input id="title" name="title" required value="{{ values.title }}" class="brief-input" placeholder="e.g. Q4 Executive board briefing memo and 16-slide investor update deck">
+        </div>
+      </div>
+
+      <!-- Section 2: Client Contact Information -->
+      <div class="brief-card">
+        <div class="brief-card-header">
+          <span class="brief-card-num">02</span>
+          <div>
+            <h2 class="brief-card-title">Client Information</h2>
+            <p class="brief-card-desc">Your contact details for quote delivery, notifications, and operations messaging.</p>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="field">
+            <label for="full_name">Your name <span class="req">*</span></label>
+            <input id="full_name" name="full_name" required value="{{ values.full_name|default:initial_name }}" class="brief-input" placeholder="e.g. Estella Williams">
+          </div>
+          <div class="field">
+            <label for="email">Email address <span class="req">*</span></label>
+            <input id="email" type="email" name="email" required value="{{ values.email|default:initial_email }}" class="brief-input" placeholder="e.g. estellawilliams06@gmail.com">
+          </div>
+        </div>
+
+        <div class="field" style="margin-top: 18px;">
+          <label for="company">Company / team <span class="help">(optional)</span></label>
+          <span class="field-hint">Organization, fund, or startup name.</span>
+          <input id="company" name="company" value="{{ values.company }}" class="brief-input" placeholder="e.g. NorthStar Freight Logistics">
+        </div>
+      </div>
+
+      <!-- Section 3: Project Scope & Deliverables -->
+      <div class="brief-card">
+        <div class="brief-card-header">
+          <span class="brief-card-num">03</span>
+          <div>
+            <h2 class="brief-card-title">Project Scope & Deliverables</h2>
+            <p class="brief-card-desc">Specify what this work needs to achieve, target stakeholders, and what you already have.</p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="objective">Objective <span class="req">*</span></label>
+          <span class="field-hint">What do you need this work to achieve?</span>
+          <textarea id="objective" name="objective" required rows="3" class="brief-input" placeholder="e.g. Prepare executive presentation deck and confidential board briefing memo summarizing Q3 KPI performance, bridge financing terms, and 2027 regional expansion milestones.">{{ values.objective }}</textarea>
+        </div>
+
+        <div class="field" style="margin-top: 18px;">
+          <label for="audience">Audience <span class="help">(optional)</span></label>
+          <span class="field-hint">Who is the primary audience or stakeholder?</span>
+          <textarea id="audience" name="audience" rows="2" class="brief-input" placeholder="e.g. Board of directors, enterprise logistics partners, angel investors">{{ values.audience }}</textarea>
+        </div>
+
+        <div class="field" style="margin-top: 18px;">
+          <label for="scope">Current materials & scope <span class="req">*</span></label>
+          <span class="field-hint">What drafts, spreadsheets, rough bullets, notes, or raw data do you already have?</span>
+          <textarea id="scope" name="scope" required rows="3" class="brief-input" placeholder="e.g. Comprehensive 16-slide investor update deck notes and a 4-page executive board memorandum outline.">{{ values.scope }}</textarea>
+        </div>
+
+        <div class="field" style="margin-top: 18px;">
+          <label for="deliverable">Requested deliverables <span class="req">*</span></label>
+          <span class="field-hint">What exact deliverables should we produce? (e.g. 16-slide presentation deck and executive memo).</span>
+          <textarea id="deliverable" name="deliverable" required rows="3" class="brief-input" placeholder="e.g. 16-slide presentation deck and executive memo (.docx & .pdf).">{{ values.deliverable }}</textarea>
+        </div>
+      </div>
+
+      <!-- Section 4: Supporting Materials & Attachments -->
+      <div class="brief-card">
+        <div class="brief-card-header">
+          <span class="brief-card-num">04</span>
+          <div>
+            <h2 class="brief-card-title">Supporting Materials & Intake Notes</h2>
+            <p class="brief-card-desc">Attach any rough notes, source decks, or data sheets. Review and remove files before sending.</p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Attach source materials / rough notes <span class="help">(optional)</span></label>
+          <span class="field-hint">Drag and drop files here, or use the file browser. You can inspect and remove files before submission.</span>
+
+          <!-- Modern Interactive Drag & Drop Area -->
+          <div class="modern-dropzone" id="modern-dropzone" tabindex="0" role="region" aria-label="File upload dropzone">
+            <div class="dropzone-content">
+              <div class="dropzone-icon">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+              </div>
+              <div class="dropzone-text">
+                <span class="dropzone-prompt">Drag & drop files here, or <button type="button" class="dropzone-browse-btn" id="browse-btn">browse files</button></span>
+                <span class="dropzone-hint">Supports DOCX, PDF, XLSX, PPTX, PNG, JPG, WEBP, TXT, CSV, or ZIP (up to 25 MB each)</span>
+              </div>
+            </div>
+            <!-- Native file input bound to DataTransfer -->
+            <input type="file" id="attachments" name="attachments" multiple hidden accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.ppt,.pptx,.png,.jpg,.jpeg,.webp,.gif,.txt,.zip">
+          </div>
+
+          <!-- Interactive Staged File Cards List -->
+          <div class="staged-files-container" id="staged-files-container" hidden>
+            <div class="staged-files-header">
+              <span class="staged-files-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: text-bottom;">
+                  <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l7.9-7.89"></path>
+                </svg>
+                Attached files (<span id="staged-count">0</span>)
+              </span>
+              <button type="button" class="staged-clear-all" id="clear-all-files-btn">Remove all</button>
+            </div>
+            <div class="staged-files-grid" id="staged-files-grid">
+              <!-- Dynamically populated file cards -->
+            </div>
+          </div>
+        </div>
+
+        <div class="field" style="margin-top: 24px;">
+          <label for="intake_notes">Intake notes / initial inquiry <span class="help">(optional)</span></label>
+          <span class="field-hint">Any specific background, rush rate questions, deadline constraints, or instructions.</span>
+          <textarea id="intake_notes" name="intake_notes" rows="4" class="brief-input" placeholder="e.g. guys i am in a bind. we have our Q4 board & investor meeting tomorrow morning at 9am CT... can you turn this around overnight? what's the rush rate?">{{ values.intake_notes }}</textarea>
+        </div>
+      </div>
+
+      <!-- Section 5: Engagement Preferences & Budget -->
+      <div class="brief-card">
+        <div class="brief-card-header">
+          <span class="brief-card-num">05</span>
+          <div>
+            <h2 class="brief-card-title">Turnaround & Budget Band</h2>
+            <p class="brief-card-desc">Indicate your turnaround urgency, depth of research required, and target budget band.</p>
+          </div>
+        </div>
+
+        <div class="form-grid-3">
+          <div class="field">
+            <label for="turnaround">Turnaround</label>
+            <span class="field-hint">Urgency & delivery window</span>
+            <select id="turnaround" name="turnaround" class="brief-input">
+              <option value="flexible" {% if values.turnaround == 'flexible' %}selected{% endif %}>Flexible</option>
+              <option value="standard" {% if not values.turnaround or values.turnaround == 'standard' %}selected{% endif %}>Standard (2–3 days)</option>
+              <option value="priority" {% if values.turnaround == 'priority' %}selected{% endif %}>Priority (Rush / Next day)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="research_depth">Research depth</label>
+            <span class="field-hint">Depth of external synthesis</span>
+            <select id="research_depth" name="research_depth" class="brief-input">
+              <option value="none" {% if values.research_depth == 'none' %}selected{% endif %}>None (Provided files only)</option>
+              <option value="light" {% if values.research_depth == 'light' %}selected{% endif %}>Light (Basic checks)</option>
+              <option value="standard" {% if not values.research_depth or values.research_depth == 'standard' %}selected{% endif %}>Standard (Peer benchmarks)</option>
+              <option value="deep" {% if values.research_depth == 'deep' %}selected{% endif %}>Deep (Exhaustive validation)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="budget_band">Budget band <span class="help">(optional)</span></label>
+            <span class="field-hint">Expected pricing tier</span>
+            <select id="budget_band" name="budget_band" class="brief-input">
+              <option value="Standard" {% if not values.budget_band or values.budget_band == 'Standard' %}selected{% endif %}>Standard</option>
+              <option value="USD 35–75" {% if values.budget_band == 'USD 35–75' %}selected{% endif %}>USD 35–75</option>
+              <option value="USD 75–250" {% if values.budget_band == 'USD 75–250' %}selected{% endif %}>USD 75–250</option>
+              <option value="USD 250–750" {% if values.budget_band == 'USD 250–750' %}selected{% endif %}>USD 250–750</option>
+              <option value="USD 750–3,000" {% if values.budget_band == 'USD 750–3,000' %}selected{% endif %}>USD 750–3,000</option>
+              <option value="USD 3,000–10,000+" {% if values.budget_band == 'USD 3,000–10,000+' %}selected{% endif %}>USD 3,000–10,000+</option>
+              <option value="Flexible / Quote upon review" {% if values.budget_band == 'Flexible / Quote upon review' %}selected{% endif %}>Flexible / Quote upon review</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-bottom-actions">
+        <button class="btn btn-primary btn-submit-brief" type="submit" id="submit-brief-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+          Send brief
+        </button>
+        <span class="form-bottom-note">Submitting this brief creates a dedicated operations thread. No billing occurs until a formal quote is reviewed and accepted.</span>
+      </div>
+    </form>
+
+    <!-- Sticky Summary Rail -->
+    <aside class="brief-summary-rail">
+      <div class="brief-summary-card">
+        <div class="eyebrow" style="margin-bottom: 8px;">Brief Overview</div>
+        <h3 class="brief-summary-heading">Engagement Summary</h3>
+
+        <div class="brief-summary-list">
+          <div class="brief-summary-item">
+            <span class="summary-label">Service</span>
+            <span class="summary-value" id="rail-service">Choose service</span>
+          </div>
+          <div class="brief-summary-item">
+            <span class="summary-label">Turnaround</span>
+            <span class="summary-value" id="rail-turnaround">Standard</span>
+          </div>
+          <div class="brief-summary-item">
+            <span class="summary-label">Research</span>
+            <span class="summary-value" id="rail-research">Standard</span>
+          </div>
+          <div class="brief-summary-item">
+            <span class="summary-label">Budget</span>
+            <span class="summary-value" id="rail-budget">Standard</span>
+          </div>
+          <div class="brief-summary-item">
+            <span class="summary-label">Attachments</span>
+            <span class="summary-value" id="rail-attachments">0 files</span>
+          </div>
+        </div>
+
+        <div class="brief-summary-steps">
+          <div class="summary-step-row">
+            <span class="step-num">1</span>
+            <span>We review the brief and attached files.</span>
+          </div>
+          <div class="summary-step-row">
+            <span class="step-num">2</span>
+            <span>A dedicated chat thread is created instantly.</span>
+          </div>
+          <div class="summary-step-row">
+            <span class="step-num">3</span>
+            <span>You receive a binding quote or follow-up question.</span>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" type="button" id="rail-submit-btn" style="width: 100%; margin-top: 20px;">
+          Send brief
+        </button>
+        <p class="rail-guarantee">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: -2px;">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          Free brief review · Zero commitment
+        </p>
+      </div>
+    </aside>
   </div>
-  <div class="field"><label for="budget_band">Budget <span class="help">(optional)</span></label><select id="budget_band" name="budget_band"><option value="">Not sure yet</option><option>USD 35–75</option><option>USD 75–250</option><option>USD 250–750</option><option>USD 750–3,000</option><option>USD 3,000–10,000+</option></select></div>
-  <div class="form-note">Submitting the brief creates the request. Billing begins only after you accept a quote.</div>
-  <div><button class="btn btn-primary" type="submit">Send brief</button></div>
-</form>
-<aside class="summary-rail"><div class="eyebrow">Next</div><ol style="padding-left:20px;color:var(--text-muted)"><li style="margin:12px 0">We review the brief.</li><li style="margin:12px 0">We confirm the scope and timing.</li><li style="margin:12px 0">You receive a quote or a short follow-up question.</li></ol></aside>
-</div></section>
+</section>
+
+<!-- Modern Interactive Staging & Drag-and-Drop Script -->
+<script>
+(function() {
+  const form = document.getElementById("brief-intake-form");
+  const fileInput = document.getElementById("attachments");
+  const dropzone = document.getElementById("modern-dropzone");
+  const browseBtn = document.getElementById("browse-btn");
+  const stagedContainer = document.getElementById("staged-files-container");
+  const stagedGrid = document.getElementById("staged-files-grid");
+  const stagedCountEl = document.getElementById("staged-count");
+  const clearAllBtn = document.getElementById("clear-all-files-btn");
+
+  const serviceSelect = document.getElementById("service_code");
+  const turnaroundSelect = document.getElementById("turnaround");
+  const researchSelect = document.getElementById("research_depth");
+  const budgetSelect = document.getElementById("budget_band");
+
+  const railService = document.getElementById("rail-service");
+  const railTurnaround = document.getElementById("rail-turnaround");
+  const railResearch = document.getElementById("rail-research");
+  const railBudget = document.getElementById("rail-budget");
+  const railAttachments = document.getElementById("rail-attachments");
+  const railSubmitBtn = document.getElementById("rail-submit-btn");
+
+  // Main DataTransfer store for staged files
+  let stagedDt = new DataTransfer();
+
+  function formatFileSize(bytes) {
+    if (bytes === 0) return "0 B";
+    const k = 1024;
+    const sizes = ["B", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
+  }
+
+  function getFileCategory(name) {
+    const ext = name.split(".").pop().toLowerCase();
+    if (["docx", "doc"].includes(ext)) return { cls: "badge-docx", label: "DOCX" };
+    if (["xlsx", "xls", "csv"].includes(ext)) return { cls: "badge-xlsx", label: "XLSX" };
+    if (["pptx", "ppt"].includes(ext)) return { cls: "badge-pptx", label: "PPTX" };
+    if (["pdf"].includes(ext)) return { cls: "badge-pdf", label: "PDF" };
+    if (["png", "jpg", "jpeg", "webp", "gif"].includes(ext)) return { cls: "badge-img", label: "IMG" };
+    if (["zip", "rar", "7z", "tar", "gz"].includes(ext)) return { cls: "badge-zip", label: "ZIP" };
+    if (["mp3", "wav", "m4a", "ogg", "aac", "flac"].includes(ext)) return { cls: "badge-audio", label: "AUDIO" };
+    return { cls: "badge-doc", label: ext.toUpperCase().slice(0, 4) || "FILE" };
+  }
+
+  function syncFilesAndRender() {
+    fileInput.files = stagedDt.files;
+    const total = stagedDt.files.length;
+    stagedCountEl.textContent = total;
+    railAttachments.textContent = total === 1 ? "1 file" : total + " files";
+
+    if (total === 0) {
+      stagedContainer.hidden = true;
+      stagedGrid.innerHTML = "";
+      return;
+    }
+
+    stagedContainer.hidden = false;
+    stagedGrid.innerHTML = "";
+
+    for (let i = 0; i < total; i++) {
+      const f = stagedDt.files[i];
+      const cat = getFileCategory(f.name);
+
+      const card = document.createElement("div");
+      card.className = "staged-file-card";
+      card.setAttribute("data-file-idx", i);
+
+      card.innerHTML = `
+        <div class="file-badge ${cat.cls}">${cat.label}</div>
+        <div class="staged-file-meta">
+          <div class="staged-file-name" title="${f.name}">${f.name}</div>
+          <div class="staged-file-sub">
+            <span class="staged-file-size">${formatFileSize(f.size)}</span>
+            <span class="staged-ready-tag">• Ready</span>
+          </div>
+        </div>
+        <button type="button" class="staged-remove-btn" title="Remove ${f.name}" aria-label="Remove ${f.name}" data-idx="${i}">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      `;
+
+      stagedGrid.appendChild(card);
+    }
+
+    // Attach remove handlers
+    const removeBtns = stagedGrid.querySelectorAll(".staged-remove-btn");
+    removeBtns.forEach(btn => {
+      btn.onclick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const removeIdx = parseInt(this.getAttribute("data-idx"), 10);
+        removeFileAt(removeIdx);
+      };
+    });
+  }
+
+  function addFiles(fileList) {
+    if (!fileList || !fileList.length) return;
+    for (let i = 0; i < fileList.length; i++) {
+      const f = fileList[i];
+      // Prevent duplicates by name and size
+      let exists = false;
+      for (let j = 0; j < stagedDt.files.length; j++) {
+        const cur = stagedDt.files[j];
+        if (cur.name === f.name && cur.size === f.size && cur.lastModified === f.lastModified) {
+          exists = true;
+          break;
+        }
+      }
+      if (!exists) {
+        stagedDt.items.add(f);
+      }
+    }
+    syncFilesAndRender();
+  }
+
+  function removeFileAt(index) {
+    const newDt = new DataTransfer();
+    for (let i = 0; i < stagedDt.files.length; i++) {
+      if (i !== index) {
+        newDt.items.add(stagedDt.files[i]);
+      }
+    }
+    stagedDt = newDt;
+    syncFilesAndRender();
+  }
+
+  function clearAllFiles() {
+    stagedDt = new DataTransfer();
+    syncFilesAndRender();
+  }
+
+  if (clearAllBtn) {
+    clearAllBtn.onclick = function(e) {
+      e.preventDefault();
+      clearAllFiles();
+    };
+  }
+
+  // Browse triggers
+  if (browseBtn) {
+    browseBtn.onclick = function(e) {
+      e.preventDefault();
+      fileInput.click();
+    };
+  }
+  if (dropzone) {
+    dropzone.onclick = function(e) {
+      if (e.target !== browseBtn && !e.target.closest(".staged-remove-btn")) {
+        fileInput.click();
+      }
+    };
+
+    dropzone.addEventListener("keydown", function(e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        fileInput.click();
+      }
+    });
+
+    // Drag and Drop events
+    ["dragenter", "dragover"].forEach(evtName => {
+      dropzone.addEventListener(evtName, function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dropzone.classList.add("is-dragover");
+      });
+    });
+
+    ["dragleave", "dragend"].forEach(evtName => {
+      dropzone.addEventListener(evtName, function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dropzone.classList.remove("is-dragover");
+      });
+    });
+
+    dropzone.addEventListener("drop", function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dropzone.classList.remove("is-dragover");
+      if (e.dataTransfer && e.dataTransfer.files) {
+        addFiles(e.dataTransfer.files);
+      }
+    });
+  }
+
+  fileInput.addEventListener("change", function() {
+    if (this.files && this.files.length) {
+      addFiles(this.files);
+    }
+  });
+
+  // Live Summary Rail Synchronization
+  function updateSummaryRail() {
+    if (serviceSelect) {
+      const selectedOpt = serviceSelect.options[serviceSelect.selectedIndex];
+      railService.textContent = (selectedOpt && selectedOpt.value) ? (selectedOpt.getAttribute("data-name") || selectedOpt.textContent.split("(")[0].trim()) : "Choose service";
+    }
+    if (turnaroundSelect) {
+      const tVal = turnaroundSelect.value;
+      railTurnaround.textContent = tVal ? tVal.charAt(0).toUpperCase() + tVal.slice(1) : "Standard";
+    }
+    if (researchSelect) {
+      const rVal = researchSelect.value;
+      railResearch.textContent = rVal ? rVal.charAt(0).toUpperCase() + rVal.slice(1) : "Standard";
+    }
+    if (budgetSelect) {
+      railBudget.textContent = budgetSelect.value || "Standard";
+    }
+  }
+
+  [serviceSelect, turnaroundSelect, researchSelect, budgetSelect].forEach(el => {
+    if (el) el.addEventListener("change", updateSummaryRail);
+  });
+  updateSummaryRail();
+
+  if (railSubmitBtn && form) {
+    railSubmitBtn.onclick = function() {
+      // Validate HTML5 required fields
+      if (!form.reportValidity()) {
+        return;
+      }
+      form.submit();
+    };
+  }
+
+  updateSummaryRail();
+})();
+</script>
 {% endblock %}

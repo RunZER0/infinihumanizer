@@ -148,6 +148,7 @@ def request_service(request, service_code=None):
 
         research_depth = request.POST.get("research_depth", "standard")
         turnaround = request.POST.get("turnaround", "standard")
+        budget_band = request.POST.get("budget_band", "").strip() or "Standard"
         low, high = estimate_request(code, research_depth, turnaround)
 
         User = get_user_model()
@@ -188,7 +189,7 @@ def request_service(request, service_code=None):
             deliverable=required["deliverable"],
             research_depth=research_depth,
             turnaround=turnaround,
-            budget_band=request.POST.get("budget_band", "").strip(),
+            budget_band=budget_band,
             estimate_low=low,
             estimate_high=high,
             currency="USD",
@@ -199,8 +200,14 @@ def request_service(request, service_code=None):
             },
         )
         # Create a dedicated new conversation thread for this project
+        initials = "".join([part[0].upper() for part in (required["full_name"] or "CL").split() if part.isalpha()])[:2]
+        if not initials:
+            initials = "CL"
+        existing_count = ClientConversation.objects.filter(user=target_user).count() + 1
+        conv_reference = f"{initials}{existing_count:02d}"
         conv = ClientConversation.objects.create(
             user=target_user,
+            reference=conv_reference,
             subject=item.title,
             category="job",
             status="open",
