@@ -4368,7 +4368,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 5, 9, 16, 30),
-                        "Glad to hear that, Estella! Since the revised newsletter is confirmed and sent out to your LPs, I'll go ahead and mark this conversation as closed. If you need another pass for next month's update or anything new, just open a new thread anytime. Good luck with the investor circular!",
+                        "Glad to hear that, Estella! Since the revised newsletter is confirmed and sent out to your LPs, if you need another pass for next month's update or anything new, just reach out anytime. Good luck with the investor circular!",
                         [],
                     ),
                     (
@@ -4470,7 +4470,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 12, 17, 31, 0),
-                        "Awesome! Since all 4 role handbooks are confirmed and approved by your hiring team, I'll go ahead and close this conversation thread. Whenever your next hiring batch or new roles open up, just open a new thread and we'll take care of it. Best of luck with the onboarding ramp!",
+                        "Awesome! Since all 4 role handbooks are confirmed and approved by your hiring team, whenever your next hiring batch or new roles open up, just reach out and we'll take care of it. Best of luck with the onboarding ramp!",
                         [],
                     ),
                     (
@@ -4546,7 +4546,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 21, 7, 55, 12),
-                        "So glad to hear that! Since the deck and memo are finalized and confirmed, I'll go ahead and close this conversation thread. Go crush the presentation and let us know whenever you need the next deck!",
+                        "So glad to hear that! Since the deck and memo are finalized and confirmed, go crush the presentation and let us know whenever you need the next deck!",
                         [],
                     ),
                     (
@@ -4558,7 +4558,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 21, 8, 4, 15),
-                        "Rooting for you guys! Thread closed—knock it out of the park 💪",
+                        "Rooting for you guys! Knock it out of the park 💪",
                         [],
                     ),
                 ],
@@ -5807,7 +5807,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 20, 18, 49, 15),
-                "Haha hey surviving your edits made the docs airtight! Since all agreements, policies, and intake scripts are confirmed and in your clinic drive, I'll go ahead and mark this conversation as closed. If you ever add new therapy specialties or need policy updates, feel free to open a new thread anytime. Have a good evening with your patient!",
+                "Haha hey surviving your edits made the docs airtight! Since all agreements, policies, and intake scripts are confirmed and in your clinic drive, if you ever add new therapy specialties or need policy updates, feel free to reach out anytime. Have a good evening with your patient!",
                 [],
             ),
             (
@@ -6299,6 +6299,29 @@ class Command(BaseCommand):
                         read_at=msg_dt + timedelta(minutes=2),
                     )
                     ClientMessage.objects.filter(pk=msg.pk).update(created_at=msg_dt)
+                    created_messages += 1
+
+                if c_status == "closed":
+                    closure_dt = last_msg_dt + timedelta(minutes=2)
+                    closure_body = (
+                        "This conversation has been closed consequent to the completion of the requested task "
+                        "and delivery of all agreed scope items.\n\n"
+                        "What this means:\n"
+                        "• All delivered files, work products, and billing receipts remain permanently accessible in your workspace history.\n"
+                        "• The composer for this thread is now paused to keep records organized and focused by engagement.\n"
+                        "• If you have follow-up questions, require revisions, or need further assistance, you can request to reopen this thread at any time.\n\n"
+                        "Thank you for working with InfiniAI!"
+                    )
+                    closure_msg = ClientMessage.objects.create(
+                        conversation=conv,
+                        author=None,
+                        sender="admin",
+                        body=closure_body,
+                        attachments=[],
+                        read_at=closure_dt + timedelta(minutes=1),
+                    )
+                    ClientMessage.objects.filter(pk=closure_msg.pk).update(created_at=closure_dt)
+                    last_msg_dt = closure_dt
                     created_messages += 1
 
                 ClientConversation.objects.filter(pk=conv.pk).update(
