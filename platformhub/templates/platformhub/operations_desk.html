@@ -741,6 +741,10 @@
             const composerCard = document.getElementById("desk-composer-card");
             if (closedBanner) closedBanner.hidden = !isClosed;
             if (composerCard) composerCard.hidden = isClosed;
+            if (data.message) {
+              renderMessage(data.message);
+              scrollThreadToEnd();
+            }
             if (!isClosed) {
               const replyInput = document.getElementById("desk-reply-input");
               if (replyInput) replyInput.focus();
@@ -1209,6 +1213,22 @@
       if (pollingConvId !== currentConversationId) return;
       const data = await response.json();
       if (pollingConvId !== currentConversationId) return;
+      if (data && data.status) {
+        const isClosed = data.status === "closed";
+        const closedBanner = document.getElementById("desk-closed-banner");
+        const composerCard = document.getElementById("desk-composer-card");
+        if (closedBanner) closedBanner.hidden = !isClosed;
+        if (composerCard) composerCard.hidden = isClosed;
+        const statusEl = document.getElementById("desk-thread-status");
+        if (statusEl) {
+          statusEl.textContent = data.status_display || (isClosed ? "Closed" : "Open");
+          statusEl.className = "ops-status-text wa-thread-badge " + (isClosed ? "ops-state-settled" : "ops-state-open");
+        }
+        const toggleBtn = document.getElementById("desk-toggle-status-btn");
+        if (toggleBtn) {
+          toggleBtn.textContent = isClosed ? "Reopen" : "Close thread";
+        }
+      }
       if (Array.isArray(data.messages)) {
         data.messages.forEach(renderMessage);
       }

@@ -4967,15 +4967,90 @@ body.modal-open{overflow:hidden}
 }
 
 .client-closed-banner {
-  justify-content: center;
-  text-align: center;
+  justify-content: space-between;
+  text-align: left;
   background: #f8fafc !important;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .client-closed-banner .wa-closed-info {
-  justify-content: center;
+  justify-content: flex-start;
   color: #64748b;
   font-weight: 500;
+  flex: 1;
+}
+
+.client-btn-request-reopen {
+  padding: 6px 14px;
+  background: #ffffff;
+  color: #1e293b;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.client-btn-request-reopen:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.client-reopen-box {
+  padding: 16px 20px;
+  background: #f8fafc !important;
+  border-top: 1px solid #e2e8f0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.client-reopen-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.client-reopen-header strong {
+  font-size: 0.92rem;
+  color: #0f172a;
+}
+
+.client-reopen-hint {
+  font-size: 0.82rem;
+  color: #64748b;
+}
+
+.client-reopen-textarea {
+  width: 100%;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.88rem;
+  font-family: inherit;
+  resize: vertical;
+  box-sizing: border-box;
+  background: #ffffff;
+  color: #0f172a;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.client-reopen-textarea:focus {
+  border-color: #2563eb;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.client-reopen-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
 }
 
 /* ==========================================================================

@@ -1235,6 +1235,41 @@ def client_chat(request):
         )
 
     if request.method == "POST":
+        action = request.POST.get("action", "message").strip()
+
+        if action == "request_reopen":
+            reason = request.POST.get("reason", "").strip() or request.POST.get("message", "").strip()
+            if not reason:
+                if is_ajax:
+                    return JsonResponse({"error": "Please provide a reason explaining why you need this thread reopened."}, status=400)
+                messages.error(request, "Please provide a reason explaining why you need this thread reopened.")
+                return redirect(f"{reverse('platformhub:client_chat')}?conversation={conversation.id}")
+
+            reopen_req_body = (
+                "Request to Reopen Thread\n"
+                "--------------------------------------------------\n"
+                f"Reason for reopen:\n{reason}"
+            )
+            msg = ClientMessage.objects.create(
+                conversation=conversation,
+                author=chat_user,
+                sender="client",
+                body=reopen_req_body,
+            )
+            conversation.updated_at = timezone.now()
+            conversation.save(update_fields=["updated_at"])
+
+            if is_ajax:
+                return JsonResponse({
+                    "ok": True,
+                    "status": conversation.status,
+                    "status_display": conversation.get_status_display(),
+                    "message": _serialize_message(msg, current_user=request.user, conversation_user=conversation.user, is_desk_view=False),
+                    "notice": "Reopen request submitted. Operations will review and reopen.",
+                })
+            messages.success(request, "Reopen request submitted. Operations will review and reopen.")
+            return redirect(f"{reverse('platformhub:client_chat')}?conversation={conversation.id}")
+
         if conversation.status == "closed":
             if is_ajax:
                 return JsonResponse({"error": "This conversation was marked as closed."}, status=400)
@@ -1306,6 +1341,14 @@ def client_chat(request):
     open_invoices = [inv for inv in invoices if inv.status not in {"paid", "void"}]
     client_payments = _client_payments(user=chat_user, email=chat_user.email)
 
+    last_msg = chat_msgs[-1] if chat_msgs else None
+    is_reopen_pending = bool(
+        conversation.status == "closed"
+        and last_msg
+        and last_msg.sender == "client"
+        and "Request to Reopen Thread" in (last_msg.body or "")
+    )
+
     return render(request, "platformhub/client_chat.html", {
         "chat_user": chat_user,
         "conversation": conversation,
@@ -1315,6 +1358,7 @@ def client_chat(request):
         "invoices": invoices[:16],
         "open_invoices": open_invoices,
         "client_payments": client_payments[:20],
+        "is_reopen_pending": is_reopen_pending,
     })
 
 
@@ -1353,12 +1397,20 @@ def client_chat_feed(request):
     _annotate_chat_messages(feed_msgs)
     invoices = _client_invoices(user=conversation.user, email=conversation.user.email, include_void=(role == "admin"))
     presence = _compute_user_presence(conversation.user, feed_msgs[-1].created_at if feed_msgs else None)
+    last_msg = feed_msgs[-1] if feed_msgs else None
+    is_reopen_pending = bool(
+        conversation.status == "closed"
+        and last_msg
+        and last_msg.sender == "client"
+        and "Request to Reopen Thread" in (last_msg.body or "")
+    )
     return JsonResponse({
         "conversation_id": str(conversation.id),
         "reference": conversation.reference or "",
         "subject": conversation.subject or "",
         "status": conversation.status,
         "status_display": conversation.get_status_display(),
+        "is_reopen_pending": is_reopen_pending,
         "client_email": conversation.user.email or conversation.user.username,
         "client_presence": presence,
         "messages": [
@@ -1596,18 +1648,57 @@ def operations_desk(request, conversation_id=None):
     if request.method == "POST":
         action = request.POST.get("action", "reply").strip()
         if action in ["toggle_status", "close", "reopen"]:
+            previous_status = active_conversation.status
             if action == "close":
-                active_conversation.status = "closed"
+                new_status = "closed"
             elif action == "reopen":
-                active_conversation.status = "open"
+                new_status = "open"
             else:
-                active_conversation.status = "closed" if active_conversation.status == "open" else "open"
+                new_status = "closed" if active_conversation.status == "open" else "open"
+
+            active_conversation.status = new_status
             active_conversation.save(update_fields=["status", "updated_at"])
+
+            system_msg = None
+            if previous_status == "open" and new_status == "closed":
+                closure_body = (
+                    "This conversation has been closed consequent to the completion of the requested task "
+                    "and delivery of all agreed scope items.\n\n"
+                    "What this means:\n"
+                    "• All delivered files, work products, and billing receipts remain permanently accessible in your workspace history.\n"
+                    "• The composer for this thread is now paused to keep records organized and focused by engagement.\n"
+                    "• If you have follow-up questions, require revisions, or need further assistance, you can request to reopen this thread at any time.\n\n"
+                    "Thank you for working with InfiniAI!"
+                )
+                system_msg = ClientMessage.objects.create(
+                    conversation=active_conversation,
+                    author=request.user,
+                    sender="admin",
+                    body=closure_body,
+                )
+            elif previous_status == "closed" and new_status == "open":
+                reopen_body = (
+                    "This conversation thread has been reopened. The message composer is now active for both client and operations."
+                )
+                system_msg = ClientMessage.objects.create(
+                    conversation=active_conversation,
+                    author=request.user,
+                    sender="admin",
+                    body=reopen_body,
+                )
+
             if is_ajax:
+                serialized_msg = _serialize_message(
+                    system_msg,
+                    current_user=request.user,
+                    conversation_user=active_conversation.user,
+                    is_desk_view=True
+                ) if system_msg else None
                 return JsonResponse({
                     "ok": True,
                     "status": active_conversation.status,
                     "status_display": active_conversation.get_status_display(),
+                    "message": serialized_msg,
                 })
             return redirect("platformhub:operations_desk_conversation", conversation_id=active_conversation.id)
 
