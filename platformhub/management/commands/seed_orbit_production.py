@@ -4336,7 +4336,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 5, 5, 6, 20),
-                        "Here's the payment link: https://paystack.shop/pay/ew-williams8",
+                        "Here's the payment link: https://paystack.shop/pay/tx0ipp9eg4",
                         [],
                     ),
                     (
@@ -4409,7 +4409,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 10, 18, 57, 10),
-                        "Here's the payment link: https://paystack.shop/pay/ew-williams8",
+                        "Here's the payment link: https://paystack.shop/pay/tx0ipp9eg4",
                         [],
                     ),
                     (
@@ -4511,7 +4511,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 20, 19, 48, 30),
-                        "Here's the payment link: https://paystack.shop/pay/ew-williams8",
+                        "Here's the payment link: https://paystack.shop/pay/tx0ipp9eg4",
                         [],
                     ),
                     (

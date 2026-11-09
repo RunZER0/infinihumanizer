@@ -13,7 +13,7 @@ CLIENT_CUSTOM_CHECKOUT_LINKS = {
     "kchin444@gmail.com": "https://paystack.shop/pay/kc-chin77",
     "vickyizad@gmail.com": "https://paystack.shop/pay/li-tampa44",
     "drako.santaana.glz@gmail.com": "https://paystack.shop/pay/ds-dock55",
-    "estellawilliams06@gmail.com": "https://paystack.shop/pay/ew-williams8",
+    "estellawilliams06@gmail.com": "https://paystack.shop/pay/tx0ipp9eg4",
     "kayleecabreros@gmail.com": "https://paystack.shop/pay/kc-skin12",
     "dkiragu97@gmail.com": "https://paystack.shop/pay/dk-freight3",
     "uzbekquintero@gmail.com": "https://paystack.shop/pay/aq-cold61",
