@@ -63,12 +63,7 @@
             <p class="ops-thread-preview wa-thread-preview">
               {% if item.last_message %}
                 {% if item.last_message.sender != "client" %}
-                <span class="wa-preview-ticks">
-                  <svg class="wa-ticks {% if item.last_message.read_at %}wa-ticks-read{% else %}wa-ticks-unread{% endif %}" width="14" height="13" viewBox="0 0 16 15" fill="none">
-                    <path d="M15.01 3.316l-7.79 7.79-3.79-3.79 1.06-1.06 2.73 2.73 6.73-6.73 1.06 1.06z" fill="{% if item.last_message.read_at %}#53bdeb{% else %}#8696a0{% endif %}"/>
-                    <path d="M11.22 3.316l-7.79 7.79-3.43-3.43 1.06-1.06 2.37 2.37 6.73-6.73 1.06 1.06z" fill="{% if item.last_message.read_at %}#53bdeb{% else %}#8696a0{% endif %}"/>
-                  </svg>
-                </span>
+                <span class="wa-preview-status {% if item.last_message.read_at %}wa-status-read{% else %}wa-status-delivered{% endif %}">{% if item.last_message.read_at %}Read ·{% else %}Delivered ·{% endif %}</span>
                 {% endif %}
                 {% if item.last_message.body %}
                   {{ item.last_message.body|truncatechars:42 }}
@@ -532,18 +527,11 @@
     const timeStr = escapeHtml(item.time_display || (item.created_at_display && item.created_at_display.includes("·") ? item.created_at_display.split("·")[1].trim() : (item.created_at_display || "Now")));
     const isRead = Boolean(item.is_read);
 
-    let tickHtml = "";
+    let statusHtml = "";
     if (isOut) {
-      const tickColor = isRead ? "#53bdeb" : "#8696a0";
-      const tickClass = isRead ? "wa-ticks-read" : "wa-ticks-unread";
-      const tickTitle = isRead ? "Read" : "Delivered";
-      tickHtml =
-        '<span class="wa-tick-wrap" title="' + tickTitle + '">' +
-          '<svg class="wa-ticks ' + tickClass + '" width="16" height="15" viewBox="0 0 16 15" fill="none">' +
-            '<path d="M15.01 3.316l-7.79 7.79-3.79-3.79 1.06-1.06 2.73 2.73 6.73-6.73 1.06 1.06z" fill="' + tickColor + '"/>' +
-            '<path d="M11.22 3.316l-7.79 7.79-3.43-3.43 1.06-1.06 2.37 2.37 6.73-6.73 1.06 1.06z" fill="' + tickColor + '"/>' +
-          '</svg>' +
-        '</span>';
+      const statusClass = isRead ? "wa-status-read" : "wa-status-delivered";
+      const statusText = isRead ? "Read" : "Delivered";
+      statusHtml = '<span class="wa-msg-status ' + statusClass + '">' + statusText + '</span>';
     }
 
     article.innerHTML =
@@ -552,7 +540,7 @@
         attHtml +
         '<div class="wa-msg-meta">' +
           '<span class="wa-msg-time">' + timeStr + '</span>' +
-          tickHtml +
+          statusHtml +
         '</div>' +
       '</div>';
 
@@ -897,7 +885,7 @@
         presenceEl.textContent = "online";
         presenceEl.className = "wa-status-online";
       } else {
-        presenceEl.textContent = data.client_presence.last_seen_display || "offline";
+        presenceEl.textContent = data.client_presence.last_seen_display || "last seen long ago";
         presenceEl.className = "wa-status-offline";
       }
     }

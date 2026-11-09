@@ -1061,23 +1061,16 @@ def _compute_user_presence(user, latest_message_time=None):
     if latest_message_time:
         times.append(latest_message_time + timedelta(minutes=14))
     if not times:
-        return {"is_online": False, "last_seen_display": "offline"}
+        return {"is_online": False, "last_seen_display": "last seen long ago"}
 
     last_active = max(times)
     diff = now - last_active
     if diff < timedelta(minutes=15):
         return {"is_online": True, "last_seen_display": "online"}
-
-    local_active = timezone.localtime(last_active)
-    local_now = timezone.localtime(now)
-    time_str = local_active.strftime("%I:%M %p").lstrip("0")
-
-    if local_active.date() == local_now.date():
-        return {"is_online": False, "last_seen_display": f"last seen today at {time_str}"}
-    elif local_active.date() == (local_now - timedelta(days=1)).date():
-        return {"is_online": False, "last_seen_display": f"last seen yesterday at {time_str}"}
+    elif diff < timedelta(days=7):
+        return {"is_online": False, "last_seen_display": "last seen recently"}
     else:
-        return {"is_online": False, "last_seen_display": f"last seen {local_active.strftime('%b %d')} at {time_str}"}
+        return {"is_online": False, "last_seen_display": "last seen long ago"}
 
 
 def _is_message_outgoing(item, current_user=None, conversation_user=None, is_desk_view=False):

@@ -14,7 +14,7 @@
           {% if client_presence.is_online %}
           <span class="wa-status-online" id="desk-chat-presence">online</span>
           {% else %}
-          <span class="wa-status-offline" id="desk-chat-presence">{{ client_presence.last_seen_display|default:"offline" }}</span>
+          <span class="wa-status-offline" id="desk-chat-presence">{{ client_presence.last_seen_display|default:"last seen long ago" }}</span>
           {% endif %}
           <span class="wa-header-sep" aria-hidden="true">·</span>
           <span class="wa-header-email" id="desk-chat-email">{{ conversation.user.email }}</span>
@@ -118,12 +118,7 @@
         <div class="wa-msg-meta">
           <span class="wa-msg-time">{{ item.time_display }}</span>
           {% if item.is_outgoing %}
-          <span class="wa-tick-wrap" title="{% if item.is_read %}Read{% else %}Delivered{% endif %}">
-            <svg class="wa-ticks {% if item.is_read %}wa-ticks-read{% else %}wa-ticks-unread{% endif %}" width="16" height="15" viewBox="0 0 16 15" fill="none">
-              <path d="M15.01 3.316l-7.79 7.79-3.79-3.79 1.06-1.06 2.73 2.73 6.73-6.73 1.06 1.06z" fill="{% if item.is_read %}#53bdeb{% else %}#8696a0{% endif %}"/>
-              <path d="M11.22 3.316l-7.79 7.79-3.43-3.43 1.06-1.06 2.37 2.37 6.73-6.73 1.06 1.06z" fill="{% if item.is_read %}#53bdeb{% else %}#8696a0{% endif %}"/>
-            </svg>
-          </span>
+          <span class="wa-msg-status {% if item.is_read %}wa-status-read{% else %}wa-status-delivered{% endif %}">{% if item.is_read %}Read{% else %}Delivered{% endif %}</span>
           {% endif %}
         </div>
       </div>

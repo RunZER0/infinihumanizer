@@ -4552,6 +4552,37 @@ body.modal-open{overflow:hidden}
   color: #667781;
 }
 
+.wa-msg-status {
+  font-size: 11px;
+  font-weight: 500;
+  margin-left: 3px;
+  line-height: 1;
+  user-select: none;
+}
+
+.wa-msg-status.wa-status-read {
+  color: #53bdeb;
+}
+
+.wa-msg-status.wa-status-delivered {
+  color: #8696a0;
+}
+
+.wa-preview-status {
+  font-size: 12px;
+  font-weight: 500;
+  margin-right: 2px;
+  user-select: none;
+}
+
+.wa-preview-status.wa-status-read {
+  color: #53bdeb;
+}
+
+.wa-preview-status.wa-status-delivered {
+  color: #8696a0;
+}
+
 .wa-tick-wrap {
   display: inline-flex;
   align-items: center;
