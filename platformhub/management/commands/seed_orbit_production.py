@@ -2676,6 +2676,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 11, 4, 16, 34, 0),
                 "Anytime Jose! Stay safe out on the road 👊",
                 [],
+                False,
             ),
         ],
     },
@@ -3656,6 +3657,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 28, 10, 28, 0),
                 "Mahalo Luca! Glad your accountant is happy. Have a great charter season!",
                 [],
+                False,
             ),
         ],
     },
@@ -3991,6 +3993,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 11, 8, 9, 44, 0),
                 "Wonderful news Liza! Good luck with the procurement committee today!",
                 [],
+                False,
             ),
         ],
     },
@@ -4359,6 +4362,12 @@ CLIENT_PROFILES = {
                     ),
                     (
                         'admin',
+                        dt_utc(2026, 10, 5, 5, 11, 20),
+                        "Got it, payment cleared on card! Opening up the draft and polishing the opening hook now—will ping you the second it's ready.",
+                        [],
+                    ),
+                    (
+                        'admin',
                         dt_utc(2026, 10, 5, 8, 35, 40),
                         "Here you go Estella! Cut out the stiff corporate speak and made the opening hook way punchier. Take a look and see how it reads to you.",
                         [
@@ -4542,6 +4551,12 @@ CLIENT_PROFILES = {
                         'client',
                         dt_utc(2026, 10, 21, 2, 46, 15),
                         "paid the $150! pulling an all nighter here too on our numbers lol. ping me the second you have the files",
+                        [],
+                    ),
+                    (
+                        'admin',
+                        dt_utc(2026, 10, 21, 2, 48, 20),
+                        "Will do! Payment cleared on our end. Working through the final review now, will ping you the second everything's uploaded. Try to get a little sleep!",
                         [],
                     ),
                     (
@@ -4806,6 +4821,12 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
+                dt_utc(2026, 10, 5, 8, 47, 20),
+                "Payment confirmed, thank you Drako! Running the model formulas now, will notify you as soon as they're posted.",
+                [],
+            ),
+            (
+                'admin',
                 dt_utc(2026, 10, 5, 12, 18, 14),
                 'Here are your completed corridor financial models: the Q3 corridor reconciliation workbook and the automated 12-month multi-sheet cash-flow and expense model with dynamic formulas.',
                 [
@@ -4963,6 +4984,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 30, 15, 42, 0),
                 "So excited for you Alexa! Knock that pitch out of the park!",
                 [],
+                False,
             ),
         ],
     },
@@ -5437,6 +5459,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 23, 14, 28, 0),
                 "That's what we love to hear Patrick! Cheers and talk soon!",
                 [],
+                False,
             ),
         ],
     },
@@ -5612,6 +5635,7 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 5, 8, 16, 25, 0),
                 "Haha love to hear that! Glad the builder feels so smooth. Good luck with the Shopify rollout!",
                 [],
+                False,
             ),
         ],
     },
@@ -5806,6 +5830,12 @@ CLIENT_PROFILES = {
                 'client',
                 dt_utc(2026, 10, 20, 18, 26, 12),
                 "paid! went through on apple pay, $240 cleared. send over the final package when you have a sec!",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 10, 20, 18, 27, 25),
+                "Will do! Saw it clear on Apple Pay. Just doing the final PDF export—dropping the full package right here in a sec.",
                 [],
             ),
             (
@@ -6342,13 +6372,19 @@ class Command(BaseCommand):
                             ])
                             body = "\n".join(brief_lines).strip()
 
+                    is_read_override = msg_tuple[4] if len(msg_tuple) > 4 else None
+                    if is_read_override is False:
+                        m_read_at = None
+                    else:
+                        m_read_at = msg_dt + timedelta(minutes=2)
+
                     msg = ClientMessage.objects.create(
                         conversation=conv,
                         author=user if sender == "client" else None,
                         sender=sender,
                         body=body,
                         attachments=att_objs,
-                        read_at=msg_dt + timedelta(minutes=2),
+                        read_at=m_read_at,
                     )
                     ClientMessage.objects.filter(pk=msg.pk).update(created_at=msg_dt)
                     created_messages += 1
@@ -6364,13 +6400,21 @@ class Command(BaseCommand):
                         "• If you have follow-up questions, require revisions, or need further assistance, you can request to reopen this thread at any time.\n\n"
                         "Thank you for working with InfiniAI!"
                     )
+                    unread_closure_refs = {
+                        "EW03", "IC01", "PH01", "LI01", "JC01", "LC01", "AQ01", "CL01", "JJ01", "EW02", "AB01"
+                    }
+                    if c_ref in unread_closure_refs or cs.get("unread_closure", False):
+                        closure_read_at = None
+                    else:
+                        closure_read_at = closure_dt + timedelta(minutes=1)
+
                     closure_msg = ClientMessage.objects.create(
                         conversation=conv,
                         author=None,
                         sender="admin",
                         body=closure_body,
                         attachments=[],
-                        read_at=closure_dt + timedelta(minutes=1),
+                        read_at=closure_read_at,
                     )
                     ClientMessage.objects.filter(pk=closure_msg.pk).update(created_at=closure_dt)
                     last_msg_dt = closure_dt
