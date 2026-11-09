@@ -2552,7 +2552,7 @@ CLIENT_PROFILES = {
         'messages': [
             (
                 'client',
-                dt_utc(2026, 10, 17, 21, 13, 22),
+                dt_utc(2026, 11, 2, 9, 13, 22),
                 "hey man, need some help with my company bio and a couple cold emails. freight brokers keep lowballing us on DFW box truck runs and i'm trying to get direct contracts with local distributors. typing this from my cab at a dock in Grand Prairie so excuse any typos lol, but i attached my rough notes. how much to clean this up and make us look like a serious carrier?",
                 [
                     'Freight Carrier Bio.docx',
@@ -2560,67 +2560,67 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 17, 21, 28, 40),
+                dt_utc(2026, 11, 2, 9, 28, 40),
                 "Hey Jose! Good to connect. Shippers right now are starving for reliable asset-based carriers who actually own their trucks, instead of brokers who re-broker and drop freight at the last minute. Are you mostly bidding on dedicated warehouse distribution runs between Dallas, Fort Worth, and Arlington, or regional hot-shot hauls across North Texas?",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 17, 21, 45, 12),
+                dt_utc(2026, 11, 2, 9, 45, 12),
                 "mostly regional distribution routes and dedicated cross-town runs between DFW warehouses, Arlington assembly plants, and Alliance airport. we have two 26ft straight trucks with liftgates and pallet jacks ready to go. how much to clean this up and make us look like a serious carrier?",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 18, 14, 12, 30),
+                dt_utc(2026, 11, 2, 14, 12, 30),
                 "We can shape your notes into a punchy executive capability bio, 3 targeted cold outreach emails for DFW warehouse dispatchers, plus a clean mobile rate card graphic you can text straight from your cab. Total package is $25.00 flat and we can have the draft in your hands by tomorrow evening. Want us to get started?",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 18, 19, 27, 14),
+                dt_utc(2026, 11, 2, 14, 27, 14),
                 "sounds fair man, let's do it. i tried paying through the normal checkout on your portal earlier from my phone, but chase flagged my debit card because of the merchant location i think. do you have a direct link or alternate way to run it?",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 18, 19, 41, 10),
+                dt_utc(2026, 11, 2, 14, 41, 10),
                 "No worries at all Jose! We're setting up a custom checkout page for you since we are having issues with our payment provider integration at the moment.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 18, 19, 41, 45),
+                dt_utc(2026, 11, 2, 14, 41, 45),
                 "Let's do a quick $1.00 card authorization test first so your bank whitelists it. Posted test invoice INV-261018-JC01 ($1.00): https://paystack.shop/pay/4q5iounn6s",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 18, 19, 42, 20),
+                dt_utc(2026, 11, 2, 14, 42, 20),
                 "Apple Pay is enabled on it so you can clear it right from your cab without filling out standard web forms. Once that clears, we'll dive straight into the draft!",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 18, 19, 43, 19),
+                dt_utc(2026, 11, 2, 14, 43, 19),
                 "wait where do i pay? is it the link above or inside the portal?",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 18, 19, 44, 10),
+                dt_utc(2026, 11, 2, 14, 44, 10),
                 "Tap that direct link right there: https://paystack.shop/pay/4q5iounn6s. Apple Pay is enabled on it so you can just double-click your phone without digging for your card from the cab.",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 18, 19, 45, 28),
+                dt_utc(2026, 11, 2, 14, 45, 28),
                 "alright that direct link worked smooth! cleared the $1 test deposit on apple pay. send over the preview when you have it.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 18, 21, 28, 52),
+                dt_utc(2026, 11, 2, 16, 28, 52),
                 "Payment registered Jose, thank you! Took about an hour and a half to draft the bio and first 2 emails—attached is the v1 preview. Notice how we lead with 100% on-time DFW metro dispatch and direct driver cell contact so shippers know they aren't dealing with a middleman.",
                 [
                     'Carrier Outreach Preview v1.pdf',
@@ -2628,25 +2628,25 @@ CLIENT_PROFILES = {
             ),
             (
                 'client',
-                dt_utc(2026, 10, 18, 21, 31, 19),
+                dt_utc(2026, 11, 2, 16, 31, 19),
                 "man this reads way better than what i had. can we add a line in email 2 about our liftgates having 3500lb capacity? some of these warehouse managers have heavy palletized machinery and ask about that right away. also ready to pay the $24 balance.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 18, 21, 33, 40),
+                dt_utc(2026, 11, 2, 16, 33, 40),
                 "Spot on—calling out 3,500-lb tuck-under liftgate capacity proves you can handle heavy machinery without relying on their dock equipment. I'll get that worked into Email 2 right now. Here's the payment link for the remaining $24: https://paystack.shop/pay/4q5iounn6s",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 18, 21, 41, 55),
+                dt_utc(2026, 11, 2, 16, 41, 55),
                 "done! cleared the $24 balance on apple pay just now.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 19, 13, 41, 29),
+                dt_utc(2026, 11, 3, 13, 41, 29),
                 "Morning Jose! Finished polishing the bio, locked in the 3,500-lb liftgate specs in Email 2, and generated your clean 2026 DFW rate card graphic. Attached both files—hope this helps you lock down those local distributor runs! If you have any fellow owner-operators or carrier friends running box trucks around DFW who need their client pitches or rate cards cleaned up, definitely send them our way!",
                 [
                     'Outreach Email Sequence.docx',
@@ -2655,25 +2655,25 @@ CLIENT_PROFILES = {
             ),
             (
                 'client',
-                dt_utc(2026, 10, 19, 14, 7, 54),
+                dt_utc(2026, 11, 4, 14, 7, 54),
                 "downloaded both. that rate card graphic looks awesome on my phone, already texted it to a shipper in Carrollton. appreciate the quick turnaround man! and for sure, i'll tell the guys at the yard to hit you up.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 19, 14, 18, 22),
+                dt_utc(2026, 11, 4, 14, 18, 22),
                 "Appreciate that Jose! Good luck locking in that Carrollton run. Holler if you ever need any more lane sheets or flyers.",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 19, 14, 22, 5),
+                dt_utc(2026, 11, 4, 14, 22, 5),
                 "will do man, thanks again 🚛",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 20, 16, 0, 0),
+                dt_utc(2026, 11, 4, 16, 34, 0),
                 "Anytime Jose! Stay safe out on the road 👊",
                 [],
             ),
@@ -2861,11 +2861,11 @@ CLIENT_PROFILES = {
                         [],
                     ),
                     (
-                'admin',
-                dt_utc(2026, 10, 20, 16, 0, 0),
-                "So glad it helped Audrey! Looking forward to diving into the 3 pages once your designer finishes the mockups.",
-                [],
-            ),
+                        'admin',
+                        dt_utc(2026, 10, 2, 11, 30, 0),
+                        "So glad it helped Audrey! Looking forward to diving into the 3 pages once your designer finishes the mockups.",
+                        [],
+                    ),
                     (
                         'client',
                         dt_utc(2026, 10, 2, 11, 47, 30),
@@ -3025,6 +3025,12 @@ CLIENT_PROFILES = {
                         'client',
                         dt_utc(2026, 10, 19, 17, 12, 15),
                         "Couldn't have done it without you guys! 🎉",
+                        [],
+                    ),
+                    (
+                        'admin',
+                        dt_utc(2026, 10, 20, 22, 45, 0),
+                        "Always here Audrey! Enjoy the new bookings and holler whenever you're ready for the holiday studio promo!",
                         [],
                     ),
                 ],
@@ -3358,7 +3364,7 @@ CLIENT_PROFILES = {
                 'messages': [
                     (
                         'client',
-                        dt_utc(2026, 9, 15, 17, 51, 46),
+                        dt_utc(2026, 10, 30, 14, 20, 0),
                         "Hey team—quick update. The routing spec from April has been running like a charm. We're now overhauling our 5 main B2B website pages and building a 12-slide outbound deck for 3PL buyers. Attached our brief—how much for both?",
                         [
                             'Enterprise Deck Brief.docx',
@@ -3366,31 +3372,31 @@ CLIENT_PROFILES = {
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 9, 15, 18, 19, 12),
+                        dt_utc(2026, 10, 30, 14, 45, 0),
                         "Great to hear from you Jack! Looked through your brief. The current deck focuses heavily on technical API architecture, but 3PL warehouse general managers care about two things: gate turn times and detention penalties ($1,200/truck/month). We should lead with yard congestion ROI.\n\nWriting all 5 B2B website pages, structuring the 12-slide enterprise PowerPoint deck, and building an interactive terminal prototype with live 12-bay monitoring is $500 flat.",
                         [],
                     ),
                     (
                         'client',
-                        dt_utc(2026, 9, 17, 16, 26, 38),
+                        dt_utc(2026, 10, 30, 15, 10, 0),
                         "Love that framing. Sorry for the two-day lag, had to get budget sign-off from my cofounder. Send the $500 invoice and I'll clear it now.",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 9, 17, 16, 32, 47),
+                        dt_utc(2026, 10, 30, 15, 35, 0),
                         "Invoice QP2609-5851CC11 ($500.00) is live on your account. Settle directly on your payment link: https://paystack.shop/pay/jj-crm92",
                         [],
                     ),
                     (
                         'client',
-                        dt_utc(2026, 9, 17, 16, 47, 19),
+                        dt_utc(2026, 10, 30, 16, 15, 0),
                         "Cleared on Apple Pay.",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 9, 18, 19, 14, 8),
+                        dt_utc(2026, 10, 31, 9, 20, 0),
                         "Here's the v1 draft of the 5 website pages and the 12-slide deck outline. Let us know what you want adjusted.",
                         [
                             'Enterprise Deck v1.pdf',
@@ -3398,13 +3404,13 @@ CLIENT_PROFILES = {
                     ),
                     (
                         'client',
-                        dt_utc(2026, 9, 19, 11, 9, 51),
+                        dt_utc(2026, 10, 31, 9, 42, 0),
                         "Reviewed with the sales team this morning. Website copy is ready as-is. On Slide 4 of the deck, can we swap the placeholder ROI numbers for our actual Q3 Midwest 3PL pilot (38% faster dock turn time and 14 hrs/wk saved per dispatcher)?",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 9, 19, 15, 28, 34),
+                        dt_utc(2026, 11, 1, 15, 40, 12),
                         "Updated Slide 4 with the exact Q3 Midwest 3PL pilot metrics! Attached is the final 5-page website copy deck, the 12-slide PowerPoint presentation (.pptx) ready for your sales reps, and the standalone interactive 5-page B2B website prototype ready to demo directly in any browser.",
                         [
                             'Enterprise Deck Final.docx',
@@ -3414,13 +3420,13 @@ CLIENT_PROFILES = {
                     ),
                     (
                         'client',
-                        dt_utc(2026, 9, 19, 16, 5, 22),
+                        dt_utc(2026, 11, 2, 10, 35, 0),
                         "Downloaded all three. The interactive terminal prototype with the 12-bay live monitor and detention calculator blew our VP of Sales away. Taking this into our carrier partner meeting tomorrow. Appreciate the great work!",
                         [],
                     ),
                     (
                 'admin',
-                dt_utc(2026, 10, 20, 16, 0, 0),
+                dt_utc(2026, 11, 2, 10, 55, 0),
                 "That is fantastic Jack! Good luck tomorrow, rooting for you guys.",
                 [],
             ),
@@ -3569,7 +3575,7 @@ CLIENT_PROFILES = {
         'messages': [
             (
                 'client',
-                dt_utc(2026, 8, 28, 20, 14, 32),
+                dt_utc(2026, 10, 26, 14, 10, 0),
                 "aloha guys! hope the weather is nice over there. so my accountant is breathing down my neck about Q3 reconciliations for our Waikiki catamaran charter business and my Ala Moana rental condo. our bank export has missing vendor names, mixed repair bills, and i honestly don't have the patience to sit in Excel for 10 hours. attached the raw bank CSV and some paper receipts. can you turn this into a clean reconciled ledger?",
                 [
                     'Q3 Bank Export.csv',
@@ -3578,61 +3584,61 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 8, 28, 20, 41, 9),
+                dt_utc(2026, 10, 26, 14, 35, 0),
                 "Aloha Luca! Happy to take this off your plate. Reconciling charter fuel and harbor dockage against seasonal tourism payouts is right in our wheelhouse. We can reconcile all 50+ transactions across the Waikiki and Ala Moana units, match those Pacific Split-AC and hardware receipts, and give you a clean monthly P&L plus a 50/50 partner distribution breakdown in both Excel and CSV for $220 flat. Want us to jump into it?",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 8, 28, 21, 2, 14),
+                dt_utc(2026, 10, 26, 15, 5, 0),
                 "mahalo for looking at this so fast! one quick question before you invoice me: does the ledger separate out Hawaii General Excise Tax (GET at 4.712%) and Transient Accommodations Tax (TAT at 10.25%)? that's the main thing my tax guy was nagging me about because Waikiki short-term rentals get audited on TAT all the time.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 8, 28, 21, 5, 30),
+                dt_utc(2026, 10, 26, 15, 30, 0),
                 "100%. We calculate base lodging revenue and break out both GET (4.712%) and Honolulu County TAT (10.25% + 3% county surcharge) in dedicated columns with automatic tax liability totals so your accountant can file without doing any extra math. Does that cover everything your CPA needs so we can open up the project?",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 8, 28, 21, 15, 40),
+                dt_utc(2026, 10, 26, 16, 0, 0),
                 "shaka! that saves me a massive headache and gives my CPA exactly what he asked for. Shoot the invoice over and I'll clear it from the dock.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 8, 28, 21, 18, 0),
+                dt_utc(2026, 10, 26, 16, 15, 0),
                 "Awesome Luca! We've set up your dedicated payment link since we are having issues with our payment provider integration at the moment.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 8, 28, 21, 18, 30),
+                dt_utc(2026, 10, 26, 16, 15, 30),
                 "Posted invoice INV-260814-LC01 ($220.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/892lxc01po (it's also linked directly on your invoice).",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 8, 28, 21, 19, 0),
+                dt_utc(2026, 10, 26, 16, 16, 0),
                 "Diving into the reconciliation now!",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 8, 29, 18, 7, 44),
+                dt_utc(2026, 10, 27, 9, 20, 0),
                 "just tapped apple pay right as we untied the bow lines for our afternoon Diamond Head sail! Cleared the $220. Let me know if any of the fuel slips are illegible.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 8, 29, 18, 19, 22),
+                dt_utc(2026, 10, 27, 9, 45, 0),
                 "Payment confirmed, thank you Luca! Starting on the reconciliation now.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 8, 30, 16, 42, 15),
+                dt_utc(2026, 10, 27, 16, 42, 15),
                 "Aloha Luca! Here is the completed reconciliation package: your cleaned Q3 CSV ledger and your multi-tab Excel financial model with automatic GET/TAT tax formulas and partner cash distributions.",
                 [
                     'Q3 Reconciled Ledger.csv',
@@ -3641,13 +3647,13 @@ CLIENT_PROFILES = {
             ),
             (
                 'client',
-                dt_utc(2026, 8, 31, 10, 15, 30),
+                dt_utc(2026, 10, 28, 10, 15, 30),
                 "just forwarded both workbooks to my accountant and he said it's the cleanest book he's seen from a charter operator all year. mahalo nui loa team!",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 20, 16, 0, 0),
+                dt_utc(2026, 10, 28, 10, 28, 0),
                 "Mahalo Luca! Glad your accountant is happy. Have a great charter season!",
                 [],
             ),
@@ -3714,7 +3720,7 @@ CLIENT_PROFILES = {
         'messages': [
             (
                 'client',
-                dt_utc(2026, 10, 13, 16, 18, 24),
+                dt_utc(2026, 11, 7, 16, 18, 24),
                 "hey team, need some emergency spreadsheet surgery. our customs broker just hit us with unexpected Section 301 tariffs on our stainless pour-over kettles, and our LCL ocean freight spiked $35/CBM. attached our supplier SKU sheet and the broker duty notice. can you build a dynamic landed-cost & margin calculator so we know which retail prices we need to bump?",
                 [
                     'Raw SKU Inventory.xlsx',
@@ -3723,55 +3729,55 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 13, 16, 42, 11),
+                dt_utc(2026, 11, 7, 16, 42, 11),
                 "Hey Keegan! Trans-Pacific freight swings are brutal if you're not allocating CBM dynamically. We can build an Excel model where you enter the total ocean freight invoice and customs entry fee once, and formulas automatically distribute true landed cost per SKU based on carton volume and HTS tariff rates. That's $240.00 flat including a staff receiving SOP.",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 14, 9, 17, 38),
+                dt_utc(2026, 11, 7, 17, 17, 38),
                 "that CBM volume allocation is exactly what we need. one thing though: our customs broker files under HTS 8516.79.00 for the electric kettles and HTS 7323.93.00 for the manual pour-over carafes. does your model let me input separate tariff percentages per SKU line, or is it a flat rate across the container?",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 14, 9, 29, 45),
+                dt_utc(2026, 11, 7, 17, 29, 45),
                 "It's a dynamic SKU-by-SKU lookup. Each product line has its own HTS classification column with the exact ad valorem duty rate (e.g. 2.7% base + 25% Section 301) applied specifically to that SKU's FOB value, so you never over-allocate duty onto non-tariffed items. We can build the full automated margin calculator and staff receiving SOP for $240.00 flat. Would you like us to spin this up for you?",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 14, 9, 36, 12),
+                dt_utc(2026, 11, 7, 17, 36, 12),
                 "awesome, that will save us hours arguing with accounting. yes please, shoot the invoice over and let's get it rolling.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 14, 9, 38, 20),
+                dt_utc(2026, 11, 7, 17, 38, 20),
                 "We're setting up a custom checkout page for you since we are having issues with our payment provider integration at the moment.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 14, 9, 38, 50),
+                dt_utc(2026, 11, 7, 17, 38, 50),
                 "Posted invoice INV-261014-KC01 ($240.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/kc-chin77 (it's also linked directly on your invoice).",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 14, 9, 39, 20),
+                dt_utc(2026, 11, 7, 17, 39, 20),
                 "Starting the CBM allocation formulas now!",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 14, 9, 44, 19),
+                dt_utc(2026, 11, 7, 17, 44, 19),
                 "paid the $240 on corporate debit just now.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 15, 8, 31, 52),
+                dt_utc(2026, 11, 8, 8, 31, 52),
                 "Here is the draft v1 model for you to test out with your team.",
                 [
                     'SKU Margin Calculator v1.xlsx',
@@ -3779,13 +3785,13 @@ CLIENT_PROFILES = {
             ),
             (
                 'client',
-                dt_utc(2026, 10, 15, 10, 48, 16),
+                dt_utc(2026, 11, 8, 10, 48, 16),
                 "this formula logic is so clean! could you add a wholesale pricing column at 2.1x landed cost, and lock the formula cells so my warehouse staff don't accidentally overwrite them?",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 15, 11, 6, 33),
+                dt_utc(2026, 11, 8, 11, 6, 33),
                 "Added the 2.1x wholesale tier, locked all formula ranges, and attached your staff receiving handbook PDF!",
                 [
                     'SKU Margin Calculator.xlsx',
@@ -3795,13 +3801,13 @@ CLIENT_PROFILES = {
             ),
             (
                 'client',
-                dt_utc(2026, 10, 15, 11, 24, 50),
+                dt_utc(2026, 11, 8, 11, 24, 50),
                 "received! our warehouse receiving supervisor tested it on the morning container delivery and the locked cells worked perfectly. thanks team!",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 20, 16, 0, 0),
+                dt_utc(2026, 11, 8, 11, 42, 0),
                 "Awesome to hear Keegan! Reach out anytime if you need more SKU sheets built.",
                 [],
             ),
@@ -3911,7 +3917,7 @@ CLIENT_PROFILES = {
         'messages': [
             (
                 'client',
-                dt_utc(2026, 10, 9, 13, 14, 27),
+                dt_utc(2026, 11, 6, 13, 14, 27),
                 "Hey guys! We are bidding on a big 4-building medical plaza in Tampa next week and their procurement director asked for our formal vendor packet and rate card. Right now ours is literally a scrambled Word doc from 2022. I need this looking razor sharp by Thursday so we don't look amateur.",
                 [
                     'Vendor Packet Draft.docx',
@@ -3919,55 +3925,55 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 9, 13, 38, 52),
+                dt_utc(2026, 11, 6, 13, 38, 52),
                 "Hi Liza! Medical plaza procurement committees are hyper-focused on insurance certificates ($1M liability), OSHA disinfection compliance, and clean SLA schedules. Are they requesting specialized terminal cleaning protocols for outpatient surgical suites, or standard commercial janitorial?",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 9, 13, 52, 16),
+                dt_utc(2026, 11, 6, 13, 52, 16),
                 "That disinfection compliance angle is huge—most cleaners just list 'sweeping and mopping' and get tossed in the trash. Yes, they specifically asked for after-hours terminal cleanings for outpatient surgical suites. Can we make sure the rate card includes per-sq-ft biohazard protocols?",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 9, 14, 15, 30),
+                dt_utc(2026, 11, 6, 14, 15, 30),
                 "Absolutely. We'll build a dedicated section for Operating Room & Outpatient Terminal Disinfection with per-sq-ft biohazard protocol surcharges, plus the complete vendor compliance manual for $120 flat. Should we prepare this for the Tampa bid?",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 9, 14, 28, 45),
+                dt_utc(2026, 11, 6, 14, 28, 45),
                 "Yes please, that's exactly what will set us apart from the generic franchise cleaners. Send the invoice over!",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 10, 11, 7, 10),
+                dt_utc(2026, 11, 7, 11, 7, 10),
                 "We're setting up a custom checkout page for you on our portal since we're currently upgrading our payment provider integration.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 10, 11, 7, 33),
-                "Posted invoice INV-261010-LI01 ($120.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/li-tampa44 (it's also linked directly on your invoice).",
+                dt_utc(2026, 11, 7, 11, 7, 33),
+                "Posted invoice INV-261107-LI01 ($120.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/li-tampa44 (it's also linked directly on your invoice).",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 10, 11, 8, 0),
+                dt_utc(2026, 11, 7, 11, 8, 0),
                 "Diving into the OSHA disinfection specifications right now!",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 10, 16, 44, 19),
+                dt_utc(2026, 11, 7, 16, 44, 19),
                 "cleared on our Tampa office card! sending the updated supervisor phone numbers right now.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 10, 16, 58, 41),
+                dt_utc(2026, 11, 7, 16, 58, 41),
                 "Here are your finalized vendor compliance manual and commercial rate card!",
                 [
                     'Vendor Agreement Packet.pdf',
@@ -3976,13 +3982,13 @@ CLIENT_PROFILES = {
             ),
             (
                 'client',
-                dt_utc(2026, 10, 11, 9, 30, 14),
+                dt_utc(2026, 11, 8, 9, 30, 14),
                 "printed 5 bound copies for the procurement committee this morning. the surgical suite disinfection specs look so executive. thank you guys!",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 20, 16, 0, 0),
+                dt_utc(2026, 11, 8, 9, 44, 0),
                 "Wonderful news Liza! Good luck with the procurement committee today!",
                 [],
             ),
@@ -4040,7 +4046,7 @@ CLIENT_PROFILES = {
         'messages': [
             (
                 'client',
-                dt_utc(2026, 10, 9, 18, 27, 14),
+                dt_utc(2026, 11, 4, 18, 27, 14),
                 "hey... honestly haven't updated a resume since 2021 and looking at it now is kind of embarrassing. I've been running the entire night shift at Sunbelt Distribution for 3 years, 14 guys on the dock, zero lost-time incidents, but on paper it just says 'forklift driver'. can you help rewrite this so I can apply for an Operations Supervisor opening?",
                 [
                     'Operations Resume 2023.pdf',
@@ -4049,55 +4055,55 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 9, 18, 49, 33),
+                dt_utc(2026, 11, 4, 18, 49, 33),
                 "Hi Drako! 540 shifts without a single safety incident and running a 14-person cross-dock is leadership gold in modern logistics. Are you targeting general warehouse supervisor roles, or specialized cold-chain and automated distribution facilities?",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 10, 8, 14, 52),
+                dt_utc(2026, 11, 5, 8, 14, 52),
                 "man, hearing you frame 540 shifts without an incident actually made me stand a little taller haha. I was nervous my high school diploma was gonna hold me back. I'm targeting operations supervisor and cross-dock lead at regional distribution centers. Just promise me no cheesy corporate buzzwords like 'synergistic rockstar'. What's the turnaround and cost to get this done?",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 10, 8, 22, 10),
+                dt_utc(2026, 11, 5, 8, 22, 10),
                 "Zero buzzwords, 100% hard dock numbers: trailer throughput, OSHA compliance, labor scheduling, and team leadership. We can build your executive resume and matching LinkedIn profile summary for $25.00 flat and deliver the draft by tomorrow. Ready for us to write the draft?",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 10, 8, 26, 40),
+                dt_utc(2026, 11, 5, 8, 26, 40),
                 "Sounds great to me, let's do it. Post the bill and I'll clear it.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 10, 8, 30, 0),
+                dt_utc(2026, 11, 5, 8, 30, 0),
                 "We're setting up a custom checkout page for you on our portal since we're currently upgrading our payment provider integration.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 10, 8, 30, 12),
+                dt_utc(2026, 11, 5, 8, 30, 12),
                 "Posted invoice INV-261011-DS01 ($25.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/ds-dock55 (it's also linked directly on your invoice).",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 10, 8, 30, 45),
+                dt_utc(2026, 11, 5, 8, 30, 45),
                 "Drafting the core leadership competencies right now!",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 10, 8, 45, 19),
+                dt_utc(2026, 11, 5, 8, 45, 19),
                 "paid on debit just now from my phone.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 11, 14, 18, 20),
+                dt_utc(2026, 11, 5, 14, 18, 20),
                 "Here is your v1 draft! Take a look and let us know if anything needs tuning.",
                 [
                     'Operations Supervisor Resume v1.docx',
@@ -4105,13 +4111,13 @@ CLIENT_PROFILES = {
             ),
             (
                 'client',
-                dt_utc(2026, 10, 11, 16, 5, 40),
+                dt_utc(2026, 11, 5, 16, 5, 40),
                 "reading this over during lunch on the dock—this sounds like a real leader wrote it. can we add one bullet under Sunbelt about coordinating bilingual Spanish/English safety briefings? half our forklift team is Spanish-speaking and the hiring manager will love that.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 11, 17, 30, 45),
+                dt_utc(2026, 11, 5, 17, 30, 45),
                 "Added the bilingual shift operations bullet! Attached are your final Word and ATS-formatted PDF resume and LinkedIn summary.",
                 [
                     'Operations Supervisor Resume.pdf',
@@ -4120,13 +4126,13 @@ CLIENT_PROFILES = {
             ),
             (
                 'client',
-                dt_utc(2026, 10, 12, 9, 12, 10),
+                dt_utc(2026, 11, 6, 9, 12, 10),
                 "downloaded both. submitting the application to regional HR tonight. really appreciate the respect you gave my work man.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 20, 16, 0, 0),
+                dt_utc(2026, 11, 6, 9, 27, 0),
                 "You earned it man. Best of luck with regional HR, hope you get the role!",
                 [],
             ),
@@ -4874,7 +4880,7 @@ CLIENT_PROFILES = {
         'messages': [
             (
                 'client',
-                dt_utc(2026, 10, 2, 8, 19, 44),
+                dt_utc(2026, 10, 28, 15, 14, 0),
                 "hey guys... so our angel pitch demo day is in 9 days and every time I practice my 10 slides I stumble over our unit economics. I really need help making the narrative click. mentors keep saying our go-to-market slide is hand-wavy and our competitive moat isn't clear. attached our rough bullets and competitor pricing notes. can you help structure this into an investor-ready deck?",
                 [
                     'Pitch Deck Bullets.docx',
@@ -4883,49 +4889,49 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 2, 8, 41, 23),
+                dt_utc(2026, 10, 28, 15, 38, 0),
                 "Hi Alexa! Trade logistics software is a massive opportunity, but angel investors get anxious when founders pitch broad market sizes instead of proving repeatable pilot traction. Looked through your notes—28 paid pilots and zero logo churn in 90 days is genuinely impressive.\n\nIs your demo day presentation a rapid 3-to-4 minute pitch, or do you have a full 10-minute partner deck slot?",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 2, 8, 54, 10),
+                dt_utc(2026, 10, 28, 16, 10, 0),
                 "It's a strict 4-minute pitch followed by 3 minutes of partner Q&A. That's exactly why I was stumbling—I was trying to cram 20 operational details into the go-to-market slide instead of telling a clean story. What would the structure and pricing look like to overhaul the slides and unit economics?",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 2, 9, 4, 30),
+                dt_utc(2026, 10, 28, 16, 30, 0),
                 "For a 4-minute demo day format, we structure a high-impact 10-slide deck: lead with the operational pain of lost paper logs, showcase your 28 paid pilots and 100% retention, and isolate the unit economics (0.7-month payback). We'll build the full PowerPoint (.pptx) with scripted speaker notes and an accompanying Excel financial model for $250.00 flat. Want us to build that narrative out?",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 2, 9, 8, 18),
+                dt_utc(2026, 10, 28, 16, 45, 0),
                 "omg yes, that framing is so much sharper and cuts right to what investors care about. Sending the green light!",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 2, 9, 12, 10),
+                dt_utc(2026, 10, 28, 17, 5, 0),
                 "We're setting up a custom checkout page for you since we are having issues with our payment provider integration at the moment.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 2, 9, 12, 45),
+                dt_utc(2026, 10, 28, 17, 5, 30),
                 "Posted invoice INV-261002-AQ01 ($250.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/aq-cold61 (it's also linked directly on your invoice).",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 2, 9, 13, 20),
+                dt_utc(2026, 10, 28, 17, 6, 0),
                 "Starting on the slide outline now, and I'll drop the v1 narrative architecture in here this afternoon!",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 2, 17, 34, 52),
+                dt_utc(2026, 10, 29, 9, 15, 0),
                 'Here is the v1 narrative outline to review, Alexa! Notice how Slide 3 shifts immediately into your 28 paid pilots and 0.7-month payback.',
                 [
                     'Pitch Deck Structure v1.pdf',
@@ -4933,13 +4939,13 @@ CLIENT_PROFILES = {
             ),
             (
                 'client',
-                dt_utc(2026, 10, 2, 18, 26, 11),
+                dt_utc(2026, 10, 29, 10, 4, 0),
                 'paid the $250 invoice! the outline flow is 10x better already.',
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 3, 4, 11, 39),
+                dt_utc(2026, 10, 30, 11, 20, 0),
                 'Here is the complete deliverable: the full 10-slide PowerPoint presentation (.pptx) with speaker notes, and your Excel unit economics model!',
                 [
                     '10-Slide Investor Pitch.pptx',
@@ -4948,13 +4954,13 @@ CLIENT_PROFILES = {
             ),
             (
                 'client',
-                dt_utc(2026, 10, 3, 14, 28, 5),
+                dt_utc(2026, 10, 30, 14, 28, 5),
                 'practiced with my lead mentor this morning and he said this deck looks like a Series A company made it! thank you so much for the quick turnaround!',
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 20, 16, 0, 0),
+                dt_utc(2026, 10, 30, 15, 42, 0),
                 "So excited for you Alexa! Knock that pitch out of the park!",
                 [],
             ),
@@ -5012,7 +5018,7 @@ CLIENT_PROFILES = {
         'messages': [
             (
                 'client',
-                dt_utc(2026, 9, 29, 15, 22, 38),
+                dt_utc(2026, 11, 8, 14, 18, 0),
                 "hey team, typing this on the train between client workshops. I recorded 3 lengthy discovery interviews with a corporate client's leadership team (18 pages of transcripts). I need this turned into a crisp executive action sheet with pain points and recommended workshops. can you distill this down for me?",
                 [
                     'Call Transcripts (18p).docx',
@@ -5020,43 +5026,43 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 9, 29, 15, 47, 19),
+                dt_utc(2026, 11, 8, 14, 35, 0),
                 "Hi Cami! Safe travels on the train. Skimmed the transcripts—the friction between engineering sprint delivery and the VP of Product's roadmap is glaring, while the People Ops notes point to severe manager burnout.\n\nIs this action sheet going straight to their C-suite for sign-off on your advisory scope, or is it for the workshop attendees themselves?",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 9, 29, 16, 18, 40),
+                dt_utc(2026, 11, 8, 15, 14, 0),
                 "Straight to the CEO and Board. We need to demonstrate that their delivery silos are costing them millions before they'll approve the 4-workshop advisory retainer. What would the turnaround and investment look like for a concise synthesis?",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 9, 29, 16, 35, 12),
+                dt_utc(2026, 11, 8, 15, 30, 0),
                 "We can extract the core friction points across all three departments, map them directly to 4 modular workshop agendas, and deliver a clean executive action sheet PDF for $160 flat by tomorrow morning. Want us to proceed with that?",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 9, 30, 8, 14, 41),
+                dt_utc(2026, 11, 8, 16, 18, 0),
                 "That framing will close the engagement. Yes please, let's do it!",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 9, 30, 8, 29, 20),
+                dt_utc(2026, 11, 8, 16, 35, 0),
                 "We're setting up a custom payment page for you on our portal since we're currently upgrading our payment provider integration.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 9, 30, 8, 29, 56),
+                dt_utc(2026, 11, 8, 16, 35, 30),
                 "Posted invoice INV-260930-CK01 ($160.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/ck-train88 (it's also linked directly on your invoice).",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 9, 30, 8, 30, 30),
+                dt_utc(2026, 11, 8, 16, 36, 0),
                 "Alongside it, here is the v1 draft synthesis outline so you can review the department breakdown while on the move.",
                 [
                     'Call Action Sheet v1.pdf',
@@ -5064,13 +5070,13 @@ CLIENT_PROFILES = {
             ),
             (
                 'client',
-                dt_utc(2026, 9, 30, 18, 18, 23),
+                dt_utc(2026, 11, 8, 18, 18, 23),
                 'paid on visa! v1 captures the exact political dynamics between their CTO and Head of Product.',
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 1, 6, 14, 47),
+                dt_utc(2026, 11, 9, 6, 14, 47),
                 'Here is your final executive action sheet PDF, complete with the recommended 4-workshop modular delivery schedule!',
                 [
                     'Call Action Sheet.pdf',
@@ -5078,13 +5084,13 @@ CLIENT_PROFILES = {
             ),
             (
                 'client',
-                dt_utc(2026, 10, 1, 8, 42, 10),
+                dt_utc(2026, 11, 9, 8, 42, 10),
                 "Downloaded and reviewed with our CEO. The delivery breakdown is crystal clear, thank you team!",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 20, 16, 0, 0),
+                dt_utc(2026, 11, 9, 10, 4, 0),
                 "Glad it hit the mark Cami! Have a great rest of your week!",
                 [],
             ),
@@ -5185,7 +5191,7 @@ CLIENT_PROFILES = {
         'messages': [
             (
                 'client',
-                dt_utc(2026, 7, 25, 10, 14, 29),
+                dt_utc(2026, 10, 23, 11, 20, 0),
                 'hey! our last two email campaigns fell completely flat—open rates were decent at 34% but click-through was under 1.2%. I think our CTAs and body copy are way too polite and passive. attached the draft sequences, be as brutally honest as needed!',
                 [
                     'Summer Campaign Emails Rough.docx',
@@ -5193,55 +5199,55 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 7, 25, 10, 38, 44),
+                dt_utc(2026, 10, 23, 11, 45, 0),
                 "Hi Lina! Polite emails get ignored. The issue with your drafts is that the product benefit is buried in paragraph 3, and the CTA button says 'Shop Now' instead of creating urgency around reserved inventory. Are these going out to repeat VIP buyers or your cold acquisition list?",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 7, 25, 11, 5, 19),
+                dt_utc(2026, 10, 23, 12, 15, 0),
                 "These are going out to our VIP customer segment who bought our spring linen drop. That diagnostic is so true—we were so afraid of sounding pushy that we sounded boring. Can you rewrite the 5 summer retention emails and polish our spring collection copy deck?",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 7, 25, 11, 24, 30),
+                dt_utc(2026, 10, 23, 12, 40, 0),
                 "We can restructure all 5 summer emails with punchy subject lines and benefit-driven urgency, plus polish the spring storefront copy deck for $120 flat. Want us to get started?",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 7, 26, 9, 17, 33),
+                dt_utc(2026, 10, 24, 9, 15, 0),
                 "100%, that's a no-brainer. Send the invoice over!",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 7, 26, 9, 32, 0),
+                dt_utc(2026, 10, 24, 9, 30, 0),
                 "We're setting up a custom checkout page for you since we are having issues with our payment provider integration at the moment.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 7, 26, 9, 32, 18),
+                dt_utc(2026, 10, 24, 9, 30, 30),
                 "Posted invoice INV-260726-LR01 ($120.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/lr-summer22 (it's also linked directly on your invoice).",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 7, 26, 9, 32, 45),
+                dt_utc(2026, 10, 24, 9, 31, 0),
                 "Drafting the email hooks and storefront copy now!",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 7, 27, 11, 24, 51),
+                dt_utc(2026, 10, 24, 14, 22, 0),
                 'paid on card!',
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 7, 27, 14, 13, 8),
+                dt_utc(2026, 10, 25, 14, 13, 8),
                 'Here are both completed copy deliverables: your spring collection launch copy deck and storefront FAQ, plus the final high-converting summer retention email sequence (5 emails).',
                 [
                     'Spring Launch Copy.docx',
@@ -5250,13 +5256,13 @@ CLIENT_PROFILES = {
             ),
             (
                 'client',
-                dt_utc(2026, 7, 27, 16, 20, 15),
+                dt_utc(2026, 10, 25, 16, 20, 15),
                 "Loaded the emails into Klaviyo and reviewed the storefront FAQ. The conversion hooks are so much stronger, thank you guys!",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 20, 16, 0, 0),
+                dt_utc(2026, 10, 25, 16, 35, 0),
                 "Love hearing that Lina! Hope the campaign converts like crazy!",
                 [],
             ),
@@ -5357,7 +5363,7 @@ CLIENT_PROFILES = {
         'messages': [
             (
                 'client',
-                dt_utc(2026, 6, 27, 15, 19, 42),
+                dt_utc(2026, 10, 21, 14, 10, 0),
                 "afternoon folks, weather's been brutal up here in St. John's with ferry delays, and our dispatch fuel sheets are completely out of whack with the new diesel surcharges. attached our raw route spreadsheet, need clean formulas for driver mileage and fuel adjustments.",
                 [
                     'Newfoundland Dispatch Raw.xlsx',
@@ -5365,55 +5371,55 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 6, 27, 15, 43, 18),
+                dt_utc(2026, 10, 21, 14, 35, 0),
                 "Hello Patrick! We know the Marine Atlantic Port aux Basques ferry rates can throw a massive wrench into driver settlement sheets. Are your dispatch sheets tracking solely the Newfoundland coastal routes, or do you have interprovincial hauls coming through Nova Scotia?",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 6, 27, 16, 12, 40),
+                dt_utc(2026, 10, 21, 15, 5, 0),
                 "we run both—coastal NL distribution plus the Trans-Canada highway link through North Sydney into Nova Scotia. When the ferry gets delayed 18 hours due to gale warnings, our standby demurrage gets completely lost. Can you build formulas that capture both?",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 6, 27, 16, 28, 15),
+                dt_utc(2026, 10, 21, 15, 30, 0),
                 "We'll build a formula model that separates ferry tolls from driving mileage, tracks standby demurrage hours, and applies sliding diesel index surcharges automatically for $175 flat. Shall we put this together for you?",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 6, 28, 9, 11, 54),
+                dt_utc(2026, 10, 22, 9, 15, 0),
                 "that'll save our dispatchers from pulling their hair out every blizzard. send the bill over, let's get it done.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 6, 28, 9, 27, 0),
+                dt_utc(2026, 10, 22, 9, 27, 0),
                 "We're setting up a custom payment page for you on our portal since we're currently upgrading our payment provider integration.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 6, 28, 9, 27, 36),
+                dt_utc(2026, 10, 22, 9, 27, 30),
                 "Posted invoice INV-260628-PH01 ($175.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/ph-ferry34 (it's also linked directly on your invoice).",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 6, 28, 9, 28, 10),
+                dt_utc(2026, 10, 22, 9, 28, 0),
                 "Building the dispatch and fuel model now!",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 6, 29, 11, 18, 27),
+                dt_utc(2026, 10, 22, 11, 18, 0),
                 'paid on mastercard.',
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 6, 29, 13, 4, 19),
+                dt_utc(2026, 10, 23, 13, 4, 19),
                 'Here are both completed Newfoundland freight models: your dispatch and fuel-surcharge tracker with dynamic per-km formulas and ferry fees, plus the regional carrier rate lookup matrix.',
                 [
                     'Dispatch & Fuel Tracker.xlsx',
@@ -5422,13 +5428,13 @@ CLIENT_PROFILES = {
             ),
             (
                 'client',
-                dt_utc(2026, 6, 29, 14, 15, 30),
+                dt_utc(2026, 10, 23, 14, 15, 30),
                 "Ran yesterday's ferry run through the model and the numbers balanced to the cent. Saves our dispatchers 2 hours a day. Cheers guys!",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 20, 16, 0, 0),
+                dt_utc(2026, 10, 23, 14, 28, 0),
                 "That's what we love to hear Patrick! Cheers and talk soon!",
                 [],
             ),

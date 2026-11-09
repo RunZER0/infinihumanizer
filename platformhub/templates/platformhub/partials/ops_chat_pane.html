@@ -36,6 +36,18 @@
           {% if conversation.status == "open" %}Close thread{% else %}Reopen{% endif %}
         </button>
       </form>
+      <form method="post" action="{% url 'platformhub:operations_desk_conversation' conversation.id %}" class="ops-inline-form" id="desk-delete-thread-form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="delete_thread">
+        <input type="hidden" name="conversation_id" value="{{ conversation.id }}">
+        <button class="wa-btn-subtle wa-btn-delete" type="submit" id="desk-delete-thread-btn" title="Delete chat for me (remains intact on client's side)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:3px; vertical-align:-2px;">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+          Delete
+        </button>
+      </form>
     </div>
   </header>
 

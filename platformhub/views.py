@@ -1257,7 +1257,8 @@ def client_chat(request):
                 body=reopen_req_body,
             )
             conversation.updated_at = timezone.now()
-            conversation.save(update_fields=["updated_at"])
+            conversation.is_deleted_by_admin = False
+            conversation.save(update_fields=["updated_at", "is_deleted_by_admin"])
 
             if is_ajax:
                 return JsonResponse({
@@ -1305,7 +1306,8 @@ def client_chat(request):
                 attachments=saved_attachments,
             )
             conversation.status = "open"
-            conversation.save(update_fields=["status", "updated_at"])
+            conversation.is_deleted_by_admin = False
+            conversation.save(update_fields=["status", "updated_at", "is_deleted_by_admin"])
             if is_ajax:
                 return JsonResponse({
                     "ok": True,
@@ -1448,7 +1450,8 @@ def operations_desk_more_threads(request):
     limit = max(1, min(100, int(request.GET.get("limit", "50"))))
 
     older_convs = list(
-        ClientConversation.objects.select_related("user")
+        ClientConversation.objects.filter(is_deleted_by_admin=False)
+        .select_related("user")
         .prefetch_related("messages__author")
         .order_by("-updated_at")[offset : offset + limit]
     )
@@ -1598,12 +1601,15 @@ def operations_desk(request, conversation_id=None):
 
     # Load active conversations (up to 100) so all client threads are pre-cached in initial_threads for instant switching
     conversations = list(
-        ClientConversation.objects.select_related("user").prefetch_related("messages__author").order_by("-updated_at")[:100]
+        ClientConversation.objects.filter(is_deleted_by_admin=False)
+        .select_related("user")
+        .prefetch_related("messages__author")
+        .order_by("-updated_at")[:100]
     )
 
     if conversation_id:
         active_conversation = get_object_or_404(
-            ClientConversation.objects.select_related("user"),
+            ClientConversation.objects.filter(is_deleted_by_admin=False).select_related("user"),
             id=conversation_id,
         )
     else:
@@ -1611,11 +1617,14 @@ def operations_desk(request, conversation_id=None):
         active_conversation = None
         if q_conv:
             try:
-                active_conversation = ClientConversation.objects.select_related("user").filter(id=q_conv).first()
+                active_conversation = ClientConversation.objects.filter(is_deleted_by_admin=False).select_related("user").filter(id=q_conv).first()
             except (ValueError, ValidationError):
                 active_conversation = None
         if not active_conversation:
-            active_conversation = conversations[0]
+            active_conversation = conversations[0] if conversations else None
+            if not active_conversation:
+                default_user = _resolve_chat_user(request)
+                active_conversation, _ = ClientConversation.objects.get_or_create(user=default_user)
 
     # Fast-path JSON endpoint for instantaneous asynchronous thread loading
     if request.method == "GET" and (
@@ -1647,6 +1656,35 @@ def operations_desk(request, conversation_id=None):
 
     if request.method == "POST":
         action = request.POST.get("action", "reply").strip()
+        if action == "delete_thread":
+            target_id = request.POST.get("conversation_id")
+            target_conv = active_conversation
+            if target_id and str(target_id) != str(active_conversation.id):
+                target_conv = ClientConversation.objects.filter(id=target_id).first() or active_conversation
+
+            target_conv.is_deleted_by_admin = True
+            target_conv.save(update_fields=["is_deleted_by_admin"])
+
+            next_conv = (
+                ClientConversation.objects.filter(is_deleted_by_admin=False)
+                .order_by("-updated_at")
+                .first()
+            )
+            next_url = (
+                reverse("platformhub:operations_desk_conversation", kwargs={"conversation_id": next_conv.id})
+                if next_conv
+                else reverse("platformhub:operations_desk")
+            )
+
+            if is_ajax:
+                return JsonResponse({
+                    "ok": True,
+                    "deleted_conversation_id": str(target_conv.id),
+                    "next_url": next_url,
+                })
+            messages.success(request, "Conversation deleted from your desk list.")
+            return redirect(next_url)
+
         if action in ["toggle_status", "close", "reopen"]:
             previous_status = active_conversation.status
             if action == "close":

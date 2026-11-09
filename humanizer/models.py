@@ -47,6 +47,7 @@ class ClientConversation(models.Model):
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default="job")
     subject = models.CharField(max_length=220, default="Workspace chat")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="open")
+    is_deleted_by_admin = models.BooleanField(default=False, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -56,6 +57,23 @@ class ClientConversation(models.Model):
     def __str__(self):
         ref = f"[{self.reference}] " if self.reference else ""
         return f"{ref}{self.user.email or self.user.username} · {self.get_status_display()}"
+
+    @property
+    def wa_time_display(self):
+        from django.utils import timezone
+        from datetime import timedelta
+        dt = timezone.localtime(self.updated_at)
+        now = timezone.localtime(timezone.now())
+        if dt.date() == now.date():
+            return dt.strftime("%H:%M")
+        elif dt.date() == (now - timedelta(days=1)).date():
+            return "Yesterday"
+        elif (now - dt).days < 7 and dt.weekday() != now.weekday():
+            return dt.strftime("%A")
+        elif dt.year == now.year:
+            return dt.strftime("%b %d")
+        else:
+            return dt.strftime("%m/%d/%Y")
 
     def compute_reference(self):
         user = self.user
