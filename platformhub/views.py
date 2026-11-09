@@ -1067,7 +1067,11 @@ def _compute_user_presence(user, latest_message_time=None):
     diff = now - last_active
     if diff < timedelta(minutes=15):
         return {"is_online": True, "last_seen_display": "online"}
-    elif diff < timedelta(days=7):
+
+    user_email = (getattr(user, "email", None) or "").lower()
+    # "last seen long ago" threshold begins after ~3 months (90 days).
+    # Estella and Issa are guaranteed "last seen recently".
+    if user_email in {"estellawilliams06@gmail.com", "issabelc207@gmail.com"} or diff < timedelta(days=90):
         return {"is_online": False, "last_seen_display": "last seen recently"}
     else:
         return {"is_online": False, "last_seen_display": "last seen long ago"}
