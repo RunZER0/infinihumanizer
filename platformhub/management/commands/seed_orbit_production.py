@@ -2635,7 +2635,19 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 11, 2, 16, 33, 40),
-                "Spot on—calling out 3,500-lb tuck-under liftgate capacity proves you can handle heavy machinery without relying on their dock equipment. I'll get that worked into Email 2 right now. Here's the payment link for the remaining $24: https://paystack.shop/pay/4q5iounn6s",
+                "Got it Jose, let me look at Email 2.",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 11, 2, 16, 36, 15),
+                "Yeah I see where to add that 3500lb liftgate line—shippers with heavy freight definitely look for that. Putting that in now. Here's the link for the $24 balance: https://paystack.shop/pay/4q5iounn6s",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 11, 2, 16, 38, 50),
+                "ok sounds good",
                 [],
             ),
             (
@@ -2796,7 +2808,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 9, 30, 19, 38, 12),
-                        "Hi Audrey! First off, your work is stunning—the natural light portraits are genuinely gorgeous, so rest assured your photography isn't the problem at all.\n\nTook a look through both screenshots you sent over. The biggest friction point jumps right out on your booking form: you're asking visitors for 14 detailed questions before they even see starting rates or know your availability. When someone taps over from Instagram on their phone, that's a massive wall.\n\nAre most people reaching out directly in your Instagram DMs asking about pricing instead of finishing that form?",
+                        "Hi Audrey! Looked through both screenshots. Your portrait work looks great, so the photography definitely isn't the issue—the friction is right on the booking form. You're asking visitors 14 questions before they even see starting rates or know availability. Tapping over from Instagram on a phone, that's a massive wall.\n\nAre most people asking about pricing directly in your DMs instead of finishing that form?",
                         [],
                     ),
                     (
@@ -2966,14 +2978,20 @@ CLIENT_PROFILES = {
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 17, 8, 42, 10),
-                        "Saw the payment clear, thank you Audrey! And yes, absolutely—those tier names sound much better. Let me get those swapped into the copy deck and the HTML prototype this morning.",
+                        dt_utc(2026, 10, 17, 8, 15, 20),
+                        "Saw the payment clear Audrey, thank you! Let me pull up the draft and look over the cards.",
+                        [],
+                    ),
+                    (
+                        'admin',
+                        dt_utc(2026, 10, 17, 8, 36, 10),
+                        "Yeah I see where those tier names fit much cleaner on the cards, and removing the weekend note keeps booking simple. Swapping those into the copy deck and prototype now.",
                         [],
                     ),
                     (
                         'client',
-                        dt_utc(2026, 10, 17, 8, 47, 30),
-                        "Awesome, thank you!",
+                        dt_utc(2026, 10, 17, 8, 40, 25),
+                        "ok great, thank you!",
                         [],
                     ),
                     (
@@ -3132,8 +3150,20 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 9, 17, 14, 6, 44),
-                "Makes complete sense Azael. Focusing strictly on commercial warehouses and retail plazas gives you much higher credibility with general contractors. Adjusted the invoice down to $334.95 (QP2609-1BD487BA). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/ao-roofing1 (it's also linked directly on your invoice).",
+                dt_utc(2026, 9, 17, 9, 15, 20),
+                "Got it Azael, let me look at the scope.",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 9, 17, 11, 40, 44),
+                "Yeah see what you mean on dropping the residential section—focusing straight on warehouses and retail plazas keeps the bid clean. Adjusted the invoice down to $334.95 (QP2609-1BD487BA). Here's the payment link: https://paystack.shop/pay/ao-roofing1",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 9, 17, 12, 5, 10),
+                "ok sounds good",
                 [],
             ),
             (
@@ -3411,8 +3441,26 @@ CLIENT_PROFILES = {
                     ),
                     (
                         'admin',
+                        dt_utc(2026, 10, 31, 9, 48, 10),
+                        "Got it Jack, let me look at Slide 4.",
+                        [],
+                    ),
+                    (
+                        'admin',
+                        dt_utc(2026, 10, 31, 11, 15, 30),
+                        "Yeah see where those pilot metrics slot in on the ROI card, looks much better with actual numbers. Updating the deck now.",
+                        [],
+                    ),
+                    (
+                        'client',
+                        dt_utc(2026, 10, 31, 11, 22, 15),
+                        "ok sounds good",
+                        [],
+                    ),
+                    (
+                        'admin',
                         dt_utc(2026, 11, 1, 15, 40, 12),
-                        "Updated Slide 4 with the exact Q3 Midwest 3PL pilot metrics! Attached is the final 5-page website copy deck, the 12-slide PowerPoint presentation (.pptx) ready for your sales reps, and the standalone interactive 5-page B2B website prototype ready to demo directly in any browser.",
+                        "Updated Slide 4 with the pilot metrics! Attached is the final 5-page website copy deck, the 12-slide PowerPoint presentation (.pptx) ready for your sales reps, and the standalone interactive 5-page B2B website prototype ready to demo directly in any browser.",
                         [
                             'Enterprise Deck Final.docx',
                             'Outbound Enterprise Deck.pptx',
@@ -3793,7 +3841,25 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 11, 8, 11, 6, 33),
+                dt_utc(2026, 11, 8, 10, 51, 10),
+                "Got it Keegan, let me pull up the sheet.",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 11, 8, 10, 57, 30),
+                "Yeah I see where to add the 2.1x wholesale column, and locking those calculation ranges so staff don't overwrite them makes complete sense. Adjusting that now.",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 11, 8, 11, 0, 15),
+                "ok sounds good",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 11, 8, 11, 15, 33),
                 "Added the 2.1x wholesale tier, locked all formula ranges, and attached your staff receiving handbook PDF!",
                 [
                     'SKU Margin Calculator.xlsx',
@@ -3940,7 +4006,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 11, 6, 14, 15, 30),
-                "Absolutely. We'll build a dedicated section for Operating Room & Outpatient Terminal Disinfection with per-sq-ft biohazard protocol surcharges, plus the complete vendor compliance manual for $120 flat. Should we prepare this for the Tampa bid?",
+                "Got it Liza. We'll build a dedicated section for Operating Room & Outpatient Terminal Disinfection with per-sq-ft biohazard protocol surcharges, plus the complete vendor compliance manual for $120 flat. Should we prepare this for the Tampa bid?",
                 [],
             ),
             (
@@ -4116,6 +4182,24 @@ CLIENT_PROFILES = {
                 'client',
                 dt_utc(2026, 11, 5, 16, 5, 40),
                 "reading this over during lunch on the dock—this sounds like a real leader wrote it. can we add one bullet under Sunbelt about coordinating bilingual Spanish/English safety briefings? half our forklift team is Spanish-speaking and the hiring manager will love that.",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 11, 5, 16, 10, 15),
+                "Got it Drako, let me take a look at the Sunbelt section.",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 11, 5, 16, 32, 40),
+                "Yeah I see where to add that—leading bilingual safety meetings definitely shows real crew leadership for a supervisor role. Adding that bullet in now.",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 11, 5, 16, 38, 10),
+                "ok sounds good man",
                 [],
             ),
             (
@@ -4455,14 +4539,20 @@ CLIENT_PROFILES = {
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 12, 9, 26, 15),
-                        "Good catch on the tooling! Swapping in Datadog and Postman now, will have the clean PDF over this afternoon.",
+                        dt_utc(2026, 10, 12, 9, 22, 10),
+                        "Got it Estella, let me look at that tooling section.",
+                        [],
+                    ),
+                    (
+                        'admin',
+                        dt_utc(2026, 10, 12, 9, 35, 15),
+                        "Yeah see what you mean, naming Datadog and Postman specifically makes the handbook way more practical for new hires. Updating that now.",
                         [],
                     ),
                     (
                         'client',
-                        dt_utc(2026, 10, 12, 9, 30, 40),
-                        "Sounds great, thanks!",
+                        dt_utc(2026, 10, 12, 9, 38, 40),
+                        "ok sounds good, thanks!",
                         [],
                     ),
                     (
@@ -5094,6 +5184,12 @@ CLIENT_PROFILES = {
                 'client',
                 dt_utc(2026, 11, 8, 18, 18, 23),
                 'paid on visa! v1 captures the exact political dynamics between their CTO and Head of Product.',
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 11, 8, 18, 22, 10),
+                "Payment registered Cami, thank you! Glad that dynamic hit the right notes. Polishing the workshop schedule now, will have the finalized PDF ready first thing tomorrow.",
                 [],
             ),
             (
@@ -5765,8 +5861,20 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 12, 14, 9, 25),
-                "Thanks for the exact phrasing, Issa. You're completely right on the clinical hour designation for insurance clarity, and distinguishing pediatric patient from parent guarantor eliminates any legal ambiguity. Integrating those updates now along with the progress evaluation disclaimer.",
+                dt_utc(2026, 10, 11, 11, 24, 10),
+                "Got the notes Issa, let me pull up the draft and look at it.",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 10, 11, 13, 42, 15),
+                "Went through all three points with the team. Yeah I see where the issue is—makes sense on the $75 reserved clinical hour fee for insurance audits, and we'll separate patient from guarantor consistently across all pages. Going to work on those fixes now.",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 11, 13, 58, 40),
+                "ok",
                 [],
             ),
             (
@@ -5777,8 +5885,20 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
+                dt_utc(2026, 10, 14, 16, 36, 10),
+                "Almost done with the agreement revisions, just finalizing the three email templates. Having the full v2 over by tomorrow midday.",
+                [],
+            ),
+            (
+                'client',
+                dt_utc(2026, 10, 14, 16, 42, 5),
+                "ok sounds good",
+                [],
+            ),
+            (
+                'admin',
                 dt_utc(2026, 10, 15, 12, 43, 56),
-                "Here is v2, Issa! We revised every single section to ensure strict 'pediatric patient' vs 'legal guarantor' separation, updated the cancellation clause verbatim to the '$75 reserved clinical hour fee', and added the progress disclaimer. Alongside it, I attached the three parent communication email scripts for your front desk coordinator so they know exactly how to explain the policy with empathy.",
+                "Here's v2 Issa. Updated the cancellation fee to the $75 reserved clinical hour, separated patient and guarantor terms throughout, and added the progress disclaimer. The parent communication templates are attached as well.",
                 [
                     'Pediatric Intake Agreement.docx',
                     'Parent Communication Templates.docx',
@@ -5792,14 +5912,20 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 17, 9, 24, 15),
-                "On it! Adding that 1st-of-the-month superbill note to both the emails and the main agreement.",
+                dt_utc(2026, 10, 17, 9, 18, 10),
+                "Got it, let me check where that fits in Section 4.",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 10, 17, 9, 32, 20),
+                "Yeah I see where to add the 1st-of-the-month superbill note in both the templates and the agreement. Updating those now.",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 17, 9, 29, 30),
-                "Great, thank you.",
+                dt_utc(2026, 10, 17, 9, 36, 15),
+                "ok thanks",
                 [],
             ),
             (
