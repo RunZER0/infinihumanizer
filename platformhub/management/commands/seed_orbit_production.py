@@ -2990,8 +2990,50 @@ CLIENT_PROFILES = {
                     ),
                     (
                         'client',
-                        dt_utc(2026, 10, 17, 8, 40, 25),
-                        "ok great, thank you!",
+                        dt_utc(2026, 10, 17, 9, 12, 15),
+                        "Wait wait, hold on—I'm looking at the Services page draft again and you completely missed the commercial press rights and the 3 wardrobe changes on the middle tier! We specifically had that in our brief notes. Did you guys forget that whole section?",
+                        [],
+                    ),
+                    (
+                        'admin',
+                        dt_utc(2026, 10, 17, 9, 24, 40),
+                        "Hey Audrey, it's actually in there! Check page 4 under 'Tier 2: Studio Session Specifications'—the second bullet down explicitly lists 'Up to 3 curated wardrobe changes and full commercial & editorial press usage rights included'. Take a look right under the deliverables table.",
+                        [],
+                    ),
+                    (
+                        'client',
+                        dt_utc(2026, 10, 17, 9, 38, 10),
+                        "Oh shoot... you're totally right. I was scrolling through the mobile Word viewer on my phone between shoots and that table preview was collapsed. My bad, so sorry about that! 🤦‍♀️",
+                        [],
+                    ),
+                    (
+                        'client',
+                        dt_utc(2026, 10, 17, 9, 44, 25),
+                        "One thing I do want to push back on though—on the Booking page, you put the 50% non-refundable retainer notice right above the date/time calendar picker. Won't that scare potential clients off before they even pick a date? Shouldn't we move the deposit terms down to the confirmation email after they select their slot?",
+                        [],
+                    ),
+                    (
+                        'admin',
+                        dt_utc(2026, 10, 17, 10, 18, 30),
+                        "Totally get why you'd wonder about that, but here's why having it upfront works much better for you: if someone selects a prime Saturday golden hour slot without realizing it requires an upfront 50% retainer, they'll hold the date on your calendar and then ghost when the deposit invoice arrives. Putting the 50% retainer right before they confirm the slot ensures anyone booking is serious and pre-committed. It protects your weekend slots from tire-kickers holding dates.",
+                        [],
+                    ),
+                    (
+                        'client',
+                        dt_utc(2026, 10, 17, 10, 42, 15),
+                        "You know what... that actually makes a ton of sense. Last fall I had two different clients book out October weekends and then vanish once the deposit invoice went out, and I lost those dates completely. Let's keep it upfront right where you have it.",
+                        [],
+                    ),
+                    (
+                        'admin',
+                        dt_utc(2026, 10, 17, 10, 50, 0),
+                        "Glad we're aligned on that! It'll save you so many calendar headaches. Locking in those new tier names ('Essential', 'Studio Session', 'Full Day Campaign'), keeping the retainer placement upfront, and assembling the interactive prototype now. Having the whole bundle ready for you this afternoon.",
+                        [],
+                    ),
+                    (
+                        'client',
+                        dt_utc(2026, 10, 17, 10, 54, 30),
+                        "Sounds perfect, thank you so much!",
                         [],
                     ),
                     (

@@ -881,6 +881,16 @@ class HumanizerEntitlementTests(TestCase):
 
 
 class PostersGalleryTests(TestCase):
+    def setUp(self):
+        self.admin = User.objects.create_user(
+            username="poster-admin",
+            email="posteradmin@example.com",
+            password="pwd",
+            is_staff=True,
+            is_superuser=True,
+        )
+        self.client.force_login(self.admin)
+
     def test_posters_gallery_renders_20_posters_and_contact_ctas(self):
         url = reverse("platformhub:posters")
         resp = self.client.get(url)
@@ -895,6 +905,14 @@ class PostersGalleryTests(TestCase):
 
 class AdminPostersDownloadTests(TestCase):
     def setUp(self):
+        self.admin = User.objects.create_user(
+            username="download-admin",
+            email="downloadadmin@example.com",
+            password="pwd",
+            is_staff=True,
+            is_superuser=True,
+        )
+        self.client.force_login(self.admin)
         from platformhub.engaging_posters_data import sync_social_posters_db
         sync_social_posters_db()
 
