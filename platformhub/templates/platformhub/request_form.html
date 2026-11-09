@@ -42,8 +42,8 @@
 
         <div class="field" style="margin-top: 18px;">
           <label for="title">Project name <span class="req">*</span></label>
-          <span class="field-hint">A descriptive name for this job thread (e.g. Q4 Executive board briefing memo).</span>
-          <input id="title" name="title" required value="{{ values.title }}" class="brief-input" placeholder="e.g. Q4 Executive board briefing memo and 16-slide investor update deck">
+          <span class="field-hint">A descriptive name for this job thread (e.g. Q3 Operations Review & Executive Summary).</span>
+          <input id="title" name="title" required value="{{ values.title }}" class="brief-input" placeholder="e.g. Q3 Operations Review & 15-Slide Executive Summary">
         </div>
       </div>
 
@@ -60,18 +60,18 @@
         <div class="form-grid-2">
           <div class="field">
             <label for="full_name">Your name <span class="req">*</span></label>
-            <input id="full_name" name="full_name" required value="{{ values.full_name|default:initial_name }}" class="brief-input" placeholder="e.g. Estella Williams">
+            <input id="full_name" name="full_name" required value="{{ values.full_name|default:initial_name }}" class="brief-input" placeholder="e.g. Sarah Jenkins">
           </div>
           <div class="field">
             <label for="email">Email address <span class="req">*</span></label>
-            <input id="email" type="email" name="email" required value="{{ values.email|default:initial_email }}" class="brief-input" placeholder="e.g. estellawilliams06@gmail.com">
+            <input id="email" type="email" name="email" required value="{{ values.email|default:initial_email }}" class="brief-input" placeholder="e.g. sarah.jenkins@acmeholdings.co">
           </div>
         </div>
 
         <div class="field" style="margin-top: 18px;">
           <label for="company">Company / team <span class="help">(optional)</span></label>
           <span class="field-hint">Organization, fund, or startup name.</span>
-          <input id="company" name="company" value="{{ values.company }}" class="brief-input" placeholder="e.g. NorthStar Freight Logistics">
+          <input id="company" name="company" value="{{ values.company }}" class="brief-input" placeholder="e.g. Apex Global Logistics">
         </div>
       </div>
 
@@ -88,25 +88,25 @@
         <div class="field">
           <label for="objective">Objective <span class="req">*</span></label>
           <span class="field-hint">What do you need this work to achieve?</span>
-          <textarea id="objective" name="objective" required rows="3" class="brief-input" placeholder="e.g. Prepare executive presentation deck and confidential board briefing memo summarizing Q3 KPI performance, bridge financing terms, and 2027 regional expansion milestones.">{{ values.objective }}</textarea>
+          <textarea id="objective" name="objective" required rows="3" class="brief-input" placeholder="e.g. Prepare executive briefing memo and slide deck summarizing regional quarterly performance, operating margins, and FY27 expansion roadmap.">{{ values.objective }}</textarea>
         </div>
 
         <div class="field" style="margin-top: 18px;">
           <label for="audience">Audience <span class="help">(optional)</span></label>
           <span class="field-hint">Who is the primary audience or stakeholder?</span>
-          <textarea id="audience" name="audience" rows="2" class="brief-input" placeholder="e.g. Board of directors, enterprise logistics partners, angel investors">{{ values.audience }}</textarea>
+          <textarea id="audience" name="audience" rows="2" class="brief-input" placeholder="e.g. Executive committee, enterprise logistics partners, angel investors">{{ values.audience }}</textarea>
         </div>
 
         <div class="field" style="margin-top: 18px;">
           <label for="scope">Current materials & scope <span class="req">*</span></label>
           <span class="field-hint">What drafts, spreadsheets, rough bullets, notes, or raw data do you already have?</span>
-          <textarea id="scope" name="scope" required rows="3" class="brief-input" placeholder="e.g. Comprehensive 16-slide investor update deck notes and a 4-page executive board memorandum outline.">{{ values.scope }}</textarea>
+          <textarea id="scope" name="scope" required rows="3" class="brief-input" placeholder="e.g. Internal operational spreadsheet, department head notes, and a 5-page draft memo.">{{ values.scope }}</textarea>
         </div>
 
         <div class="field" style="margin-top: 18px;">
           <label for="deliverable">Requested deliverables <span class="req">*</span></label>
-          <span class="field-hint">What exact deliverables should we produce? (e.g. 16-slide presentation deck and executive memo).</span>
-          <textarea id="deliverable" name="deliverable" required rows="3" class="brief-input" placeholder="e.g. 16-slide presentation deck and executive memo (.docx & .pdf).">{{ values.deliverable }}</textarea>
+          <span class="field-hint">What exact deliverables should we produce? (e.g. 15-slide presentation deck and executive memo).</span>
+          <textarea id="deliverable" name="deliverable" required rows="3" class="brief-input" placeholder="e.g. 15-slide executive presentation (.pptx) and 3-page summary memo (.docx & .pdf).">{{ values.deliverable }}</textarea>
         </div>
       </div>
 
@@ -163,7 +163,7 @@
         <div class="field" style="margin-top: 24px;">
           <label for="intake_notes">Intake notes / initial inquiry <span class="help">(optional)</span></label>
           <span class="field-hint">Any specific background, rush rate questions, deadline constraints, or instructions.</span>
-          <textarea id="intake_notes" name="intake_notes" rows="4" class="brief-input" placeholder="e.g. guys i am in a bind. we have our Q4 board & investor meeting tomorrow morning at 9am CT... can you turn this around overnight? what's the rush rate?">{{ values.intake_notes }}</textarea>
+          <textarea id="intake_notes" name="intake_notes" rows="4" class="brief-input" placeholder="e.g. Need this ready for an executive leadership review by end of week. Please review raw data notes and let us know if priority turnaround is possible.">{{ values.intake_notes }}</textarea>
         </div>
       </div>
 

@@ -4213,11 +4213,11 @@ CLIENT_PROFILES = {
                 'key': 'ew_board_deck',
                 'reference': 'INF-261021-EW',
                 'service_family': 'studio',
-                'service_code': 'studio-presentations',
+                'service_code': 'studio-deck',
                 'title': 'Q4 Executive board briefing memo and 16-slide investor update deck',
                 'objective': 'Prepare executive presentation deck and confidential board briefing memo summarizing Q3 KPI performance, bridge financing terms, and 2027 regional expansion milestones.',
                 'scope': 'Comprehensive 16-slide investor update deck and a 4-page executive board memorandum.',
-                'budget_band': 'Overnight Priority',
+                'budget_band': 'USD 75–250',
                 'deliverable': '16-slide presentation deck and executive memo (.docx & .pdf).',
                 'status': 'delivered',
                 'estimate_low': Decimal('150.00'),
@@ -4324,7 +4324,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 5, 5, 2, 10),
-                        "It's about 1,800 words so standard $25 pass. Can have it back to you in about 3 or 4 hours if you want us to start now.",
+                        "For 1,800 words with priority review, that falls under our $25 Pro tier from the pricing list. Can have it back to you in about 3 or 4 hours if you want us to start now.",
                         [],
                     ),
                     (
@@ -4389,7 +4389,7 @@ CLIENT_PROFILES = {
                     (
                         'client',
                         dt_utc(2026, 10, 10, 18, 34, 22),
-                        "Hey team, back again and need your brainpower. We're hiring 4 key operational roles over the next 45 days (Lead Dispatcher, Customer Ops, Billing Specialist, Account Exec) and I don't have the hours to build 4 separate SOP ramp manuals from scratch. Attached my rough notes on role expectations. Thought we could bundle all four under the standard $50 operational tier—can you turn these into structured 30-60-90 day benchmarks and daily workflow checklists for each role?",
+                        "Hey team, back again and need your brainpower. We're hiring 4 key operational roles over the next 45 days (Lead Dispatcher, Customer Ops, Billing Specialist, Account Exec) and I don't have the hours to build 4 separate SOP ramp manuals from scratch. Attached my rough notes on role expectations. Can you turn these into structured 30-60-90 day benchmarks and daily workflow checklists for each role?",
                         [
                             'Role Ramp Notes.docx',
                         ],
@@ -4397,7 +4397,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 10, 18, 52, 14),
-                        "Hey Estella, good to see you back! Took a look through your role notes. Because you've got 4 completely distinct operational tracks here (Dispatch, Customer Ops, Billing, and AE) each requiring dedicated 30-60-90 benchmarks and daily checklists, it comes out to 4 separate handbooks. That scope is $80 total ($20 per role) rather than the single-role $50 tier. Can have the first complete draft over to you by tomorrow afternoon—sound good?",
+                        "Hey Estella, good to see you back! Technical production (studio-technical) on our services list starts at $75 for a standard deliverable. For building out all 4 distinct operational role frameworks ($20/role), that comes to $80 total, which fits right in the scoped research and production band ($75–$250). Can have the first complete draft over to you by tomorrow afternoon—sound good?",
                         [],
                     ),
                     (
@@ -4498,14 +4498,26 @@ CLIENT_PROFILES = {
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 20, 19, 35, 10),
-                        "Hey Estella! Yeah we can knock this out tonight. We'll take the 40 pages down to a tight 16-slide board deck, clean up the financial schedule, and write the 2-page executive summary memo. Overnight rush rate is $150 flat. Can have it all in your hands by 6am CT so you have time before the meeting.",
+                        dt_utc(2026, 10, 20, 19, 28, 10),
+                        "Hey Estella! Yes, we can definitely turn this around overnight before your 9am meeting.",
+                        [],
+                    ),
+                    (
+                        'client',
+                        dt_utc(2026, 10, 20, 19, 34, 40),
+                        "lifesaver. what's the total going to be with the overnight turnaround? just need to get it cleared on our card now",
+                        [],
+                    ),
+                    (
+                        'admin',
+                        dt_utc(2026, 10, 20, 19, 38, 15),
+                        "Our Deck & Presentation package (studio-deck) starts at $150 on the services list. Since you're an existing client and we already have your company templates on file, we'll keep it right at the base $150 tier and include the overnight priority turn and the 2-page briefing memo in that.",
                         [],
                     ),
                     (
                         'client',
                         dt_utc(2026, 10, 20, 19, 42, 18),
-                        "you are a lifesaver. send the link, will pay now while i finish updating our cap table.",
+                        "awesome, really appreciate that. send over the link and ill pay right now while finishing up with our cap table",
                         [],
                     ),
                     (
@@ -4517,7 +4529,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 20, 19, 49, 5),
-                        "Diving into the slides and financial model now.",
+                        "Opening up the deck now. We'll have everything ready in your portal by 6am CT so you have time to review before 9.",
                         [],
                     ),
                     (
@@ -4529,7 +4541,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 21, 6, 14, 20),
-                        "Morning Estella! Just wrapped it up. Here's the complete board pack:\n- 16-slide investor deck (.pptx)\n- Financial schedule (.xlsx)\n- 2-page briefing memo (.docx)\n- Everything bundled in the ZIP",
+                        "Morning Estella! Just wrapped it up. Here's your complete board pack:\n- 16-slide investor deck (.pptx)\n- Financial schedule (.xlsx)\n- 2-page briefing memo (.docx)\n- Everything bundled in the ZIP",
                         [
                             'Q4 Board Presentation.pptx',
                             'Q4 Financial Model.xlsx',
@@ -4546,7 +4558,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 21, 7, 55, 12),
-                        "So glad to hear that! Since the deck and memo are finalized and confirmed, go crush the presentation and let us know whenever you need the next deck!",
+                        "So glad to hear that! Go crush the presentation and let us know whenever you need the next deck.",
                         [],
                     ),
                     (
@@ -5601,6 +5613,7 @@ CLIENT_PROFILES = {
         'username': 'issa_cuevas',
         'first_name': 'Issa',
         'last_name': 'Cuevas',
+        'company': 'Cuevas Speech & Language Therapy, PLLC',
         'channel': 'Audrey Brown referral',
         'reference': 'IC01',
         'subject': 'Pediatric Clinic Intake Agreement & Parent Disclosure Pack ($240)',
@@ -5611,11 +5624,11 @@ CLIENT_PROFILES = {
                 'reference': 'INF-261020-IC',
                 'service_family': 'studio',
                 'service_code': 'studio-technical',
-                'title': 'Pediatric speech clinic intake agreement, parent disclosure forms, and HIPAA consent pack',
+                'title': 'Pediatric clinic intake agreement, parent disclosure forms, and HIPAA consent pack',
                 'objective': 'Draft comprehensive clinical service agreements, parent fee disclosures, cancellation policies, and HIPAA-compliant consent documents for pediatric speech therapy practice.',
                 'scope': 'Four specialized clinical documents: Master Clinical Service Agreement, Parent Financial & Cancellation Disclosure, HIPAA Teletherapy & In-Clinic Consent, and Intake Encounter Scripts.',
-                'budget_band': 'Standard ($150–$160)',
-                'deliverable': 'Clinical agreement and parent intake documentation pack (.docx & .pdf).',
+                'budget_band': 'USD 75–250',
+                'deliverable': 'Master clinic agreement, parent financial terms, HIPAA consent, and desk scripts (.docx & .pdf).',
                 'status': 'delivered',
                 'estimate_low': Decimal('240.00'),
                 'estimate_high': Decimal('240.00'),
@@ -5673,37 +5686,43 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 6, 15, 42, 10),
-                "Hey Issa! So glad Audrey sent you our way—we loved helping her streamline her studio intake. And yes, 100%, we specialize in clinical intake and client agreements. I'm already looking over the draft doc you attached. Pediatric practices are definitely tricky because you're balancing parent guarantors with minor patients, plus HIPAA consents, teletherapy notes, and observation mirrors. We'll tear right into the fee disclosures and legal language to get this airtight.",
+                "Hey Issa! Glad Audrey connected us. Yes, we handle custom clinical intake documentation and client agreements all the time. Pediatric practices have specific needs around minor patients vs legal guarantors, HIPAA teletherapy, and observation rooms. We can definitely take this on.",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 10, 7, 8, 29, 14),
-                "Ok good, because I don't have patience for fluff. If we do this, it has to be legally airtight and pediatric-specific. Our therapists work with non-verbal toddlers and sensory integration, so the observation mirror and video consent have to be spelled out explicitly. When could I see a first draft? On the intake form I selected the $160 tier, does that cover all four clinical documents?",
+                "ok good to know, because i dont have patience for another agency giving me template junk. if you look at the notes our therapists work with non-verbal kids and observation mirrors, so that has to be explicit. what would the total be for all four docs?",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 7, 11, 18, 37),
-                "Hey Issa, completely understand being direct about what you need. Because pediatric clinical paperwork needs distinct guarantor terms, HIPAA teletherapy, observation mirror consents, plus the front-desk parent cancellation scripts across 4 custom documents, that falls under our full $240 clinical documentation pack rather than the $160 single-policy tier. We don't cut corners on clinical language. We can have v1 in your hands by Friday afternoon.",
+                "On our services page, Technical Production (studio-technical) starts at $75 for a single technical document. Since your scope is a 4-part clinical pack—the master agreement, parent financial disclosure, HIPAA consent, and front-desk scripts—we can do the full package for $240. That fits right inside the $75–$250 band from your brief.",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 10, 7, 11, 42, 10),
-                "Fair enough—I'd rather pay the $240 and have it done right than deal with another audit nightmare. Let's see what you come up with by Friday.",
+                "Fair enough, $240 works if it's actually thorough and saves me from another parent yelling at the desk. How soon can I see a first draft?",
+                [],
+            ),
+            (
+                'admin',
+                dt_utc(2026, 10, 7, 12, 5, 0),
+                "We can have v1 in your hands by Friday afternoon. Starting on the draft now.",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 10, 9, 19, 43, 52),
-                "Just checking on this. It's Friday evening and I haven't seen the draft in my portal yet. I have a staff meeting Monday morning and need to review this beforehand.",
+                "just checking in on this... its friday evening, wanted to review before our monday staff meeting",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 9, 20, 17, 11),
-                "Right here, Issa! Just wrapped the final read-through on the observation and teletherapy sections. Attached is v1 of the Master Clinical Intake & Consent Agreement. It lays out the guarantor definitions, HIPAA privacy notices, and explicit mirror/video consent terms. Take your time reviewing it over the weekend before your staff meeting.",
+                "Just finished the final review pass. Attached is v1 of the Master Agreement. Focus on the guarantor clauses and mirror observation sections over the weekend and let us know what you want tweaked.",
                 [
                     'Pediatric Intake Agreement v1.docx',
                 ],
@@ -6240,55 +6259,82 @@ class Command(BaseCommand):
                         elif spec.get("requests"):
                             req = spec["requests"][0]
 
-                    if req is not None:
-                        from platformhub.catalog import SERVICE_INDEX
-                        req_svc_code = getattr(req, "service_code", None) or (req.get("service_code") if isinstance(req, dict) else "")
-                        req_title = getattr(req, "title", None) or (req.get("title") if isinstance(req, dict) else "Service Request")
-                        req_ref = getattr(req, "reference", None) or (req.get("reference") if isinstance(req, dict) else "INF-REQ")
-                        req_obj = getattr(req, "objective", None) or (req.get("objective") if isinstance(req, dict) else "")
-                        req_scope = getattr(req, "scope", None) or (req.get("scope") if isinstance(req, dict) else "")
-                        req_deliv = getattr(req, "deliverable", None) or (req.get("deliverable") if isinstance(req, dict) else "")
-                        req_est_low = getattr(req, "estimate_low", None) or (req.get("estimate_low") if isinstance(req, dict) else "25.00")
-                        req_est_high = getattr(req, "estimate_high", None) or (req.get("estimate_high") if isinstance(req, dict) else "50.00")
-
-                        svc = SERVICE_INDEX.get(req_svc_code, {})
-                        svc_name = svc.get("name") or req_svc_code or "Custom Project"
-                        client_name = f"{spec.get('first_name', '')} {spec.get('last_name', '')}".strip() or "Client"
-
-                        brief_lines = [
-                            "Project Brief Submitted via /request/",
-                            "--------------------------------------------------",
-                            f"Project Name: {req_title}",
-                            f"Reference: {req_ref}",
-                            f"Service: {svc_name} ({req_svc_code})",
-                            f"Client: {client_name} <{primary_email}>",
-                        ]
-                        company = spec.get("company")
-                        if company:
-                            brief_lines.append(f"Company / Team: {company}")
-                        brief_lines.extend([
-                            "",
-                            "Objective:",
-                            str(req_obj).strip(),
-                            "",
-                            "Current Materials & Scope:",
-                            str(req_scope).strip(),
-                        ])
-                        if body:
-                            brief_lines.extend([
+                    if idx == 0:
+                        if c_cat == "consultation":
+                            client_name = f"{spec.get('first_name', '')} {spec.get('last_name', '')}".strip() or "Client"
+                            consult_lines = [
+                                "Consultation Inquiry Submitted via /consultation/",
+                                "--------------------------------------------------",
+                                f"Reference: {c_ref or 'INF-CONSULT'}",
+                                f"Client: {client_name} <{primary_email}>",
+                            ]
+                            company = spec.get("company")
+                            if company:
+                                consult_lines.append(f"Company / Team: {company}")
+                            consult_lines.extend([
                                 "",
-                                "Intake Notes:",
+                                "Message:",
                                 body.strip(),
                             ])
-                        req_budget = (req.get("budget_band") if isinstance(req, dict) else getattr(req, "budget_band", None)) or "Standard"
-                        brief_lines.extend([
-                            "",
-                            "Requested Deliverables:",
-                            str(req_deliv).strip(),
-                            "",
-                            f"Turnaround: Priority · Research: Standard · Budget Band: {req_budget}",
-                        ])
-                        body = "\n".join(brief_lines).strip()
+                            body = "\n".join(consult_lines).strip()
+                        elif req is not None:
+                            from platformhub.catalog import SERVICE_INDEX
+                            req_svc_code = getattr(req, "service_code", None) or (req.get("service_code") if isinstance(req, dict) else "")
+                            req_title = getattr(req, "title", None) or (req.get("title") if isinstance(req, dict) else "Service Request")
+                            req_ref = getattr(req, "reference", None) or (req.get("reference") if isinstance(req, dict) else "INF-REQ")
+                            req_obj = getattr(req, "objective", None) or (req.get("objective") if isinstance(req, dict) else "")
+                            req_scope = getattr(req, "scope", None) or (req.get("scope") if isinstance(req, dict) else "")
+                            req_deliv = getattr(req, "deliverable", None) or (req.get("deliverable") if isinstance(req, dict) else "")
+                            req_turn = (req.get("turnaround") if isinstance(req, dict) else getattr(req, "turnaround", None)) or "Priority"
+                            req_res = (req.get("research_depth") if isinstance(req, dict) else getattr(req, "research_depth", None)) or "Standard"
+                            req_budget = (req.get("budget_band") if isinstance(req, dict) else getattr(req, "budget_band", None)) or "Standard"
+
+                            svc = SERVICE_INDEX.get(req_svc_code, {})
+                            svc_name = svc.get("name") or req_svc_code or "Custom Project"
+                            client_name = f"{spec.get('first_name', '')} {spec.get('last_name', '')}".strip() or "Client"
+
+                            brief_lines = [
+                                "Project Brief Submitted via /request/",
+                                "--------------------------------------------------",
+                                f"Project Name: {req_title}",
+                                f"Reference: {req_ref}",
+                                f"Service: {svc_name} ({req_svc_code})",
+                                f"Client: {client_name} <{primary_email}>",
+                            ]
+                            company = spec.get("company")
+                            if company:
+                                brief_lines.append(f"Company / Team: {company}")
+                            brief_lines.extend([
+                                "",
+                                "Objective:",
+                                str(req_obj).strip(),
+                            ])
+                            audience = getattr(req, "audience", None) or (req.get("audience") if isinstance(req, dict) else "")
+                            if audience:
+                                brief_lines.extend([
+                                    "",
+                                    "Audience:",
+                                    str(audience).strip(),
+                                ])
+                            brief_lines.extend([
+                                "",
+                                "Current Materials & Scope:",
+                                str(req_scope).strip(),
+                            ])
+                            if body:
+                                brief_lines.extend([
+                                    "",
+                                    "Intake Notes:",
+                                    body.strip(),
+                                ])
+                            brief_lines.extend([
+                                "",
+                                "Requested Deliverables:",
+                                str(req_deliv).strip(),
+                                "",
+                                f"Turnaround: {str(req_turn).capitalize()} · Research: {str(req_res).capitalize()} · Budget Band: {req_budget}",
+                            ])
+                            body = "\n".join(brief_lines).strip()
 
                     msg = ClientMessage.objects.create(
                         conversation=conv,

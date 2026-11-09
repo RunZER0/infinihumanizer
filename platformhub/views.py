@@ -603,7 +603,7 @@ def consultation(request):
                 consult_lines.append(f"Company / Team: {item.company}")
             consult_lines.extend([
                 "",
-                "Inquiry Details & Objective:",
+                "Message:",
                 topic.strip(),
             ])
             ClientMessage.objects.create(
