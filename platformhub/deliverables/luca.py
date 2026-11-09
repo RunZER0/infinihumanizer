@@ -83,11 +83,11 @@ def build_luca_deliverables() -> dict[str, dict]:
     # 3. luca_august_vendor_receipts.pdf: 3-page consolidated marine receipts PDF
     files["August Vendor Receipts.pdf"] = write_pdf_file(
         "August Vendor Receipts.pdf",
-        "Pacific Oasis Charters — August Marine Maintenance & Vendor Disbursement Audit",
+        "Pacific Oasis Charters - August Marine Maintenance & Vendor Disbursement Audit",
         [
             "# 1. MONTHLY MARINE OPERATING SUMMARY",
             "Entity: Pacific Oasis Luxury Charters & Marine Holdings LLC · Kewalo Basin Harbor, Honolulu, HI.",
-            "Accounting Period: August 1 – August 31, 2026 · Compiled for Managing Partner Review (Luca Carollo).",
+            "Accounting Period: August 1 - August 31, 2026 · Compiled for Managing Partner Review (Luca Carollo).",
             "Total Operating Disbursements: $18,450.00 across fleet diesel bunkering, split-AC servicing, marine slip leases, and USCG annual inspection compliance.",
             "--PAGE-BREAK--",
             "# 2. ITEMIZED VENDOR DISBURSEMENT LEDGER",
@@ -116,7 +116,7 @@ def build_luca_deliverables() -> dict[str, dict]:
     # 4. luca_oahu_charter_booking_deck_final.pdf: 4-page charter booking deck PDF
     files["Charter Booking Deck.pdf"] = write_pdf_file(
         "Charter Booking Deck.pdf",
-        "Pacific Oasis Luxury Yacht Charters — Oahu Fleet Portfolio & Private Excursions",
+        "Pacific Oasis Luxury Yacht Charters - Oahu Fleet Portfolio & Private Excursions",
         [
             "# 1. PACIFIC OASIS LUXURY CHARTERS",
             "Welcome aboard Pacific Oasis Luxury Yacht Charters. We curate private, bespoke luxury maritime experiences departing daily from Kewalo Basin Harbor and Ala Wai Harbor in Honolulu, Hawaii.",
@@ -132,15 +132,15 @@ def build_luca_deliverables() -> dict[str, dict]:
             ],
             "--PAGE-BREAK--",
             "# 3. CURATED PRIVATE CHARTER EXCURSIONS",
-            "— Waikiki Sunset & Diamond Head Champagne Cruise: 3 hours of golden-hour sailing with curated wine and artisan charcuterie.",
-            "— Turtle Canyon & South Shore Snorkel Safari: 4 hours exploring vibrant marine reefs, wild sea turtles, and pristine blue waters.",
-            "— Kaneohe Bay Sandbar VIP Adventure: 6-hour excursion to Oahu's famous sunken sandbar with paddleboards and private chef barbecue.",
-            "— Inter-Island Channel Crossing (Maui / Lanai): Full-day offshore luxury voyage across the Kaiwi Channel.",
+            "- Waikiki Sunset & Diamond Head Champagne Cruise: 3 hours of golden-hour sailing with curated wine and artisan charcuterie.",
+            "- Turtle Canyon & South Shore Snorkel Safari: 4 hours exploring vibrant marine reefs, wild sea turtles, and pristine blue waters.",
+            "- Kaneohe Bay Sandbar VIP Adventure: 6-hour excursion to Oahu's famous sunken sandbar with paddleboards and private chef barbecue.",
+            "- Inter-Island Channel Crossing (Maui / Lanai): Full-day offshore luxury voyage across the Kaiwi Channel.",
             "--PAGE-BREAK--",
             "# 4. CULINARY EXPERIENCES & PRIVATE BOOKING INTAKE",
-            "— Private Chef Program: Multi-course Hawaiian fusion tasting menus featuring locally caught ahi sashimi, Kona kampachi, and Maui beef.",
-            "— Beverage Packages: Sommelier-selected vintage champagne, artisanal island cocktails, and craft local brews.",
-            "— Direct Concierge Reservations: Luca Carollo, Managing Director · (808) 720-4190 · luca@pacificoasischarters.com",
+            "- Private Chef Program: Multi-course Hawaiian fusion tasting menus featuring locally caught ahi sashimi, Kona kampachi, and Maui beef.",
+            "- Beverage Packages: Sommelier-selected vintage champagne, artisanal island cocktails, and craft local brews.",
+            "- Direct Concierge Reservations: Luca Carollo, Managing Director · (808) 720-4190 · luca@pacificoasischarters.com",
         ],
         role="deliverable",
         subtitle="4-Page Luxury Yacht Fleet Portfolio, Excursion Packages & Private Concierge Guide",

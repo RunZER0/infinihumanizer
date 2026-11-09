@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Project brief — InfiniAI{% endblock %}
+{% block title %}Project brief - InfiniAI{% endblock %}
 {% block content %}
 <div class="page-shell">
   <div class="eyebrow">Project brief & scope intake</div>
@@ -183,7 +183,7 @@
             <span class="field-hint">Urgency & delivery window</span>
             <select id="turnaround" name="turnaround" class="brief-input">
               <option value="flexible" {% if values.turnaround == 'flexible' %}selected{% endif %}>Flexible</option>
-              <option value="standard" {% if not values.turnaround or values.turnaround == 'standard' %}selected{% endif %}>Standard (2–3 days)</option>
+              <option value="standard" {% if not values.turnaround or values.turnaround == 'standard' %}selected{% endif %}>Standard (2-3 days)</option>
               <option value="priority" {% if values.turnaround == 'priority' %}selected{% endif %}>Priority (Rush / Next day)</option>
             </select>
           </div>
@@ -204,11 +204,11 @@
             <span class="field-hint">Expected pricing tier</span>
             <select id="budget_band" name="budget_band" class="brief-input">
               <option value="Standard" {% if not values.budget_band or values.budget_band == 'Standard' %}selected{% endif %}>Standard</option>
-              <option value="USD 35–75" {% if values.budget_band == 'USD 35–75' %}selected{% endif %}>USD 35–75</option>
-              <option value="USD 75–250" {% if values.budget_band == 'USD 75–250' %}selected{% endif %}>USD 75–250</option>
-              <option value="USD 250–750" {% if values.budget_band == 'USD 250–750' %}selected{% endif %}>USD 250–750</option>
-              <option value="USD 750–3,000" {% if values.budget_band == 'USD 750–3,000' %}selected{% endif %}>USD 750–3,000</option>
-              <option value="USD 3,000–10,000+" {% if values.budget_band == 'USD 3,000–10,000+' %}selected{% endif %}>USD 3,000–10,000+</option>
+              <option value="USD 35-75" {% if values.budget_band == 'USD 35-75' %}selected{% endif %}>USD 35-75</option>
+              <option value="USD 75-250" {% if values.budget_band == 'USD 75-250' %}selected{% endif %}>USD 75-250</option>
+              <option value="USD 250-750" {% if values.budget_band == 'USD 250-750' %}selected{% endif %}>USD 250-750</option>
+              <option value="USD 750-3,000" {% if values.budget_band == 'USD 750-3,000' %}selected{% endif %}>USD 750-3,000</option>
+              <option value="USD 3,000-10,000+" {% if values.budget_band == 'USD 3,000-10,000+' %}selected{% endif %}>USD 3,000-10,000+</option>
               <option value="Flexible / Quote upon review" {% if values.budget_band == 'Flexible / Quote upon review' %}selected{% endif %}>Flexible / Quote upon review</option>
             </select>
           </div>

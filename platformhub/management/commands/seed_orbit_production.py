@@ -59,7 +59,7 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     files["Freight Carrier Bio.docx"] = write_docx_file(
         "Freight Carrier Bio.docx",
-        "Cruz Metro Freight — Rough Company Notes",
+        "Cruz Metro Freight - Rough Company Notes",
         [
             "Cruz Metro Freight operates dedicated 26ft liftgate box trucks and high-roof sprinters out of DFW.",
             "We handle scheduled retail replenishment, pallet recovery, and warehouse dock-to-dock transfers.",
@@ -71,25 +71,25 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Carrier Outreach Preview v1.pdf"] = write_pdf_file(
         "Carrier Outreach Preview v1.pdf",
-        "Cruz Metro Freight — Capability Statement & Cold Outreach Preview (v1)",
+        "Cruz Metro Freight - Capability Statement & Cold Outreach Preview (v1)",
         [
             "# 1. CORPORATE PROFILE & OPERATIONAL AUTHORITY",
             "Cruz Metro Freight LLC is an asset-based regional freight carrier operating out of Dallas-Fort Worth, Texas.",
             "USDOT #3918204 · MC #1488209 · Texas DMV #0094182 · Active Operating Authority since 2021.",
             "Insurance: $1,000,000 Commercial Auto Liability · $100,000 Motor Truck Cargo (Great West Casualty).",
             "# 2. ASSET FLEET & EQUIPMENT SPECIFICATIONS",
-            "— Two 26-foot Freightliner M2-106 Box Trucks: 10,000 lbs payload, 3,500-lb Maxon hydraulic tuck-under liftgates, 102-inch width, e-track cargo securing rails.",
-            "— Two Mercedes-Benz Sprinter Cargo Vans: High-roof, 3,850 lbs payload capacity, dedicated to critical parcel and hot-shot delivery.",
-            "— On-Board Equipment: Heavy-duty 5,500-lb hydraulic pallet jacks, heavy ratchet load-bars, and moving blankets standard on every truck.",
+            "- Two 26-foot Freightliner M2-106 Box Trucks: 10,000 lbs payload, 3,500-lb Maxon hydraulic tuck-under liftgates, 102-inch width, e-track cargo securing rails.",
+            "- Two Mercedes-Benz Sprinter Cargo Vans: High-roof, 3,850 lbs payload capacity, dedicated to critical parcel and hot-shot delivery.",
+            "- On-Board Equipment: Heavy-duty 5,500-lb hydraulic pallet jacks, heavy ratchet load-bars, and moving blankets standard on every truck.",
             "# 3. VALUE PROPOSITION & PERFORMANCE BENCHMARKS",
-            "— 99.4% On-Time Delivery Metric across 1,840 completed metro runs in 2026.",
-            "— Direct dock dispatch without broker fees or middleman layers.",
-            "— 2 full hours of free dock detention included per stop to absorb warehouse staging delays.",
-            "— Real-time GPS tracking links and immediate electronic proof-of-delivery (e-POD) photos emailed upon delivery.",
+            "- 99.4% On-Time Delivery Metric across 1,840 completed metro runs in 2026.",
+            "- Direct dock dispatch without broker fees or middleman layers.",
+            "- 2 full hours of free dock detention included per stop to absorb warehouse staging delays.",
+            "- Real-time GPS tracking links and immediate electronic proof-of-delivery (e-POD) photos emailed upon delivery.",
             "# 4. OUTREACH SEQUENCE TARGETING & VALUE PROPOSITIONS",
-            "— Sequence 1: Local industrial park shipping leads (focusing on Tuesday/Thursday open liftgate capacity).",
-            "— Sequence 2: Emergency same-day pallet recovery when brokers drop scheduled pickups.",
-            "— Sequence 3: Transparent flat metro zone rate card with no hidden fuel surcharge spikes.",
+            "- Sequence 1: Local industrial park shipping leads (focusing on Tuesday/Thursday open liftgate capacity).",
+            "- Sequence 2: Emergency same-day pallet recovery when brokers drop scheduled pickups.",
+            "- Sequence 3: Transparent flat metro zone rate card with no hidden fuel surcharge spikes.",
         ],
         role="draft",
         subtitle="Asset-Based Freight Carrier Profile & Outbound Sequence · DFW Logistics Corridor",
@@ -97,7 +97,7 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Outreach Email Sequence.docx"] = write_docx_file(
         "Outreach Email Sequence.docx",
-        "Cruz Metro Freight — Company Capability Bio & Cold Outreach Deck (Final)",
+        "Cruz Metro Freight - Company Capability Bio & Cold Outreach Deck (Final)",
         [
             "# EXECUTIVE CAPABILITY STATEMENT & COMPANY PROFILE",
             "Entity: Cruz Metro Freight LLC · Headquarters: Dallas, Texas · Terminal: 4820 W Davis St, Dallas, TX 75211",
@@ -105,14 +105,14 @@ def build_seed_attachments() -> dict[str, dict]:
             "Commercial Insurance: $1,000,000 Combined Single Limit (CSL) Commercial Auto Liability · $100,000 Broad-Form Motor Truck Cargo · Policy Underwritten by Great West Casualty.",
             "Company Overview: Cruz Metro Freight is an asset-based regional logistics provider headquartered in Dallas, Texas. We operate late-model 26-foot Freightliner M2-106 box trucks equipped with 3,500-lb Maxon tuck-under hydraulic liftgates and high-roof Mercedes-Benz Sprinter vans. Serving industrial manufacturers, third-party logistics (3PL) distribution centers, and commercial retail chains across the Dallas-Fort Worth Metroplex and North Texas corridor.",
             "# FLEET SPECIFICATIONS & ASSET DETAILS",
-            "— Two 26-foot Freightliner M2-106 Box Trucks: 26,000 lbs GVWR (Non-CDL compliant for agile multi-stop metro dispatch), 10,000 lbs legal payload capacity, 102-inch exterior width, roll-up rear doors, e-track tie-down interior rails, and 3,500-lb hydraulic tuck-under liftgates.",
-            "— Two Mercedes-Benz Sprinter High-Roof Cargo Vans: 3,850 lbs payload, 170-inch wheelbase, pallet-loadable sliding side doors, dedicated to rush medical supply and critical parcel runs.",
-            "— Handling Equipment: Every unit carries an on-board 5,500-lb heavy-duty hydraulic pallet jack, 4 heavy ratchet load-bars, and 12 furniture blankets.",
+            "- Two 26-foot Freightliner M2-106 Box Trucks: 26,000 lbs GVWR (Non-CDL compliant for agile multi-stop metro dispatch), 10,000 lbs legal payload capacity, 102-inch exterior width, roll-up rear doors, e-track tie-down interior rails, and 3,500-lb hydraulic tuck-under liftgates.",
+            "- Two Mercedes-Benz Sprinter High-Roof Cargo Vans: 3,850 lbs payload, 170-inch wheelbase, pallet-loadable sliding side doors, dedicated to rush medical supply and critical parcel runs.",
+            "- Handling Equipment: Every unit carries an on-board 5,500-lb heavy-duty hydraulic pallet jack, 4 heavy ratchet load-bars, and 12 furniture blankets.",
             "# CORE OPERATIONAL CAPABILITIES & SLA GUARANTEES",
-            "— Scheduled Morning Retail Replenishment: Guaranteed pre-10:00 AM dock delivery windows for regional retail corridors.",
-            "— Emergency Same-Day Hot-Shot Pallet Recovery: 90-minute rapid dispatch response across Dallas, Tarrant, Collin, and Denton counties.",
-            "— 2-Hour Free Dock Detention Window: We absorb standard warehouse staging delays without triggering surprise demurrage charges.",
-            "— Direct Dispatcher Communication: No broker layers or outsourced call centers. Live GPS tracking links and instant electronic proof-of-delivery (e-POD) photos emailed immediately upon sign-off.",
+            "- Scheduled Morning Retail Replenishment: Guaranteed pre-10:00 AM dock delivery windows for regional retail corridors.",
+            "- Emergency Same-Day Hot-Shot Pallet Recovery: 90-minute rapid dispatch response across Dallas, Tarrant, Collin, and Denton counties.",
+            "- 2-Hour Free Dock Detention Window: We absorb standard warehouse staging delays without triggering surprise demurrage charges.",
+            "- Direct Dispatcher Communication: No broker layers or outsourced call centers. Live GPS tracking links and instant electronic proof-of-delivery (e-POD) photos emailed immediately upon sign-off.",
             "# COLD OUTBOUND SEQUENCE 1: WAREHOUSE SHIPPING SUPERVISOR INTRO",
             "Target: Shipping Supervisors & Logistics Leads at Industrial Distribution Hubs in Grand Prairie & Arlington.",
             "Subject: Open Tue/Thu liftgate capacity in DFW industrial corridor",
@@ -121,7 +121,7 @@ def build_seed_attachments() -> dict[str, dict]:
             "If your primary freight broker ever scrambles to cover regional pallet drops or leaves your dock backed up with late pickups, we keep standby capacity reserved specifically for local DFW manufacturing and distribution facilities.",
             "A few quick highlights on our fleet:",
             "• Asset-based carrier with late-model 26ft Freightliners (3,500-lb liftgates and pallet jacks on board).",
-            "• 2 full hours of free dock detention included per stop—we never nickel-and-dime your facility.",
+            "• 2 full hours of free dock detention included per stop-we never nickel-and-dime your facility.",
             "• $1,000,000 commercial auto liability and $100,000 active cargo insurance (COI available on request).",
             "Would you be open to keeping our direct dispatcher contact on hand for backup capacity next time a load falls through?",
             "Best regards, Jose Cruz · Owner & Fleet Dispatcher · Cruz Metro Freight LLC · (214) 555-0194",
@@ -136,12 +136,12 @@ def build_seed_attachments() -> dict[str, dict]:
             "Warm regards, Jose Cruz · Cruz Metro Freight",
             "# COLD OUTBOUND SEQUENCE 3: METRO ZONE FLAT RATE CARD",
             "Target: Procurement & Freight Routing Specialists seeking transparent local cartage rates.",
-            "Subject: Flat metro zone cartage rates — Cruz Metro Freight (DFW)",
+            "Subject: Flat metro zone cartage rates - Cruz Metro Freight (DFW)",
             "Hi {{First_Name}},",
             "Here is our standard DFW metro rate matrix effective November 1, 2026. Clean, transparent zone pricing with zero fuel surcharge spikes:",
-            "• Metro Core (0–25 miles): $175 Flat base (includes first 2 pallets, +$25 per additional pallet).",
-            "• Outer Metro (25–50 miles): $285 Flat base (includes first 2 pallets, +$35 per additional pallet).",
-            "• Extended Corridor (50–100 miles): $3.85 per loaded mile (straight door-to-door).",
+            "• Metro Core (0-25 miles): $175 Flat base (includes first 2 pallets, +$25 per additional pallet).",
+            "• Outer Metro (25-50 miles): $285 Flat base (includes first 2 pallets, +$35 per additional pallet).",
+            "• Extended Corridor (50-100 miles): $3.85 per loaded mile (straight door-to-door).",
             "• Liftgate Service: Included on all scheduled retail and ground drops at no extra charge.",
             "• Free Dock Detention: 2 full hours included per stop before standard $65/hr demurrage applies.",
             "Let me know if we can quote your upcoming lanes for next month.",
@@ -151,10 +151,10 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Freight Rates Card.png"] = write_png_file(
         "Freight Rates Card.png",
-        "Cruz Metro Freight — 2026 DFW Metro Rate Card",
+        "Cruz Metro Freight - 2026 DFW Metro Rate Card",
         [
-            "Metro Core (0–25 miles): $175 Flat / $25 per additional pallet",
-            "Outer Metro (25–50 miles): $285 Flat / $35 per additional pallet",
+            "Metro Core (0-25 miles): $175 Flat / $25 per additional pallet",
+            "Outer Metro (25-50 miles): $285 Flat / $35 per additional pallet",
             "Liftgate Service: Included on all scheduled retail drops",
             "Free Dock Detention: 2 full hours included per stop",
             "Same-Day Hotshot Dispatch: $95 rush fee / 90-min response",
@@ -209,7 +209,7 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Website Audit & Recommendations.pdf"] = write_pdf_file(
         "Website Audit & Recommendations.pdf",
-        "Studio Brown — Homepage & Booking Flow Copy Audit Report",
+        "Studio Brown - Homepage & Booking Flow Copy Audit Report",
         [
             "# 1. EXECUTIVE DIAGNOSTIC SUMMARY",
             "Studio Brown's existing portfolio captures exquisite natural light imagery, but the current intake workflow experiences an acute 68% visitor abandonment rate prior to inquiry submission.",
@@ -221,14 +221,14 @@ def build_seed_attachments() -> dict[str, dict]:
             "Social Proof Strip: Prominently feature verified editorial publications: Featured in Austin Monthly · Kinfolk Magazine · Rangefinder Award Winner · Architectural Digest Features.",
             "# 3. UPFRONT PRICING ANCHORS & PACKAGE TRANSPARENCY",
             "Industry benchmark data proves that high-end creative studios display baseline investment anchors to pre-qualify inbound clients and eliminate repetitive pricing back-and-forth.",
-            "— Tier 1: Essential Session ($450 flat) · 60 minutes studio time, 15 retouched images, 1 wardrobe look, 7-day turnaround.",
-            "— Tier 2: Studio Session ($950 flat) · 2.5 hours, 35 retouched images, 3 wardrobe looks, commercial license, raw archive.",
-            "— Tier 3: Full Day Campaign ($2,200 flat) · 6-hour studio + location block, 75 selects, creative direction, commercial buyout.",
+            "- Tier 1: Essential Session ($450 flat) · 60 minutes studio time, 15 retouched images, 1 wardrobe look, 7-day turnaround.",
+            "- Tier 2: Studio Session ($950 flat) · 2.5 hours, 35 retouched images, 3 wardrobe looks, commercial license, raw archive.",
+            "- Tier 3: Full Day Campaign ($2,200 flat) · 6-hour studio + location block, 75 selects, creative direction, commercial buyout.",
             "# 4. STREAMLINING THE INTAKE FUNNEL: FROM 14 FIELDS TO 5 ESSENTIALS",
             "Eliminate redundant preliminary questions (shoe size, extensive Pinterest boards, complex budget sliders). Convert the inquiry form to five frictionless data points:",
             "1. Full Legal Name",
             "2. Email Address & Direct Mobile Phone",
-            "3. Preferred Session Date (with interactive Monday–Friday studio calendar picker)",
+            "3. Preferred Session Date (with interactive Monday-Friday studio calendar picker)",
             "4. Selected Package Tier (dropdown pre-populated with Essential, Studio Session, or Campaign)",
             "5. Creative Vision & Wardrobe Notes (open-text brief)",
             "# 5. POLICY CLARITY & DEPOSIT AUTOMATION",
@@ -241,18 +241,18 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Wireframe Notes.docx"] = write_docx_file(
         "Wireframe Notes.docx",
-        "Studio Brown — 3-Page Wireframe Notes & Sitemap",
+        "Studio Brown - 3-Page Wireframe Notes & Sitemap",
         [
             "# SITEMAP ARCHITECTURE",
-            "Page 1: Homepage — Hero headline, portfolio reel, client trust strip, package preview, FAQs.",
-            "Page 2: Services & Rates — 3 clearly defined packages (Essential, Studio Session, Campaign).",
-            "Page 3: Booking & Availability — 5-field inquiry form, calendar embed, booking policy.",
+            "Page 1: Homepage - Hero headline, portfolio reel, client trust strip, package preview, FAQs.",
+            "Page 2: Services & Rates - 3 clearly defined packages (Essential, Studio Session, Campaign).",
+            "Page 3: Booking & Availability - 5-field inquiry form, calendar embed, booking policy.",
         ],
         role="source",
     )
     files["Website Copy v1.docx"] = write_docx_file(
         "Website Copy v1.docx",
-        "Studio Brown — 3-Page Website Copy Deck (v1 Draft)",
+        "Studio Brown - 3-Page Website Copy Deck (v1 Draft)",
         [
             "# PAGE 1: HOMEPAGE HERO",
             "Headline: Editorial photography crafted for brands and individuals with distinct vision.",
@@ -264,7 +264,7 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Website Copy (Final).docx"] = write_docx_file(
         "Website Copy (Final).docx",
-        "Studio Brown — 3-Page Website Copy Deck (Final Production Master)",
+        "Studio Brown - 3-Page Website Copy Deck (Final Production Master)",
         [
             "# PAGE 1: HOMEPAGE MASTER COPY",
             "NAVIGATION BAR: Home · Portfolio · Services & Packages · Studio Experience · Reserve Studio",
@@ -273,9 +273,9 @@ def build_seed_attachments() -> dict[str, dict]:
             "HERO SUBHEAD: Specializing in commercial brand lookbooks, executive editorial profiles, and intimate creative portraiture. Based in East Austin with worldwide travel availability.",
             "HERO CALL-TO-ACTION BUTTONS: Primary: [Check Studio Availability] · Secondary: [Explore 2026 Rates]",
             "CLIENT TRUST STRIP: Featured in Austin Monthly · Kinfolk Magazine · Rangefinder Award Winner · Architectural Digest Features",
-            "STUDIO PHILOSOPHY: Photography that prioritizes genuine connection, understated elegance, and natural light. We believe the most compelling images happen in the quiet moments between poses—when authentic character emerges effortlessly. Our 1,800 sq ft East Austin studio features floor-to-ceiling north-facing warehouse windows, curated mid-century seating, and textured plaster backdrops designed for timeless visual narratives.",
+            "STUDIO PHILOSOPHY: Photography that prioritizes genuine connection, understated elegance, and natural light. We believe the most compelling images happen in the quiet moments between poses-when authentic character emerges effortlessly. Our 1,800 sq ft East Austin studio features floor-to-ceiling north-facing warehouse windows, curated mid-century seating, and textured plaster backdrops designed for timeless visual narratives.",
             "PORTFOLIO SECTORS: 01 Commercial Lookbooks · 02 Executive & Editorial Profiles · 03 Intimate Creative Portraiture · 04 Architectural & Interior Spaces",
-            "CLIENT TESTIMONIAL: 'Working with Audrey was the easiest commercial shoot our creative agency had all year. Zero awkward posing, immaculate natural window lighting, and our gallery arrived 3 days ahead of schedule.' — Sarah L., Creative Director, Kinship Goods",
+            "CLIENT TESTIMONIAL: 'Working with Audrey was the easiest commercial shoot our creative agency had all year. Zero awkward posing, immaculate natural window lighting, and our gallery arrived 3 days ahead of schedule.' - Sarah L., Creative Director, Kinship Goods",
             "FREQUENTLY ASKED QUESTIONS (FAQS):",
             "Q: What should I wear to my studio session? A: We recommend neutral palettes, organic textures (linen, silk, cashmere, raw denim), and minimal logos. Upon booking, you will receive our comprehensive 12-page Studio Brown Styling & Wardrobe Guide.",
             "Q: How and when will I receive my images? A: Your private online proofing gallery is delivered within 5 to 7 business days. High-resolution master files include full print releases and commercial usage licensing.",
@@ -286,7 +286,7 @@ def build_seed_attachments() -> dict[str, dict]:
             "TIER 1: ESSENTIAL SESSION ($450 FLAT)",
             "Best for: Artists, founders, and professionals who need a tight, editorial portfolio refresh.",
             "Inclusions: 60 minutes private studio time · 15 hand-retouched high-resolution master files · 1 wardrobe look in natural window light · Fast 7-business-day delivery turnaround · Private online proofing gallery with download rights.",
-            "TIER 2: STUDIO SESSION ($950 FLAT) — MOST POPULAR",
+            "TIER 2: STUDIO SESSION ($950 FLAT) - MOST POPULAR",
             "Best for: Executive portraits, brand lookbooks, and personal editorial narratives.",
             "Inclusions: 2.5 hours studio + courtyard space · 35 hand-retouched high-resolution master files · Up to 3 wardrobe looks and mood transitions · Commercial & editorial licensing included · Priority 5-business-day delivery turnaround · Full-resolution raw image archive access.",
             "TIER 3: FULL DAY CAMPAIGN ($2,200 FLAT)",
@@ -296,13 +296,13 @@ def build_seed_attachments() -> dict[str, dict]:
             "# PAGE 3: BOOKING INTAKE & STUDIO SCHEDULING",
             "HEADER: Reserve Your Studio Session",
             "SUBHEAD: Complete our streamlined 5-field inquiry to reserve your preferred date on our East Austin studio calendar.",
-            "STUDIO HOURS: Monday through Friday, 9:00 AM – 4:00 PM (optimal natural window lighting hours).",
+            "STUDIO HOURS: Monday through Friday, 9:00 AM - 4:00 PM (optimal natural window lighting hours).",
             "INTAKE FORM SPECIFICATION:",
-            "— Field 1: Full Legal Name (Text input, required)",
-            "— Field 2: Email & Direct Mobile Phone (Contact input, required)",
-            "— Field 3: Preferred Session Date (Date picker input, required, Mon–Fri)",
-            "— Field 4: Selected Package Tier (Dropdown selection: Essential Session $450, Studio Session $950, Full Day Campaign $2,200)",
-            "— Field 5: Creative Vision & Wardrobe Notes (Multi-line text area, optional brief description of project, intended usage, and styling vibes)",
+            "- Field 1: Full Legal Name (Text input, required)",
+            "- Field 2: Email & Direct Mobile Phone (Contact input, required)",
+            "- Field 3: Preferred Session Date (Date picker input, required, Mon-Fri)",
+            "- Field 4: Selected Package Tier (Dropdown selection: Essential Session $450, Studio Session $950, Full Day Campaign $2,200)",
+            "- Field 5: Creative Vision & Wardrobe Notes (Multi-line text area, optional brief description of project, intended usage, and styling vibes)",
             "STUDIO BOOKING POLICY & TERMS: A 50% non-refundable retainer is required to secure your selected date on the studio calendar. The remaining balance is due on the day of the shoot prior to master file release. Rescheduling is permitted up to 48 hours prior to call time without penalty.",
             "CONFIRMATION FEEDBACK MESSAGE: 'Thank you! Your calendar hold request has been received. Our studio coordinator will confirm availability within 4 business hours and send your 50% deposit checkout link.'",
         ],
@@ -317,7 +317,7 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Booking Flow Wireframe.png"] = write_png_file(
         "Booking Flow Wireframe.png",
-        "Studio Brown — Optimized 3-Step Booking Funnel",
+        "Studio Brown - Optimized 3-Step Booking Funnel",
         [
             "Step 1: Homepage positioning & transparent package pricing ($450 / $950 / $2,200)",
             "Step 2: Simplified 5-question intake form with automatic date availability check",
@@ -399,7 +399,7 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Warehouse SKU Handbook.pdf"] = write_pdf_file(
         "Warehouse SKU Handbook.pdf",
-        "Warehouse Receiving, Inventory Barcoding & Landed Cost Entry SOP — Chin Specialty Goods",
+        "Warehouse Receiving, Inventory Barcoding & Landed Cost Entry SOP - Chin Specialty Goods",
         [
             "# 1. PURPOSE, REGULATORY SCOPE & OPERATIONAL MANDATE",
             "This Standard Operating Procedure (SOP-LOG-2026-04) establishes the mandatory protocol governing inbound intermodal freight intake, customs classification verification, physical damage triage, barcode serialization, and landed cost model updates for all Chin Specialty Goods inventory arriving at the Los Angeles logistics terminal.",
@@ -451,13 +451,13 @@ def build_seed_attachments() -> dict[str, dict]:
             "Following warehouse physical intake, the operations clerk must open the master financial model (keegan_sku_margin_calculator_v2_locked.xlsx) and populate the inbound shipment variables in accordance with the formula schedule below:",
             [
                 ["Cost Component", "Target Cell / Column", "Calculation Formula", "Verification Source", "Accounting General Ledger"],
-                ["Supplier FOB Unit Cost", "Column D (D3:D10)", "Input from Supplier Commercial Invoice", "Supplier Wire Confirmation", "GL 13100 — In-Transit Inventory"],
-                ["Ocean Freight Allocation", "Column E (E3:E10)", "=(Total_LCL_Freight / Total_CBM) * SKU_CBM", "Freight Forwarder Final Invoice", "GL 50120 — Freight Inbound Incurred"],
-                ["Customs Duty Allocation", "Column F (F3:F10)", "=Unit_FOB * Effective_Duty_Rate_%", "CBP Form 7501 Entry Summary", "GL 50130 — Customs Duty & Clearance"],
-                ["Drayage & Pierpass Fee", "Column G (G3:G10)", "=(Drayage_Total / Total_Cartons) * SKU_Carton_Ratio", "Drayage Carrier Invoice", "GL 50140 — Port Drayage & Wharfage"],
-                ["True Landed Unit Cost", "Column H (H3:H10)", "=SUM(D3:G3)", "Calculated landed cost floor", "GL 13200 — Warehouse Finished Goods"],
-                ["Wholesale Price (2.1x)", "Column I (I3:I10)", "=ROUNDUP(H3 * 2.1, 2)", "B2B catalog baseline tier", "GL 40100 — Wholesale Revenue"],
-                ["Retail MSRP Price", "Column J (J3:J10)", "Direct catalog retail price sheet", "Website active listing", "GL 40200 — Direct-to-Consumer Sales"],
+                ["Supplier FOB Unit Cost", "Column D (D3:D10)", "Input from Supplier Commercial Invoice", "Supplier Wire Confirmation", "GL 13100 - In-Transit Inventory"],
+                ["Ocean Freight Allocation", "Column E (E3:E10)", "=(Total_LCL_Freight / Total_CBM) * SKU_CBM", "Freight Forwarder Final Invoice", "GL 50120 - Freight Inbound Incurred"],
+                ["Customs Duty Allocation", "Column F (F3:F10)", "=Unit_FOB * Effective_Duty_Rate_%", "CBP Form 7501 Entry Summary", "GL 50130 - Customs Duty & Clearance"],
+                ["Drayage & Pierpass Fee", "Column G (G3:G10)", "=(Drayage_Total / Total_Cartons) * SKU_Carton_Ratio", "Drayage Carrier Invoice", "GL 50140 - Port Drayage & Wharfage"],
+                ["True Landed Unit Cost", "Column H (H3:H10)", "=SUM(D3:G3)", "Calculated landed cost floor", "GL 13200 - Warehouse Finished Goods"],
+                ["Wholesale Price (2.1x)", "Column I (I3:I10)", "=ROUNDUP(H3 * 2.1, 2)", "B2B catalog baseline tier", "GL 40100 - Wholesale Revenue"],
+                ["Retail MSRP Price", "Column J (J3:J10)", "Direct catalog retail price sheet", "Website active listing", "GL 40200 - Direct-to-Consumer Sales"],
                 ["Gross Margin Percentage", "Column K (K3:K10)", "=(J3 - H3) / J3", "Target threshold: >= 65.0%", "Executive Gross Margin KPI"],
             ],
             "Gross Margin Guardrail Rule: If any individual SKU calculates a retail gross margin below 65.0% in Column K, the spreadsheet generates an automated conditional formatting alert (Cell Fill: Light Red). The inventory lot cannot be released for e-commerce or retail fulfillment until pricing adjustments are formally authorized in writing by Keegan Chin.",
@@ -481,7 +481,7 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Staff SKU Guide.pdf"] = write_pdf_file(
         "Staff SKU Guide.pdf",
-        "Warehouse Staff Quick Reference Guide — SKU Matrix, HTS Classifications & Duty Rates",
+        "Warehouse Staff Quick Reference Guide - SKU Matrix, HTS Classifications & Duty Rates",
         [
             "# WAREHOUSE RECEIVING STAFF SKU REFERENCE GUIDE",
             "This quick-reference handbook is issued for dock receiving clerks and inventory technicians at Chin Specialty Goods.",
@@ -515,7 +515,7 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     files["Vendor Packet Draft.docx"] = write_docx_file(
         "Vendor Packet Draft.docx",
-        "Liza Facilities Maintenance — Vendor Onboarding Notes",
+        "Liza Facilities Maintenance - Vendor Onboarding Notes",
         [
             "Need formal W-9, Certificate of Insurance, and ACH direct deposit forms.",
             "Rate schedule needs commercial pricing for 4-building medical plaza RFP.",
@@ -525,15 +525,15 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Vendor Agreement Packet.pdf"] = write_pdf_file(
         "Vendor Agreement Packet.pdf",
-        "Vendor Onboarding Packet & Compliance Manual — Liza Facility Services",
+        "Vendor Onboarding Packet & Compliance Manual - Liza Facility Services",
         [
             "# 1. CORPORATE ONBOARDING & MANDATORY COMPLIANCE",
             "Liza Facility Services LLC requires all subcontracted maintenance teams and service vendors to maintain active compliance files on record prior to job site dispatch.",
             "Mandatory Documentation: (a) Signed IRS Form W-9; (b) Certificate of Insurance (COI) verifying $1,000,000 per occurrence / $2,000,000 aggregate Commercial General Liability naming Liza Facility Services LLC as an additional insured; (c) Statutory Workers' Compensation coverage; (d) Direct Deposit ACH Authorization Agreement.",
             "# 2. DISPATCH SLA & RESPONSE PROTOCOLS",
-            "— Priority / Emergency Work Orders: Immediate dispatch with on-site crew arrival within 120 minutes of electronic work order receipt.",
-            "— Routine Commercial Maintenance: 24 to 48 hours scheduled window across Tampa Bay commercial corridors.",
-            "— Facility Sign-In: Crews must scan on-site QR badges upon arrival and departure to log digital timecard timestamps.",
+            "- Priority / Emergency Work Orders: Immediate dispatch with on-site crew arrival within 120 minutes of electronic work order receipt.",
+            "- Routine Commercial Maintenance: 24 to 48 hours scheduled window across Tampa Bay commercial corridors.",
+            "- Facility Sign-In: Crews must scan on-site QR badges upon arrival and departure to log digital timecard timestamps.",
             "# 3. BILLING SCHEDULE & NET-15 PAYMENT TERMS",
             "Invoices submitted by Friday 5:00 PM EST with completed job sign-off sheets are processed on automated Net-15 terms via electronic ACH direct deposit.",
             "# 4. OSHA COMPLIANCE & CLINICAL SAFETY STANDARDS",
@@ -559,7 +559,7 @@ def build_seed_attachments() -> dict[str, dict]:
     files["Commercial Rate Card.xlsx"] = copy_chat_file_alias("Commercial Rate Card.xlsx", "Commercial Rate Card.xlsx", role="deliverable")
     files["Service Proposal Notes.docx"] = write_docx_file(
         "Service Proposal Notes.docx",
-        "Tampa Bay Medical Plaza RFP Response — 15 Pages (Rough Scramble)",
+        "Tampa Bay Medical Plaza RFP Response - 15 Pages (Rough Scramble)",
         [
             "# ROUGH NOTES FOR TAMPA MEDICAL RFP",
             "Section 1: Company Profile & Executive Bio (rough unformatted text).",
@@ -570,7 +570,7 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Service Proposal v1.docx"] = write_docx_file(
         "Service Proposal v1.docx",
-        "Commercial Facility Maintenance Proposal — Formatted Draft (v1)",
+        "Commercial Facility Maintenance Proposal - Formatted Draft (v1)",
         [
             "# DRAFT RFP PROPOSAL",
             "Standardized RFP response layout, structured SLA tables, and executive summary for medical plaza review.",
@@ -579,7 +579,7 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Service Proposal.pdf"] = write_pdf_file(
         "Service Proposal.pdf",
-        "Commercial Facility Maintenance Proposal — Tampa Bay Medical Plaza (Final)",
+        "Commercial Facility Maintenance Proposal - Tampa Bay Medical Plaza (Final)",
         [
             "# EXECUTIVE PROPOSAL & CONTRACTUAL MANDATE",
             "Liza Facility Services LLC is pleased to submit this formal RFP response and binding commercial maintenance contract for Tampa Bay Medical Plaza. We provide turnkey clinical-grade sanitation, terminal room disinfection, environmental services (EVS), and 24/7/365 rapid emergency response across all four (4) multi-tenant medical office buildings comprising 48,000 gross square feet.",
@@ -589,10 +589,10 @@ def build_seed_attachments() -> dict[str, dict]:
             "The commercial cleaning scope spans 4 detached medical facilities housing specialty outpatient practices, clinical testing labs, pediatric suites, and ambulatory care centers.",
             [
                 ["Building Designation", "Primary Medical Occupancy", "Gross Area (Sq Ft)", "Exam / Procedure Rms", "Clinical Restrooms", "Floor Substrates"],
-                ["Building A — Medical Arts", "Primary Care & Internal Medicine", "14,500 sq ft", "18 Exam Rooms", "6 Multi-Stall / 4 Private", "Commercial VCT & Terrazzo"],
-                ["Building B — Pediatric Center", "Pediatric Therapy & Urgent Care", "11,200 sq ft", "14 Exam Rooms / Sensory Gym", "4 Pediatric / 2 Staff", "Seamless Sheet Vinyl & Matting"],
-                ["Building C — Surgical Outpatient", "Endoscopy & Minor Surgery Suites", "12,800 sq ft", "6 Minor Op Suites / 8 Recovery", "6 Scrub / 4 Clinical", "Anti-Microbial Sealed Flooring"],
-                ["Building D — Diagnostic Imaging", "MRI, CT, Phlebotomy & Lab", "9,500 sq ft", "4 Draw Stations / 2 Scanner Halls", "4 Public / 2 Lab Private", "Static-Dissipative Tile (SDT)"],
+                ["Building A - Medical Arts", "Primary Care & Internal Medicine", "14,500 sq ft", "18 Exam Rooms", "6 Multi-Stall / 4 Private", "Commercial VCT & Terrazzo"],
+                ["Building B - Pediatric Center", "Pediatric Therapy & Urgent Care", "11,200 sq ft", "14 Exam Rooms / Sensory Gym", "4 Pediatric / 2 Staff", "Seamless Sheet Vinyl & Matting"],
+                ["Building C - Surgical Outpatient", "Endoscopy & Minor Surgery Suites", "12,800 sq ft", "6 Minor Op Suites / 8 Recovery", "6 Scrub / 4 Clinical", "Anti-Microbial Sealed Flooring"],
+                ["Building D - Diagnostic Imaging", "MRI, CT, Phlebotomy & Lab", "9,500 sq ft", "4 Draw Stations / 2 Scanner Halls", "4 Public / 2 Lab Private", "Static-Dissipative Tile (SDT)"],
                 ["Total Plaza Footprint", "4 Commercial Medical Facilities", "48,000 sq ft", "42 Clinical Rooms", "28 Sanitary Units", "100% Non-Porous Cleanable"],
             ],
             "--PAGE-BREAK--",
@@ -600,11 +600,11 @@ def build_seed_attachments() -> dict[str, dict]:
             "Operations execute in strict compliance with CDC Healthcare Environmental Infection Control Guidelines and OSHA 29 CFR 1910.1030 (Bloodborne Pathogens Standard). All exam rooms receive terminal sanitization nightly.",
             [
                 ["Facility Area", "Service Frequency", "Mandatory Chemical Class", "Target Wet Contact Time", "Primary Disinfection Touchpoints"],
-                ["Main Lobbies & Atriums", "5x Weekly (M–F Nightly)", "EPA List N Neutral Quat", "5 Minutes Wet Dwell", "Vestibule door hardware, reception counters, check-in touchscreens"],
-                ["Exam & Consultation Rooms", "5x Weekly (M–F Nightly)", "Hydrogen Peroxide Sporicidal", "10 Minutes Wet Dwell", "Exam tables, phlebotomy chairs, mayo stands, sink fixtures, stool levers"],
+                ["Main Lobbies & Atriums", "5x Weekly (M-F Nightly)", "EPA List N Neutral Quat", "5 Minutes Wet Dwell", "Vestibule door hardware, reception counters, check-in touchscreens"],
+                ["Exam & Consultation Rooms", "5x Weekly (M-F Nightly)", "Hydrogen Peroxide Sporicidal", "10 Minutes Wet Dwell", "Exam tables, phlebotomy chairs, mayo stands, sink fixtures, stool levers"],
                 ["Minor Procedure Suites", "5x Weekly (Terminal Clean)", "Hospital Bleach / Sporicide", "10 Minutes Wet Dwell", "Surgical overhead lamps, articulating arms, stainless casework, kick buckets"],
-                ["Clinical Restrooms", "5x Weekly (M–F Nightly)", "Acid-Free Bathroom Disinfectant", "10 Minutes Wet Dwell", "Flush levers, grab bars, sanitary disposal boxes, touchless soap valves"],
-                ["Staff Breakrooms / Lockers", "5x Weekly (M–F Nightly)", "Food-Contact Sanitizer (D2)", "60 Seconds Dwell", "Microwave keypads, refrigerator handles, coffee carafes, table tops"],
+                ["Clinical Restrooms", "5x Weekly (M-F Nightly)", "Acid-Free Bathroom Disinfectant", "10 Minutes Wet Dwell", "Flush levers, grab bars, sanitary disposal boxes, touchless soap valves"],
+                ["Staff Breakrooms / Lockers", "5x Weekly (M-F Nightly)", "Food-Contact Sanitizer (D2)", "60 Seconds Dwell", "Microwave keypads, refrigerator handles, coffee carafes, table tops"],
                 ["Common Hallways & Elevators", "5x Weekly + Weekly Scrub", "Green Seal GS-37 Neutral", "Air dry following mop", "Call buttons, handrails, terrazzo flooring, wall bumper rails"],
             ],
             "--PAGE-BREAK--",
@@ -634,11 +634,11 @@ def build_seed_attachments() -> dict[str, dict]:
             "Our operations deploy a dedicated, background-screened, bilingual commercial cleaning crew assigned exclusively to the Tampa Bay Medical Plaza complex.",
             [
                 ["Operational Role", "Headcount", "Shift Window", "Security / Background Clearance", "Primary Assignment"],
-                ["On-Site Operations Supervisor", "1 Lead FTE", "5:30 PM – 1:30 AM (M–F)", "Level 2 FDLE Background + HIPAA Certified", "Building walk-throughs, ATP swab tests, sign-offs"],
-                ["Clinical EVS Technician 1", "1 Tech FTE", "6:00 PM – 12:00 AM (M–F)", "Level 2 FDLE + OSHA Bloodborne Pathogens", "Building A (Medical Arts) Exam & Restroom Terminal"],
-                ["Clinical EVS Technician 2", "1 Tech FTE", "6:00 PM – 12:00 AM (M–F)", "Level 2 FDLE + OSHA Bloodborne Pathogens", "Building B (Pediatric Center) Disinfection & Gym"],
-                ["Clinical EVS Technician 3", "1 Tech FTE", "6:00 PM – 12:00 AM (M–F)", "Level 2 FDLE + OSHA Bloodborne Pathogens", "Building C (Surgical Suites) Terminal Sterilization"],
-                ["Utility & Floor Specialist", "1 Tech FTE", "6:00 PM – 12:00 AM (M–F)", "Level 2 FDLE + Machine Operator Certified", "Building D + Plaza-wide auto-scrubbing & waste"],
+                ["On-Site Operations Supervisor", "1 Lead FTE", "5:30 PM - 1:30 AM (M-F)", "Level 2 FDLE Background + HIPAA Certified", "Building walk-throughs, ATP swab tests, sign-offs"],
+                ["Clinical EVS Technician 1", "1 Tech FTE", "6:00 PM - 12:00 AM (M-F)", "Level 2 FDLE + OSHA Bloodborne Pathogens", "Building A (Medical Arts) Exam & Restroom Terminal"],
+                ["Clinical EVS Technician 2", "1 Tech FTE", "6:00 PM - 12:00 AM (M-F)", "Level 2 FDLE + OSHA Bloodborne Pathogens", "Building B (Pediatric Center) Disinfection & Gym"],
+                ["Clinical EVS Technician 3", "1 Tech FTE", "6:00 PM - 12:00 AM (M-F)", "Level 2 FDLE + OSHA Bloodborne Pathogens", "Building C (Surgical Suites) Terminal Sterilization"],
+                ["Utility & Floor Specialist", "1 Tech FTE", "6:00 PM - 12:00 AM (M-F)", "Level 2 FDLE + Machine Operator Certified", "Building D + Plaza-wide auto-scrubbing & waste"],
             ],
             "120-Minute Emergency Dispatch SLA: Liza Facility Services maintains a 24/7/365 emergency on-call team. For active biological fluid spills, sudden plumbing backups, or roof condensation leaks, our emergency response technician guarantees arrival on site within two (2) hours of ticket dispatch.",
             "--PAGE-BREAK--",
@@ -667,18 +667,18 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     files["Operations Resume 2023.pdf"] = write_pdf_file(
         "Operations Resume 2023.pdf",
-        "Drako Santa Ana — Resume (Outdated 2021 Version)",
+        "Drako Santa Ana - Resume (Outdated 2021 Version)",
         [
             "# OUTDATED RESUME (2021)",
-            "Drako Santa Ana — Material Handler & Forklift Driver.",
-            "Sunbelt Distribution (2019–2021): Operated sit-down forklift, unloaded freight trailers.",
+            "Drako Santa Ana - Material Handler & Forklift Driver.",
+            "Sunbelt Distribution (2019-2021): Operated sit-down forklift, unloaded freight trailers.",
             "Note: Missing 3 years as Night Shift Dock Supervisor managing 14 handlers.",
         ],
         role="source",
     )
     files["Warehouse Leadership Notes.docx"] = write_docx_file(
         "Warehouse Leadership Notes.docx",
-        "Drako's Notes on Actual Work Experience (2022–Present)",
+        "Drako's Notes on Actual Work Experience (2022-Present)",
         [
             "# ACTUAL WORK EXPERIENCE NOTES",
             "Promoted to Night Shift Dock Supervisor in early 2023.",
@@ -691,7 +691,7 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Resume & LinkedIn v1.docx"] = write_docx_file(
         "Resume & LinkedIn v1.docx",
-        "Drako Santa Ana — Operations Supervisor Resume (v1 Draft)",
+        "Drako Santa Ana - Operations Supervisor Resume (v1 Draft)",
         [
             "# DRAFT OPERATIONS RESUME",
             "Target Title: Logistics & Warehouse Operations Supervisor.",
@@ -701,28 +701,28 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Resume & LinkedIn.pdf"] = write_pdf_file(
         "Resume & LinkedIn.pdf",
-        "Drako Santa Ana — Operations Supervisor Resume & LinkedIn Optimization Master",
+        "Drako Santa Ana - Operations Supervisor Resume & LinkedIn Optimization Master",
         [
             "# DRAKO SANTA ANA · WAREHOUSE & DOCK OPERATIONS SUPERVISOR",
             "Dallas-Fort Worth Metroplex · (214) 555-0187 · drako.santaana@gmail.com · linkedin.com/in/drakosantaana-logistics",
             "# PROFESSIONAL SUMMARY",
             "High-impact Warehouse Operations Supervisor with 6+ years of progressive leadership across fast-paced distribution and cross-dock logistics centers. Expert at directing 14+ material handlers, managing fleet staging across 30+ regional freight bays, and enforcing rigorous OSHA compliance across 120,000 sq ft facilities. Proven record of sustaining 99.8% outbound shipping accuracy across 450,000 cases and achieving 540 consecutive shifts with zero OSHA-recordable incidents.",
             "# CORE COMPETENCIES",
-            "— Cross-Dock Logistics & Freight Scheduling · WMS Systems (SAP EWM, Manhattan Associates) · RF Barcode Scanning",
-            "— Inventory Cycle Counts & Reconciliation · Forklift & Reach Truck Operator Certification · Team Safety Leadership",
-            "— Fleet Trailer Turnaround Optimization · Labor Management & Shift Scheduling · Continuous Improvement (5S / Lean)",
+            "- Cross-Dock Logistics & Freight Scheduling · WMS Systems (SAP EWM, Manhattan Associates) · RF Barcode Scanning",
+            "- Inventory Cycle Counts & Reconciliation · Forklift & Reach Truck Operator Certification · Team Safety Leadership",
+            "- Fleet Trailer Turnaround Optimization · Labor Management & Shift Scheduling · Continuous Improvement (5S / Lean)",
             "# PROFESSIONAL EXPERIENCE",
-            "Night Shift Operations Supervisor · Sunbelt Distribution, Grand Prairie, TX · 2023 – Present",
+            "Night Shift Operations Supervisor · Sunbelt Distribution, Grand Prairie, TX · 2023 - Present",
             "• Directed nightly cross-dock operations for 30+ regional freight trailers, managing 14 material handlers and equipment operators across a 120,000 sq ft high-throughput distribution center.",
             "• Sustained 99.8% order picking and dispatch accuracy across 450,000 outbound cases for major regional retail grocery accounts.",
             "• Achieved 540 consecutive shifts with zero OSHA-recordable safety incidents through daily pre-shift safety huddles and strict equipment inspection protocols.",
             "• Spearheaded the facility rollout of an upgraded RF barcode scanning system, training 22 operators and compressing average trailer dock dwell time by 22 minutes per load.",
-            "Lead Material Handler & Equipment Operator · Sunbelt Distribution · 2021 – 2023",
+            "Lead Material Handler & Equipment Operator · Sunbelt Distribution · 2021 - 2023",
             "• Operated sit-down electric forklifts, high-reach trucks, and order pickers; awarded Facility Operator of the Year in 2022.",
             "• Conducted weekly cycle counts across 1,400 active pallet locations, reducing inventory variance to under 0.08%.",
             "# EDUCATION & CERTIFICATIONS",
-            "— OSHA 30-Hour General Industry Safety Certification · Certified Powered Industrial Truck (PIT) Trainer",
-            "— Associate of Applied Science in Logistics & Supply Chain Management · Dallas College",
+            "- OSHA 30-Hour General Industry Safety Certification · Certified Powered Industrial Truck (PIT) Trainer",
+            "- Associate of Applied Science in Logistics & Supply Chain Management · Dallas College",
             "# LINKEDIN PROFILE OPTIMIZATION PACK",
             "Headline: Warehouse Operations Supervisor | Cross-Dock Logistics | 99.8% Shipping Accuracy | 540 Shifts Zero OSHA Recordables",
             "About Section: 'I build high-performing, safety-first warehouse teams that turn trailers on time and eliminate inventory discrepancies. Over the last 6 years in DFW logistics, I've managed night-shift distribution crews handling millions of cases...'",
@@ -735,7 +735,7 @@ def build_seed_attachments() -> dict[str, dict]:
     files["Operations Supervisor Resume.pdf"] = copy_chat_file_alias("Resume & LinkedIn.pdf", "Operations Supervisor Resume.pdf", role="deliverable")
     files["LinkedIn Profile & Cover Letter.docx"] = write_docx_file(
         "LinkedIn Profile & Cover Letter.docx",
-        "Drako Santa Ana — LinkedIn Profile Overhaul & Targeted Operations Cover Letter",
+        "Drako Santa Ana - LinkedIn Profile Overhaul & Targeted Operations Cover Letter",
         [
             "# SECTION 1: LINKEDIN PROFILE OPTIMIZATION",
             "Target Headline: Warehouse & Dock Operations Supervisor | 540 Consecutive Shifts Without Incident | DFW Cross-Dock Leadership",
@@ -754,9 +754,9 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     files["October Newsletter Draft.docx"] = write_docx_file(
         "October Newsletter Draft.docx",
-        "Estella Williams — Leadership Update Draft (October)",
+        "Estella Williams - Leadership Update Draft (October)",
         [
-            "# DRAFT LEADERSHIP UPDATE — OCTOBER 2026",
+            "# DRAFT LEADERSHIP UPDATE - OCTOBER 2026",
             "Rough draft of Q3 recap for company all-hands and investor circular.",
             "Needs executive tone, crisp numbers on customer retention, and clear strategic goals.",
         ],
@@ -764,9 +764,9 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["October Investor Newsletter.docx"] = write_docx_file(
         "October Investor Newsletter.docx",
-        "Estella Williams — Refined Q3 Leadership Memo (Final)",
+        "Estella Williams - Refined Q3 Leadership Memo (Final)",
         [
-            "# CONFIDENTIAL LEADERSHIP & INVESTOR UPDATE — OCTOBER 2026",
+            "# CONFIDENTIAL LEADERSHIP & INVESTOR UPDATE - OCTOBER 2026",
             "From: Estella Williams, Founder & CEO · InfiniAI Operations",
             "Team & Partners,",
             "As we close out Q3 2026, I want to share where we stand across our key operational pillars and outline our strategic focus for the upcoming quarter.",
@@ -806,24 +806,24 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Lead Dispatcher SOP.pdf"] = write_pdf_file(
         "Lead Dispatcher SOP.pdf",
-        "Lead Logistics Dispatcher — 30-60-90 Day Ramp & Operational SOP",
+        "Lead Logistics Dispatcher - 30-60-90 Day Ramp & Operational SOP",
         [
-            "# LEAD LOGISTICS DISPATCHER — STANDARD OPERATING PROCEDURE",
+            "# LEAD LOGISTICS DISPATCHER - STANDARD OPERATING PROCEDURE",
             "Terminal Operations & Logistics Platform · Operational Governance Standards",
             "Core Mandate: Direct regional cross-dock trailer routing, enforce driver check-in geofencing, and maintain a 99.4% on-time dispatch SLA across 65 logistics terminal nodes.",
             "--PAGE-BREAK--",
             "# 30-60-90 DAY RAMP BENCHMARK MATRIX",
             [
                 ["Ramp Horizon", "Quantitative Metric / KPI", "Operational Milestone Objective", "Verification Artifact / Deliverable"],
-                ["Day 1–30 (Intake)", ">= 98.0% On-Time Check-In", "Master geofence configuration & Blue Yonder EDI 214 sync", "Shadow 40 shift check-ins; pass TMS system exam"],
-                ["Day 31–60 (Ramp)", "< 12 min Yard Dwell Time", "Manage cross-dock routing across 3 multi-terminal nodes", "Lead daily driver shift standups; audit dwell logs"],
-                ["Day 61–90 (Mastery)", ">= 99.4% On-Time Dispatch", "Direct emergency storm freight diversions; train new staff", "Sign off on regional terminal SOPs; 0 safety breaches"],
+                ["Day 1-30 (Intake)", ">= 98.0% On-Time Check-In", "Master geofence configuration & Blue Yonder EDI 214 sync", "Shadow 40 shift check-ins; pass TMS system exam"],
+                ["Day 31-60 (Ramp)", "< 12 min Yard Dwell Time", "Manage cross-dock routing across 3 multi-terminal nodes", "Lead daily driver shift standups; audit dwell logs"],
+                ["Day 61-90 (Mastery)", ">= 99.4% On-Time Dispatch", "Direct emergency storm freight diversions; train new staff", "Sign off on regional terminal SOPs; 0 safety breaches"],
             ],
             "# DAILY OPERATIONAL SHIFT CHECKLIST",
-            "— 06:00 Shift Kickoff: Verify overnight trailer drop counts against inbound EDI 204 manifests; flag delayed line-haul carriers.",
-            "— 09:30 Yard Optimization: Audit trailer parking queue; reassign idling tractors to open dock doors to avoid detention fees.",
-            "— 14:00 Cross-Dock Coordination: Confirm outbound load consolidation with warehouse staging leads.",
-            "— 17:30 Shift Handover: Deliver digitized shift handover log detailing open demurrage exceptions and pending freight diversions.",
+            "- 06:00 Shift Kickoff: Verify overnight trailer drop counts against inbound EDI 204 manifests; flag delayed line-haul carriers.",
+            "- 09:30 Yard Optimization: Audit trailer parking queue; reassign idling tractors to open dock doors to avoid detention fees.",
+            "- 14:00 Cross-Dock Coordination: Confirm outbound load consolidation with warehouse staging leads.",
+            "- 17:30 Shift Handover: Deliver digitized shift handover log detailing open demurrage exceptions and pending freight diversions.",
             "# SYSTEMS ACCESS, PERMISSIONS & TOOLCHAIN",
             [
                 ["System / Tool", "Access Level", "Security & Protocol Enforced"],
@@ -842,26 +842,26 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Customer Operations SOP.pdf"] = write_pdf_file(
         "Customer Operations SOP.pdf",
-        "Customer Operations Associate — 30-60-90 Day Ramp & Operational SOP",
+        "Customer Operations Associate - 30-60-90 Day Ramp & Operational SOP",
         [
-            "# CUSTOMER OPERATIONS ASSOCIATE — STANDARD OPERATING PROCEDURE",
+            "# CUSTOMER OPERATIONS ASSOCIATE - STANDARD OPERATING PROCEDURE",
             "Terminal Operations & Logistics Platform · Operational Governance Standards",
             "Core Mandate: Frontline terminal support triage, dispatcher Intercom/Zendesk escalations, carrier platform retention, and carrier communication.",
             "--PAGE-BREAK--",
             "# 30-60-90 DAY RAMP BENCHMARK MATRIX",
             [
                 ["Ramp Horizon", "Quantitative Metric / KPI", "Operational Milestone Objective", "Verification Artifact / Deliverable"],
-                ["Day 1–30 (Intake)", "< 15 min First Response Time", "Triage Tier-1 terminal support tickets; memorize network workarounds", "Resolve 100 simulated support tickets with >90% CSAT"],
-                ["Day 31–60 (Ramp)", "> 95% CSAT Score (>50 tkts)", "Document weekly terminal recurring bugs; run carrier webinars", "Publish 4 knowledge-base troubleshooting guides"],
-                ["Day 61–90 (Mastery)", "< 2.0 hr Ticket Resolution", "Lead QBR operational reviews for Tier-2 carrier fleets", "Produce monthly churn risk audit for VP Operations"],
+                ["Day 1-30 (Intake)", "< 15 min First Response Time", "Triage Tier-1 terminal support tickets; memorize network workarounds", "Resolve 100 simulated support tickets with >90% CSAT"],
+                ["Day 31-60 (Ramp)", "> 95% CSAT Score (>50 tkts)", "Document weekly terminal recurring bugs; run carrier webinars", "Publish 4 knowledge-base troubleshooting guides"],
+                ["Day 61-90 (Mastery)", "< 2.0 hr Ticket Resolution", "Lead QBR operational reviews for Tier-2 carrier fleets", "Produce monthly churn risk audit for VP Operations"],
             ],
             "# INCIDENT CLASSIFICATION & ESCALATION MATRIX",
             [
                 ["Ticket Priority", "Incident Description", "Response SLA", "Resolution SLA", "Escalation Lead"],
-                ["P1 — Critical", "Geofence outage preventing driver gate entry", "< 5 Minutes", "< 30 Minutes", "On-Call DevOps Engineer"],
-                ["P2 — High", "EDI manifest sync delay > 15 minutes", "< 15 Minutes", "< 60 Minutes", "Lead Integrations Specialist"],
-                ["P3 — Medium", "Individual dispatcher login / SSO failure", "< 30 Minutes", "< 4 Hours", "Customer Operations Associate"],
-                ["P4 — Low", "Reporting export or UI cosmetic discrepancy", "< 2 Hours", "< 24 Hours", "Product Operations Analyst"],
+                ["P1 - Critical", "Geofence outage preventing driver gate entry", "< 5 Minutes", "< 30 Minutes", "On-Call DevOps Engineer"],
+                ["P2 - High", "EDI manifest sync delay > 15 minutes", "< 15 Minutes", "< 60 Minutes", "Lead Integrations Specialist"],
+                ["P3 - Medium", "Individual dispatcher login / SSO failure", "< 30 Minutes", "< 4 Hours", "Customer Operations Associate"],
+                ["P4 - Low", "Reporting export or UI cosmetic discrepancy", "< 2 Hours", "< 24 Hours", "Product Operations Analyst"],
             ],
             "# SYSTEMS ACCESS & TOOLCHAIN",
             [
@@ -880,23 +880,23 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Billing Specialist SOP.pdf"] = write_pdf_file(
         "Billing Specialist SOP.pdf",
-        "Billing & Accounts Specialist — 30-60-90 Day Ramp & Operational SOP",
+        "Billing & Accounts Specialist - 30-60-90 Day Ramp & Operational SOP",
         [
-            "# BILLING & ACCOUNTS SPECIALIST — STANDARD OPERATING PROCEDURE",
+            "# BILLING & ACCOUNTS SPECIALIST - STANDARD OPERATING PROCEDURE",
             "Terminal Operations & Logistics Platform · Operational Governance Standards",
             "Core Mandate: Terminal SaaS subscription billing, automated ACH reconciliation, and carrier detention fee dispute escrow management.",
             "--PAGE-BREAK--",
             "# 30-60-90 DAY RAMP BENCHMARK MATRIX",
             [
                 ["Ramp Horizon", "Quantitative Metric / KPI", "Operational Milestone Objective", "Verification Artifact / Deliverable"],
-                ["Day 1–30 (Intake)", "100% Invoice Accuracy", "Reconcile weekly Stripe/Paystack billing; audit dunning workflows", "Reconcile 65 terminal billing accounts to $0.00 variance"],
-                ["Day 31–60 (Ramp)", "DSO < 22 Calendar Days", "Resolve carrier detention escrow disputes within 48 hours", "Implement automated Net-15 ACH debit reminders"],
-                ["Day 61–90 (Mastery)", "< 0.5% Bad Debt Expense", "Automate monthly GAAP ASC 606 revenue recognition schedules", "Deliver clean audit package for external CPA review"],
+                ["Day 1-30 (Intake)", "100% Invoice Accuracy", "Reconcile weekly Stripe/Paystack billing; audit dunning workflows", "Reconcile 65 terminal billing accounts to $0.00 variance"],
+                ["Day 31-60 (Ramp)", "DSO < 22 Calendar Days", "Resolve carrier detention escrow disputes within 48 hours", "Implement automated Net-15 ACH debit reminders"],
+                ["Day 61-90 (Mastery)", "< 0.5% Bad Debt Expense", "Automate monthly GAAP ASC 606 revenue recognition schedules", "Deliver clean audit package for external CPA review"],
             ],
             "# BILLING WORKFLOW RECONCILIATION STANDARDS",
-            "— Weekly Dunning Cadence: Day 3 post-due automated reminder; Day 7 phone outreach to carrier controller; Day 14 account suspension warning.",
-            "— Demurrage Escrow Disputes: Escrow deposits held in segregated FDIC-insured operating accounts pending GPS dwell-time verification.",
-            "— Payment Reconciliation: Daily sync between Stripe, Paystack gateway settlement batches, and NetSuite General Ledger.",
+            "- Weekly Dunning Cadence: Day 3 post-due automated reminder; Day 7 phone outreach to carrier controller; Day 14 account suspension warning.",
+            "- Demurrage Escrow Disputes: Escrow deposits held in segregated FDIC-insured operating accounts pending GPS dwell-time verification.",
+            "- Payment Reconciliation: Daily sync between Stripe, Paystack gateway settlement batches, and NetSuite General Ledger.",
             "# SYSTEMS ACCESS & FINANCIAL PROTOCOLS",
             [
                 ["System / Tool", "Access Level", "Security & Protocol Enforced"],
@@ -914,23 +914,23 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Account Executive SOP.pdf"] = write_pdf_file(
         "Account Executive SOP.pdf",
-        "Enterprise Account Executive — 30-60-90 Day Ramp & Operational SOP",
+        "Enterprise Account Executive - 30-60-90 Day Ramp & Operational SOP",
         [
-            "# ENTERPRISE ACCOUNT EXECUTIVE — STANDARD OPERATING PROCEDURE",
+            "# ENTERPRISE ACCOUNT EXECUTIVE - STANDARD OPERATING PROCEDURE",
             "Terminal Operations & Logistics Platform · Operational Governance Standards",
             "Core Mandate: Mid-market logistics terminal sales, 3PL discovery scoping, and pilot-to-annual contract conversion.",
             "--PAGE-BREAK--",
             "# 30-60-90 DAY RAMP BENCHMARK MATRIX",
             [
                 ["Ramp Horizon", "Quantitative Metric / KPI", "Operational Milestone Objective", "Verification Artifact / Deliverable"],
-                ["Day 1–30 (Intake)", "30 Qualified Lead Discovery", "Master MEDDPICC qualification and interactive demurrage calculator", "Complete 5 mock discovery pitches before Executive team"],
-                ["Day 31–60 (Ramp)", "12 Pilots in Evaluation", "Compress terminal sales cycle from 64 to < 40 days", "Deliver $250K in advanced pipeline opportunities"],
-                ["Day 61–90 (Mastery)", "$450K Annualized ACV Closed", "Establish referral partnerships with 2 regional freight brokerages", "Maintain >30% win rate on formal RFP submissions"],
+                ["Day 1-30 (Intake)", "30 Qualified Lead Discovery", "Master MEDDPICC qualification and interactive demurrage calculator", "Complete 5 mock discovery pitches before Executive team"],
+                ["Day 31-60 (Ramp)", "12 Pilots in Evaluation", "Compress terminal sales cycle from 64 to < 40 days", "Deliver $250K in advanced pipeline opportunities"],
+                ["Day 61-90 (Mastery)", "$450K Annualized ACV Closed", "Establish referral partnerships with 2 regional freight brokerages", "Maintain >30% win rate on formal RFP submissions"],
             ],
             "# SALES DISCOVERY & ROI DEMONSTRATION STANDARDS",
-            "— MEDDPICC Qualification: Every terminal lead must have identified Metrics, Economic Buyer, Decision Criteria, and Decision Process before trial deployment.",
-            "— Interactive Demurrage Calculator: Model facility savings based on average trailer dwell reduction (target: 38% reduction, $14,800/mo saved per terminal).",
-            "— Contract Conversion: Pilot agreements convert automatically to Net-30 annual enterprise subscription upon completion of Day 30 live throughput test.",
+            "- MEDDPICC Qualification: Every terminal lead must have identified Metrics, Economic Buyer, Decision Criteria, and Decision Process before trial deployment.",
+            "- Interactive Demurrage Calculator: Model facility savings based on average trailer dwell reduction (target: 38% reduction, $14,800/mo saved per terminal).",
+            "- Contract Conversion: Pilot agreements convert automatically to Net-30 annual enterprise subscription upon completion of Day 30 live throughput test.",
             "# TECHNICAL INTEGRATION & SALES TOOLCHAIN",
             [
                 ["System / Platform", "Access Level / Tooling Role", "Security Protocol"],
@@ -949,7 +949,7 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Q4 Board Notes.docx"] = write_docx_file(
         "Q4 Board Notes.docx",
-        "Q4 Board Deck — Unformatted Bullet Dump (40 Pages)",
+        "Q4 Board Deck - Unformatted Bullet Dump (40 Pages)",
         [
             "# RAW BOARD BULLETS",
             "Raw bullets on Q3 financials, ARR expansion, churn breakdown, and 2027 hiring plan.",
@@ -968,7 +968,7 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Executive Board Memo.docx"] = write_docx_file(
         "Executive Board Memo.docx",
-        "Q4 Executive Board Briefing Memo — Estella Williams (Final)",
+        "Q4 Executive Board Briefing Memo - Estella Williams (Final)",
         [
             "# CONFIDENTIAL BOARD OF DIRECTORS BRIEFING MEMO",
             "Date: October 21, 2026 · Terminal Operations & Logistics Inc. · Executive Governance Record",
@@ -992,7 +992,7 @@ def build_seed_attachments() -> dict[str, dict]:
             [
                 ["Customer Tier Segment", "Active Logos", "Ending ARR", "GRR %", "NRR %", "Avg Demurrage Saved / Mo"],
                 ["Tier 1: Enterprise 3PLs (10+ yards)", "4 Fleets", "$1,480,000", "100.0%", "124.0%", "$14,800 / Facility"],
-                ["Tier 2: Mid-Market Regional (3–9 yards)", "11 Fleets", "$1,840,000", "96.5%", "112.5%", "$8,200 / Facility"],
+                ["Tier 2: Mid-Market Regional (3-9 yards)", "11 Fleets", "$1,840,000", "96.5%", "112.5%", "$8,200 / Facility"],
                 ["Tier 3: Single Terminal Hubs", "22 Fleets", "$880,000", "94.2%", "102.0%", "$4,100 / Facility"],
                 ["Consolidated Portfolio Total", "37 Fleets", "$4,200,000", "96.4%", "114.2%", "$9,450 Average"],
             ],
@@ -1026,26 +1026,26 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Q4 Board Deck Slides.pdf"] = write_pdf_file(
         "Q4 Board Deck Slides.pdf",
-        "Q4 Board Deck — Slide Copy & Executive Visual Layouts",
+        "Q4 Board Deck - Slide Copy & Executive Visual Layouts",
         [
             "# SLIDE 1: TITLE & EXECUTIVE OVERVIEW",
-            "— Headline: InfiniAI Logistics Platform · Q4 2026 Executive Investor Update",
-            "— Subhead: Presented by Estella Williams, Founder & CEO · Confidential Board Review",
+            "- Headline: InfiniAI Logistics Platform · Q4 2026 Executive Investor Update",
+            "- Subhead: Presented by Estella Williams, Founder & CEO · Confidential Board Review",
             "# SLIDE 2: Q3 PERFORMANCE SNAPSHOT ($4.2M ARR, 114% NET EXPANSION)",
-            "— $4.2M ARR (+18% QoQ) · 114% NRR across enterprise carriers · 77.2% Gross Margin",
-            "— $94K average net monthly burn with 18.2 months cash runway ($4.42M cash balance)",
+            "- $4.2M ARR (+18% QoQ) · 114% NRR across enterprise carriers · 77.2% Gross Margin",
+            "- $94K average net monthly burn with 18.2 months cash runway ($4.42M cash balance)",
             "# SLIDE 3: CUSTOMER RETENTION & COHORT HEALTH",
-            "— Zero enterprise logo churn across 6 consecutive quarters",
-            "— 96.4% Gross Revenue Retention · CAC payback under 8 months",
+            "- Zero enterprise logo churn across 6 consecutive quarters",
+            "- 96.4% Gross Revenue Retention · CAC payback under 8 months",
             "# SLIDE 4: PRODUCT ROADMAP & ENTERPRISE MOAT",
-            "— Live geofenced trailer arrival check-in with multilingual driver SMS",
-            "— Bi-directional SAP S/4HANA & Blue Yonder EDI connectors in pilot",
-            "— Independent SOC-2 Type II certification completed with zero exceptions",
+            "- Live geofenced trailer arrival check-in with multilingual driver SMS",
+            "- Bi-directional SAP S/4HANA & Blue Yonder EDI connectors in pilot",
+            "- Independent SOC-2 Type II certification completed with zero exceptions",
             "# SLIDE 5: UNIT ECONOMICS & EFFICIENCY",
-            "— 17.5x LTV/CAC ratio · $507 monthly ARPU · Cloud hosting down to $84/terminal",
+            "- 17.5x LTV/CAC ratio · $507 monthly ARPU · Cloud hosting down to $84/terminal",
             "# SLIDE 6: 2027 HEADCOUNT & STRATEGIC PRIORITIES",
-            "— Scale terminal footprint from 65 to 110 facilities",
-            "— Targeted Series A ($4.5M) preparation for Q1 2027 expansion",
+            "- Scale terminal footprint from 65 to 110 facilities",
+            "- Targeted Series A ($4.5M) preparation for Q1 2027 expansion",
         ],
         role="deliverable",
         subtitle="16-Slide Executive Presentation Script & Visual Narrative Guide",
@@ -1054,7 +1054,7 @@ def build_seed_attachments() -> dict[str, dict]:
     # 16-Slide Executive Board & Investor Presentation Deck (.pptx)
     files["Q4 Board Presentation.pptx"] = write_pptx_file(
         "Q4 Board Presentation.pptx",
-        "Q4 2026 Executive Investor Update — Estella Williams",
+        "Q4 2026 Executive Investor Update - Estella Williams",
         [
             {"title": "InfiniAI Logistics Platform", "subtitle": "Q4 2026 Executive Investor Update · Board Briefing", "bullets": ["Presented by Estella Williams, Founder & CEO", "Confidential Board of Directors Review · October 2026"]},
             {"title": "Executive Summary & Q3 Highlights", "subtitle": "Accelerating Enterprise Terminal Adoption", "bullets": ["$4.2M Current Annual Recurring Revenue (+18% QoQ expansion)", "114% Net Revenue Retention across mid-market enterprise carrier tier", "Gross margin expanded to 77.2% through automated infrastructure scaling", "Net monthly burn reduced to $94K with 18.2-month cash runway"]},
@@ -1066,7 +1066,7 @@ def build_seed_attachments() -> dict[str, dict]:
             {"title": "Mid-Market Logistics Traction", "subtitle": "Asset-Based Carrier Adoption", "bullets": ["65 live freight terminals across Midwest, Texas, and Pacific Northwest", "Key win: Apex Cold Storage expanded from 3 to 14 facilities in Q3", "Average customer detention fee savings: $14,800 per terminal per month", "Frontline dispatcher satisfaction score: 4.9/5 across 840 active operators"]},
             {"title": "Sales Pipeline & Territory Velocity", "subtitle": "Weighted Pipeline of $1.8M ARR", "bullets": ["65 qualified opportunities in active sales evaluation stages", "Average enterprise sales cycle compressed from 64 to 38 days", "Inbound demo conversion rate: 38% from organic search and industry referrals", "Channel partner distribution agreements signed with 2 major TMS consultancies"]},
             {"title": "Security, Governance & Compliance", "subtitle": "Enterprise Trust Infrastructure", "bullets": ["SOC-2 Type II report completed with zero material exceptions", "End-to-end 256-bit AES data encryption in transit and at rest", "Quarterly penetration tests executed by independent third-party auditor", "Automated role-based access control (RBAC) with granular audit logs"]},
-            {"title": "Carrier Fleet Tier Economics", "subtitle": "Performance by Fleet Size Category", "bullets": ["Tier 1 (5–20 Trucks): 38 fleets · $750/mo avg · 98% retention", "Tier 2 (21–50 Trucks): 21 fleets · $1,650/mo avg · 118% net expansion", "Tier 3 (50+ Trucks): 6 fleets · $3,200/mo avg · 140% net expansion", "Focus on Tier 2 expansion generates highest net contribution margin"]},
+            {"title": "Carrier Fleet Tier Economics", "subtitle": "Performance by Fleet Size Category", "bullets": ["Tier 1 (5-20 Trucks): 38 fleets · $750/mo avg · 98% retention", "Tier 2 (21-50 Trucks): 21 fleets · $1,650/mo avg · 118% net expansion", "Tier 3 (50+ Trucks): 6 fleets · $3,200/mo avg · 140% net expansion", "Focus on Tier 2 expansion generates highest net contribution margin"]},
             {"title": "2027 Headcount & Organization Plan", "subtitle": "Targeted Operational Scaling", "bullets": ["Current Headcount: 14 FTEs (Engineering 7, Sales/CS 5, G&A 2)", "Key Q1 Hires: VP of Enterprise Sales, Staff Distributed Systems Engineer", "Operational SOPs finalized for 4 core support & dispatch roles", "Hiring plan gated strictly on achieving $4.8M ARR milestone"]},
             {"title": "Cash Flow & Runway Analysis", "subtitle": "18.2 Months of Cash Runway", "bullets": ["Ending Cash Balance as of Sept 30, 2026: $4.42M", "Average Net Monthly Burn: $94,000 (down from $138,000 in Q1)", "Current runway extends through April 2028 without additional capital", "Optionality to reach cash flow breakeven with 15% ARR growth"]},
             {"title": "Cap Table & Bridge Financing", "subtitle": "Capital Structure Summary", "bullets": ["Founders & Common Stock: 68.4% fully diluted", "Series Seed Investors: 18.2% (SAFE notes converted)", "Unallocated Option Pool: 13.4% reserved for key technical hires", "Bridge Financing: $150K strategic working capital tranche settled Oct 2026"]},
@@ -1123,7 +1123,7 @@ def build_seed_attachments() -> dict[str, dict]:
             "Estella_Williams_Q4_Executive_Investor_Deck.pptx": "Q4 Board Presentation.pptx",
             "Estella_Williams_Q4_Financial_Model.xlsx": "Q4 Financial Model.xlsx",
             "Estella_Williams_Q4_Board_Briefing_Memo.docx": "Executive Board Memo.docx",
-            "README_BOARD_PACK.txt": "Estella Williams — Q4 Executive Board Package\nIncludes: 16-Slide Board Deck (.pptx), Cap Table & Projections (.xlsx), Briefing Memo (.docx).\nAll assets verified and approved for Q4 Board Review.",
+            "README_BOARD_PACK.txt": "Estella Williams - Q4 Executive Board Package\nIncludes: 16-Slide Board Deck (.pptx), Cap Table & Projections (.xlsx), Briefing Memo (.docx).\nAll assets verified and approved for Q4 Board Review.",
         },
         role="deliverable",
     )
@@ -1145,7 +1145,7 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Welcome Email Sequence Draft.docx"] = write_docx_file(
         "Welcome Email Sequence Draft.docx",
-        "Kaylee Skincare — Welcome Flow Rough Notes",
+        "Kaylee Skincare - Welcome Flow Rough Notes",
         [
             "Email 1: Welcome to the brand + 15% discount code.",
             "Email 2: Our botanical sourcing story and founder message.",
@@ -1155,13 +1155,13 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Welcome Email Sequence.docx"] = write_docx_file(
         "Welcome Email Sequence.docx",
-        "Kaylee Skincare — 4-Part Welcome & Botanical Ritual Email Sequence (Final)",
+        "Kaylee Skincare - 4-Part Welcome & Botanical Ritual Email Sequence (Final)",
         [
             "# EMAIL 1: WELCOME TO THE BOTANICAL SANCTUARY",
             "Subject: Welcome to the sanctuary (+ 15% off your first ritual)",
             "Preview Text: Pure cold-pressed botanicals crafted for sensitive, stressed skin.",
             "Dear {{First_Name}},",
-            "Welcome to our small-batch skincare sanctuary. We founded Kaylee Skincare on a simple premise: your skin doesn't need 10 aggressive chemical steps—it needs pure, nutrient-dense lipid restoration that works with your natural acid mantle, not against it.",
+            "Welcome to our small-batch skincare sanctuary. We founded Kaylee Skincare on a simple premise: your skin doesn't need 10 aggressive chemical steps-it needs pure, nutrient-dense lipid restoration that works with your natural acid mantle, not against it.",
             "To welcome you to our community, here is 15% off your first order with code RITUAL15 at checkout.",
             "Where to start:",
             "If your skin feels tight, inflamed, or depleted, our Midnight Botanical Nectar Serum and Ceramide Barrier Cream were formulated specifically to calm irritation overnight.",
@@ -1171,11 +1171,11 @@ def build_seed_attachments() -> dict[str, dict]:
             "Subject: Why we cold-press our botanical oils (The story behind the blue nectar)",
             "Preview Text: Meet the rare Moroccan Blue Tansy and wild-harvested rosehip seed oil.",
             "Dear {{First_Name}},",
-            "Ever wonder why our Midnight Botanical Nectar Serum has that deep, soothing sapphire hue? That color comes naturally from chamazulene—a potent anti-inflammatory compound released during the gentle steam distillation of Moroccan Blue Tansy flowers.",
+            "Ever wonder why our Midnight Botanical Nectar Serum has that deep, soothing sapphire hue? That color comes naturally from chamazulene-a potent anti-inflammatory compound released during the gentle steam distillation of Moroccan Blue Tansy flowers.",
             "Most commercial brands use high-heat chemical extraction that strips delicate antioxidants. We partner exclusively with certified organic, small-plot growers to cold-press our jojoba, rosehip, and squalane oils in small batches under 85°F.",
             "The result is a silky, featherweight elixir that penetrates down to the stratum corneum without clogging pores or leaving greasy residue.",
             "[Discover the Sourcing Journey ->]",
-            "# EMAIL 3: SKIN BARRIER 101 — STOP STRIPPING YOUR ACID MANTLE",
+            "# EMAIL 3: SKIN BARRIER 101 - STOP STRIPPING YOUR ACID MANTLE",
             "Subject: Skin barrier 101: Stop stripping your acid mantle",
             "Preview Text: The 3 signs your moisture barrier is crying for help.",
             "Dear {{First_Name}},",
@@ -1191,9 +1191,9 @@ def build_seed_attachments() -> dict[str, dict]:
             "Dear {{First_Name}},",
             "Because we source raw botanical harvests in limited seasonal quantities, our small batches frequently sell out within days of release.",
             "As a valued subscriber, you now have access to our VIP Circle perks:",
-            "— 48-hour priority access to limited seasonal harvests and holiday gift editions.",
-            "— Free carbon-neutral shipping on all replenishment orders over $50.",
-            "— Complimentary botanical sample vial with every handcrafted order.",
+            "- 48-hour priority access to limited seasonal harvests and holiday gift editions.",
+            "- Free carbon-neutral shipping on all replenishment orders over $50.",
+            "- Complimentary botanical sample vial with every handcrafted order.",
             "Your 15% welcome code RITUAL15 is active through Sunday midnight.",
             "[Shop Your Personalized Ritual ->]",
             "With gratitude, Kaylee & the Botanical Formulation Team",
@@ -1220,8 +1220,8 @@ def build_seed_attachments() -> dict[str, dict]:
         "Corridor_Reconciliation_Q3",
         [
             ["Corridor Segment", "Total Trips", "Total Miles", "Fuel Expense (USD)", "KES Converted", "Toll Surcharges", "Net Margin %"],
-            ["Mombasa – Nairobi (Southern Corridor)", 24, 11640, 7840.00, 1019200, 768.00, "28.4%"],
-            ["Nairobi – Eldoret – Malaba (Western Corridor)", 18, 5580, 4920.00, 639600, 324.00, "31.2%"],
+            ["Mombasa - Nairobi (Southern Corridor)", 24, 11640, 7840.00, 1019200, 768.00, "28.4%"],
+            ["Nairobi - Eldoret - Malaba (Western Corridor)", 18, 5580, 4920.00, 639600, 324.00, "31.2%"],
             ["Nairobi Metro Delivery Shuttle", 45, 3150, 2180.00, 283400, 0.00, "38.6%"],
         ],
         role="deliverable",
@@ -1255,12 +1255,12 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     files["Pitch Deck Bullets.docx"] = write_docx_file(
         "Pitch Deck Bullets.docx",
-        "Alexa Quintero — 10-Slide Pitch Outline & Mentor Feedback",
+        "Alexa Quintero - 10-Slide Pitch Outline & Mentor Feedback",
         [
-            "Slide 1: Problem statement — Field service companies waste 14 hrs/week on paper dispatch.",
-            "Slide 2: Solution — Automated dispatch & electronic signoff on mobile.",
-            "Slide 3: Market Size — $8.2B TAM in North American trade logistics.",
-            "Slide 4: Traction — 28 pilot contractors, $14K MRR, zero churn in 90 days.",
+            "Slide 1: Problem statement - Field service companies waste 14 hrs/week on paper dispatch.",
+            "Slide 2: Solution - Automated dispatch & electronic signoff on mobile.",
+            "Slide 3: Market Size - $8.2B TAM in North American trade logistics.",
+            "Slide 4: Traction - 28 pilot contractors, $14K MRR, zero churn in 90 days.",
             "Mentors say: Sharpen unit economics and customer acquisition playbook.",
         ],
         role="source",
@@ -1279,7 +1279,7 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Pitch Deck Structure v1.pdf"] = write_pdf_file(
         "Pitch Deck Structure v1.pdf",
-        "Angel Pitch Deck Architecture (10 Slides) — v1 Review",
+        "Angel Pitch Deck Architecture (10 Slides) - v1 Review",
         [
             "Slide 1: Executive Title & The 10-Second Hook",
             "Slide 2: The Operational Pain of Disconnected Field Crews",
@@ -1292,7 +1292,7 @@ def build_seed_attachments() -> dict[str, dict]:
     # DIVERSE DELIVERABLE: Real OpenXML PPTX presentation
     files["10-Slide Investor Pitch.pptx"] = write_pptx_file(
         "10-Slide Investor Pitch.pptx",
-        "Alexa Quintero — Angel Investor Presentation (10 Slides)",
+        "Alexa Quintero - Angel Investor Presentation (10 Slides)",
         [
             {"title": "FieldPulse: Automated Mobile Dispatch for Trade Fleets", "bullets": ["Presented by Alexa Quintero, Founder & CEO", "Targeting the $8.2B North American Trade & Field Services Market"]},
             {"title": "The Problem: Broken Field Communication", "bullets": ["Field technicians spend 2.4 hours daily on manual paper logs", "Dispatchers scramble across phone calls, whiteboards, and text threads", "Lost invoices and uncollected change orders bleed 8% of trade contractor margins"]},
@@ -1345,26 +1345,26 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Call Action Sheet.pdf"] = write_pdf_file(
         "Call Action Sheet.pdf",
-        "Executive Leadership Action Sheet & Workshop Roadmap — Cami Kurtz (Final)",
+        "Executive Leadership Action Sheet & Workshop Roadmap - Cami Kurtz (Final)",
         [
             "# 1. EXECUTIVE DIAGNOSTIC SYNTHESIS (FROM 18 PAGES OF C-SUITE INTERVIEWS)",
             "Diagnostic discovery across the Chief Technology Officer, VP of Product, and VP of People revealed three systemic organizational bottlenecks impeding cross-functional velocity and manager retention.",
             "# 2. THEME 1: ENGINEERING & PRODUCT DELIVERY SILOS",
-            "— Finding: Engineering sprint planning operates in isolation from customer success feedback, resulting in 40% of sprint capacity being re-routed to ad-hoc customer fire drills.",
-            "— Strategic Intervention: Transition from monthly output metrics to joint quarterly Objectives & Key Results (OKRs). Embed customer operations leads directly into bi-weekly sprint planning sessions.",
+            "- Finding: Engineering sprint planning operates in isolation from customer success feedback, resulting in 40% of sprint capacity being re-routed to ad-hoc customer fire drills.",
+            "- Strategic Intervention: Transition from monthly output metrics to joint quarterly Objectives & Key Results (OKRs). Embed customer operations leads directly into bi-weekly sprint planning sessions.",
             "# 3. THEME 2: SALES-TO-ROADMAP FEEDBACK DISCONNECT",
-            "— Finding: Regional enterprise sales executives report promising custom features to prospects without engineering architectural feasibility sign-off, driving customer churn at onboarding.",
-            "— Strategic Intervention: Institute a bi-weekly Product-Sales Roadmap Governance Council with formal MEDDPICC architectural gates before non-standard features are committed to master service agreements.",
+            "- Finding: Regional enterprise sales executives report promising custom features to prospects without engineering architectural feasibility sign-off, driving customer churn at onboarding.",
+            "- Strategic Intervention: Institute a bi-weekly Product-Sales Roadmap Governance Council with formal MEDDPICC architectural gates before non-standard features are committed to master service agreements.",
             "# 4. THEME 3: MANAGER BURNOUT & MID-TIER LEADERSHIP RETENTION",
-            "— Finding: Newly promoted team managers spend 18+ hours weekly in unstructured meetings without clear escalation frameworks, driving high attrition among technical leads.",
-            "— Strategic Intervention: Establish peer coaching cohorts and roll out standardized 1-on-1 performance review templates and asynchronous decision frameworks.",
+            "- Finding: Newly promoted team managers spend 18+ hours weekly in unstructured meetings without clear escalation frameworks, driving high attrition among technical leads.",
+            "- Strategic Intervention: Establish peer coaching cohorts and roll out standardized 1-on-1 performance review templates and asynchronous decision frameworks.",
             "# 5. 6-WEEK MODULAR WORKSHOP CURRICULUM",
-            "— Week 1: Executive Alignment & Shared Vision Calibration (Half-day intensive with C-suite stakeholders).",
-            "— Week 2: Joint OKR Mapping & Cross-Functional Dependency Architecture.",
-            "— Week 3: Frontline Delegation & Manager Empowerment Systems.",
-            "— Week 4: Eliminating Meeting Bloat & Asynchronous Operating Rhythms.",
-            "— Week 5: Accountability Frameworks & 360 Peer Feedback Implementation.",
-            "— Week 6: Long-Term Governance Cadence & Executive Retreat Deliverables Review.",
+            "- Week 1: Executive Alignment & Shared Vision Calibration (Half-day intensive with C-suite stakeholders).",
+            "- Week 2: Joint OKR Mapping & Cross-Functional Dependency Architecture.",
+            "- Week 3: Frontline Delegation & Manager Empowerment Systems.",
+            "- Week 4: Eliminating Meeting Bloat & Asynchronous Operating Rhythms.",
+            "- Week 5: Accountability Frameworks & 360 Peer Feedback Implementation.",
+            "- Week 6: Long-Term Governance Cadence & Executive Retreat Deliverables Review.",
         ],
         role="deliverable",
         subtitle="Executive Alignment Strategy, Diagnostic Insights & 6-Week Leadership Blueprint",
@@ -1376,7 +1376,7 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     files["Roofing Rough Notes.docx"] = write_docx_file(
         "Roofing Rough Notes.docx",
-        "Azael Roofing — Rough Website Content & Job History",
+        "Azael Roofing - Rough Website Content & Job History",
         [
             "Family owned roofing contractor in McAllen & Brownsville since 2012.",
             "Expanding from shingle repairs to commercial flat roofs (TPO, PVC, and Standing Seam Metal).",
@@ -1402,7 +1402,7 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Site Copy & Estimate v1.docx"] = write_docx_file(
         "Site Copy & Estimate v1.docx",
-        "Orozco Commercial Roofing — Website Copy & Bid Estimate (v1)",
+        "Orozco Commercial Roofing - Website Copy & Bid Estimate (v1)",
         [
             "Homepage copy, commercial systems overview, and free roof assessment CTA.",
         ],
@@ -1410,7 +1410,7 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Site Copy & Estimate.docx"] = write_docx_file(
         "Site Copy & Estimate.docx",
-        "Orozco Commercial & Industrial Roofing — Master Technical Specifications & Commercial Bid Deck",
+        "Orozco Commercial & Industrial Roofing - Master Technical Specifications & Commercial Bid Deck",
         [
             "# SECTION 1: HOMEPAGE MASTER COPY DECK & VALUE PROPOSITION",
             "NAVIGATION BAR: Commercial Flat Roofing · Architectural Standing Seam · Storm Restoration & Hail Recovery · 20-Year NDL Warranties · Project Gallery · Commercial Diagnostic Intake",
@@ -1420,7 +1420,7 @@ def build_seed_attachments() -> dict[str, dict]:
             "CALL-TO-ACTION BUTTONS: Primary: [Schedule 21-Point Commercial Roof Assessment] · Secondary: [Download 20-Year NDL Warranty Guide]",
             "LOCAL PROOF STRIP: Carlisle SynTec Certified Applicator · Elevate (Firestone) Red Shield Partner · GAF Master Commercial Contractor · $2M Commercial Liability & Full Workers' Comp · 14+ Years RGV Operations",
             "COMPANY OVERVIEW: Blistering subtropical sun, high UV indexes, and severe Gulf Coast windstorms destroy commercial roofs not specifically engineered for South Texas climates. Family-owned and operated since 2012, Orozco Roofing delivers turnkey commercial installations that meet strict FM 1-90 and 1-120 wind uplift codes while lowering facility cooling loads by up to 30%.",
-            "CUSTOMER TESTIMONIAL: 'Orozco re-roofed our 42,000 sq ft logistics distribution facility in Pharr without disrupting single-day shipping operations. Their Carlisle 20-Year NDL warranty gave our board total peace of mind.' — Hector V., Facilities Director, Valley Logistics Hub",
+            "CUSTOMER TESTIMONIAL: 'Orozco re-roofed our 42,000 sq ft logistics distribution facility in Pharr without disrupting single-day shipping operations. Their Carlisle 20-Year NDL warranty gave our board total peace of mind.' - Hector V., Facilities Director, Valley Logistics Hub",
             "--PAGE-BREAK--",
             "# SECTION 2: COMMERCIAL SYSTEMS TECHNICAL COMPARISON MATRIX",
             "Commercial building owners require precise performance specifications to evaluate capital roofing investments. The table below outlines our primary commercial membrane systems:",
@@ -1446,8 +1446,8 @@ def build_seed_attachments() -> dict[str, dict]:
             "--PAGE-BREAK--",
             "# SECTION 4: 20-YEAR NO DOLLAR LIMIT (NDL) MANUFACTURER WARRANTIES",
             "What a Manufacturer-Backed 20-Year NDL Warranty Means for Property Owners:",
-            "— 100% Comprehensive Financial Guarantee: Standard prorated material warranties exclude certified labor and reduce coverage every year. A genuine No Dollar Limit (NDL) warranty issued directly by Carlisle SynTec or Elevate guarantees 100% coverage of all certified materials AND certified contractor labor to correct any roof leak for the full 20-year term.",
-            "— Direct Manufacturer Technical Audit: An independent field engineering representative from the manufacturer travels to the property to perform a destructive weld probe and probe 100% of lap seams before issuing the warranty certificate.",
+            "- 100% Comprehensive Financial Guarantee: Standard prorated material warranties exclude certified labor and reduce coverage every year. A genuine No Dollar Limit (NDL) warranty issued directly by Carlisle SynTec or Elevate guarantees 100% coverage of all certified materials AND certified contractor labor to correct any roof leak for the full 20-year term.",
+            "- Direct Manufacturer Technical Audit: An independent field engineering representative from the manufacturer travels to the property to perform a destructive weld probe and probe 100% of lap seams before issuing the warranty certificate.",
             "--PAGE-BREAK--",
             "# SECTION 5: COMMERCIAL BID COST BREAKDOWN & UNIT PRICE MATRIX",
             "This transparent bidding schedule outlines square-foot unit economics for commercial capital replacement projects across the Rio Grande Valley.",
@@ -1539,7 +1539,7 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["CRM Pipeline Spec.pdf"] = write_pdf_file(
         "CRM Pipeline Spec.pdf",
-        "HubSpot Enterprise CRM Architecture & Deal Stage Specification — DockStream Logistics",
+        "HubSpot Enterprise CRM Architecture & Deal Stage Specification - DockStream Logistics",
         [
             "# 1. OPERATIONAL MANDATE & CRM INFRASTRUCTURE PURPOSE",
             "This technical specification defines the lead lifecycle architecture, opportunity stage gating criteria, automated territory routing, and weighted ARR forecasting formulas implemented within HubSpot Enterprise CRM for DockStream Logistics.",
@@ -1621,7 +1621,7 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Enterprise Deck Final.docx"] = write_docx_file(
         "Enterprise Deck Final.docx",
-        "5-Page B2B Website Copy Deck — DockStream Logistics (Final Production Master)",
+        "5-Page B2B Website Copy Deck - DockStream Logistics (Final Production Master)",
         [
             "# PAGE 1: HOMEPAGE (ELIMINATE DOCK DEAD-TIME)",
             "NAVIGATION: Home · Platform Features · Integrations & Architecture · Pricing & ROI · Request Scoping Call",
@@ -1631,28 +1631,28 @@ def build_seed_attachments() -> dict[str, dict]:
             "CALL-TO-ACTION BUTTONS: [Request Terminal Scoping Call] · [Explore Features ->]",
             "KEY PERFORMANCE PROOF: 38% Faster Trailer Turn Time · 14 Hours Saved Per Dispatcher Weekly · $14,800 Average Monthly Detention Savings · 14 Days Turnkey Implementation SLA.",
             "REAL-TIME FACILITY STATUS DEMO: Interactive simulation demonstrating instant bay toggling between Unloading, Available, and Docking In.",
-            "CUSTOMER TESTIMONIAL: 'DockStream paid for itself in reduced detention claims in month one. The frontline dispatchers love how simple the mobile check-in is.' — Dave Henderson, Director of Terminal Operations, Apex Cold Logistics.",
+            "CUSTOMER TESTIMONIAL: 'DockStream paid for itself in reduced detention claims in month one. The frontline dispatchers love how simple the mobile check-in is.' - Dave Henderson, Director of Terminal Operations, Apex Cold Logistics.",
             "# PAGE 2: PLATFORM FEATURES & WORKFLOWS",
-            "FEATURE 1: Geofenced Driver Check-In — Drivers trigger automated arrival alerts upon entering terminal perimeter. No app download required—drivers receive an SMS link with door assignment.",
-            "FEATURE 2: Dynamic Dock Door Assignment — Intelligent algorithms allocate bays based on trailer temperature class, liftgate requirements, forklift staging proximity, and dispatch schedules.",
-            "FEATURE 3: Sign-on-Glass Electronic BOL — Drivers inspect carton tallies and sign digital bills of lading directly on mobile glass in under 30 seconds. PDFs sync to carrier and ERP records instantly.",
-            "FEATURE 4: Predictive Demurrage Alerts — Automated countdown flags trailers approaching detention windows (45 minutes prior), empowering dispatchers to prioritize at-risk freight.",
-            "FEATURE 5: Shift Throughput Analytics — Track turnaround times by carrier, driver, shift supervisor, and commodity type. Export audit-ready compliance logs with one click.",
-            "FEATURE 6: Multilingual Driver Interface — Instant SMS localization into English, Spanish, Polish, and Russian ensures seamless communication with long-haul regional freight drivers.",
+            "FEATURE 1: Geofenced Driver Check-In - Drivers trigger automated arrival alerts upon entering terminal perimeter. No app download required-drivers receive an SMS link with door assignment.",
+            "FEATURE 2: Dynamic Dock Door Assignment - Intelligent algorithms allocate bays based on trailer temperature class, liftgate requirements, forklift staging proximity, and dispatch schedules.",
+            "FEATURE 3: Sign-on-Glass Electronic BOL - Drivers inspect carton tallies and sign digital bills of lading directly on mobile glass in under 30 seconds. PDFs sync to carrier and ERP records instantly.",
+            "FEATURE 4: Predictive Demurrage Alerts - Automated countdown flags trailers approaching detention windows (45 minutes prior), empowering dispatchers to prioritize at-risk freight.",
+            "FEATURE 5: Shift Throughput Analytics - Track turnaround times by carrier, driver, shift supervisor, and commodity type. Export audit-ready compliance logs with one click.",
+            "FEATURE 6: Multilingual Driver Interface - Instant SMS localization into English, Spanish, Polish, and Russian ensures seamless communication with long-haul regional freight drivers.",
             "# PAGE 3: ENTERPRISE INTEGRATIONS & SECURITY",
             "HEADLINE: Connects Seamlessly with Your Existing Logistics Stack",
             "SUBHEAD: Bi-directional webhooks and native connectors eliminate dual-entry between yard management and enterprise ERPs.",
-            "— SAP TMS & S/4HANA: Native IDoc and OData REST integration. Pull incoming manifest schedules and push finalized pallet receipts straight into central inventory.",
-            "— Oracle Transportation Management (OTM): Real-time dock appointment synchronization with shipment milestone updates (EDI 214 and XML freight statuses).",
-            "— Blue Yonder (JDA): Automated warehouse door reservation mapping and driver staging queue synchronization.",
-            "— Standard EDI 204 / 214 / 210: Turnkey electronic data interchange compatibility with certified clearinghouse protocols.",
-            "— Security & SOC-2: End-to-end 256-bit AES data encryption in transit and at rest, role-based access control (RBAC), and annual third-party penetration testing.",
+            "- SAP TMS & S/4HANA: Native IDoc and OData REST integration. Pull incoming manifest schedules and push finalized pallet receipts straight into central inventory.",
+            "- Oracle Transportation Management (OTM): Real-time dock appointment synchronization with shipment milestone updates (EDI 214 and XML freight statuses).",
+            "- Blue Yonder (JDA): Automated warehouse door reservation mapping and driver staging queue synchronization.",
+            "- Standard EDI 204 / 214 / 210: Turnkey electronic data interchange compatibility with certified clearinghouse protocols.",
+            "- Security & SOC-2: End-to-end 256-bit AES data encryption in transit and at rest, role-based access control (RBAC), and annual third-party penetration testing.",
             "# PAGE 4: TRANSPARENT PRICING & LICENSING TIERS",
             "HEADLINE: Simple, Predictable Per-Facility Pricing",
             "SUBHEAD: No per-driver fees. Unlimited trailer transactions and dispatcher logins included.",
             "TIER 1: STANDARD HUB ($1,250 / MONTH PER TERMINAL)",
             "• Up to 20 Active Loading Bays · Unlimited Driver SMS Check-ins · Digital BOL Generation & PDF Export · Standard 99.9% Uptime SLA · Email & Phone Dispatch Support.",
-            "TIER 2: ENTERPRISE FLEET ($2,800 / MONTH PER TERMINAL) — MOST POPULAR",
+            "TIER 2: ENTERPRISE FLEET ($2,800 / MONTH PER TERMINAL) - MOST POPULAR",
             "• Unlimited Loading Bays & Terminals · Bi-directional SAP / Oracle TMS Sync · Predictive Demurrage Alert Engine · 99.99% Enterprise Uptime Guarantee · Dedicated Implementation Engineer.",
             "INTERACTIVE ROI CALCULATOR: At 45 daily trailers and 75-minute dwell time, monthly projected savings equal $15,390 (including 182 dispatcher hours saved and 74 prevented detention claims).",
             "# PAGE 5: DEMONSTRATION & TERMINAL SCOPING INTAKE",
@@ -1666,14 +1666,14 @@ def build_seed_attachments() -> dict[str, dict]:
     # DIVERSE DELIVERABLE: Real 12-slide OpenXML PPTX Presentation
     files["Outbound Enterprise Deck.pptx"] = write_pptx_file(
         "Outbound Enterprise Deck.pptx",
-        "Enterprise Logistics Automation Deck — Jack Johnson (12 Slides)",
+        "Enterprise Logistics Automation Deck - Jack Johnson (12 Slides)",
         [
             {"title": "DockStream: Intelligent Cross-Dock Logistics", "bullets": ["Presented by Jack Johnson, Co-Founder", "Accelerating Mid-Market 3PL Dock Turn Times"]},
             {"title": "The Hidden Cost of Dock Congestion", "bullets": ["Midwest carriers report 14 hours per week lost waiting on paperwork", "Detention fees cost average distribution hubs $180,000 annually", "Fragmented driver texts and phone calls create dockyard gridlock"]},
             {"title": "The DockStream Platform", "bullets": ["Automated driver check-in via mobile geofence", "Dynamic dock door assignment based on pallet count and liftgate need", "Instant electronic BOL generation and ERP sync"]},
             {"title": "Case Study: Midwest 3PL Pilot Results", "bullets": ["38% reduction in average trailer turnaround time", "14 hours per week saved per dispatcher", "Zero lost paperwork across 18,000 consecutive pallet transfers"]},
             {"title": "Architecture & Enterprise Security", "bullets": ["Cloud-native microservices with 99.99% uptime guarantee", "SOC2 Type II certified with end-to-end 256-bit AES encryption", "Native bi-directional API connectors for SAP, Oracle TMS, and Blue Yonder"]},
-            {"title": "Driver Experience & Mobile Simplicity", "bullets": ["Drivers check in via SMS link—no mobile app download required", "Multi-language support (English, Spanish, Polish)", "Digital bill of lading signed on glass in under 30 seconds"]},
+            {"title": "Driver Experience & Mobile Simplicity", "bullets": ["Drivers check in via SMS link-no mobile app download required", "Multi-language support (English, Spanish, Polish)", "Digital bill of lading signed on glass in under 30 seconds"]},
             {"title": "Real-Time Facility Operations Dashboard", "bullets": ["Bird's-eye view of all active loading bays", "Predictive demurrage alerts 45 minutes before detention penalties trigger", "Automated shift performance and throughput reports"]},
             {"title": "Customer Testimonial: Apex Cold Logistics", "bullets": ["'DockStream paid for itself in reduced detention claims in month one.'", "- Dave Henderson, Director of Terminal Operations"]},
             {"title": "Deployment Timeline: Live in 14 Days", "bullets": ["Week 1: ERP API credential exchange and dockyard mapping", "Week 2: Frontline dispatcher training and pilot bay rollout", "Day 15: Full facility activation with dedicated implementation engineer"]},
@@ -1733,11 +1733,11 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["August Vendor Receipts.pdf"] = write_pdf_file(
         "August Vendor Receipts.pdf",
-        "August Maintenance Receipts — Ala Moana & Waikiki Properties",
+        "August Maintenance Receipts - Ala Moana & Waikiki Properties",
         [
-            "Invoice 4821 — Pacific Split-AC Service: $620.00 (Unit 12A coil cleaning & refrigerant).",
-            "Receipt 9102 — Kakaako Hardware: $185.00 (Unit 4B smart keyless deadbolt).",
-            "Receipt 3409 — CleanTeam Hawaii: $280.00 (Deep clean between guest stays).",
+            "Invoice 4821 - Pacific Split-AC Service: $620.00 (Unit 12A coil cleaning & refrigerant).",
+            "Receipt 9102 - Kakaako Hardware: $185.00 (Unit 4B smart keyless deadbolt).",
+            "Receipt 3409 - CleanTeam Hawaii: $280.00 (Deep clean between guest stays).",
         ],
         role="source",
     )
@@ -1780,7 +1780,7 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Charter Booking Deck.pdf"] = write_pdf_file(
         "Charter Booking Deck.pdf",
-        "Oahu Catamaran & Sportfishing Private Charters — 2026 Guest Brochure & Booking Guide",
+        "Oahu Catamaran & Sportfishing Private Charters - 2026 Guest Brochure & Booking Guide",
         [
             "# 1. WELCOME ABOARD: PRIVATE OCEAN HOSPITALITY AT KEWALO BASIN",
             "Aloha and welcome to Oahu Catamaran & Sportfishing Charters, Honolulu's premier ocean hospitality company berthed at historic Kewalo Basin Harbor (Slips K-14 & K-15). Under the leadership of Managing Partner Luca Carollo, our fleet delivers bespoke private ocean excursions along the iconic Waikiki coastline, Diamond Head crater, and offshore pelagic waters of the Kaiwi Channel.",
@@ -1794,14 +1794,14 @@ def build_seed_attachments() -> dict[str, dict]:
                 ["Length Overall (LOA) & Beam", "42' 0\" LOA · 22' 6\" Beam", "34' 0\" LOA · 12' 0\" Beam"],
                 ["Draft / Ocean Clearance", "3' 8\" Shallow Keel", "3' 2\" Deep-V Modified Hull"],
                 ["USCG Certified Passenger Capacity", "18 Guests + 3 Crew", "6 Guests + 2 Crew"],
-                ["Propulsion & Speed", "Twin Yanmar 40HP Marine Diesel (8–10 kts)", "Twin Cummins Turbo Diesel (24–28 kts)"],
+                ["Propulsion & Speed", "Twin Yanmar 40HP Marine Diesel (8-10 kts)", "Twin Cummins Turbo Diesel (24-28 kts)"],
                 ["Nav & Marine Electronics", "Raymarine HybridTouch GPS & Sonar", "Furuno 3D Sonar, CHIRP Transducer, Radar"],
                 ["Primary Deck Amenities", "Dual trampolines, shaded cockpit, galley, head", "Lee outriggers, tuna tubes, live well, fighting chair"],
                 ["Ideal Charter Mission", "Snorkel sails, sunset cruises, corporate VIP", "Pelagic big game fishing (Ahi, Marlin, Mahi)"],
             ],
             "--PAGE-BREAK--",
             "# 3. 2026 PRIVATE CHARTER RATES & EXPERIENCES SCHEDULE",
-            "Transparent private charter rates with all harbor fees and captain provisioning included. State excise tax (4.712%) and optional crew gratuity (industry standard 15–20%) are separate.",
+            "Transparent private charter rates with all harbor fees and captain provisioning included. State excise tax (4.712%) and optional crew gratuity (industry standard 15-20%) are separate.",
             [
                 ["Charter Experience", "Vessel", "Duration", "Daily Departure Times", "Base Charter Rate", "Harbor Fee", "All-In Private Total"],
                 ["Turtle Canyon Snorkel & Sail", "Makani Catamaran", "3.0 Hours", "08:30 AM & 12:00 PM", "$1,250.00", "$45.00", "$1,295.00"],
@@ -1856,7 +1856,7 @@ def build_seed_attachments() -> dict[str, dict]:
     # 8-Slide Oahu Catamaran & Sportfishing Guest Presentation Deck (.pptx)
     files["Charter Booking Deck.pptx"] = write_pptx_file(
         "Charter Booking Deck.pptx",
-        "Oahu Catamaran & Sportfishing Private Charters — 2026 Presentation",
+        "Oahu Catamaran & Sportfishing Private Charters - 2026 Presentation",
         [
             {"title": "Oahu Catamaran & Sportfishing Charters", "subtitle": "2026 Private Charter & Concierge Presentation", "bullets": ["Presented by Luca Carollo, Managing Partner", "Kewalo Basin Harbor, Honolulu, Hawaii"]},
             {"title": "Fleet Overview: Makani & Hoku", "subtitle": "USCG Licensed Captained Vessels out of Kewalo Basin", "bullets": ["42ft Luxury Sailing Catamaran 'Makani' (18 passengers) for coastal sails & snorkeling", "34ft Custom Sportfisher 'Hoku' (6 passengers) for offshore big game fishing", "Full marine electronics, sound systems, shaded cockpits, and private heads"]},
@@ -1905,7 +1905,7 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     files["Summer Campaign Emails Rough.docx"] = write_docx_file(
         "Summer Campaign Emails Rough.docx",
-        "Lina Rickert — Summer Promo Emails Draft",
+        "Lina Rickert - Summer Promo Emails Draft",
         [
             "Email 1: Early summer VIP access to new footwear collection.",
             "Email 2: 48-hour flash sale reminder.",
@@ -1923,23 +1923,23 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Summer Launch Emails.docx"] = write_docx_file(
         "Summer Launch Emails.docx",
-        "High-Converting Summer Retention Sequence (5 Emails) — Final Production Master",
+        "High-Converting Summer Retention Sequence (5 Emails) - Final Production Master",
         [
             "# EMAIL 1: VIP PRIVATE EARLY ACCESS (24 HOURS BEFORE PUBLIC LAUNCH)",
             "Audience: High-LTV past purchasers & VIP subscriber segment.",
             "Subject: VIP early access: 24 hours before public drop",
             "Preview Text: Your size is reserved for the next 24 hours + complimentary express shipping.",
             "Dear {{First_Name}},",
-            "Every summer, our Tuscan workshop crafts a limited archive of handcrafted leather sandals and woven espadrilles. Because we work with small, family-owned tanneries in Florence, our production runs are intentionally small—and when they sell out, they're gone for the season.",
+            "Every summer, our Tuscan workshop crafts a limited archive of handcrafted leather sandals and woven espadrilles. Because we work with small, family-owned tanneries in Florence, our production runs are intentionally small-and when they sell out, they're gone for the season.",
             "Before we announce our High-Summer Capsule to our full 45,000-person community tomorrow morning, we've opened our doors 24 hours early exclusively for our VIP circle.",
             "What's in the private archive:",
-            "— The Amalfi Woven Slide in Burnished Saddle & Cream: Ultra-supple Italian calfskin with our signature 6mm memory foam footbed.",
-            "— The Capri Ankle-Wrap Espadrille in Natural Linen: Hand-stitched jute sole reinforced with non-slip recycled rubber.",
-            "— The Positano Heeled Mule in Terracotta: An effortless 45mm architectural block heel designed for 8+ hours on your feet.",
+            "- The Amalfi Woven Slide in Burnished Saddle & Cream: Ultra-supple Italian calfskin with our signature 6mm memory foam footbed.",
+            "- The Capri Ankle-Wrap Espadrille in Natural Linen: Hand-stitched jute sole reinforced with non-slip recycled rubber.",
+            "- The Positano Heeled Mule in Terracotta: An effortless 45mm architectural block heel designed for 8+ hours on your feet.",
             "As our thank you for being a loyal collector, enter code SUMMERVIP at checkout to unlock complimentary express courier shipping.",
             "[Unlock Your VIP Early Access ->]",
             "P.S. Sizes 38 and 39 historically account for 45% of our opening-day volume. We recommend reserving your preferred size this evening before public inventory unlocks.",
-            "# EMAIL 2: BEHIND THE CRAFT — THE SILHOUETTE SELLING OUT FIRST",
+            "# EMAIL 2: BEHIND THE CRAFT - THE SILHOUETTE SELLING OUT FIRST",
             "Audience: Engaged VIP openers who viewed product pages without completing checkout.",
             "Subject: The silhouette selling out first (and why)",
             "Preview Text: Why 620+ women joined the waitlist for the Amalfi Woven Slide.",
@@ -1952,18 +1952,18 @@ def build_seed_attachments() -> dict[str, dict]:
             "3. Water-Resistant Veg-Tan Treatment: Finished with natural carnauba wax to resist light splashes, summer showers, and salt air.",
             "[Shop The Amalfi Slide While Sizes Remain ->]",
             "Warmly, Lina Rickert & The Design Atelier",
-            "# EMAIL 3: EDITORIAL STYLING GUIDE — 3 OUTFITS, 1 PAIR",
+            "# EMAIL 3: EDITORIAL STYLING GUIDE - 3 OUTFITS, 1 PAIR",
             "Audience: Full subscriber segment (Day 3 of campaign).",
             "Subject: Quick styling guide: 3 outfits, 1 pair",
             "Preview Text: From morning farmers markets to sunset terrace dinners.",
             "Dear {{First_Name}},",
             "When packing for a summer weekend escape, shoe space is premium real estate. We believe the ultimate summer sandal should transition effortlessly from coastal mornings to evening aperitifs.",
             "Here is how our creative team is styling the Capri Linen Espadrille this weekend:",
-            "Look 01: The Saturday Morning Market — Pair with relaxed ivory linen trousers, an unbuttoned oversized cotton poplin shirt, and a structured woven raffia tote.",
-            "Look 02: Coastal Midday Exploration — Style with a breezy tiered midi sundress and delicate hammered gold jewelry for effortless, sun-drenched ease.",
-            "Look 03: Terrace Sunset Aperitivo — Elevate with a monochromatic silk slip skirt, structured blazer draped over the shoulders, and a bold lip.",
+            "Look 01: The Saturday Morning Market - Pair with relaxed ivory linen trousers, an unbuttoned oversized cotton poplin shirt, and a structured woven raffia tote.",
+            "Look 02: Coastal Midday Exploration - Style with a breezy tiered midi sundress and delicate hammered gold jewelry for effortless, sun-drenched ease.",
+            "Look 03: Terrace Sunset Aperitivo - Elevate with a monochromatic silk slip skirt, structured blazer draped over the shoulders, and a bold lip.",
             "[Explore The Complete Styling Lookbook ->]",
-            "# EMAIL 4: INVENTORY COUNTDOWN — 48 HOURS LEFT",
+            "# EMAIL 4: INVENTORY COUNTDOWN - 48 HOURS LEFT",
             "Audience: Active cart abandoners & site visitors with browsed categories.",
             "Subject: 48 hours left: Your size is still reserved in your bag",
             "Preview Text: Don't leave your favorite summer silhouette behind.",
@@ -1972,7 +1972,7 @@ def build_seed_attachments() -> dict[str, dict]:
             "Our logistics team is currently packing final weekend orders. We noticed you left a pair in your cart, and we've held your size in reserve so you don't miss out on seasonal allocations.",
             "Remember: Every Lina Rickert pair includes our 30-Day Step-In-Comfort Guarantee. Try them on in the comfort of your home. If the fit, arch support, or leather feel isn't absolutely perfection, returns and exchanges are complimentary.",
             "[Complete Your Order in 1 Click ->]",
-            "# EMAIL 5: FINAL CALL — SUMMER CAPSULE CLOSES AT MIDNIGHT",
+            "# EMAIL 5: FINAL CALL - SUMMER CAPSULE CLOSES AT MIDNIGHT",
             "Audience: All non-purchasers across summer campaign list.",
             "Subject: Final call: Summer capsule archive closes at midnight",
             "Preview Text: Last chance for complimentary VIP shipping & seasonal colorways.",
@@ -1991,7 +1991,7 @@ def build_seed_attachments() -> dict[str, dict]:
         [
             "# 1. CAMPAIGN CREATIVE DIRECTION & BRAND THEME",
             "Theme: 'Effortless Form, Tuscan Heritage, Endless Steps'",
-            "Target Demographic: Professional women aged 28–52 seeking sophisticated, timeless artisan footwear with sneaker-level all-day arch comfort.",
+            "Target Demographic: Professional women aged 28-52 seeking sophisticated, timeless artisan footwear with sneaker-level all-day arch comfort.",
             "Channel Architecture: Master Announcement Email, SMS VIP Broadcasts, Instagram Organic & Paid Carousel Captions, and E-Commerce PDP Conversion Modules.",
             "# 2. HERO ANNOUNCEMENT EMAIL (FULL BRAND SUBSCRIBER LIST)",
             "Subject: It's here: The Spring Footwear Collection has landed",
@@ -2001,19 +2001,19 @@ def build_seed_attachments() -> dict[str, dict]:
             "Today, we are thrilled to unveil our Spring 2026 Collection: eight timeless footwear silhouettes designed in our Munich studio and hand-built by third-generation shoe artisans in Tuscany, Italy.",
             "From buttery-soft glove leather mules to tailored pointed-toe flats that cushion every step from morning boardroom meetings to evening gallery openings, each pair combines bespoke European aesthetics with orthopedically aligned footbeds.",
             "Collection Highlights:",
-            "• The Sofia Glove Mule in Nude & Espresso — Featherlight Italian Nappa leather that fits like a second skin.",
-            "• The Verona Pointed Flat in Obsidian & Olive — Architectural symmetry featuring our signature non-slip flex-groove sole.",
-            "• The Lucca Slingback in Cognac Calfskin — A balanced 35mm kitten heel for effortless transitional elegance.",
+            "• The Sofia Glove Mule in Nude & Espresso - Featherlight Italian Nappa leather that fits like a second skin.",
+            "• The Verona Pointed Flat in Obsidian & Olive - Architectural symmetry featuring our signature non-slip flex-groove sole.",
+            "• The Lucca Slingback in Cognac Calfskin - A balanced 35mm kitten heel for effortless transitional elegance.",
             "[Shop The Complete Spring Collection ->]",
             "Warmly, Lina Rickert, Founder",
             "# 3. SMS VIP CAMPAIGN BROADCAST SCRIPTS",
-            "— SMS 1 (Opening Drop Alert): 'LINA RICKERT: Our Spring 2026 Collection is officially LIVE. 24hr priority access for SMS VIPs before social drop. Tap to reserve your size + free express shipping with code SPRINGVIP: [Link] (Txt STOP to unsubscribe)'",
-            "— SMS 2 (Low Stock Velocity Alert): 'Lina Rickert VIP Alert: Sizes 38 and 39 in the Sofia Glove Mule are down to the last 14 pairs in our warehouse. Claim your pair before public restock: [Link]'",
-            "— SMS 3 (Weekend Capsule Reminder): 'Planning your spring wardrobe? Our Tuscan artisans craft in strictly limited batches. Explore the new pointed flat styles before sizes sell out: [Link]'",
+            "- SMS 1 (Opening Drop Alert): 'LINA RICKERT: Our Spring 2026 Collection is officially LIVE. 24hr priority access for SMS VIPs before social drop. Tap to reserve your size + free express shipping with code SPRINGVIP: [Link] (Txt STOP to unsubscribe)'",
+            "- SMS 2 (Low Stock Velocity Alert): 'Lina Rickert VIP Alert: Sizes 38 and 39 in the Sofia Glove Mule are down to the last 14 pairs in our warehouse. Claim your pair before public restock: [Link]'",
+            "- SMS 3 (Weekend Capsule Reminder): 'Planning your spring wardrobe? Our Tuscan artisans craft in strictly limited batches. Explore the new pointed flat styles before sizes sell out: [Link]'",
             "# 4. INSTAGRAM CONTENT STRATEGY & CAPTION SERIES",
-            "— Post 01 (Hero Carousel — Collection Reveal): 'Built for the women who walk 10,000 steps a day and refuse to sacrifice elegance for comfort. Our Spring 2026 Collection is now live at the link in bio. Handcrafted in Tuscany in strictly limited runs. Which silhouette are you wearing first?'",
-            "— Post 02 (Reels / Artisan Process Behind the Scenes): 'Meet Marco. For forty-two years, his hands have shaped Tuscan leather into wearable art. Swipe to see the 84 individual steps required to craft a single pair of our Verona Pointed Flats. True luxury isn't rushed. Link in bio.'",
-            "— Post 03 (Lifestyle & Everyday Styling): 'Boardroom at 9:00 AM. Client lunch at 1:00 PM. Museum stroll at 6:00 PM. One pair, zero blisters, infinite ease. Tap the photo to shop the Sofia Glove Mule in buttery Nappa leather.'",
+            "- Post 01 (Hero Carousel - Collection Reveal): 'Built for the women who walk 10,000 steps a day and refuse to sacrifice elegance for comfort. Our Spring 2026 Collection is now live at the link in bio. Handcrafted in Tuscany in strictly limited runs. Which silhouette are you wearing first?'",
+            "- Post 02 (Reels / Artisan Process Behind the Scenes): 'Meet Marco. For forty-two years, his hands have shaped Tuscan leather into wearable art. Swipe to see the 84 individual steps required to craft a single pair of our Verona Pointed Flats. True luxury isn't rushed. Link in bio.'",
+            "- Post 03 (Lifestyle & Everyday Styling): 'Boardroom at 9:00 AM. Client lunch at 1:00 PM. Museum stroll at 6:00 PM. One pair, zero blisters, infinite ease. Tap the photo to shop the Sofia Glove Mule in buttery Nappa leather.'",
             "# 5. E-COMMERCE PRODUCT DETAIL PAGE (PDP) CONVERSION MODULES",
             "BADGE 1: Handcrafted in Tuscany, Italy (Certified Italian Leather Consortium).",
             "BADGE 2: 6mm Proprietary Triple-Density Memory Foam Cushioning with reinforced arch contour.",
@@ -2077,7 +2077,7 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     files["Storefront Launch Notes.docx"] = write_docx_file(
         "Storefront Launch Notes.docx",
-        "Carter Lemburg — Storefront Launch Notes & Wireframe",
+        "Carter Lemburg - Storefront Launch Notes & Wireframe",
         [
             "DTC hardware product launch: Modular MagSafe desk organizer & wireless charger.",
             "Need launch checklist, polished headline copy, and an interactive prototype preview.",
@@ -2094,19 +2094,19 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Website Launch Checklist.pdf"] = write_pdf_file(
         "Website Launch Checklist.pdf",
-        "ApexDesk — E-Commerce Pre-Launch & Shopify Technical Verification Checklist",
+        "ApexDesk - E-Commerce Pre-Launch & Shopify Technical Verification Checklist",
         [
             "# 1. TECHNICAL LAUNCH AUDIT OVERVIEW",
             "Pre-flight verification checklist for the public release of the ApexDesk Modular Aluminum Rail Ecosystem.",
             "# 2. HARDWARE ECOSYSTEM VERIFICATION CHECKS",
-            "— Mobile Rail Customizer: Verified 60fps gesture handling and live accessory rendering on iOS Safari and Android Chrome.",
-            "— Apple Pay & Express Checkout: Verified 1-tap tokenization and Paystack payment callback handling.",
-            "— Inventory Sync: Real-time reservation locks for Batch 01 (500 units) active across warehouse ERP.",
-            "— Page Weight & Core Web Vitals: Mobile LCP < 1.4s, FID < 15ms, CLS = 0.00 across all device viewports.",
-            "— SSL & Domain Security: HSTS enabled with automated 256-bit TLS certificate rotation.",
+            "- Mobile Rail Customizer: Verified 60fps gesture handling and live accessory rendering on iOS Safari and Android Chrome.",
+            "- Apple Pay & Express Checkout: Verified 1-tap tokenization and Paystack payment callback handling.",
+            "- Inventory Sync: Real-time reservation locks for Batch 01 (500 units) active across warehouse ERP.",
+            "- Page Weight & Core Web Vitals: Mobile LCP < 1.4s, FID < 15ms, CLS = 0.00 across all device viewports.",
+            "- SSL & Domain Security: HSTS enabled with automated 256-bit TLS certificate rotation.",
             "# 3. CONVERSION COPY DECK",
-            "— Hero Positioning: 'The Last Desktop Surface You Will Ever Calibrate.'",
-            "— Value Props: Zero Cable Clutter · Unibody 6063 Aluminum · Qi2 15W High-Efficiency Magnetic Power.",
+            "- Hero Positioning: 'The Last Desktop Surface You Will Ever Calibrate.'",
+            "- Value Props: Zero Cable Clutter · Unibody 6063 Aluminum · Qi2 15W High-Efficiency Magnetic Power.",
         ],
         role="deliverable",
         subtitle="DTC Hardware Storefront Launch Specification & QA Sign-Off",
@@ -2117,7 +2117,7 @@ def build_seed_attachments() -> dict[str, dict]:
         {
             "ApexDesk_Storefront_Prototype.html": "Storefront Prototype.html",
             "ApexDesk_Launch_Audit_Report.pdf": "Website Launch Checklist.pdf",
-            "README_LAUNCH.txt": "Carter Lemburg — ApexDesk DTC Storefront Launch Package\nPackage Version: 2.4 Final Master Launch Kit\nIncludes: HTML Prototype, PDF Technical Audit, CSS Stylesheet, Launch Checklist, Hardware Engineering Spec, Asset Manifest.",
+            "README_LAUNCH.txt": "Carter Lemburg - ApexDesk DTC Storefront Launch Package\nPackage Version: 2.4 Final Master Launch Kit\nIncludes: HTML Prototype, PDF Technical Audit, CSS Stylesheet, Launch Checklist, Hardware Engineering Spec, Asset Manifest.",
             "launch_checklist.md": "# ApexDesk Storefront Launch Checklist\n\n- [x] Configure Shopify variant SKUs (AD-01 Matte Black, AD-02 Silver)\n- [x] Integrate 15W Qi2 fast-charging compliance badge\n- [x] Set up abandoned cart recovery email trigger (1hr / 24hr)\n- [x] Test Apple Pay and Google Pay express checkout buttons\n- [x] Verify Cloudflare edge SSL and cache rules\n- [x] Activate Meta Conversions API (CAPI) and GA4 e-commerce events",
             "hardware_engineering_spec.txt": "APEXDESK HARDWARE ENGINEERING SPECIFICATIONS\nModel: AD-01 Modular Magnetic Charging Rail\nChassis: Solid Unibody CNC 6063 Aerospace Aluminum\nWeight: 980 grams (weighted non-slip base)\nCharging Module: Qi2 MPP (Magnetic Power Profile) 15W Fast Charge\nInput Power: USB-C PD 3.0 (Minimum 30W recommended; 65W GaN included)\nMagnets: 16x N52 Neodymium Ring Array (1.2 kg pull force)\nFinish: Type-II Matte Anodized Bead-Blasted (Obsidian / Space Silver)\nSafety Protection: Over-voltage, Over-current, Foreign Object Detection (FOD)\n",
             "styles.css": "/* ApexDesk Production CSS */\n:root { --accent: #cc4b2c; --bg: #0c0b09; }\nbody { font-family: -apple-system, sans-serif; background: var(--bg); color: #fff; }",
@@ -2131,12 +2131,12 @@ def build_seed_attachments() -> dict[str, dict]:
     # =========================================================================
     files["Clinic Intake Notes.docx"] = write_docx_file(
         "Clinic Intake Notes.docx",
-        "Cuevas Speech & Language Therapy — Rough Intake Notes & Policy Scramble",
+        "Cuevas Speech & Language Therapy - Rough Intake Notes & Policy Scramble",
         [
-            "# CLINIC INTAKE DESK NOTES (ROUGH DRAFT — ISSA CUEVAS)",
+            "# CLINIC INTAKE DESK NOTES (ROUGH DRAFT - ISSA CUEVAS)",
             "Practice: Cuevas Speech & Language Therapy, PLLC · 3410 Far West Blvd, Suite 280, Austin, TX 78731.",
             "Issues with current 2019 paperwork: Parents constantly argue over missed sessions. Last week Mrs. Henderson refused to pay the $50 late fee because she claimed 'it wasn't clear in the paperwork' that sick days still hold the therapist's hour.",
-            "Need to change the policy wording: It must state '$75 reserved clinical hour fee' — not an admin charge or late fee. In pediatric speech pathology, we reserve an entire treatment room and 60 minutes of clinician time. Third-party insurance never reimburses missed hours.",
+            "Need to change the policy wording: It must state '$75 reserved clinical hour fee' - not an admin charge or late fee. In pediatric speech pathology, we reserve an entire treatment room and 60 minutes of clinician time. Third-party insurance never reimburses missed hours.",
             "HIPAA notice needs major overhaul: Form is from 2019. Does not mention telepractice video recording, two-way mirror observation rooms, or our new encrypted EHR tablet check-in system.",
             "Guarantor confusion: We treat pediatric minors, but parents often write down split custody or say 'bill my ex-husband'. We need strict legal language that whoever signs the agreement is the sole Legal Financial Guarantor personally liable for all fees.",
             "Superbills: Parents keep asking when superbills are ready for their out-of-network insurance reimbursement. We need a fixed schedule: Superbills are generated on the 1st of each calendar month with CPT codes (92507, 92523, 92526) and ICD-10 codes.",
@@ -2146,7 +2146,7 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Pediatric Intake Agreement v1.docx"] = write_docx_file(
         "Pediatric Intake Agreement v1.docx",
-        "Pediatric Clinical Intake & Consent Agreement (v1 Draft — Before Revisions)",
+        "Pediatric Clinical Intake & Consent Agreement (v1 Draft - Before Revisions)",
         [
             "# ARTICLE 1: CLIENT IDENTIFICATION",
             "This agreement is made between Cuevas Speech Therapy and the client. The client agrees to attend all scheduled sessions.",
@@ -2161,9 +2161,9 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Pediatric Intake Agreement.docx"] = write_docx_file(
         "Pediatric Intake Agreement.docx",
-        "Master Clinical Intake & Patient Guarantor Agreement — Cuevas Speech & Language Therapy (Final)",
+        "Master Clinical Intake & Patient Guarantor Agreement - Cuevas Speech & Language Therapy (Final)",
         [
-            "# CUEVAS SPEECH & LANGUAGE THERAPY, PLLC — AUSTIN, TEXAS",
+            "# CUEVAS SPEECH & LANGUAGE THERAPY, PLLC - AUSTIN, TEXAS",
             "Physical Clinic: 3410 Far West Blvd, Suite 280, Austin, TX 78731 · Phone: (512) 555-0182 · Fax: (512) 555-0183",
             "Clinical Director: Issa Cuevas, M.S., CCC-SLP · Texas License #72841 · NPI #1982736450",
             "This Master Clinical Services Agreement & Patient Guarantor Attestation ('Agreement') is entered into by and between Cuevas Speech & Language Therapy, PLLC ('Clinic') and the undersigned Parent, Managing Conservator, or Legal Guardian ('Legal Guarantor'), acting on behalf of the minor pediatric patient ('Patient').",
@@ -2199,7 +2199,7 @@ def build_seed_attachments() -> dict[str, dict]:
             "7.3 Reimbursement Disclaimer: The Clinic provides accurate, compliant billing documentation but does not guarantee that any private insurance carrier will reimburse out-of-network claims. The Legal Guarantor is solely responsible for submitting Superbills directly to their insurer's member portal.",
             "# ARTICLE VIII: PROGRESS EVALUATIONS & CLINICAL ESTIMATION DISCLAIMER",
             "8.1 Professional Clinical Estimates: Periodic formal progress updates, developmental age equivalencies, and speech intelligibility percentages reflect professional clinical diagnostic evaluations and clinical estimates based on observable behavioral data.",
-            "8.2 Medical Outcomes Disclaimer: Because pediatric speech, language, and neuro-developmental progression depend on numerous extrinsic and biological variables—including neurological maturation, auditory processing, home practice consistency, and co-occurring developmental diagnoses—the Clinic and its clinicians do not and cannot guarantee specific educational, scholastic, or medical outcomes.",
+            "8.2 Medical Outcomes Disclaimer: Because pediatric speech, language, and neuro-developmental progression depend on numerous extrinsic and biological variables-including neurological maturation, auditory processing, home practice consistency, and co-occurring developmental diagnoses-the Clinic and its clinicians do not and cannot guarantee specific educational, scholastic, or medical outcomes.",
             "# SIGNATURE BLOCK: LEGAL GUARANTOR ATTESTATION & CLINICAL DIRECTOR ACKNOWLEDGEMENT",
             "By signing below, I certify that I have read, understood, and received a copy of this Master Clinical Intake Agreement, HIPAA Disclosure, and Attendance Policy. I attest that I am the legally authorized Guarantor for the Patient named below and agree to be bound by all terms, including the $75 reserved clinical hour fee policy.",
             "Child / Patient Legal Name: __________________________________________________",
@@ -2216,10 +2216,10 @@ def build_seed_attachments() -> dict[str, dict]:
     )
     files["Parent Communication Templates.docx"] = write_docx_file(
         "Parent Communication Templates.docx",
-        "Cuevas Speech Therapy — Front Desk Parent Communication Scripts & Email Decks",
+        "Cuevas Speech Therapy - Front Desk Parent Communication Scripts & Email Decks",
         [
             "# TEMPLATE 1: WELCOME & ELECTRONIC INTAKE PAPERWORK ONBOARDING (EMAIL)",
-            "Subject: Welcome to Cuevas Speech & Language Therapy — Intake Paperwork & First Session Guide",
+            "Subject: Welcome to Cuevas Speech & Language Therapy - Intake Paperwork & First Session Guide",
             "Dear {{Parent_Guarantor_Name}},",
             "Welcome to Cuevas Speech & Language Therapy! We are so excited to partner with your family on {{Child_Name}}'s speech and language journey. Our clinical team has reserved your weekly recurring therapy slot: Every {{Day_of_Week}} at {{Session_Time}} with our Clinical Director, Issa Cuevas, M.S., CCC-SLP.",
             "Before your initial diagnostic evaluation, please complete our secure electronic clinical intake package using the link below. It covers child developmental milestones, medical history, pediatrician contact, and our clinic guarantor consent.",
@@ -2232,44 +2232,44 @@ def build_seed_attachments() -> dict[str, dict]:
             "'Hi {{Parent_Name}}, thank you so much for calling to let us know that {{Child_Name}} won't be able to make it in today. First and foremost, we hope {{Child_Name}} feels better quickly!",
             "I want to gently remind you about our clinic's reserved clinical hour policy. Because each of our speech-language pathologists works one-on-one with your child and prepares individualized materials for that dedicated 60-minute window, unscheduled missed sessions without 24 hours advance notice incur our $75 reserved clinical hour fee.",
             "We never want you to lose therapy time, so we have two helpful alternatives for you:",
-            "1. If {{Child_Name}} is mildly under the weather but up for a relaxed session from home, our clinician can convert today's appointment to a HIPAA-compliant telepractice session right now at your regular time—no fee assessed at all.",
+            "1. If {{Child_Name}} is mildly under the weather but up for a relaxed session from home, our clinician can convert today's appointment to a HIPAA-compliant telepractice session right now at your regular time-no fee assessed at all.",
             "2. Alternatively, our therapist can spend {{Child_Name}}'s reserved hour conducting a parent coaching video call or designing an updated sensory home exercise packet for you to use this week.",
             "Which of those options would work best for your family today?'",
             "If parent pushes back on insurance coverage:",
             "'We completely understand insurance questions can be stressful! Because insurance carriers only reimburse for active therapy units delivered directly to the patient, they do not cover reserved facility hours. That is why our clinical intake designates the parent as the legal guarantor for reserved time. Our priority is always keeping {{Child_Name}} on track while respecting the clinician's dedicated schedule.'",
             "# TEMPLATE 3: MONTHLY INSURANCE SUPERBILL REIMBURSEMENT DELIVERY (EMAIL)",
-            "Subject: Your Monthly Superbill for Out-of-Network Insurance Reimbursement — Cuevas Speech Therapy",
+            "Subject: Your Monthly Superbill for Out-of-Network Insurance Reimbursement - Cuevas Speech Therapy",
             "Dear {{Parent_Guarantor_Name}},",
             "Attached please find your official itemized Superbill for speech-language therapy sessions completed by {{Child_Name}} during the preceding calendar month.",
             "In accordance with our clinic schedule, all superbills are generated on the 1st of each month to streamline your insurance claims submission.",
             "What is included on this statement:",
-            "— Clinic Tax ID (EIN), NPI #1982736450, and Texas State License #72841 for Issa Cuevas, M.S., CCC-SLP.",
-            "— Standard AMA CPT codes for every completed date of service (CPT 92507 for Speech/Language Therapy, CPT 92523 for Comprehensive Speech Evaluation).",
-            "— ICD-10 diagnostic codes corresponding to {{Child_Name}}'s formal evaluation.",
-            "— Itemized dates of service and verification of paid account balance.",
+            "- Clinic Tax ID (EIN), NPI #1982736450, and Texas State License #72841 for Issa Cuevas, M.S., CCC-SLP.",
+            "- Standard AMA CPT codes for every completed date of service (CPT 92507 for Speech/Language Therapy, CPT 92523 for Comprehensive Speech Evaluation).",
+            "- ICD-10 diagnostic codes corresponding to {{Child_Name}}'s formal evaluation.",
+            "- Itemized dates of service and verification of paid account balance.",
             "How to submit for reimbursement:",
             "1. Log into your health insurance member portal (e.g., Blue Cross Blue Shield, Aetna, UnitedHealthcare, Cigna).",
             "2. Navigate to 'Submit an Out-of-Network Claim' (Form CMS-1500).",
             "3. Upload this attached PDF statement as your proof of service and itemized receipt.",
-            "4. Insurers typically process out-of-network claims within 14–21 business days and issue reimbursement checks directly to the subscriber.",
+            "4. Insurers typically process out-of-network claims within 14-21 business days and issue reimbursement checks directly to the subscriber.",
             "If your insurance adjuster requires clinical progress notes or our clinical director's signature on a specific claim form, simply reply to this email and our billing coordinator will take care of it immediately.",
             "Warm regards, Billing & Patient Accounts · Cuevas Speech & Language Therapy",
             "# TEMPLATE 4: PEDIATRIC TELETHERAPY PREPARATION CHECKLIST FOR PARENTS",
             "Subject: Quick Checklist for Tomorrow's Pediatric Teletherapy Session with {{Child_Name}}",
             "To make your child's remote speech session engaging and clinically effective, please review this 4-point checklist:",
-            "— Device Setup: Place a laptop or iPad on a stable table at eye level (avoid handheld phones). Ensure camera and microphone are tested.",
-            "— Quiet Environment: Choose a well-lit room away from televisions, pets, and siblings for the 45-minute duration.",
-            "— Caregiver Co-Presence: Under Texas clinical guidelines, an adult caregiver must remain in the room for children under 8 to assist with activities and positive reinforcement.",
-            "— Favorite Toys / Reinforcers: Keep 2 or 3 of {{Child_Name}}'s favorite motivating toys or sensory items nearby to support engagement.",
+            "- Device Setup: Place a laptop or iPad on a stable table at eye level (avoid handheld phones). Ensure camera and microphone are tested.",
+            "- Quiet Environment: Choose a well-lit room away from televisions, pets, and siblings for the 45-minute duration.",
+            "- Caregiver Co-Presence: Under Texas clinical guidelines, an adult caregiver must remain in the room for children under 8 to assist with activities and positive reinforcement.",
+            "- Favorite Toys / Reinforcers: Keep 2 or 3 of {{Child_Name}}'s favorite motivating toys or sensory items nearby to support engagement.",
             "Direct Telepractice Zoom Link: https://telehealth.cuevasspeech.com/room/cuevas-slp",
         ],
         role="deliverable",
     )
     files["Pediatric Clinic Agreement.pdf"] = write_pdf_file(
         "Pediatric Clinic Agreement.pdf",
-        "Cuevas Speech & Language Therapy — Master Clinical Services Agreement & Guarantor Attestation",
+        "Cuevas Speech & Language Therapy - Master Clinical Services Agreement & Guarantor Attestation",
         [
-            "# CUEVAS SPEECH & LANGUAGE THERAPY, PLLC — AUSTIN, TEXAS",
+            "# CUEVAS SPEECH & LANGUAGE THERAPY, PLLC - AUSTIN, TEXAS",
             "Physical Clinic: 3410 Far West Blvd, Suite 280, Austin, TX 78731 · Phone: (512) 555-0182 · Fax: (512) 555-0183",
             "Clinical Director: Issa Cuevas, M.S., CCC-SLP · Texas State License #72841 · NPI #1982736450 · Tax ID (EIN): 84-2918402",
             "This Master Clinical Services Agreement, Attendance Policy, and Legal Guarantor Attestation ('Agreement') constitutes a binding professional contract between Cuevas Speech & Language Therapy, PLLC ('Clinic') and the undersigned Parent, Managing Conservator, or Legal Guardian ('Legal Guarantor'), acting on behalf of the minor pediatric patient ('Patient').",
@@ -2302,12 +2302,12 @@ def build_seed_attachments() -> dict[str, dict]:
             "4.1 Standardized Professional Fee Schedule: All services rendered are billed in accordance with the following clinical fee matrix:",
             [
                 ["CPT Code", "Clinical Description", "Duration", "Private Pay Fee", "Typical Insurer Allowable"],
-                ["92523", "Comprehensive Speech Sound & Language Diagnostic Evaluation", "90 min", "$350.00", "$210.00–$280.00"],
-                ["92521", "Evaluation of Speech Fluency / Stuttering", "60 min", "$225.00", "$140.00–$185.00"],
-                ["92526", "Pediatric Feeding & Oral-Pharyngeal Swallowing Diagnostic", "75 min", "$275.00", "$165.00–$220.00"],
-                ["92507", "Individual Speech, Language & Pragmatic Intervention", "60 min", "$160.00", "$95.00–$135.00"],
-                ["92507-F", "Pediatric Sensory Feeding / Oral-Motor Intervention", "60 min", "$175.00", "$105.00–$145.00"],
-                ["92609", "Augmentative Communication (AAC) Device Programming", "60 min", "$180.00", "$110.00–$150.00"],
+                ["92523", "Comprehensive Speech Sound & Language Diagnostic Evaluation", "90 min", "$350.00", "$210.00-$280.00"],
+                ["92521", "Evaluation of Speech Fluency / Stuttering", "60 min", "$225.00", "$140.00-$185.00"],
+                ["92526", "Pediatric Feeding & Oral-Pharyngeal Swallowing Diagnostic", "75 min", "$275.00", "$165.00-$220.00"],
+                ["92507", "Individual Speech, Language & Pragmatic Intervention", "60 min", "$160.00", "$95.00-$135.00"],
+                ["92507-F", "Pediatric Sensory Feeding / Oral-Motor Intervention", "60 min", "$175.00", "$105.00-$145.00"],
+                ["92609", "Augmentative Communication (AAC) Device Programming", "60 min", "$180.00", "$110.00-$150.00"],
                 ["RESERVED", "Reserved Clinical Hour / Late Cancellation Fee", "60 min", "$75.00", "Non-Reimbursable"],
             ],
             "4.2 Monthly Superbill Schedule: For families seeking out-of-network reimbursement from private health insurance plans, the Clinic generates comprehensive, itemized Superbills on the first (1st) day of each calendar month covering all therapy sessions completed and paid during the preceding month.",
@@ -2332,7 +2332,7 @@ def build_seed_attachments() -> dict[str, dict]:
             "8.2 Clinical Safety & Supervised Risk Release: All activities are supervised by licensed clinicians. The Legal Guarantor acknowledges that physical activities carry inherent minor risks of childhood bumps or falls, and releases the Clinic from liability arising from normal, supervised therapeutic sensory play.",
             "# ARTICLE IX: NON-GUARANTEE OF CLINICAL OUTCOMES & DISCHARGE CRITERIA",
             "9.1 Professional Clinical Estimates: Periodic formal progress updates, developmental age equivalencies, and speech intelligibility percentages reflect professional clinical diagnostic evaluations and clinical estimates based on observable behavioral data.",
-            "9.2 Medical Outcomes Disclaimer: Because pediatric speech, language, and neuro-developmental progression depend on numerous extrinsic and biological variables—including neurological maturation, auditory processing, home practice consistency, and co-occurring developmental diagnoses—the Clinic and its clinicians do not and cannot guarantee specific educational, scholastic, or medical outcomes.",
+            "9.2 Medical Outcomes Disclaimer: Because pediatric speech, language, and neuro-developmental progression depend on numerous extrinsic and biological variables-including neurological maturation, auditory processing, home practice consistency, and co-occurring developmental diagnoses-the Clinic and its clinicians do not and cannot guarantee specific educational, scholastic, or medical outcomes.",
             "9.3 Objective Discharge Criteria: Patients are discharged upon achieving age-appropriate standardized milestones (>=85th percentile), plateauing after multi-modal intervention trials, or upon mutual agreement between clinician and Legal Guarantor.",
             "# ARTICLE X: TEXAS STATE LICENSING & MEDICAL RECORDS RETENTION",
             "10.1 Regulatory Authority: Speech-language pathology services are regulated by the Texas Department of Licensing and Regulation (TDLR), PO Box 12057, Austin, TX 78711 · (800) 803-9202.",
@@ -2357,7 +2357,7 @@ def build_seed_attachments() -> dict[str, dict]:
     files["Parent Intake Forms Bundle.zip"] = write_zip_file(
         "Parent Intake Forms Bundle.zip",
         {
-            "README_CLINICAL_PACK.txt": "Cuevas Speech & Language Therapy — Complete Clinical Onboarding Pack\nIncludes: Master Agreement (.pdf), Editable Word Decks (.docx), Front Desk Scripts (.docx), Emergency Contact Form (.csv).\nClinical Director: Issa Cuevas, M.S., CCC-SLP · Austin, Texas",
+            "README_CLINICAL_PACK.txt": "Cuevas Speech & Language Therapy - Complete Clinical Onboarding Pack\nIncludes: Master Agreement (.pdf), Editable Word Decks (.docx), Front Desk Scripts (.docx), Emergency Contact Form (.csv).\nClinical Director: Issa Cuevas, M.S., CCC-SLP · Austin, Texas",
             "Master_Clinical_Agreement_Final.pdf": "Pediatric Clinic Agreement.pdf",
             "Pediatric_Intake_and_Consent_Final.docx": "Pediatric Intake Agreement.docx",
             "Parent_Communication_Templates.docx": "Parent Communication Templates.docx",
@@ -2485,7 +2485,7 @@ CLIENT_PROFILES = {
         'last_name': 'Cruz',
         'channel': 'Snapchat',
         'reference': 'JC01',
-        'subject': 'Dallas Metro Freight — Company Bio & 3 Cold Outreach Emails ($25)',
+        'subject': 'Dallas Metro Freight - Company Bio & 3 Cold Outreach Emails ($25)',
         'status': 'closed',
         'requests': [
             {
@@ -2503,14 +2503,14 @@ CLIENT_PROFILES = {
                 'created_at': dt_utc(2026, 10, 17, 21, 15, 0),
                 'deliverables': [
                     {
-                        'title': 'Cruz Metro Freight — Final Bio & Outreach Sequence (v2)',
+                        'title': 'Cruz Metro Freight - Final Bio & Outreach Sequence (v2)',
                         'kind': 'Copy rewrite',
                         'status': 'delivered',
                         'version': 2,
                         'notes': 'Settled Oct 18, 2026 across INV-261018-JC01 ($1.00) and INV-261018-JC02 ($24.00); v2 subject lines delivered Oct 19.',
                     },
                     {
-                        'title': 'Cruz Metro Freight — DFW Corridors Rate Card.png',
+                        'title': 'Cruz Metro Freight - DFW Corridors Rate Card.png',
                         'kind': 'Graphic Asset',
                         'status': 'delivered',
                         'version': 1,
@@ -2527,7 +2527,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('1.00'),
                 'amount_paid': Decimal('1.00'),
                 'status': 'paid',
-                'description': 'Rewrite & adapt — Initial card test & deposit ($1 of $25 total)',
+                'description': 'Rewrite & adapt - Initial card test & deposit ($1 of $25 total)',
                 'created_at': dt_utc(2026, 10, 18, 19, 40, 0),
                 'due_at': dt_utc(2026, 10, 19, 19, 40, 0),
                 'tx_refs': [
@@ -2541,7 +2541,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('24.00'),
                 'amount_paid': Decimal('24.00'),
                 'status': 'paid',
-                'description': 'Rewrite & adapt — Remaining balance for company bio & outreach emails ($24 of $25 total)',
+                'description': 'Rewrite & adapt - Remaining balance for company bio & outreach emails ($24 of $25 total)',
                 'created_at': dt_utc(2026, 10, 18, 21, 32, 0),
                 'due_at': dt_utc(2026, 10, 19, 21, 32, 0),
                 'tx_refs': [
@@ -2549,7 +2549,7 @@ CLIENT_PROFILES = {
                 ],
             },
         ],
-        'messages': [
+                'messages': [
             (
                 'client',
                 dt_utc(2026, 11, 2, 9, 13, 22),
@@ -2561,7 +2561,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 11, 2, 9, 28, 40),
-                "Hey Jose! Good to connect. Shippers right now are starving for reliable asset-based carriers who actually own their trucks, instead of brokers who re-broker and drop freight at the last minute. Are you mostly bidding on dedicated warehouse distribution runs between Dallas, Fort Worth, and Arlington, or regional hot-shot hauls across North Texas?",
+                "Hey Jose! Good to connect. Shippers right now want asset-based carriers who actually own their trucks, not brokers who drop loads last minute. Are you mostly bidding on dedicated warehouse runs around Dallas/Fort Worth/Arlington, or regional hot-shots?",
                 [],
             ),
             (
@@ -2573,7 +2573,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 11, 2, 14, 12, 30),
-                "We can shape your notes into a punchy executive capability bio, 3 targeted cold outreach emails for DFW warehouse dispatchers, plus a clean mobile rate card graphic you can text straight from your cab. Total package is $25.00 flat and we can have the draft in your hands by tomorrow evening. Want us to get started?",
+                "We can shape your notes into a clean capability bio, 3 targeted cold emails for DFW warehouse dispatchers, plus a mobile rate card graphic you can text straight from your cab. Total package is $25 flat, ready tomorrow evening. Want us to jump on it?",
                 [],
             ),
             (
@@ -2585,19 +2585,19 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 11, 2, 14, 41, 10),
-                "No worries at all Jose! We're setting up a custom checkout page for you since we are having issues with our payment provider integration at the moment.",
+                "No sweat Jose, Chase flags new merchant checkouts all the time.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 11, 2, 14, 41, 45),
-                "Let's do a quick $1.00 card authorization test first so your bank whitelists it. Posted test invoice INV-261018-JC01 ($1.00): https://paystack.shop/pay/4q5iounn6s",
+                "Let's do a quick $1 test first so your bank whitelists it. Test invoice INV-261018-JC01 ($1.00): https://paystack.shop/pay/4q5iounn6s",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 11, 2, 14, 42, 20),
-                "Apple Pay is enabled on it so you can clear it right from your cab without filling out standard web forms. Once that clears, we'll dive straight into the draft!",
+                "Apple Pay works on it, so you can clear it right from your cab without typing card numbers. Once that's in, we'll jump into the draft!",
                 [],
             ),
             (
@@ -2609,7 +2609,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 11, 2, 14, 44, 10),
-                "Tap that direct link right there: https://paystack.shop/pay/4q5iounn6s. Apple Pay is enabled on it so you can just double-click your phone without digging for your card from the cab.",
+                "Tap that direct link right there: https://paystack.shop/pay/4q5iounn6s. Apple Pay works on it so you can just double-click your phone.",
                 [],
             ),
             (
@@ -2621,7 +2621,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 11, 2, 16, 28, 52),
-                "Payment registered Jose, thank you! Took about an hour and a half to draft the bio and first 2 emails—attached is the v1 preview. Notice how we lead with 100% on-time DFW metro dispatch and direct driver cell contact so shippers know they aren't dealing with a middleman.",
+                "Got the $1, thanks Jose! Put together the bio and first 2 emails-attached is the v1 preview. We led with your on-time DFW runs and direct dispatcher cell so shippers know you're not a broker.",
                 [
                     'Carrier Outreach Preview v1.pdf',
                 ],
@@ -2635,13 +2635,13 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 11, 2, 16, 33, 40),
-                "Got it Jose, let me look at Email 2.",
+                "Got it Jose, checking email 2 now.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 11, 2, 16, 36, 15),
-                "Yeah I see where to add that 3500lb liftgate line—shippers with heavy freight definitely look for that. Putting that in now. Here's the link for the $24 balance: https://paystack.shop/pay/4q5iounn6s",
+                "Good call on the 3,500-lb liftgate specs-shippers with heavy pallets look for that right away. Added it in. Here's the link for the $24 balance: https://paystack.shop/pay/4q5iounn6s",
                 [],
             ),
             (
@@ -2659,7 +2659,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 11, 3, 13, 41, 29),
-                "Morning Jose! Finished polishing the bio, locked in the 3,500-lb liftgate specs in Email 2, and generated your clean 2026 DFW rate card graphic. Attached both files—hope this helps you lock down those local distributor runs! If you have any fellow owner-operators or carrier friends running box trucks around DFW who need their client pitches or rate cards cleaned up, definitely send them our way!",
+                "Morning Jose! Finished the bio, locked in the 3,500-lb liftgate specs in Email 2, and generated your DFW rate card graphic. Attached both files! Hope this helps you land those direct runs. Let me know how the Carrollton pitch goes!",
                 [
                     'Outreach Email Sequence.docx',
                     'Freight Rates Card.png',
@@ -2674,7 +2674,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 11, 4, 14, 18, 22),
-                "Appreciate that Jose! Good luck locking in that Carrollton run. Holler if you ever need any more lane sheets or flyers.",
+                "Appreciate that Jose! Good luck locking in that Carrollton run. Holler if you ever need more lane sheets or flyers.",
                 [],
             ),
             (
@@ -2688,7 +2688,6 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 11, 4, 16, 34, 0),
                 "Anytime Jose! Stay safe out on the road 👊",
                 [],
-                False,
             ),
         ],
     },
@@ -2697,7 +2696,7 @@ CLIENT_PROFILES = {
         'first_name': 'Audrey',
         'last_name': 'Brown',
         'channel': 'Snapchat',
-        'subject': 'Studio Brown — Homepage & 3-Page Website Copy Overhaul ($360)',
+        'subject': 'Studio Brown - Homepage & 3-Page Website Copy Overhaul ($360)',
         'status': 'closed',
         'requests': [
             {
@@ -2722,7 +2721,7 @@ CLIENT_PROFILES = {
                         'notes': 'Settled Sep 30, 2026 (T414467630167869) and delivered Oct 1, 2026.',
                     },
                     {
-                        'title': 'Audrey Brown Studio — Booking Flow Wireframe Diagram.png',
+                        'title': 'Audrey Brown Studio - Booking Flow Wireframe Diagram.png',
                         'kind': 'UX Architecture Diagram',
                         'status': 'delivered',
                         'version': 1,
@@ -2745,7 +2744,7 @@ CLIENT_PROFILES = {
                 'created_at': dt_utc(2026, 10, 14, 18, 20, 0),
                 'deliverables': [
                     {
-                        'title': 'Three-Page Website Copy Deck — Final (v2)',
+                        'title': 'Three-Page Website Copy Deck - Final (v2)',
                         'kind': 'Website copy',
                         'status': 'delivered',
                         'version': 2,
@@ -2762,7 +2761,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('90.00'),
                 'amount_paid': Decimal('90.00'),
                 'status': 'paid',
-                'description': 'Communication audit — Homepage & booking-flow copy audit',
+                'description': 'Communication audit - Homepage & booking-flow copy audit',
                 'created_at': dt_utc(2026, 9, 30, 19, 46, 0),
                 'due_at': dt_utc(2026, 10, 2, 19, 46, 0),
                 'tx_refs': [
@@ -2776,7 +2775,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('270.00'),
                 'amount_paid': Decimal('270.00'),
                 'status': 'paid',
-                'description': 'Website / product copy — Full 3-page website copy package (3 pages @ $90)',
+                'description': 'Website / product copy - Full 3-page website copy package (3 pages @ $90)',
                 'created_at': dt_utc(2026, 10, 15, 7, 14, 0),
                 'due_at': dt_utc(2026, 10, 18, 7, 14, 0),
                 'tx_refs': [
@@ -2791,11 +2790,11 @@ CLIENT_PROFILES = {
         'conversations': [
             {
                 'reference': 'AB01',
-                'subject': 'Studio Brown — Homepage & Booking Flow Audit ($90)',
+                'subject': 'Studio Brown - Homepage & Booking Flow Audit ($90)',
                 'status': 'closed',
                 'category': 'job',
                 'request_key': 'ab_audit',
-                'messages': [
+                                'messages': [
                     (
                         'client',
                         dt_utc(2026, 9, 30, 19, 27, 34),
@@ -2808,43 +2807,43 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 9, 30, 19, 38, 12),
-                        "Hi Audrey! Looked through both screenshots. Your portrait work looks great, so the photography definitely isn't the issue—the friction is right on the booking form. You're asking visitors 14 questions before they even see starting rates or know availability. Tapping over from Instagram on a phone, that's a massive wall.\n\nAre most people asking about pricing directly in your DMs instead of finishing that form?",
+                        "Hi Audrey! Looked through both screenshots. Your portrait work looks great, so that's definitely not the issue. The friction is right on the booking form. You're asking 14 questions before visitors even see starting rates or availability. On a phone coming from Instagram, that's a massive wall.\n\nAre people DMing you about pricing instead of finishing that form?",
                         [],
                     ),
                     (
                         'client',
                         dt_utc(2026, 9, 30, 19, 44, 25),
-                        "oh wow... yes, 100%! my DMs are constantly flooded with people asking 'how much for a portrait session?' and when I tell them to check the site to book, they just ghost. I've been terrified of putting prices on the site because someone told me it scares people off, but answering the same pricing questions in DMs all day is exhausting. hearing you say 14 questions is terrifying makes so much sense haha, i honestly thought i was just being thorough!",
+                        "oh wow... yes, 100%! my DMs are constantly flooded with people asking 'how much for a portrait session?' and when I tell them to check the site to book, they just ghost. I was terrified of putting prices on the site because someone told me it scares people off, but answering the same pricing questions in DMs all day is exhausting. 14 questions being terrifying makes so much sense haha, i honestly thought i was just being thorough!",
                         [],
                     ),
                     (
                         'admin',
                         dt_utc(2026, 9, 30, 19, 50, 48),
-                        "Putting starting rates upfront actually protects your time and attracts serious clients who already value your work—it filters out tire-kickers and builds immediate trust.\n\nWhat we'd recommend is a focused diagnostic audit: we'll cut the intake down from 14 questions to 5 painless essentials, anchor clear starting package tiers ($450 Essential, $950 Studio Session, $2,200 Campaign) so clients pre-qualify, and sharpen your hero headline to signal your East Austin studio.\n\nWe can run that complete diagnostic audit for $90 flat and have the full breakdown ready tomorrow afternoon. Would you like us to put that together for you?",
+                        "Putting starting rates upfront actually protects your time. It weeds out people who can't afford you anyway and builds immediate trust with serious clients.\n\nHere's what we'd do in the audit: cut the intake from 14 questions down to 5 essentials, anchor clear starting tiers ($450 Essential, $950 Studio Session, $2,200 Campaign) so clients pre-qualify, and sharpen your hero headline to signal your East Austin studio.\n\nWe can run that complete diagnostic audit for $90 flat, ready tomorrow afternoon. Want us to put that together?",
                         [],
                     ),
                     (
                         'client',
                         dt_utc(2026, 9, 30, 19, 53, 10),
-                        "That makes total sense and honestly takes such a huge weight off my shoulders. Yes please, let's do it!",
+                        "That makes so much sense, honestly takes a huge weight off. Yes please, let's do it!",
                         [],
                     ),
                     (
                         'admin',
                         dt_utc(2026, 9, 30, 19, 55, 10),
-                        "Awesome Audrey! We're setting up a custom checkout page for you since we are having issues with our payment provider integration at the moment.",
+                        "Awesome Audrey! Setting up the $90 audit invoice now.",
                         [],
                     ),
                     (
                         'admin',
                         dt_utc(2026, 9, 30, 19, 55, 45),
-                        "Posted invoice INV-260930-AB01 for the $90 audit. You can settle directly on your custom page here: https://paystack.shop/pay/ppiajw3f1-",
+                        "Posted invoice INV-260930-AB01 ($90.00). You can settle via card or Apple Pay right here: https://paystack.shop/pay/ppiajw3f1-",
                         [],
                     ),
                     (
                         'admin',
                         dt_utc(2026, 9, 30, 19, 56, 15),
-                        "Once that clears, we'll dive right in and have the complete audit report over to you tomorrow afternoon!",
+                        "Once that's in, we'll dive right into the teardown and have the audit over to you tomorrow afternoon!",
                         [],
                     ),
                     (
@@ -2856,13 +2855,13 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 9, 30, 20, 4, 12),
-                        "Payment confirmed, Audrey! We'll have the full audit report mapped out for you tomorrow afternoon.",
+                        "Payment confirmed, thanks Audrey! We'll have the full audit mapped out for you tomorrow afternoon.",
                         [],
                     ),
                     (
                         'admin',
                         dt_utc(2026, 10, 1, 16, 11, 29),
-                        "Here is your completed audit report Audrey! It breaks down the exact hero headline repositioning, package pricing anchors, and cuts your intake form from 14 questions down to 5 essentials so clients can book in under two minutes.",
+                        "Here is your completed audit report Audrey! It breaks down the headline repositioning, package pricing anchors, and cuts your intake form from 14 questions down to 5 essentials so clients can book in under two minutes.",
                         [
                             'Website Audit & Recommendations.pdf',
                         ],
@@ -2889,11 +2888,11 @@ CLIENT_PROFILES = {
             },
             {
                 'reference': 'AB02',
-                'subject': 'Studio Brown — 3-Page Website Copy Package ($270)',
+                'subject': 'Studio Brown - 3-Page Website Copy Package ($270)',
                 'status': 'closed',
                 'category': 'job',
                 'request_key': 'ab_copy',
-                'messages': [
+                                'messages': [
                     (
                         'client',
                         dt_utc(2026, 10, 14, 22, 39, 41),
@@ -2905,7 +2904,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 15, 7, 13, 28),
-                        "Morning Audrey! Got the wireframe notes—the layout is going to look so elevated. Posted invoice INV-261015-AB02 for the $270 package.",
+                        "Morning Audrey! Got the notes-the layout is going to look great. Posted invoice INV-261015-AB02 for the $270 package.",
                         [],
                     ),
                     (
@@ -2923,7 +2922,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 15, 8, 48, 22),
-                        "Hey Audrey! Checked the payment logs—your bank (Citizens National Bank of Texas) is flagging the $270 transaction under their automated merchant fraud filter. Totally routine with regional debit cards. We have a direct verified payment link on Paystack that bypasses the generic browser filter and supports Apple Pay: https://paystack.shop/pay/ppiajw3f1-",
+                        "Hey Audrey! Checked the payment logs-your bank (Citizens National Bank of Texas) is flagging the $270 transaction under their automated merchant fraud filter. Routine with regional debit cards. Here's a direct payment link that bypasses the browser filter and supports Apple Pay: https://paystack.shop/pay/ppiajw3f1-",
                         [],
                     ),
                     (
@@ -2935,13 +2934,13 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 15, 8, 52, 10),
-                        "Totally get being cautious! That's just Paystack's hosted checkout page (our payment gateway) since we're updating the portal checkout. Takes Apple Pay or card directly, completely secure. Or let me know if you'd rather do a direct invoice instead!",
+                        "Totally get being cautious! That's just Paystack's direct checkout page (our payment gateway) since we're updating the portal checkout. Takes Apple Pay or card directly, completely secure. Or let me know if you'd rather do a direct invoice instead!",
                         [],
                     ),
                     (
                         'client',
                         dt_utc(2026, 10, 15, 8, 55, 30),
-                        "Oh okay, that makes total sense then! Thanks for explaining, was just being careful.",
+                        "Oh okay, that makes sense then! Thanks for explaining, was just being careful.",
                         [],
                     ),
                     (
@@ -2953,7 +2952,7 @@ CLIENT_PROFILES = {
                     (
                         'client',
                         dt_utc(2026, 10, 15, 19, 25, 10),
-                        "Called my bank on the way back from a golden hour shoot—they removed the flag on their end. Heading home now.",
+                        "Called my bank on the way back from a golden hour shoot-they removed the flag on their end. Heading home now.",
                         [],
                     ),
                     (
@@ -2973,7 +2972,7 @@ CLIENT_PROFILES = {
                     (
                         'client',
                         dt_utc(2026, 10, 17, 1, 7, 44),
-                        "okay the payment went through on that link with my mastercard just now, super easy. we read through v1—could we rename the 3 tiers on the Services page to 'Essential', 'Studio Session', and 'Full Day Campaign', and take out the note about weekend calls on the Booking page?",
+                        "okay the payment went through on that link with my mastercard just now, super easy. we read through v1-could we rename the 3 tiers on the Services page to 'Essential', 'Studio Session', and 'Full Day Campaign', and take out the note about weekend calls on the Booking page?",
                         [],
                     ),
                     (
@@ -2991,49 +2990,49 @@ CLIENT_PROFILES = {
                     (
                         'client',
                         dt_utc(2026, 10, 17, 9, 12, 15),
-                        "Wait wait, hold on—I'm looking at the Services page draft again and you completely missed the commercial press rights and the 3 wardrobe changes on the middle tier! We specifically had that in our brief notes. Did you guys forget that whole section?",
+                        "wait hold on, checking the services draft and where are the commercial press rights and 3 wardrobe changes? thought we had that in the brief?",
                         [],
                     ),
                     (
                         'admin',
                         dt_utc(2026, 10, 17, 9, 24, 40),
-                        "Hey Audrey, it's actually in there! Check page 4 under 'Tier 2: Studio Session Specifications'—the second bullet down explicitly lists 'Up to 3 curated wardrobe changes and full commercial & editorial press usage rights included'. Take a look right under the deliverables table.",
+                        "check page 4 under Tier 2 specs, second bullet right under the table. it's there",
                         [],
                     ),
                     (
                         'client',
                         dt_utc(2026, 10, 17, 9, 38, 10),
-                        "Oh shoot... you're totally right. I was scrolling through the mobile Word viewer on my phone between shoots and that table preview was collapsed. My bad, so sorry about that! 🤦‍♀️",
+                        "oh shoot you're right. table was collapsed on my phone Word app, my bad! 🤦‍♀️",
                         [],
                     ),
                     (
                         'client',
                         dt_utc(2026, 10, 17, 9, 44, 25),
-                        "One thing I do want to push back on though—on the Booking page, you put the 50% non-refundable retainer notice right above the date/time calendar picker. Won't that scare potential clients off before they even pick a date? Shouldn't we move the deposit terms down to the confirmation email after they select their slot?",
+                        "wait what about the 50% deposit on the booking page? having it right before the calendar, won't that scare people off before they even pick a time?",
                         [],
                     ),
                     (
                         'admin',
                         dt_utc(2026, 10, 17, 10, 18, 30),
-                        "Totally get why you'd wonder about that, but here's why having it upfront works much better for you: if someone selects a prime Saturday golden hour slot without realizing it requires an upfront 50% retainer, they'll hold the date on your calendar and then ghost when the deposit invoice arrives. Putting the 50% retainer right before they confirm the slot ensures anyone booking is serious and pre-committed. It protects your weekend slots from tire-kickers holding dates.",
+                        "nah, because if they don't see it upfront people just book up your saturday slots and vanish when the invoice comes. having it right before the calendar stops people from holding dates they aren't serious about",
                         [],
                     ),
                     (
                         'client',
                         dt_utc(2026, 10, 17, 10, 42, 15),
-                        "You know what... that actually makes a ton of sense. Last fall I had two different clients book out October weekends and then vanish once the deposit invoice went out, and I lost those dates completely. Let's keep it upfront right where you have it.",
+                        "actually yeah good point. had two people do that in october and lost the weekends. keep it where it is",
                         [],
                     ),
                     (
                         'admin',
                         dt_utc(2026, 10, 17, 10, 50, 0),
-                        "Glad we're aligned on that! It'll save you so many calendar headaches. Locking in those new tier names ('Essential', 'Studio Session', 'Full Day Campaign'), keeping the retainer placement upfront, and assembling the interactive prototype now. Having the whole bundle ready for you this afternoon.",
+                        "cool, bundling the interactive prototype and final files now, will drop them this afternoon",
                         [],
                     ),
                     (
                         'client',
                         dt_utc(2026, 10, 17, 10, 54, 30),
-                        "Sounds perfect, thank you so much!",
+                        "sounds good, thanks",
                         [],
                     ),
                     (
@@ -3055,7 +3054,7 @@ CLIENT_PROFILES = {
                     (
                         'client',
                         dt_utc(2026, 10, 17, 17, 14, 25),
-                        "And 1000% yes—actually one of my close friends runs a pediatric speech therapy clinic here in Austin (Issa Cuevas) and her clinic intake is driving her nuts. I literally just texted her your link. Thank you guys so much for being so patient with the payment questions and turning around such beautiful copy!",
+                        "And 1000% yes-actually one of my close friends runs a pediatric speech therapy clinic here in Austin (Issa Cuevas) and her clinic intake is driving her nuts. I literally just texted her your link. Thank you guys so much for being so patient with the payment questions and turning around such beautiful copy!",
                         [],
                     ),
                     (
@@ -3079,7 +3078,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 19, 17, 5, 30),
-                        "Just pulled it up on my phone — the typography and packages look so clean! Way easier to navigate than the old setup. So glad inquiries are already coming through! Have a killer fall season!",
+                        "Just pulled it up on my phone - the typography and packages look so clean! Way easier to navigate than the old setup. So glad inquiries are already coming through! Have a killer fall season!",
                         [],
                     ),
                     (
@@ -3122,14 +3121,14 @@ CLIENT_PROFILES = {
                 'created_at': dt_utc(2026, 9, 17, 2, 10, 0),
                 'deliverables': [
                     {
-                        'title': '4-Page Contractor Site Copy & Estimate Sheet — Final (v2)',
+                        'title': '4-Page Contractor Site Copy & Estimate Sheet - Final (v2)',
                         'kind': 'Website copy & template',
                         'status': 'delivered',
                         'version': 2,
                         'notes': 'Settled Sep 19, 2026 via Bank of America Visa Apple Pay (QP-MU7UJNAA12AN, $334.95).',
                     },
                     {
-                        'title': 'Orozco Roofing — Residential Estimate Sheet.xlsx',
+                        'title': 'Orozco Roofing - Residential Estimate Sheet.xlsx',
                         'kind': 'Excel Workbook',
                         'status': 'delivered',
                         'version': 1,
@@ -3146,7 +3145,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('345.00'),
                 'amount_paid': Decimal('0.00'),
                 'status': 'void',
-                'description': 'Website / product copy — 4-page contractor website copy & estimate template',
+                'description': 'Website / product copy - 4-page contractor website copy & estimate template',
                 'created_at': dt_utc(2026, 9, 19, 3, 35, 0),
                 'due_at': dt_utc(2026, 9, 21, 3, 35, 0),
                 'tx_refs': [
@@ -3160,7 +3159,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('334.95'),
                 'amount_paid': Decimal('334.95'),
                 'status': 'paid',
-                'description': 'Website / product copy — 4-page contractor website copy & estimate template (adjusted balance)',
+                'description': 'Website / product copy - 4-page contractor website copy & estimate template (adjusted balance)',
                 'created_at': dt_utc(2026, 9, 19, 3, 45, 0),
                 'due_at': dt_utc(2026, 9, 21, 3, 45, 0),
                 'tx_refs': [
@@ -3168,7 +3167,7 @@ CLIENT_PROFILES = {
                 ],
             },
         ],
-        'messages': [
+                'messages': [
             (
                 'client',
                 dt_utc(2026, 9, 16, 23, 13, 41),
@@ -3181,13 +3180,13 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 9, 16, 23, 29, 18),
-                "Hey Azael! Commercial flat roofing is high-ticket work and building owners want to see two things right away: manufacturer certifications (like Carlisle or Firestone) and clear NDL (No Dollar Limit) warranty coverage.\n\nWe can write your complete 4-page commercial website copy deck, build an Excel roof estimator spreadsheet with working square-foot tear-off formulas, and include a residential consultation section for $345.00 total. Want us to jump into it?",
+                "Hey Azael! Commercial flat roofing is high-ticket work and building owners want to see two things right away: manufacturer certifications (Carlisle/Firestone) and clear NDL warranty coverage.\n\nWe can write your complete 4-page commercial site copy deck, build an Excel roof estimator with square-foot tear-off formulas, and include a residential section for $345 total. Want us to jump on it?",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 9, 17, 4, 11, 25),
-                "that sounds good. let's focus 100% on commercial flat roofs though—warehouses and retail plazas. can we drop the residential consultation section and knock the price down to $334.95? that way it's straight commercial.",
+                "that sounds good. let's focus 100% on commercial flat roofs though-warehouses and retail plazas. can we drop the residential consultation section and knock the price down to $334.95? that way it's straight commercial.",
                 [],
             ),
             (
@@ -3199,7 +3198,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 9, 17, 11, 40, 44),
-                "Yeah see what you mean on dropping the residential section—focusing straight on warehouses and retail plazas keeps the bid clean. Adjusted the invoice down to $334.95 (QP2609-1BD487BA). Here's the payment link: https://paystack.shop/pay/ao-roofing1",
+                "Makes sense to drop residential-focusing straight on warehouses and retail plazas keeps the bid clean. Adjusted the invoice down to $334.95. Here's the payment link: https://paystack.shop/pay/ao-roofing1",
                 [],
             ),
             (
@@ -3231,13 +3230,13 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 9, 19, 3, 44, 31),
-                "100%! We integrated an interactive Commercial Square-Foot Bid Calculator directly into your standalone HTML prototype with membrane toggles (60-mil TPO, Standing Seam Metal, Modified Bitumen, Silicone Coating) and 20-Year NDL warranty selectors.",
+                "100%! We added a square-foot bid calculator directly into the HTML prototype with toggles for 60-mil TPO, standing seam metal, modified bitumen, silicone coating, and 20-year NDL warranties.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 9, 20, 16, 14, 27),
-                "Attached are your completed deliverables: your final commercial copy deck, your customized Excel estimator spreadsheet with working formulas for tear-off and membrane costs, and your standalone interactive HTML website prototype ready to open directly in any browser.",
+                "Attached are your completed deliverables: your final commercial copy deck, your Excel estimator with working formulas for tear-off and membrane costs, and the interactive HTML website prototype ready to open in any browser.",
                 [
                     'Site Copy & Estimate.docx',
                     'Roofing Estimate Sheet.xlsx',
@@ -3253,10 +3252,9 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 9, 21, 14, 12, 6),
-                "De nada Azael! Good luck closing that Pharr warehouse bid. Reach out anytime if you need commercial bid submittals drafted.",
+                "De nada Azael! Good luck closing that Pharr warehouse bid. Ping us anytime if you need commercial bid submittals drafted.",
                 [],
             ),
-            
         ],
     },
     'jackjohnson0533@gmail.com': {
@@ -3289,14 +3287,14 @@ CLIENT_PROFILES = {
                         'notes': 'Settled Apr 5, 2026 (QP-MNLDLWO0GQPG, $160.00).',
                     },
                     {
-                        'title': 'Johnson Sales — Cleaned CRM Pipeline Export.csv',
+                        'title': 'Johnson Sales - Cleaned CRM Pipeline Export.csv',
                         'kind': 'CSV Dataset',
                         'status': 'delivered',
                         'version': 1,
                         'notes': '60-row validated CRM pipeline export.',
                     },
                     {
-                        'title': 'Johnson Outreach — Outbound Enterprise Sales Deck.pptx',
+                        'title': 'Johnson Outreach - Outbound Enterprise Sales Deck.pptx',
                         'kind': 'Slide Presentation',
                         'status': 'delivered',
                         'version': 1,
@@ -3319,7 +3317,7 @@ CLIENT_PROFILES = {
                 'created_at': dt_utc(2026, 9, 15, 18, 0, 0),
                 'deliverables': [
                     {
-                        'title': '5-Page B2B Website Copy & 12-Slide Enterprise Deck — Final (v2)',
+                        'title': '5-Page B2B Website Copy & 12-Slide Enterprise Deck - Final (v2)',
                         'kind': 'Website & deck package',
                         'status': 'delivered',
                         'version': 2,
@@ -3336,7 +3334,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('160.00'),
                 'amount_paid': Decimal('160.00'),
                 'status': 'paid',
-                'description': 'Systems & workflow — HubSpot CRM pipeline & territory routing spec',
+                'description': 'Systems & workflow - HubSpot CRM pipeline & territory routing spec',
                 'created_at': dt_utc(2026, 4, 5, 6, 10, 0),
                 'due_at': dt_utc(2026, 4, 7, 6, 10, 0),
                 'tx_refs': [
@@ -3350,7 +3348,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('500.00'),
                 'amount_paid': Decimal('500.00'),
                 'status': 'paid',
-                'description': 'Deck & website copy — 5-page B2B site copy & 12-slide enterprise sales deck',
+                'description': 'Deck & website copy - 5-page B2B site copy & 12-slide enterprise sales deck',
                 'created_at': dt_utc(2026, 9, 17, 16, 30, 0),
                 'due_at': dt_utc(2026, 9, 19, 16, 30, 0),
                 'tx_refs': [
@@ -3365,11 +3363,11 @@ CLIENT_PROFILES = {
                 'status': 'closed',
                 'category': 'job',
                 'request_key': 'jj_crm',
-                'messages': [
+                                'messages': [
                     (
                         'client',
                         dt_utc(2026, 4, 4, 19, 12, 44),
-                        "Morning team. We just pulled our Q1 HubSpot pipeline data and it's a bit of a trainwreck—reps are hoarding leads, stage definitions are blurry, and weighted forecasts are all over the map. Attached our raw CSV export. Need a formal lead-routing specification and stage criteria so we stop losing deals between SDRs and Account Execs.",
+                        "Morning team. We just pulled our Q1 HubSpot pipeline data and it's a bit of a trainwreck-reps are hoarding leads, stage definitions are blurry, and weighted forecasts are all over the map. Attached our raw CSV export. Need a formal lead-routing specification and stage criteria so we stop losing deals between SDRs and Account Execs.",
                         [
                             'HubSpot CRM Export.csv',
                         ],
@@ -3413,13 +3411,12 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 4, 6, 15, 39, 24),
-                        'Here is the completed lead-routing spec along with the cleaned pipeline dataset ready for your Monday executive review.',
+                        "All set Jack! Here is the completed lead-routing spec along with the cleaned pipeline dataset ready for your Monday executive review.",
                         [
                             'CRM Pipeline Spec.pdf',
                             'CRM Pipeline Clean.csv',
                         ],
                     ),
-                    
                     (
                         'client',
                         dt_utc(2026, 4, 6, 15, 45, 0),
@@ -3434,11 +3431,11 @@ CLIENT_PROFILES = {
                 'status': 'closed',
                 'category': 'job',
                 'request_key': 'jj_b2b',
-                'messages': [
+                                'messages': [
                     (
                         'client',
                         dt_utc(2026, 10, 30, 14, 20, 0),
-                        "Hey team—quick update. The routing spec from April has been running like a charm. We're now overhauling our 5 main B2B website pages and building a 12-slide outbound deck for 3PL buyers. Attached our brief—how much for both?",
+                        "Hey team-quick update. The routing spec from April has been running like a charm. We're now overhauling our 5 main B2B website pages and building a 12-slide outbound deck for 3PL buyers. Attached our brief-how much for both?",
                         [
                             'Enterprise Deck Brief.docx',
                         ],
@@ -3452,7 +3449,7 @@ CLIENT_PROFILES = {
                     (
                         'client',
                         dt_utc(2026, 10, 30, 15, 10, 0),
-                        "Love that framing. Sorry for the two-day lag, had to get budget sign-off from my cofounder. Send the $500 invoice and I'll clear it now.",
+                        "Love that framing. Just got budget sign-off from my cofounder. Send the $500 invoice and I'll clear it now.",
                         [],
                     ),
                     (
@@ -3502,7 +3499,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 11, 1, 15, 40, 12),
-                        "Updated Slide 4 with the pilot metrics! Attached is the final 5-page website copy deck, the 12-slide PowerPoint presentation (.pptx) ready for your sales reps, and the standalone interactive 5-page B2B website prototype ready to demo directly in any browser.",
+                        "Slide 4 is updated with your pilot metrics. Attached is the final 5-page website copy deck, the 12-slide presentation (.pptx) ready for your sales reps, and the interactive website prototype ready to demo in any browser.",
                         [
                             'Enterprise Deck Final.docx',
                             'Outbound Enterprise Deck.pptx',
@@ -3516,11 +3513,11 @@ CLIENT_PROFILES = {
                         [],
                     ),
                     (
-                'admin',
-                dt_utc(2026, 11, 2, 10, 55, 0),
-                "That is fantastic Jack! Good luck tomorrow, rooting for you guys.",
-                [],
-            ),
+                        'admin',
+                        dt_utc(2026, 11, 2, 10, 55, 0),
+                        "Awesome Jack! Good luck with the carrier meeting tomorrow, rooting for you guys.",
+                        [],
+                    ),
                 ],
             },
         ],
@@ -3540,7 +3537,7 @@ CLIENT_PROFILES = {
                 'service_family': 'studio',
                 'service_code': 'studio-technical',
                 'title': 'Spring monthly property bookkeeping and vendor schedule workbooks',
-                'objective': 'Maintain monthly unit expense schedules, vendor reconciliation sheets, and occupancy rollups across March–May 2026.',
+                'objective': 'Maintain monthly unit expense schedules, vendor reconciliation sheets, and occupancy rollups across March-May 2026.',
                 'scope': 'Monthly unit expense sheets, vendor invoices, utility receipts, and tenant occupancy records.',
                 'deliverable': 'Monthly reconciled Excel workbooks.',
                 'status': 'delivered',
@@ -3549,7 +3546,7 @@ CLIENT_PROFILES = {
                 'created_at': dt_utc(2026, 3, 1, 9, 0, 0),
                 'deliverables': [
                     {
-                        'title': 'Spring Monthly Property Bookkeeping & Vendor Ledger — Final (v1)',
+                        'title': 'Spring Monthly Property Bookkeeping & Vendor Ledger - Final (v1)',
                         'kind': 'Financial Ledger',
                         'status': 'delivered',
                         'version': 1,
@@ -3579,7 +3576,7 @@ CLIENT_PROFILES = {
                 'created_at': dt_utc(2026, 9, 6, 20, 0, 0),
                 'deliverables': [
                     {
-                        'title': 'Q3 Reconciled Property Ledger — Final',
+                        'title': 'Q3 Reconciled Property Ledger - Final',
                         'kind': 'Excel workbook',
                         'status': 'delivered',
                         'version': 1,
@@ -3602,7 +3599,7 @@ CLIENT_PROFILES = {
                 'created_at': dt_utc(2026, 9, 13, 21, 0, 0),
                 'deliverables': [
                     {
-                        'title': 'Partner Cash-Flow & Distribution Waterfall Model — Final (v2)',
+                        'title': 'Partner Cash-Flow & Distribution Waterfall Model - Final (v2)',
                         'kind': 'Excel financial model',
                         'status': 'delivered',
                         'version': 2,
@@ -3619,7 +3616,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('475.00'),
                 'amount_paid': Decimal('475.00'),
                 'status': 'paid',
-                'description': 'Technical production — Spring monthly bookkeeping & vendor reconciliation sheets (Mar–May)',
+                'description': 'Technical production - Spring monthly bookkeeping & vendor reconciliation sheets (Mar-May)',
                 'created_at': dt_utc(2026, 5, 15, 7, 9, 0),
                 'due_at': dt_utc(2026, 5, 17, 7, 9, 0),
                 'tx_refs': [
@@ -3641,7 +3638,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('120.00'),
                 'amount_paid': Decimal('120.00'),
                 'status': 'paid',
-                'description': 'Technical production — Q3 multi-unit property ledger & NOI reconciliation',
+                'description': 'Technical production - Q3 multi-unit property ledger & NOI reconciliation',
                 'created_at': dt_utc(2026, 9, 7, 9, 30, 0),
                 'due_at': dt_utc(2026, 9, 9, 9, 30, 0),
                 'tx_refs': [
@@ -3655,7 +3652,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('135.00'),
                 'amount_paid': Decimal('135.00'),
                 'status': 'paid',
-                'description': 'Technical production — 12-month partner cash-flow & LP/GP distribution model',
+                'description': 'Technical production - 12-month partner cash-flow & LP/GP distribution model',
                 'created_at': dt_utc(2026, 9, 14, 7, 45, 0),
                 'due_at': dt_utc(2026, 9, 16, 7, 45, 0),
                 'tx_refs': [
@@ -3663,7 +3660,7 @@ CLIENT_PROFILES = {
                 ],
             },
         ],
-        'messages': [
+                'messages': [
             (
                 'client',
                 dt_utc(2026, 10, 26, 14, 10, 0),
@@ -3700,19 +3697,19 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 26, 16, 15, 0),
-                "Awesome Luca! We've set up your dedicated payment link since we are having issues with our payment provider integration at the moment.",
+                "Awesome Luca! Setting up invoice INV-260814-LC01 ($220.00) now.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 26, 16, 15, 30),
-                "Posted invoice INV-260814-LC01 ($220.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/892lxc01po (it's also linked directly on your invoice).",
+                "Here's the payment link: https://paystack.shop/pay/892lxc01po. Card or Apple Pay both work.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 26, 16, 16, 0),
-                "Diving into the reconciliation now!",
+                "Diving into the reconciliation and tax schedules now!",
                 [],
             ),
             (
@@ -3730,7 +3727,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 27, 16, 42, 15),
-                "Aloha Luca! Here is the completed reconciliation package: your cleaned Q3 CSV ledger and your multi-tab Excel financial model with automatic GET/TAT tax formulas and partner cash distributions.",
+                "Aloha Luca! Finished the package: your cleaned Q3 CSV ledger and the multi-tab Excel model with automatic GET/TAT tax formulas and partner payouts.",
                 [
                     'Q3 Reconciled Ledger.csv',
                     'Q3 Financial Model.xlsx',
@@ -3747,7 +3744,6 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 28, 10, 28, 0),
                 "Mahalo Luca! Glad your accountant is happy. Have a great charter season!",
                 [],
-                False,
             ),
         ],
     },
@@ -3775,14 +3771,14 @@ CLIENT_PROFILES = {
                 'created_at': dt_utc(2026, 10, 12, 19, 15, 0),
                 'deliverables': [
                     {
-                        'title': 'Excel SKU Profit-Margin Calculator & Setup Guide — Final (v2)',
+                        'title': 'Excel SKU Profit-Margin Calculator & Setup Guide - Final (v2)',
                         'kind': 'Technical deliverable',
                         'status': 'delivered',
                         'version': 2,
                         'notes': 'Settled Oct 13, 2026 via Apple Pay (T945497750460100); v2 with locked formula cells delivered Oct 15.',
                     },
                     {
-                        'title': 'Chin Wholesale — Warehouse SKU Master Handbook.pdf',
+                        'title': 'Chin Wholesale - Warehouse SKU Master Handbook.pdf',
                         'kind': 'Operations Handbook',
                         'status': 'delivered',
                         'version': 1,
@@ -3799,7 +3795,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('120.00'),
                 'amount_paid': Decimal('120.00'),
                 'status': 'paid',
-                'description': 'Technical production — Excel SKU profit-margin workbook & setup guide ($75 sheet + $45 guide)',
+                'description': 'Technical production - Excel SKU profit-margin workbook & setup guide ($75 sheet + $45 guide)',
                 'created_at': dt_utc(2026, 10, 13, 10, 18, 0),
                 'due_at': dt_utc(2026, 10, 15, 10, 18, 0),
                 'tx_refs': [
@@ -3809,7 +3805,7 @@ CLIENT_PROFILES = {
                 ],
             },
         ],
-        'messages': [
+                'messages': [
             (
                 'client',
                 dt_utc(2026, 11, 7, 16, 18, 24),
@@ -3846,13 +3842,13 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 11, 7, 17, 38, 20),
-                "We're setting up a custom checkout page for you since we are having issues with our payment provider integration at the moment.",
+                "Awesome Keegan! Setting up invoice INV-261014-KC01 ($240.00) now.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 11, 7, 17, 38, 50),
-                "Posted invoice INV-261014-KC01 ($240.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/kc-chin77 (it's also linked directly on your invoice).",
+                "Here's the direct link: https://paystack.shop/pay/kc-chin77. Card or Apple Pay both work.",
                 [],
             ),
             (
@@ -3890,7 +3886,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 11, 8, 10, 57, 30),
-                "Yeah I see where to add the 2.1x wholesale column, and locking those calculation ranges so staff don't overwrite them makes complete sense. Adjusting that now.",
+                "Good call, adding the 2.1x wholesale tier and locking those formula ranges so staff don't overwrite them by accident. Adjusting that now.",
                 [],
             ),
             (
@@ -3918,7 +3914,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 11, 8, 11, 42, 0),
-                "Awesome to hear Keegan! Reach out anytime if you need more SKU sheets built.",
+                "Awesome to hear Keegan! Glad it worked on the morning delivery. Ping us whenever you need more SKU models built.",
                 [],
             ),
         ],
@@ -3951,7 +3947,7 @@ CLIENT_PROFILES = {
                         'kind': 'Operations packet',
                         'status': 'delivered',
                         'version': 1,
-                        'notes': 'Settled Sep 19–20, 2026 across QP2609-57FDD99C ($35) and QP2609-038E9472 ($35).',
+                        'notes': 'Settled Sep 19-20, 2026 across QP2609-57FDD99C ($35) and QP2609-038E9472 ($35).',
                     },
                 ],
             },
@@ -3960,7 +3956,7 @@ CLIENT_PROFILES = {
                 'reference': 'INF-261008-LI',
                 'service_family': 'assurance',
                 'service_code': 'assurance-editorial',
-                'title': 'Editorial QA — Editing and layout cleanup for a 15-page client proposal',
+                'title': 'Editorial QA - Editing and layout cleanup for a 15-page client proposal',
                 'objective': 'Clean up wording, formatting, and pricing table alignment across a 15-page service proposal.',
                 'scope': '42-page draft compliance handbook, layout notes, and company formatting guidelines.',
                 'deliverable': 'Edited and formatted 15-page service proposal (.docx & .pdf).',
@@ -3970,7 +3966,7 @@ CLIENT_PROFILES = {
                 'created_at': dt_utc(2026, 10, 8, 17, 30, 0),
                 'deliverables': [
                     {
-                        'title': '15-Page Service Proposal — Edited & Formatted (v2 Final)',
+                        'title': '15-Page Service Proposal - Edited & Formatted (v2 Final)',
                         'kind': 'Editorial QA package',
                         'status': 'delivered',
                         'version': 2,
@@ -3987,7 +3983,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('35.00'),
                 'amount_paid': Decimal('35.00'),
                 'status': 'paid',
-                'description': 'Communication — Vendor onboarding compliance packet (Part 1)',
+                'description': 'Communication - Vendor onboarding compliance packet (Part 1)',
                 'created_at': dt_utc(2026, 9, 19, 16, 0, 0),
                 'due_at': dt_utc(2026, 9, 21, 16, 0, 0),
                 'tx_refs': [
@@ -4001,7 +3997,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('35.00'),
                 'amount_paid': Decimal('35.00'),
                 'status': 'paid',
-                'description': 'Technical production — 2026 commercial crew rate card sheet (Part 2)',
+                'description': 'Technical production - 2026 commercial crew rate card sheet (Part 2)',
                 'created_at': dt_utc(2026, 9, 20, 4, 15, 0),
                 'due_at': dt_utc(2026, 9, 22, 4, 15, 0),
                 'tx_refs': [
@@ -4015,7 +4011,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('50.00'),
                 'amount_paid': Decimal('50.00'),
                 'status': 'paid',
-                'description': 'Editorial QA — 15-page client proposal editing & formatting',
+                'description': 'Editorial QA - 15-page client proposal editing & formatting',
                 'created_at': dt_utc(2026, 10, 8, 17, 45, 0),
                 'due_at': dt_utc(2026, 10, 12, 17, 45, 0),
                 'tx_refs': [
@@ -4024,7 +4020,7 @@ CLIENT_PROFILES = {
                 ],
             },
         ],
-        'messages': [
+                'messages': [
             (
                 'client',
                 dt_utc(2026, 11, 6, 13, 14, 27),
@@ -4042,7 +4038,7 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 11, 6, 13, 52, 16),
-                "That disinfection compliance angle is huge—most cleaners just list 'sweeping and mopping' and get tossed in the trash. Yes, they specifically asked for after-hours terminal cleanings for outpatient surgical suites. Can we make sure the rate card includes per-sq-ft biohazard protocols?",
+                "That disinfection compliance angle is huge-most cleaners just list 'sweeping and mopping' and get tossed in the trash. Yes, they specifically asked for after-hours terminal cleanings for outpatient surgical suites. Can we make sure the rate card includes per-sq-ft biohazard protocols?",
                 [],
             ),
             (
@@ -4060,13 +4056,13 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 11, 7, 11, 7, 10),
-                "We're setting up a custom checkout page for you on our portal since we're currently upgrading our payment provider integration.",
+                "On it Liza! Setting up invoice INV-261107-LI01 ($120.00) now.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 11, 7, 11, 7, 33),
-                "Posted invoice INV-261107-LI01 ($120.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/li-tampa44 (it's also linked directly on your invoice).",
+                "Here's the payment link: https://paystack.shop/pay/li-tampa44. Card or Apple Pay both work.",
                 [],
             ),
             (
@@ -4084,7 +4080,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 11, 7, 16, 58, 41),
-                "Here are your finalized vendor compliance manual and commercial rate card!",
+                "All set Liza! Here are your vendor compliance manual and commercial rate card.",
                 [
                     'Vendor Agreement Packet.pdf',
                     'Commercial Rate Card.xlsx',
@@ -4099,9 +4095,8 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 11, 8, 9, 44, 0),
-                "Wonderful news Liza! Good luck with the procurement committee today!",
+                "Awesome Liza! Good luck with the procurement committee today!",
                 [],
-                False,
             ),
         ],
     },
@@ -4129,7 +4124,7 @@ CLIENT_PROFILES = {
                 'created_at': dt_utc(2026, 10, 10, 3, 20, 0),
                 'deliverables': [
                     {
-                        'title': 'Rewritten Resume & LinkedIn Profile — Final (v2)',
+                        'title': 'Rewritten Resume & LinkedIn Profile - Final (v2)',
                         'kind': 'Copy rewrite',
                         'status': 'delivered',
                         'version': 2,
@@ -4146,7 +4141,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('25.00'),
                 'amount_paid': Decimal('25.00'),
                 'status': 'paid',
-                'description': 'Rewrite & adapt — Resume & LinkedIn profile rewrite',
+                'description': 'Rewrite & adapt - Resume & LinkedIn profile rewrite',
                 'created_at': dt_utc(2026, 10, 11, 4, 48, 0),
                 'due_at': dt_utc(2026, 10, 13, 4, 48, 0),
                 'tx_refs': [
@@ -4154,7 +4149,7 @@ CLIENT_PROFILES = {
                 ],
             },
         ],
-        'messages': [
+                'messages': [
             (
                 'client',
                 dt_utc(2026, 11, 4, 18, 27, 14),
@@ -4191,19 +4186,19 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 11, 5, 8, 30, 0),
-                "We're setting up a custom checkout page for you on our portal since we're currently upgrading our payment provider integration.",
+                "Setting up invoice INV-261011-DS01 ($25.00) now.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 11, 5, 8, 30, 12),
-                "Posted invoice INV-261011-DS01 ($25.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/ds-dock55 (it's also linked directly on your invoice).",
+                "Here's the payment link: https://paystack.shop/pay/ds-dock55. Card or Apple Pay both work.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 11, 5, 8, 30, 45),
-                "Drafting the core leadership competencies right now!",
+                "Drafting the core operations bullets right now!",
                 [],
             ),
             (
@@ -4223,7 +4218,7 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 11, 5, 16, 5, 40),
-                "reading this over during lunch on the dock—this sounds like a real leader wrote it. can we add one bullet under Sunbelt about coordinating bilingual Spanish/English safety briefings? half our forklift team is Spanish-speaking and the hiring manager will love that.",
+                "reading this over during lunch on the dock-this sounds like a real leader wrote it. can we add one bullet under Sunbelt about coordinating bilingual Spanish/English safety briefings? half our forklift team is Spanish-speaking and the hiring manager will love that.",
                 [],
             ),
             (
@@ -4235,7 +4230,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 11, 5, 16, 32, 40),
-                "Yeah I see where to add that—leading bilingual safety meetings definitely shows real crew leadership for a supervisor role. Adding that bullet in now.",
+                "Great call. Leading bilingual safety meetings shows real crew leadership for a supervisor role. Adding that bullet in now.",
                 [],
             ),
             (
@@ -4280,7 +4275,7 @@ CLIENT_PROFILES = {
                 'reference': 'INF-261005-EW',
                 'service_family': 'text-intelligence',
                 'service_code': 'text-humanize',
-                'title': 'Humanize & refine — Client newsletter rewrite and Pro access',
+                'title': 'Humanize & refine - Client newsletter rewrite and Pro access',
                 'objective': 'Refine a 1,800-word newsletter draft so it reads naturally without stiff phrasing.',
                 'scope': '1,800-word draft newsletter and brand tone guidelines.',
                 'budget_band': 'Standard',
@@ -4291,7 +4286,7 @@ CLIENT_PROFILES = {
                 'created_at': dt_utc(2026, 10, 4, 22, 48, 0),
                 'deliverables': [
                     {
-                        'title': 'Refined October Client Newsletter — Final',
+                        'title': 'Refined October Client Newsletter - Final',
                         'kind': 'Refined copy',
                         'status': 'delivered',
                         'version': 1,
@@ -4307,7 +4302,7 @@ CLIENT_PROFILES = {
                 'title': 'Four-role staff onboarding SOP and checklist package',
                 'objective': 'Write clear step-by-step onboarding checklists and daily workflow SOPs for four team roles.',
                 'scope': 'Four operational role frameworks (Lead Dispatcher, Customer Ops, Billing Specialist, Account Executive).',
-                'budget_band': 'Standard ($50–$60)',
+                'budget_band': 'Standard ($50-$60)',
                 'deliverable': 'Four-part staff onboarding SOP document (.docx & .pdf).',
                 'status': 'delivered',
                 'estimate_low': Decimal('80.00'),
@@ -4315,28 +4310,28 @@ CLIENT_PROFILES = {
                 'created_at': dt_utc(2026, 10, 10, 18, 40, 0),
                 'deliverables': [
                     {
-                        'title': 'Lead Logistics Dispatcher SOP — Final',
+                        'title': 'Lead Logistics Dispatcher SOP - Final',
                         'kind': 'SOP documentation',
                         'status': 'delivered',
                         'version': 2,
                         'notes': 'Settled Oct 10, 2026 (T820955964974907) and delivered Oct 12, 2026.',
                     },
                     {
-                        'title': 'Customer Operations Associate SOP — Final',
+                        'title': 'Customer Operations Associate SOP - Final',
                         'kind': 'SOP documentation',
                         'status': 'delivered',
                         'version': 2,
                         'notes': 'Settled Oct 10, 2026 (T820955964974907) and delivered Oct 12, 2026.',
                     },
                     {
-                        'title': 'Billing & Accounts Specialist SOP — Final',
+                        'title': 'Billing & Accounts Specialist SOP - Final',
                         'kind': 'SOP documentation',
                         'status': 'delivered',
                         'version': 2,
                         'notes': 'Settled Oct 10, 2026 (T820955964974907) and delivered Oct 12, 2026.',
                     },
                     {
-                        'title': 'Enterprise Account Executive SOP — Final',
+                        'title': 'Enterprise Account Executive SOP - Final',
                         'kind': 'SOP documentation',
                         'status': 'delivered',
                         'version': 2,
@@ -4352,7 +4347,7 @@ CLIENT_PROFILES = {
                 'title': 'Q4 Executive board briefing memo and 16-slide investor update deck',
                 'objective': 'Prepare executive presentation deck and confidential board briefing memo summarizing Q3 KPI performance, bridge financing terms, and 2027 regional expansion milestones.',
                 'scope': 'Comprehensive 16-slide investor update deck and a 4-page executive board memorandum.',
-                'budget_band': 'USD 75–250',
+                'budget_band': 'USD 75-250',
                 'deliverable': '16-slide presentation deck and executive memo (.docx & .pdf).',
                 'status': 'delivered',
                 'estimate_low': Decimal('150.00'),
@@ -4360,21 +4355,21 @@ CLIENT_PROFILES = {
                 'created_at': dt_utc(2026, 10, 20, 19, 10, 0),
                 'deliverables': [
                     {
-                        'title': 'Q4 Executive Investor Update Deck (16 Slides) — Final (v2)',
+                        'title': 'Q4 Executive Investor Update Deck (16 Slides) - Final (v2)',
                         'kind': 'Executive Deck',
                         'status': 'delivered',
                         'version': 2,
                         'notes': 'Settled Oct 21, 2026 (T549133644408552) and delivered Oct 21, 2026.',
                     },
                     {
-                        'title': 'Board of Directors Briefing Memo & Capital Summary — Final',
+                        'title': 'Board of Directors Briefing Memo & Capital Summary - Final',
                         'kind': 'Executive Briefing',
                         'status': 'delivered',
                         'version': 1,
                         'notes': 'Delivered Oct 21, 2026.',
                     },
                     {
-                        'title': 'Estella Williams — Executive Board Governance & Asset Pack.zip',
+                        'title': 'Estella Williams - Executive Board Governance & Asset Pack.zip',
                         'kind': 'ZIP Archive',
                         'status': 'delivered',
                         'version': 1,
@@ -4391,7 +4386,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('25.00'),
                 'amount_paid': Decimal('25.00'),
                 'status': 'paid',
-                'description': 'Humanize & refine — Newsletter copy refinement & Pro access',
+                'description': 'Humanize & refine - Newsletter copy refinement & Pro access',
                 'created_at': dt_utc(2026, 10, 5, 4, 58, 0),
                 'due_at': dt_utc(2026, 10, 7, 4, 58, 0),
                 'tx_refs': [
@@ -4405,7 +4400,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('80.00'),
                 'amount_paid': Decimal('80.00'),
                 'status': 'paid',
-                'description': 'Technical production — Four-role onboarding SOP checklists (4 roles @ $20)',
+                'description': 'Technical production - Four-role onboarding SOP checklists (4 roles @ $20)',
                 'created_at': dt_utc(2026, 10, 10, 18, 52, 0),
                 'due_at': dt_utc(2026, 10, 12, 18, 52, 0),
                 'tx_refs': [
@@ -4420,7 +4415,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('150.00'),
                 'amount_paid': Decimal('150.00'),
                 'status': 'paid',
-                'description': 'Presentation & executive writing — Q4 Executive board briefing memo & 16-slide investor update deck',
+                'description': 'Presentation & executive writing - Q4 Executive board briefing memo & 16-slide investor update deck',
                 'created_at': dt_utc(2026, 10, 20, 21, 15, 0),
                 'due_at': dt_utc(2026, 10, 22, 21, 15, 0),
                 'tx_refs': [
@@ -4435,7 +4430,7 @@ CLIENT_PROFILES = {
                 'status': 'closed',
                 'category': 'job',
                 'request_key': 'ew_rewrite',
-                'messages': [
+                                'messages': [
                     (
                         'client',
                         dt_utc(2026, 10, 5, 4, 38, 19),
@@ -4447,7 +4442,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 5, 4, 48, 15),
-                        "Hey Estella! Yeah we can definitely clean this up. Investor updates shouldn't read like compliance memos lol. Looked at the draft — the numbers are solid, it's just buried in passive phrasing.\n\nIs this mostly going to your LPs, or do enterprise clients get it too?",
+                        "Hey Estella! Yeah we can definitely clean this up. Investor updates shouldn't read like compliance memos lol. Looked at the draft - the numbers are solid, it's just buried in passive phrasing.\n\nIs this mostly going to your LPs, or do enterprise clients get it too?",
                         [],
                     ),
                     (
@@ -4459,7 +4454,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 5, 5, 2, 10),
-                        "For 1,800 words with priority review, that falls under our $25 Pro tier from the pricing list. Can have it back to you in about 3 or 4 hours if you want us to start now.",
+                        "We can do a priority review for $25 flat and have it back to you in about 3 hours if you want us to start now.",
                         [],
                     ),
                     (
@@ -4489,7 +4484,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 5, 5, 11, 20),
-                        "Got it, payment cleared on card! Opening up the draft and polishing the opening hook now—will ping you the second it's ready.",
+                        "Got it, payment cleared on card! Opening up the draft and polishing the opening hook now. Will ping you the second it's ready.",
                         [],
                     ),
                     (
@@ -4509,7 +4504,7 @@ CLIENT_PROFILES = {
                     (
                         'admin',
                         dt_utc(2026, 10, 5, 9, 16, 30),
-                        "Glad to hear that, Estella! Since the revised newsletter is confirmed and sent out to your LPs, if you need another pass for next month's update or anything new, just reach out anytime. Good luck with the investor circular!",
+                        "Glad to hear that Estella! Ping us whenever next month's draft is ready. Good luck with the update!",
                         [],
                     ),
                     (
@@ -4526,10 +4521,10 @@ CLIENT_PROFILES = {
                 'status': 'closed',
                 'category': 'job',
                 'request_key': 'ew_sop',
-                'messages': [
+                                'messages': [
                     (
                         'client',
-                        dt_utc(2026, 10, 10, 18, 34, 22),
+                        dt_utc(2026, 10, 10, 13, 14, 28),
                         "Hey team, back again and need your brainpower. We're hiring 4 key operational roles over the next 45 days (Lead Dispatcher, Customer Ops, Billing Specialist, Account Exec) and I don't have the hours to build 4 separate SOP ramp manuals from scratch. Attached my rough notes on role expectations. Can you turn these into structured 30-60-90 day benchmarks and daily workflow checklists for each role?",
                         [
                             'Role Ramp Notes.docx',
@@ -4537,37 +4532,37 @@ CLIENT_PROFILES = {
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 10, 18, 52, 14),
-                        "Hey Estella, good to see you back! Technical production (studio-technical) on our services list starts at $75 for a standard deliverable. For building out all 4 distinct operational role frameworks ($20/role), that comes to $80 total, which fits right in the scoped research and production band ($75–$250). Can have the first complete draft over to you by tomorrow afternoon—sound good?",
+                        dt_utc(2026, 10, 10, 13, 38, 52),
+                        "Hey Estella, good to see you back! We can build out all 4 distinct operational role frameworks with 30-60-90 day benchmarks and daily checklists for $80 flat. Can have the first complete draft over to you by tomorrow afternoon. Sound good?",
                         [],
                     ),
                     (
                         'client',
-                        dt_utc(2026, 10, 10, 18, 55, 30),
-                        "Ah yeah that makes total sense, each role really is its own beast. $80 works, send the invoice over!",
+                        dt_utc(2026, 10, 10, 13, 52, 16),
+                        "That works, each role really is its own beast. $80 works, send the invoice over!",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 10, 18, 57, 10),
+                        dt_utc(2026, 10, 10, 14, 5, 0),
                         "Here's the payment link: https://paystack.shop/pay/tx0ipp9eg4",
                         [],
                     ),
                     (
                         'client',
-                        dt_utc(2026, 10, 10, 19, 4, 15),
+                        dt_utc(2026, 10, 10, 14, 18, 45),
                         "ok worked with apple pay, $80 went through. will check back when I land tonight!",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 10, 19, 5, 0),
+                        dt_utc(2026, 10, 10, 14, 25, 12),
                         "Saw it come through, thanks! Safe flight, we'll have v1 ready for you tomorrow.",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 11, 15, 31, 54),
+                        dt_utc(2026, 10, 11, 14, 10, 30),
                         "Hope your flight went well! Here's v1 of the onboarding frameworks for all 4 roles. Take your time reviewing.",
                         [
                             'Onboarding Frameworks v1.docx',
@@ -4575,31 +4570,31 @@ CLIENT_PROFILES = {
                     ),
                     (
                         'client',
-                        dt_utc(2026, 10, 12, 9, 18, 22),
-                        "Looked over v1 with my ops lead over coffee. Structure is really good. The 60-day ramp milestones for the billing coordinator and AE are spot on. Just one small tweak—for the Solutions Architect tooling, can you specify Datadog and Postman instead of generic tools? Then we're good to finalize.",
+                        dt_utc(2026, 10, 11, 16, 42, 19),
+                        "Looked over v1 with my ops lead over coffee. Structure is really good. The 60-day ramp milestones for the billing coordinator and AE are spot on. Just one small tweak - for the Solutions Architect tooling, can you specify Datadog and Postman instead of generic tools? Then we're good to finalize.",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 12, 9, 22, 10),
+                        dt_utc(2026, 10, 11, 16, 48, 10),
                         "Got it Estella, let me look at that tooling section.",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 12, 9, 35, 15),
-                        "Yeah see what you mean, naming Datadog and Postman specifically makes the handbook way more practical for new hires. Updating that now.",
+                        dt_utc(2026, 10, 11, 17, 12, 45),
+                        "Makes sense, naming Datadog and Postman specifically makes the handbook way more practical for new hires. Updating that now.",
                         [],
                     ),
                     (
                         'client',
-                        dt_utc(2026, 10, 12, 9, 38, 40),
+                        dt_utc(2026, 10, 11, 17, 18, 30),
                         "ok sounds good, thanks!",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 12, 15, 16, 39),
+                        dt_utc(2026, 10, 11, 18, 2, 15),
                         "All set! Attached are the 4 completed role SOP handbooks with Datadog and Postman locked in for the tech roles:",
                         [
                             'Lead Dispatcher SOP.pdf',
@@ -4610,19 +4605,19 @@ CLIENT_PROFILES = {
                     ),
                     (
                         'client',
-                        dt_utc(2026, 10, 12, 17, 27, 14),
+                        dt_utc(2026, 10, 12, 9, 14, 52),
                         "Hiring managers just reviewed all 4 and love them. Thank you!!",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 12, 17, 31, 0),
-                        "Awesome! Since all 4 role handbooks are confirmed and approved by your hiring team, whenever your next hiring batch or new roles open up, just reach out and we'll take care of it. Best of luck with the onboarding ramp!",
+                        dt_utc(2026, 10, 12, 9, 30, 0),
+                        "Awesome! Good luck with the onboarding ramp, and let us know whenever your next batch of roles opens up.",
                         [],
                     ),
                     (
                         'client',
-                        dt_utc(2026, 10, 12, 17, 33, 15),
+                        dt_utc(2026, 10, 12, 9, 45, 12),
                         "Definitely will, thanks again!",
                         [],
                     ),
@@ -4634,10 +4629,10 @@ CLIENT_PROFILES = {
                 'status': 'closed',
                 'category': 'job',
                 'request_key': 'ew_board_deck',
-                'messages': [
+                                'messages': [
                     (
                         'client',
-                        dt_utc(2026, 10, 20, 19, 14, 55),
+                        dt_utc(2026, 10, 20, 21, 14, 33),
                         "guys i am in a bind. we have our Q4 board & investor meeting tomorrow morning at 9am CT. my co-founder dumped 40 pages of rough bullets, financial screenshots, and messy metrics into a doc. i need a clean, punchy 15-18 slide executive deck in PPTX plus a 2-page briefing memo summarizing our runway, burn, and expansion ARR. can you turn this around overnight? what's the rush rate?",
                         [
                             'Q4 Board Notes.docx',
@@ -4645,55 +4640,55 @@ CLIENT_PROFILES = {
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 20, 19, 28, 10),
+                        dt_utc(2026, 10, 20, 21, 28, 40),
                         "Hey Estella! Yes, we can definitely turn this around overnight before your 9am meeting.",
                         [],
                     ),
                     (
                         'client',
-                        dt_utc(2026, 10, 20, 19, 34, 40),
+                        dt_utc(2026, 10, 20, 21, 35, 12),
                         "lifesaver. what's the total going to be with the overnight turnaround? just need to get it cleared on our card now",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 20, 19, 38, 15),
-                        "Our Deck & Presentation package (studio-deck) starts at $150 on the services list. Since you're an existing client and we already have your company templates on file, we'll keep it right at the base $150 tier and include the overnight priority turn and the 2-page briefing memo in that.",
+                        dt_utc(2026, 10, 20, 21, 44, 25),
+                        "We can do our base $150 deck package. Since we already have your templates from last time, we'll bundle the overnight rush and the 2-page briefing memo into that.",
                         [],
                     ),
                     (
                         'client',
-                        dt_utc(2026, 10, 20, 19, 42, 18),
+                        dt_utc(2026, 10, 20, 21, 50, 10),
                         "awesome, really appreciate that. send over the link and ill pay right now while finishing up with our cap table",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 20, 19, 48, 30),
+                        dt_utc(2026, 10, 20, 21, 52, 45),
                         "Here's the payment link: https://paystack.shop/pay/tx0ipp9eg4",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 20, 19, 49, 5),
+                        dt_utc(2026, 10, 20, 21, 53, 30),
                         "Opening up the deck now. We'll have everything ready in your portal by 6am CT so you have time to review before 9.",
                         [],
                     ),
                     (
                         'client',
-                        dt_utc(2026, 10, 21, 2, 46, 15),
+                        dt_utc(2026, 10, 20, 22, 45, 47),
                         "paid the $150! pulling an all nighter here too on our numbers lol. ping me the second you have the files",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 21, 2, 48, 20),
-                        "Will do! Payment cleared on our end. Working through the final review now, will ping you the second everything's uploaded. Try to get a little sleep!",
+                        dt_utc(2026, 10, 20, 22, 52, 10),
+                        "Will do! Payment cleared on our end. Working through the slides now, will ping you the second everything's uploaded. Try to get a little sleep!",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 21, 6, 14, 20),
+                        dt_utc(2026, 10, 21, 6, 15, 22),
                         "Morning Estella! Just wrapped it up. Here's your complete board pack:\n- 16-slide investor deck (.pptx)\n- Financial schedule (.xlsx)\n- 2-page briefing memo (.docx)\n- Everything bundled in the ZIP",
                         [
                             'Q4 Board Presentation.pptx',
@@ -4704,25 +4699,25 @@ CLIENT_PROFILES = {
                     ),
                     (
                         'client',
-                        dt_utc(2026, 10, 21, 7, 42, 15),
+                        dt_utc(2026, 10, 21, 7, 45, 19),
                         "Just went through the slides and memo with my co-founder over coffee. This is fantastic. The ARR expansion story makes so much more sense now. You literally saved our meeting today.",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 21, 7, 55, 12),
-                        "So glad to hear that! Go crush the presentation and let us know whenever you need the next deck.",
+                        dt_utc(2026, 10, 21, 7, 52, 30),
+                        "So glad to hear that! Go crush the presentation and let us know how it goes.",
                         [],
                     ),
                     (
                         'client',
-                        dt_utc(2026, 10, 21, 8, 2, 40),
+                        dt_utc(2026, 10, 21, 8, 55, 0),
                         "Heading into the boardroom now. Thanks again!!",
                         [],
                     ),
                     (
                         'admin',
-                        dt_utc(2026, 10, 21, 8, 4, 15),
+                        dt_utc(2026, 10, 21, 9, 2, 15),
                         "Rooting for you guys! Knock it out of the park 💪",
                         [],
                     ),
@@ -4763,7 +4758,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('15.00'),
                 'amount_paid': Decimal('0.00'),
                 'status': 'void',
-                'description': 'Rewrite & adapt — Storefront product descriptions',
+                'description': 'Rewrite & adapt - Storefront product descriptions',
                 'created_at': dt_utc(2026, 9, 30, 7, 41, 10),
                 'due_at': dt_utc(2026, 10, 5, 23, 0, 0),
                 'tx_refs': [
@@ -4777,7 +4772,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('30.00'),
                 'amount_paid': Decimal('0.00'),
                 'status': 'open',
-                'description': 'Rewrite & adapt — Product descriptions & welcome email sequence ($15 each)',
+                'description': 'Rewrite & adapt - Product descriptions & welcome email sequence ($15 each)',
                 'created_at': dt_utc(2026, 10, 5, 23, 2, 15),
                 'due_at': dt_utc(2026, 10, 12, 23, 2, 15),
                 'tx_refs': [
@@ -4787,11 +4782,11 @@ CLIENT_PROFILES = {
                 ],
             },
         ],
-        'messages': [
+                'messages': [
             (
                 'client',
                 dt_utc(2026, 10, 4, 18, 14, 29),
-                'hey! our new winter serum collection launches next month and every time I try to write the product pages, they sound like a robotic dermatology textbook lol. I want warm, sensory, ritual-driven copy that makes people actually feel the texture on their skin. also need a 4-part email welcome flow for new subscribers. can you help inject some soul into these?',
+                "hey! our new winter serum collection launches next month and every time I try to write the product pages, they sound like a robotic dermatology textbook lol. I want warm, sensory, ritual-driven copy that makes people actually feel the texture on their skin. also need a 4-part email welcome flow for new subscribers. can you help inject some soul into these?",
                 [
                     'Welcome Email Sequence Draft.docx',
                 ],
@@ -4799,19 +4794,19 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 4, 18, 38, 12),
-                'Hi Kaylee! Botanical skincare copy lives and dies on sensory verbs—focusing on cloud textures, dewy absorption, and nighttime rituals rather than just listing clinical chemicals. Are you launching these on Shopify with direct-to-consumer bundles, or are you also pitching wholesale boutique accounts?',
+                "Hi Kaylee! Botanical skincare copy lives and dies on sensory verbs-focusing on cloud textures, dewy absorption, and nighttime rituals rather than just listing clinical chemicals. Are you launching these on Shopify with direct-to-consumer bundles, or are you also pitching wholesale boutique accounts?",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 10, 4, 19, 12, 35),
-                'Strictly Shopify D2C with our 4-bottle ritual bundle! We have a 4-part welcome email sequence that needs the exact same warm tone. Can you tackle both the 12 product descriptions and the welcome sequence?',
+                "Strictly Shopify D2C with our 4-bottle ritual bundle! We have a 4-part welcome email sequence that needs the exact same warm tone. Can you tackle both the 12 product descriptions and the welcome sequence?",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 4, 19, 28, 50),
-                'We can write complete sensory product descriptions for all 12 SKUs formatted in a ready-to-import Shopify spreadsheet, plus the complete 4-part email retention sequence for $180 flat. Want us to kick this off?',
+                "We can write complete sensory product descriptions for all 12 SKUs formatted in a ready-to-import Shopify spreadsheet, plus the complete 4-part email retention sequence for $180 flat. Want us to kick this off?",
                 [],
             ),
             (
@@ -4829,13 +4824,13 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 10, 5, 9, 51, 39),
-                'paid with my visa card!',
+                "paid with my visa card!",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 5, 17, 16, 4),
-                'Here are your finalized deliverables: the full 12-SKU product catalog spreadsheet ready for Shopify import, and your 4-part welcome email sequence!',
+                "All set Kaylee! Here are your finalized deliverables: the full 12-SKU product catalog spreadsheet ready for Shopify import, and your 4-part welcome email sequence!",
                 [
                     'Shopify Product Descriptions.xlsx',
                     'Welcome Email Sequence.docx',
@@ -4844,7 +4839,7 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 10, 5, 23, 19, 42),
-                'reading through the Midnight Nectar description gave me actual goosebumps!! the way you described the blue tansy melting into skin is pure poetry. thank you so much!',
+                "reading through the Midnight Nectar description gave me actual goosebumps!! the way you described the blue tansy melting into skin is pure poetry. thank you so much!",
                 [],
             ),
         ],
@@ -4882,7 +4877,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('1.18'),
                 'amount_paid': Decimal('0.00'),
                 'status': 'void',
-                'description': 'QuickPay — Initial card verification test',
+                'description': 'QuickPay - Initial card verification test',
                 'created_at': dt_utc(2026, 8, 3, 9, 38, 0),
                 'due_at': dt_utc(2026, 8, 5, 9, 38, 0),
                 'tx_refs': [
@@ -4897,7 +4892,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('100.00'),
                 'amount_paid': Decimal('0.00'),
                 'status': 'open',
-                'description': 'Technical production — 12-month Excel cash-flow & expense tracker',
+                'description': 'Technical production - 12-month Excel cash-flow & expense tracker',
                 'created_at': dt_utc(2026, 10, 2, 4, 41, 0),
                 'due_at': dt_utc(2026, 10, 9, 4, 41, 0),
                 'tx_refs': [
@@ -4906,7 +4901,7 @@ CLIENT_PROFILES = {
                 ],
             },
         ],
-        'messages': [
+                'messages': [
             (
                 'client',
                 dt_utc(2026, 10, 4, 11, 18, 33),
@@ -4918,7 +4913,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 4, 11, 42, 9),
-                "Hello Dennis! We can standardize all Southern and Western corridor trips, convert KES fuel burn to USD at historical benchmark rates, and calculate net trip margins. Are you billing your logistics clients on a flat per-container rate or cost-plus fuel surcharges?",
+                "Hey Dennis! We can standardize the Southern and Western corridor trips, convert KES to USD at benchmark rates, and calculate clean trip margins. Are you billing your logistics clients on a flat per-container rate or cost-plus fuel surcharges?",
                 [],
             ),
             (
@@ -4948,19 +4943,19 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 10, 5, 8, 45, 10),
-                'paid on card just now. let me know once the sheets are ready.',
+                "paid on card just now. let me know once the sheets are ready.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 5, 8, 47, 20),
-                "Payment confirmed, thank you Drako! Running the model formulas now, will notify you as soon as they're posted.",
+                "Payment confirmed, thank you Dennis! Running the model formulas now, will notify you as soon as they're posted.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 5, 12, 18, 14),
-                'Here are your completed corridor financial models: the Q3 corridor reconciliation workbook and the automated 12-month multi-sheet cash-flow and expense model with dynamic formulas.',
+                "All set Dennis! Here are your completed corridor models: the Q3 reconciliation workbook and the 12-month cash-flow tracker.",
                 [
                     'Corridor Reconciliation.xlsx',
                     '12-Month Cashflow Tracker.xlsx',
@@ -4969,7 +4964,7 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 10, 5, 14, 11, 28),
-                'downloaded both Excel workbooks and the corridor segment formulas match our fleet dispatch sheets exactly. thank you.',
+                "downloaded both Excel workbooks and the corridor segment formulas match our fleet dispatch sheets exactly. thank you.",
                 [],
             ),
         ],
@@ -4998,14 +4993,14 @@ CLIENT_PROFILES = {
                 'created_at': dt_utc(2026, 10, 1, 22, 44, 0),
                 'deliverables': [
                     {
-                        'title': '10-Slide Commercial Pitch Deck — Final (v2)',
+                        'title': '10-Slide Commercial Pitch Deck - Final (v2)',
                         'kind': 'Presentation deck',
                         'status': 'delivered',
                         'version': 2,
                         'notes': 'Settled Oct 2, 2026 via Apple Pay (T991195576160953) and delivered Oct 3, 2026.',
                     },
                     {
-                        'title': 'Quintero Cold Chain — 10-Slide Commercial Pitch Deck.pptx',
+                        'title': 'Quintero Cold Chain - 10-Slide Commercial Pitch Deck.pptx',
                         'kind': 'Slide Presentation',
                         'status': 'delivered',
                         'version': 1,
@@ -5022,7 +5017,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('110.00'),
                 'amount_paid': Decimal('110.00'),
                 'status': 'paid',
-                'description': 'Deck & presentation — 10-slide client pitch deck ($90 base + $20 next-day rush)',
+                'description': 'Deck & presentation - 10-slide client pitch deck ($90 base + $20 next-day rush)',
                 'created_at': dt_utc(2026, 10, 2, 4, 56, 0),
                 'due_at': dt_utc(2026, 10, 4, 4, 56, 0),
                 'tx_refs': [
@@ -5030,7 +5025,7 @@ CLIENT_PROFILES = {
                 ],
             },
         ],
-        'messages': [
+                'messages': [
             (
                 'client',
                 dt_utc(2026, 10, 28, 15, 14, 0),
@@ -5043,13 +5038,13 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 28, 15, 38, 0),
-                "Hi Alexa! Trade logistics software is a massive opportunity, but angel investors get anxious when founders pitch broad market sizes instead of proving repeatable pilot traction. Looked through your notes—28 paid pilots and zero logo churn in 90 days is genuinely impressive.\n\nIs your demo day presentation a rapid 3-to-4 minute pitch, or do you have a full 10-minute partner deck slot?",
+                "Hi Alexa! Trade logistics software is a massive opportunity, but angel investors get anxious when founders pitch broad market sizes instead of proving repeatable pilot traction. Looked through your notes-28 paid pilots and zero logo churn in 90 days is genuinely impressive.\n\nIs your demo day presentation a rapid 3-to-4 minute pitch, or do you have a full 10-minute partner deck slot?",
                 [],
             ),
             (
                 'client',
                 dt_utc(2026, 10, 28, 16, 10, 0),
-                "It's a strict 4-minute pitch followed by 3 minutes of partner Q&A. That's exactly why I was stumbling—I was trying to cram 20 operational details into the go-to-market slide instead of telling a clean story. What would the structure and pricing look like to overhaul the slides and unit economics?",
+                "It's a strict 4-minute pitch followed by 3 minutes of partner Q&A. That's exactly why I was stumbling-I was trying to cram 20 operational details into the go-to-market slide instead of telling a clean story. What would the structure and pricing look like to overhaul the slides and unit economics?",
                 [],
             ),
             (
@@ -5067,7 +5062,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 28, 17, 5, 0),
-                "We're setting up a custom checkout page for you since we are having issues with our payment provider integration at the moment.",
+                "Setting up invoice INV-261002-AQ01 ($250.00) now.",
                 [],
             ),
             (
@@ -5085,7 +5080,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 29, 9, 15, 0),
-                'Here is the v1 narrative outline to review, Alexa! Notice how Slide 3 shifts immediately into your 28 paid pilots and 0.7-month payback.',
+                "Here is the v1 narrative outline to review, Alexa! Notice how Slide 3 shifts immediately into your 28 paid pilots and 0.7-month payback.",
                 [
                     'Pitch Deck Structure v1.pdf',
                 ],
@@ -5093,13 +5088,13 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 10, 29, 10, 4, 0),
-                'paid the $250 invoice! the outline flow is 10x better already.',
+                "paid the $250 invoice! the outline flow is 10x better already.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 30, 11, 20, 0),
-                'Here is the complete deliverable: the full 10-slide PowerPoint presentation (.pptx) with speaker notes, and your Excel unit economics model!',
+                "All done Alexa! Here's the full 10-slide PowerPoint presentation (.pptx) with speaker notes, and your Excel unit economics model!",
                 [
                     '10-Slide Investor Pitch.pptx',
                     'Unit Economics Model.xlsx',
@@ -5108,7 +5103,7 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 10, 30, 14, 28, 5),
-                'practiced with my lead mentor this morning and he said this deck looks like a Series A company made it! thank you so much for the quick turnaround!',
+                "practiced with my lead mentor this morning and he said this deck looks like a Series A company made it! thank you so much for the quick turnaround!",
                 [],
             ),
             (
@@ -5116,7 +5111,6 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 30, 15, 42, 0),
                 "So excited for you Alexa! Knock that pitch out of the park!",
                 [],
-                False,
             ),
         ],
     },
@@ -5144,7 +5138,7 @@ CLIENT_PROFILES = {
                 'created_at': dt_utc(2026, 9, 29, 21, 42, 0),
                 'deliverables': [
                     {
-                        'title': 'Client Call Synthesis & Action Sheet — Final (v2)',
+                        'title': 'Client Call Synthesis & Action Sheet - Final (v2)',
                         'kind': 'Action summary',
                         'status': 'delivered',
                         'version': 2,
@@ -5161,7 +5155,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('60.00'),
                 'amount_paid': Decimal('60.00'),
                 'status': 'paid',
-                'description': 'Review & synthesis — 18-page call transcript synthesis & action list',
+                'description': 'Review & synthesis - 18-page call transcript synthesis & action list',
                 'created_at': dt_utc(2026, 9, 30, 7, 54, 10),
                 'due_at': dt_utc(2026, 10, 2, 7, 54, 10),
                 'tx_refs': [
@@ -5169,7 +5163,7 @@ CLIENT_PROFILES = {
                 ],
             },
         ],
-        'messages': [
+                'messages': [
             (
                 'client',
                 dt_utc(2026, 11, 8, 14, 18, 0),
@@ -5181,7 +5175,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 11, 8, 14, 35, 0),
-                "Hi Cami! Safe travels on the train. Skimmed the transcripts—the friction between engineering sprint delivery and the VP of Product's roadmap is glaring, while the People Ops notes point to severe manager burnout.\n\nIs this action sheet going straight to their C-suite for sign-off on your advisory scope, or is it for the workshop attendees themselves?",
+                "Hi Cami! Safe travels on the train. Skimmed the transcripts-the friction between engineering sprint delivery and the VP of Product's roadmap is glaring, while the People Ops notes point to severe manager burnout.\n\nIs this action sheet going straight to their C-suite for sign-off on your advisory scope, or is it for the workshop attendees themselves?",
                 [],
             ),
             (
@@ -5205,13 +5199,13 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 11, 8, 16, 35, 0),
-                "We're setting up a custom payment page for you on our portal since we're currently upgrading our payment provider integration.",
+                "Setting up invoice INV-260930-CK01 ($160.00) now.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 11, 8, 16, 35, 30),
-                "Posted invoice INV-260930-CK01 ($160.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/ck-train88 (it's also linked directly on your invoice).",
+                "Here's the payment link: https://paystack.shop/pay/ck-train88. Card or Apple Pay both work.",
                 [],
             ),
             (
@@ -5225,7 +5219,7 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 11, 8, 18, 18, 23),
-                'paid on visa! v1 captures the exact political dynamics between their CTO and Head of Product.',
+                "paid on visa! v1 captures the exact political dynamics between their CTO and Head of Product.",
                 [],
             ),
             (
@@ -5237,7 +5231,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 11, 9, 6, 14, 47),
-                'Here is your final executive action sheet PDF, complete with the recommended 4-workshop modular delivery schedule!',
+                "Here is your final executive action sheet PDF, complete with the recommended 4-workshop modular delivery schedule!",
                 [
                     'Call Action Sheet.pdf',
                 ],
@@ -5281,7 +5275,7 @@ CLIENT_PROFILES = {
                 'created_at': dt_utc(2026, 5, 1, 3, 50, 0),
                 'deliverables': [
                     {
-                        'title': 'Spring Collection Launch Copy & Storefront FAQ Deck — Final (v1)',
+                        'title': 'Spring Collection Launch Copy & Storefront FAQ Deck - Final (v1)',
                         'kind': 'Storefront Copy',
                         'status': 'delivered',
                         'version': 1,
@@ -5304,7 +5298,7 @@ CLIENT_PROFILES = {
                 'created_at': dt_utc(2026, 7, 23, 18, 20, 0),
                 'deliverables': [
                     {
-                        'title': '3-Part Late Summer Retention Email Sequence — Final (v2)',
+                        'title': '3-Part Late Summer Retention Email Sequence - Final (v2)',
                         'kind': 'Email copy',
                         'status': 'delivered',
                         'version': 2,
@@ -5321,7 +5315,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('70.00'),
                 'amount_paid': Decimal('70.00'),
                 'status': 'paid',
-                'description': 'Website / product copy — Spring launch descriptions & FAQ ($30 + $10 + $30)',
+                'description': 'Website / product copy - Spring launch descriptions & FAQ ($30 + $10 + $30)',
                 'created_at': dt_utc(2026, 5, 8, 20, 30, 0),
                 'due_at': dt_utc(2026, 5, 10, 20, 30, 0),
                 'tx_refs': [
@@ -5340,7 +5334,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('30.00'),
                 'amount_paid': Decimal('30.00'),
                 'status': 'paid',
-                'description': 'Website / product copy — 3-part late-summer Klaviyo email sequence',
+                'description': 'Website / product copy - 3-part late-summer Klaviyo email sequence',
                 'created_at': dt_utc(2026, 7, 25, 21, 0, 0),
                 'due_at': dt_utc(2026, 7, 27, 21, 0, 0),
                 'tx_refs': [
@@ -5348,11 +5342,11 @@ CLIENT_PROFILES = {
                 ],
             },
         ],
-        'messages': [
+                'messages': [
             (
                 'client',
                 dt_utc(2026, 10, 23, 11, 20, 0),
-                'hey! our last two email campaigns fell completely flat—open rates were decent at 34% but click-through was under 1.2%. I think our CTAs and body copy are way too polite and passive. attached the draft sequences, be as brutally honest as needed!',
+                "hey! our last two email campaigns fell completely flat-open rates were decent at 34% but click-through was under 1.2%. I think our CTAs and body copy are way too polite and passive. attached the draft sequences, be as brutally honest as needed!",
                 [
                     'Summer Campaign Emails Rough.docx',
                 ],
@@ -5366,7 +5360,7 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 10, 23, 12, 15, 0),
-                "These are going out to our VIP customer segment who bought our spring linen drop. That diagnostic is so true—we were so afraid of sounding pushy that we sounded boring. Can you rewrite the 5 summer retention emails and polish our spring collection copy deck?",
+                "These are going out to our VIP customer segment who bought our spring linen drop. That diagnostic is so true-we were so afraid of sounding pushy that we sounded boring. Can you rewrite the 5 summer retention emails and polish our spring collection copy deck?",
                 [],
             ),
             (
@@ -5384,13 +5378,13 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 24, 9, 30, 0),
-                "We're setting up a custom checkout page for you since we are having issues with our payment provider integration at the moment.",
+                "Setting up invoice INV-260726-LR01 ($120.00) now.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 24, 9, 30, 30),
-                "Posted invoice INV-260726-LR01 ($120.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/lr-summer22 (it's also linked directly on your invoice).",
+                "Here's the payment link: https://paystack.shop/pay/lr-summer22. Card or Apple Pay both work.",
                 [],
             ),
             (
@@ -5402,13 +5396,13 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 10, 24, 14, 22, 0),
-                'paid on card!',
+                "paid on card!",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 25, 14, 13, 8),
-                'Here are both completed copy deliverables: your spring collection launch copy deck and storefront FAQ, plus the final high-converting summer retention email sequence (5 emails).',
+                "All set Lina! Here are your spring collection launch copy deck and storefront FAQ, plus the final summer retention sequence.",
                 [
                     'Spring Launch Copy.docx',
                     'Summer Launch Emails.docx',
@@ -5452,7 +5446,7 @@ CLIENT_PROFILES = {
                 'created_at': dt_utc(2026, 3, 9, 18, 0, 0),
                 'deliverables': [
                     {
-                        'title': 'Spring Regional Freight Rate Matrix & Dynamic Formula Tracker — Final (v1)',
+                        'title': 'Spring Regional Freight Rate Matrix & Dynamic Formula Tracker - Final (v1)',
                         'kind': 'Rate Model',
                         'status': 'delivered',
                         'version': 1,
@@ -5475,7 +5469,7 @@ CLIENT_PROFILES = {
                 'created_at': dt_utc(2026, 6, 24, 19, 30, 0),
                 'deliverables': [
                     {
-                        'title': 'Newfoundland Dispatch & Fuel-Surcharge Tracker — Final (KM)',
+                        'title': 'Newfoundland Dispatch & Fuel-Surcharge Tracker - Final (KM)',
                         'kind': 'Excel workbook',
                         'status': 'delivered',
                         'version': 2,
@@ -5492,7 +5486,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('125.00'),
                 'amount_paid': Decimal('125.00'),
                 'status': 'paid',
-                'description': 'Technical production — Spring regional freight rate & formula sheets ($45 + $25 + $55)',
+                'description': 'Technical production - Spring regional freight rate & formula sheets ($45 + $25 + $55)',
                 'created_at': dt_utc(2026, 4, 15, 12, 35, 0),
                 'due_at': dt_utc(2026, 4, 17, 12, 35, 0),
                 'tx_refs': [
@@ -5509,7 +5503,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('90.00'),
                 'amount_paid': Decimal('90.00'),
                 'status': 'paid',
-                'description': 'Technical production — Multi-tab Newfoundland dispatch & diesel surcharge workbook',
+                'description': 'Technical production - Multi-tab Newfoundland dispatch & diesel surcharge workbook',
                 'created_at': dt_utc(2026, 6, 27, 22, 50, 0),
                 'due_at': dt_utc(2026, 6, 29, 22, 50, 0),
                 'tx_refs': [
@@ -5520,7 +5514,7 @@ CLIENT_PROFILES = {
                 ],
             },
         ],
-        'messages': [
+                'messages': [
             (
                 'client',
                 dt_utc(2026, 10, 21, 14, 10, 0),
@@ -5538,7 +5532,7 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 10, 21, 15, 5, 0),
-                "we run both—coastal NL distribution plus the Trans-Canada highway link through North Sydney into Nova Scotia. When the ferry gets delayed 18 hours due to gale warnings, our standby demurrage gets completely lost. Can you build formulas that capture both?",
+                "we run both-coastal NL distribution plus the Trans-Canada highway link through North Sydney into Nova Scotia. When the ferry gets delayed 18 hours due to gale warnings, our standby demurrage gets completely lost. Can you build formulas that capture both?",
                 [],
             ),
             (
@@ -5556,13 +5550,13 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 10, 22, 9, 27, 0),
-                "We're setting up a custom payment page for you on our portal since we're currently upgrading our payment provider integration.",
+                "Setting up invoice INV-260628-PH01 ($175.00) now.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 22, 9, 27, 30),
-                "Posted invoice INV-260628-PH01 ($175.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/ph-ferry34 (it's also linked directly on your invoice).",
+                "Here's the payment link: https://paystack.shop/pay/ph-ferry34. Card or Apple Pay both work.",
                 [],
             ),
             (
@@ -5574,13 +5568,13 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 10, 22, 11, 18, 0),
-                'paid on mastercard.',
+                "paid on mastercard.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 23, 13, 4, 19),
-                'Here are both completed Newfoundland freight models: your dispatch and fuel-surcharge tracker with dynamic per-km formulas and ferry fees, plus the regional carrier rate lookup matrix.',
+                "All set Patrick! Here are both completed Newfoundland freight models: your dispatch and fuel-surcharge tracker with dynamic per-km formulas and ferry fees, plus the regional carrier rate lookup matrix.",
                 [
                     'Dispatch & Fuel Tracker.xlsx',
                     'Spring Freight Rates.xlsx',
@@ -5597,7 +5591,6 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 10, 23, 14, 28, 0),
                 "That's what we love to hear Patrick! Cheers and talk soon!",
                 [],
-                False,
             ),
         ],
     },
@@ -5625,21 +5618,21 @@ CLIENT_PROFILES = {
                 'created_at': dt_utc(2026, 4, 12, 23, 0, 0),
                 'deliverables': [
                     {
-                        'title': 'Storefront Copy & 28-Point Pre-Launch QA Checklist — Final',
+                        'title': 'Storefront Copy & 28-Point Pre-Launch QA Checklist - Final',
                         'kind': 'Launch package',
                         'status': 'delivered',
                         'version': 1,
-                        'notes': 'Settled across Apr 12 – May 8, 2026 (final balance QP-MOWUG2PHKDPF, $55.00).',
+                        'notes': 'Settled across Apr 12 - May 8, 2026 (final balance QP-MOWUG2PHKDPF, $55.00).',
                     },
                     {
-                        'title': 'Carter Lumber — Interactive Landing Page Prototype.html',
+                        'title': 'Carter Lumber - Interactive Landing Page Prototype.html',
                         'kind': 'Interactive Prototype',
                         'status': 'delivered',
                         'version': 1,
                         'notes': 'Responsive HTML landing page prototype.',
                     },
                     {
-                        'title': 'Carter Lumber — Digital Storefront Assets & Launch Kit.zip',
+                        'title': 'Carter Lumber - Digital Storefront Assets & Launch Kit.zip',
                         'kind': 'ZIP Archive',
                         'status': 'delivered',
                         'version': 1,
@@ -5656,7 +5649,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('290.00'),
                 'amount_paid': Decimal('290.00'),
                 'status': 'paid',
-                'description': 'Communication & QA — Storefront collection copy & launch checklist ($50+$40+$50+$50+$45+$55)',
+                'description': 'Communication & QA - Storefront collection copy & launch checklist ($50+$40+$50+$50+$45+$55)',
                 'created_at': dt_utc(2026, 5, 8, 11, 35, 0),
                 'due_at': dt_utc(2026, 5, 10, 11, 35, 0),
                 'tx_refs': [
@@ -5669,7 +5662,7 @@ CLIENT_PROFILES = {
                 ],
             },
         ],
-        'messages': [
+                'messages': [
             (
                 'client',
                 dt_utc(2026, 5, 7, 14, 18, 36),
@@ -5681,7 +5674,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 5, 7, 14, 42, 19),
-                "Hi Carter! Hardware buyers don't buy alloy codes—they buy the feeling of an immaculate, zero-cable desktop, the solid tactile thud of a unibody rail, and the satisfying snap of a magnetic Qi2 dock.\n\nWe can write your complete 3-tier storefront copy deck (Unibody Rail, MagSafe Qi2 Dock, CNC Cable Channels), build a standalone interactive HTML prototype with a live 3D unibody colorway toggle and modular rail builder, and assemble a 28-point Shopify pre-launch QA checklist for $290 flat.\n\nWant us to dive into this?",
+                "Hi Carter! Hardware buyers don't buy alloy codes-they buy the feeling of an immaculate, zero-cable desktop, the solid tactile thud of a unibody rail, and the satisfying snap of a magnetic Qi2 dock.\n\nWe can write your complete 3-tier storefront copy deck (Unibody Rail, MagSafe Qi2 Dock, CNC Cable Channels), build a standalone interactive HTML prototype with a live 3D unibody colorway toggle and modular rail builder, and assemble a 28-point Shopify pre-launch QA checklist for $290 flat.\n\nWant us to dive into this?",
                 [],
             ),
             (
@@ -5705,13 +5698,13 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 5, 7, 15, 8, 10),
-                "We're setting up a custom checkout page for you on our portal since we're currently upgrading our payment provider integration.",
+                "Setting up invoice INV-260508-CL01 ($290.00) now.",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 5, 7, 15, 8, 30),
-                "Posted invoice INV-260508-CL01 ($290.00). Settle via Card or Apple Pay on your direct payment link: https://paystack.shop/pay/cl-apex99 (it's also linked directly on your invoice).",
+                "Here's the payment link: https://paystack.shop/pay/cl-apex99. Card or Apple Pay both work.",
                 [],
             ),
             (
@@ -5743,7 +5736,7 @@ CLIENT_PROFILES = {
             (
                 'admin',
                 dt_utc(2026, 5, 8, 13, 50, 25),
-                "Love 'Lifetime Unibody Guarantee'—way stronger. Updating the badge copy and the Qi2 subtotal in the prototype now, will have the full launch kit over shortly.",
+                "Love 'Lifetime Unibody Guarantee'-way stronger. Updating the badge copy and the Qi2 subtotal in the prototype now, will have the full launch kit over shortly.",
                 [],
             ),
             (
@@ -5765,7 +5758,7 @@ CLIENT_PROFILES = {
             (
                 'client',
                 dt_utc(2026, 5, 8, 16, 19, 48),
-                "just spent 15 minutes playing with the colorway toggle and modular rail builder on my iPhone—this feels smoother than Apple's configurator! sending the copy deck to our Shopify engineer right now. seriously grateful for the quick turnaround!",
+                "just spent 15 minutes playing with the colorway toggle and modular rail builder on my iPhone-this feels smoother than Apple's configurator! sending the copy deck to our Shopify engineer right now. seriously grateful for the quick turnaround!",
                 [],
             ),
             (
@@ -5773,7 +5766,6 @@ CLIENT_PROFILES = {
                 dt_utc(2026, 5, 8, 16, 25, 0),
                 "Haha love to hear that! Glad the builder feels so smooth. Good luck with the Shopify rollout!",
                 [],
-                False,
             ),
         ],
     },
@@ -5795,7 +5787,7 @@ CLIENT_PROFILES = {
                 'title': 'Pediatric clinic intake agreement, parent disclosure forms, and HIPAA consent pack',
                 'objective': 'Draft comprehensive clinical service agreements, parent fee disclosures, cancellation policies, and HIPAA-compliant consent documents for pediatric speech therapy practice.',
                 'scope': 'Four specialized clinical documents: Master Clinical Service Agreement, Parent Financial & Cancellation Disclosure, HIPAA Teletherapy & In-Clinic Consent, and Intake Encounter Scripts.',
-                'budget_band': 'USD 75–250',
+                'budget_band': 'USD 75-250',
                 'deliverable': 'Master clinic agreement, parent financial terms, HIPAA consent, and desk scripts (.docx & .pdf).',
                 'status': 'delivered',
                 'estimate_low': Decimal('240.00'),
@@ -5803,21 +5795,21 @@ CLIENT_PROFILES = {
                 'created_at': dt_utc(2026, 10, 6, 14, 15, 0),
                 'deliverables': [
                     {
-                        'title': 'Pediatric Clinical Intake & Consent Agreement — Final (v2)',
+                        'title': 'Pediatric Clinical Intake & Consent Agreement - Final (v2)',
                         'kind': 'Clinical Documentation',
                         'status': 'delivered',
                         'version': 2,
                         'notes': 'Settled Oct 20, 2026 (T267443039046790) and delivered Oct 20, 2026.',
                     },
                     {
-                        'title': 'Parent Communication & Cancellation Policy Templates — Final',
+                        'title': 'Parent Communication & Cancellation Policy Templates - Final',
                         'kind': 'Practice Templates',
                         'status': 'delivered',
                         'version': 1,
                         'notes': 'Delivered Oct 20, 2026.',
                     },
                     {
-                        'title': 'Cuevas Speech Therapy — Complete Clinical Onboarding Pack.zip',
+                        'title': 'Cuevas Speech Therapy - Complete Clinical Onboarding Pack.zip',
                         'kind': 'ZIP Archive',
                         'status': 'delivered',
                         'version': 1,
@@ -5834,7 +5826,7 @@ CLIENT_PROFILES = {
                 'amount_due': Decimal('240.00'),
                 'amount_paid': Decimal('240.00'),
                 'status': 'paid',
-                'description': 'Technical documentation — Pediatric speech clinic intake agreement, parent disclosure forms, and HIPAA consent pack',
+                'description': 'Technical documentation - Pediatric speech clinic intake agreement, parent disclosure forms, and HIPAA consent pack',
                 'created_at': dt_utc(2026, 10, 20, 17, 30, 0),
                 'due_at': dt_utc(2026, 10, 22, 17, 30, 0),
                 'tx_refs': [
@@ -5842,10 +5834,10 @@ CLIENT_PROFILES = {
                 ],
             },
         ],
-        'messages': [
+                'messages': [
             (
                 'client',
-                dt_utc(2026, 10, 6, 14, 13, 28),
+                dt_utc(2026, 10, 20, 14, 10, 0),
                 "hey... a friend of mine (audrey brown) said you guys essentially saved her sanity when her studio booking page was crashing and confusing people. honestly i'm pretty skeptical because the last agency we hired took 3 weeks just to send us boilerplate garbage from google, but our clinic intake paperwork is a total disaster right now. parents are yelling at our front desk over the cancellation fee, and our HIPAA consent forms are from 2019. do you guys actually write customized pediatric therapy agreements, or is that outside what you handle?",
                 [
                     'Clinic Intake Notes.docx',
@@ -5853,43 +5845,43 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 6, 15, 42, 10),
+                dt_utc(2026, 10, 20, 14, 25, 0),
                 "Hey Issa! Glad Audrey connected us. Yes, we handle custom clinical intake documentation and client agreements all the time. Pediatric practices have specific needs around minor patients vs legal guarantors, HIPAA teletherapy, and observation rooms. We can definitely take this on.",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 7, 8, 29, 14),
+                dt_utc(2026, 10, 20, 14, 38, 0),
                 "ok good to know, because i dont have patience for another agency giving me template junk. if you look at the notes our therapists work with non-verbal kids and observation mirrors, so that has to be explicit. what would the total be for all four docs?",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 7, 11, 18, 37),
-                "On our services page, Technical Production (studio-technical) starts at $75 for a single technical document. Since your scope is a 4-part clinical pack—the master agreement, parent financial disclosure, HIPAA consent, and front-desk scripts—we can do the full package for $240. That fits right inside the $75–$250 band from your brief.",
+                dt_utc(2026, 10, 20, 14, 48, 0),
+                "For all 4 docs-the master agreement, parent financial disclosure, HIPAA consent, and front-desk scripts-we can do the full package for $240 flat. Fits right inside your budget.",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 7, 11, 42, 10),
+                dt_utc(2026, 10, 20, 14, 55, 0),
                 "Fair enough, $240 works if it's actually thorough and saves me from another parent yelling at the desk. How soon can I see a first draft?",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 7, 12, 5, 0),
+                dt_utc(2026, 10, 20, 15, 5, 0),
                 "We can have v1 in your hands by Friday afternoon. Starting on the draft now.",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 9, 19, 43, 52),
+                dt_utc(2026, 10, 20, 15, 45, 0),
                 "just checking in on this... its friday evening, wanted to review before our monday staff meeting",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 9, 20, 17, 11),
+                dt_utc(2026, 10, 20, 15, 58, 0),
                 "Just finished the final review pass. Attached is v1 of the Master Agreement. Focus on the guarantor clauses and mirror observation sections over the weekend and let us know what you want tweaked.",
                 [
                     'Pediatric Intake Agreement v1.docx',
@@ -5897,49 +5889,49 @@ CLIENT_PROFILES = {
             ),
             (
                 'client',
-                dt_utc(2026, 10, 11, 11, 13, 48),
-                "I went through v1 line by line with my lead pathologist. You have a lot of work to do.\n1. Page 2 is completely unacceptable. You wrote 'late cancellations incur a $50 administrative charge'—in clinical therapy that will trigger insurance audit pushback. It MUST read 'Unscheduled missed sessions without 24-hour advance written notice are subject to the reserved clinical hour fee of $75'.\n2. Why did you use the word 'patient' on line 14 and 'client' on line 28? We treat pediatric patients, but parents are the legal guarantors. Keep the legal terms strict throughout.\n3. Add a clear disclaimer on page 3 that progress evaluations are clinical estimates and not guaranteed medical outcomes.\nFix these and send me a revised version.",
+                dt_utc(2026, 10, 20, 16, 25, 0),
+                "I went through v1 line by line with my lead pathologist. You have a lot of work to do.\n1. Page 2 is completely unacceptable. You wrote 'late cancellations incur a $50 administrative charge'-in clinical therapy that will trigger insurance audit pushback. It MUST read 'Unscheduled missed sessions without 24-hour advance written notice are subject to the reserved clinical hour fee of $75'.\n2. Why did you use the word 'patient' on line 14 and 'client' on line 28? We treat pediatric patients, but parents are the legal guarantors. Keep the legal terms strict throughout.\n3. Add a clear disclaimer on page 3 that progress evaluations are clinical estimates and not guaranteed medical outcomes.\nFix these and send me a revised version.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 11, 11, 24, 10),
+                dt_utc(2026, 10, 20, 16, 30, 0),
                 "Got the notes Issa, let me pull up the draft and look at it.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 11, 13, 42, 15),
-                "Went through all three points with the team. Yeah I see where the issue is—makes sense on the $75 reserved clinical hour fee for insurance audits, and we'll separate patient from guarantor consistently across all pages. Going to work on those fixes now.",
+                dt_utc(2026, 10, 20, 16, 42, 0),
+                "Went through all three points with the team. Yeah I see where the issue is-makes sense on the $75 reserved clinical hour fee for insurance audits, and we'll separate patient from guarantor consistently across all pages. Going to work on those fixes now.",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 11, 13, 58, 40),
+                dt_utc(2026, 10, 20, 16, 45, 0),
                 "ok",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 14, 16, 28, 19),
+                dt_utc(2026, 10, 20, 17, 10, 0),
                 "Did you finish those edits yet? Also don't forget the parent communication emails you promised in the scope. I need those templates for our intake coordinator.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 14, 16, 36, 10),
+                dt_utc(2026, 10, 20, 17, 18, 0),
                 "Almost done with the agreement revisions, just finalizing the three email templates. Having the full v2 over by tomorrow midday.",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 14, 16, 42, 5),
+                dt_utc(2026, 10, 20, 17, 22, 0),
                 "ok sounds good",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 15, 12, 43, 56),
+                dt_utc(2026, 10, 20, 17, 45, 0),
                 "Here's v2 Issa. Updated the cancellation fee to the $75 reserved clinical hour, separated patient and guarantor terms throughout, and added the progress disclaimer. The parent communication templates are attached as well.",
                 [
                     'Pediatric Intake Agreement.docx',
@@ -5948,68 +5940,68 @@ CLIENT_PROFILES = {
             ),
             (
                 'client',
-                dt_utc(2026, 10, 17, 9, 11, 34),
+                dt_utc(2026, 10, 20, 18, 5, 0),
                 "The cancellation clause and guarantor terms are much better now. However, under Section 4 on the communication deck, can you add a sentence explaining that superbills for out-of-network reimbursement are generated on the 1st of each month? Once that's in, we should be ready for the final PDF.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 17, 9, 18, 10),
+                dt_utc(2026, 10, 20, 18, 9, 0),
                 "Got it, let me check where that fits in Section 4.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 17, 9, 32, 20),
+                dt_utc(2026, 10, 20, 18, 14, 0),
                 "Yeah I see where to add the 1st-of-the-month superbill note in both the templates and the agreement. Updating those now.",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 17, 9, 36, 15),
+                dt_utc(2026, 10, 20, 18, 16, 0),
                 "ok thanks",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 17, 14, 28, 49),
+                dt_utc(2026, 10, 20, 18, 22, 0),
                 "All locked in! Updated the schedule in Section 6 and the welcome templates. Ready for your final sign-off whenever you get a minute.",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 20, 17, 14, 18),
+                dt_utc(2026, 10, 20, 18, 25, 0),
                 "Okay where do I pay? I need to get this off my to-do list before my 7pm patient.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 20, 17, 22, 0),
+                dt_utc(2026, 10, 20, 18, 25, 30),
                 "Here's the payment link: https://paystack.shop/pay/tx0ipp9eg4",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 20, 17, 22, 45),
+                dt_utc(2026, 10, 20, 18, 26, 0),
                 "Takes card or Apple Pay. As soon as it clears I'll drop the finalized PDFs and forms bundle right here for you!",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 20, 18, 26, 12),
+                dt_utc(2026, 10, 20, 18, 27, 30),
                 "paid! went through on apple pay, $240 cleared. send over the final package when you have a sec!",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 20, 18, 27, 25),
-                "Will do! Saw it clear on Apple Pay. Just doing the final PDF export—dropping the full package right here in a sec.",
+                dt_utc(2026, 10, 20, 18, 29, 0),
+                "On it! Saw the $240 clear. Doing the final PDF export now.",
                 [],
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 20, 18, 29, 7),
-                "Saw it clear, thank you! Here is the final package with the agreement and all the intake forms bundled up:",
+                dt_utc(2026, 10, 20, 18, 30, 0),
+                "Here is the final package with the agreement and all the intake forms bundled up:",
                 [
                     'Pediatric Clinic Agreement.pdf',
                     'Parent Intake Forms Bundle.zip',
@@ -6017,20 +6009,20 @@ CLIENT_PROFILES = {
             ),
             (
                 'admin',
-                dt_utc(2026, 10, 20, 18, 29, 45),
+                dt_utc(2026, 10, 20, 18, 31, 0),
                 "Everything we updated with your clinical lead is in there. Let me know if you need any tweaks once you print the master copies!",
                 [],
             ),
             (
                 'client',
-                dt_utc(2026, 10, 20, 18, 41, 35),
+                dt_utc(2026, 10, 20, 18, 45, 0),
                 "Got everything downloaded to the office drive and printed the master copies for Monday. Looks so much cleaner. Appreciate you bearing with all my edits! Going to tell Audrey you survived lol",
                 [],
             ),
             (
                 'admin',
                 dt_utc(2026, 10, 20, 18, 49, 15),
-                "Haha hey surviving your edits made the docs airtight! Since all agreements, policies, and intake scripts are confirmed and in your clinic drive, if you ever add new therapy specialties or need policy updates, feel free to reach out anytime. Have a good evening with your patient!",
+                "Haha surviving your edits made the docs airtight! Glad it's all ready for Monday. Ping us if you ever need tweaks or new policies. Have a good evening with your patient!",
                 [],
             ),
             (
@@ -6055,37 +6047,37 @@ EMAIL_ALIAS_TO_PRIMARY = {
 
 # Clean non-academic descriptions for every legacy / additional transaction in ValdaceAi CSV
 ADDITIONAL_TX_DESCRIPTIONS = {
-    "QP-MM44I969Z6G7": ("Mussie Yemane", "Technical production — 5-year Excel NPV & cash-flow valuation model", "studio", "studio-technical"),
-    "QP-MN7BXU2XG5ZF": ("Moana Sagaya", "Website / product copy — Brand messaging & 3-page website copy deck", "communication", "communication-copy"),
-    "QP-MNY2JNFDXRW7": ("Ryan Gibson", "Systems & workflow — Python CSV data-cleaning & webhook automation script", "systems", "systems-discovery"),
-    "QP-MNY2KLFQKMTG": ("Ryan Gibson", "Systems & workflow — Python CSV data-cleaning & webhook automation script", "systems", "systems-discovery"),
-    "QP-MO2Q8875S0H2": ("John Werner", "Technical production — Monthly sales pipeline & expense tracker cleanup", "studio", "studio-technical"),
-    "QP-MO91TN0DXAXT": ("Andrew Young", "Review & synthesis — Environmental water-quality field survey summary", "studio", "studio-review"),
-    "QP-MO91U5LSOP00": ("Andrew Young", "Review & synthesis — Environmental water-quality field survey summary", "studio", "studio-review"),
-    "QP-MOTP5EOODW4T": ("Cheyenne Bishop", "Technical production — Excel margin & unit-cost formula fix", "studio", "studio-technical"),
-    "QP-MOTP7EMH08LQ": ("Cheyenne Bishop", "Technical production — Excel margin & unit-cost formula fix", "studio", "studio-technical"),
-    "QP-MOXDEYGTY769": ("Angelina Rickert", "Website / product copy — Seasonal menu & catering one-pager update", "communication", "communication-copy"),
-    "QP-MS0VC5ELX1EJ": ("Angelina Rickert", "Website / product copy — Fall catering package refresh", "communication", "communication-copy"),
-    "QP-MP03HCM3FNVP": ("Emy Natividad", "Technical production — Q2 operations & vendor cost workbook", "studio", "studio-technical"),
-    "QP-MP03LDT4ECD1": ("Emy Natividad", "Technical production — Q2 operations & vendor cost workbook", "studio", "studio-technical"),
-    "QP-MP1IJT1IJ0B9": ("Uware Iyen", "Technical production — Operations workflow documentation", "studio", "studio-technical"),
-    "QP-MP1ILF8SNQC0": ("Uware Iyen", "Technical production — Operations workflow documentation", "studio", "studio-technical"),
-    "QP-MQIMB8U7AZJB": ("Daphne Johnson", "Systems & workflow — Python automation script & API integration", "systems", "systems-discovery"),
-    "QP-MQIMGHQAR4SO": ("Daphne Johnson", "Systems & workflow — Python automation script & API integration", "systems", "systems-discovery"),
-    "QP-MQIMQMB6IPVM": ("Daphne Johnson", "Systems & workflow — Python automation script & API integration", "systems", "systems-discovery"),
-    "QP-MQPULJTEU6ND": ("Daphne Johnson", "Systems & workflow — Python automation script & API integration", "systems", "systems-discovery"),
-    "QP-MQTLZ0AJ5G2U": ("Patrick Hyland", "Technical production — Q3 cross-border carrier tariff workbook", "studio", "studio-technical"),
-    "QP-MQTMRX5VZ647": ("Patrick Hyland", "Technical production — Q3 cross-border carrier tariff workbook", "studio", "studio-technical"),
-    "QP-MQWVUVXISHS3": ("Patrick Hyland", "Technical production — Q3 cross-border carrier tariff workbook", "studio", "studio-technical"),
-    "QP-MQWYNHW6NBYG": ("Patrick Hyland", "Technical production — Q3 cross-border carrier tariff workbook", "studio", "studio-technical"),
-    "QP-MU5RGDSOQP22": ("Jack Johnson", "Technical production — Multi-property hospitality expansion model", "studio", "studio-technical"),
-    "QP-MU7UBRBHE6KP": ("Azael Orozco", "Technical production — Commercial fleet & route P&L workbook", "studio", "studio-technical"),
-    "QP-MU7UJNAA12AN": ("Azael Orozco", "Technical production — Commercial fleet & route P&L workbook", "studio", "studio-technical"),
-    "QP-MU8L5VHB3TJS": ("Liza Iza", "Website / product copy — Wholesale line sheet & lookbook copy", "communication", "communication-copy"),
-    "QP-MU9BEM9FRNAP": ("Liza Iza", "Website / product copy — Retail stockist outreach sequence", "communication", "communication-copy"),
-    "T083852538976491": ("Issa Cuevas", "Technical documentation — Pediatric speech clinic intake agreement & HIPAA consent pack", "studio", "studio-technical"),
-    "T267443039046790": ("Issa Cuevas", "Technical documentation — Pediatric speech clinic intake agreement & HIPAA consent pack", "studio", "studio-technical"),
-    "T549133644408552": ("Estella Williams", "Presentation & executive writing — Q4 Executive board briefing memo & 16-slide investor update deck", "studio", "studio-presentations"),
+    "QP-MM44I969Z6G7": ("Mussie Yemane", "Technical production - 5-year Excel NPV & cash-flow valuation model", "studio", "studio-technical"),
+    "QP-MN7BXU2XG5ZF": ("Moana Sagaya", "Website / product copy - Brand messaging & 3-page website copy deck", "communication", "communication-copy"),
+    "QP-MNY2JNFDXRW7": ("Ryan Gibson", "Systems & workflow - Python CSV data-cleaning & webhook automation script", "systems", "systems-discovery"),
+    "QP-MNY2KLFQKMTG": ("Ryan Gibson", "Systems & workflow - Python CSV data-cleaning & webhook automation script", "systems", "systems-discovery"),
+    "QP-MO2Q8875S0H2": ("John Werner", "Technical production - Monthly sales pipeline & expense tracker cleanup", "studio", "studio-technical"),
+    "QP-MO91TN0DXAXT": ("Andrew Young", "Review & synthesis - Environmental water-quality field survey summary", "studio", "studio-review"),
+    "QP-MO91U5LSOP00": ("Andrew Young", "Review & synthesis - Environmental water-quality field survey summary", "studio", "studio-review"),
+    "QP-MOTP5EOODW4T": ("Cheyenne Bishop", "Technical production - Excel margin & unit-cost formula fix", "studio", "studio-technical"),
+    "QP-MOTP7EMH08LQ": ("Cheyenne Bishop", "Technical production - Excel margin & unit-cost formula fix", "studio", "studio-technical"),
+    "QP-MOXDEYGTY769": ("Angelina Rickert", "Website / product copy - Seasonal menu & catering one-pager update", "communication", "communication-copy"),
+    "QP-MS0VC5ELX1EJ": ("Angelina Rickert", "Website / product copy - Fall catering package refresh", "communication", "communication-copy"),
+    "QP-MP03HCM3FNVP": ("Emy Natividad", "Technical production - Q2 operations & vendor cost workbook", "studio", "studio-technical"),
+    "QP-MP03LDT4ECD1": ("Emy Natividad", "Technical production - Q2 operations & vendor cost workbook", "studio", "studio-technical"),
+    "QP-MP1IJT1IJ0B9": ("Uware Iyen", "Technical production - Operations workflow documentation", "studio", "studio-technical"),
+    "QP-MP1ILF8SNQC0": ("Uware Iyen", "Technical production - Operations workflow documentation", "studio", "studio-technical"),
+    "QP-MQIMB8U7AZJB": ("Daphne Johnson", "Systems & workflow - Python automation script & API integration", "systems", "systems-discovery"),
+    "QP-MQIMGHQAR4SO": ("Daphne Johnson", "Systems & workflow - Python automation script & API integration", "systems", "systems-discovery"),
+    "QP-MQIMQMB6IPVM": ("Daphne Johnson", "Systems & workflow - Python automation script & API integration", "systems", "systems-discovery"),
+    "QP-MQPULJTEU6ND": ("Daphne Johnson", "Systems & workflow - Python automation script & API integration", "systems", "systems-discovery"),
+    "QP-MQTLZ0AJ5G2U": ("Patrick Hyland", "Technical production - Q3 cross-border carrier tariff workbook", "studio", "studio-technical"),
+    "QP-MQTMRX5VZ647": ("Patrick Hyland", "Technical production - Q3 cross-border carrier tariff workbook", "studio", "studio-technical"),
+    "QP-MQWVUVXISHS3": ("Patrick Hyland", "Technical production - Q3 cross-border carrier tariff workbook", "studio", "studio-technical"),
+    "QP-MQWYNHW6NBYG": ("Patrick Hyland", "Technical production - Q3 cross-border carrier tariff workbook", "studio", "studio-technical"),
+    "QP-MU5RGDSOQP22": ("Jack Johnson", "Technical production - Multi-property hospitality expansion model", "studio", "studio-technical"),
+    "QP-MU7UBRBHE6KP": ("Azael Orozco", "Technical production - Commercial fleet & route P&L workbook", "studio", "studio-technical"),
+    "QP-MU7UJNAA12AN": ("Azael Orozco", "Technical production - Commercial fleet & route P&L workbook", "studio", "studio-technical"),
+    "QP-MU8L5VHB3TJS": ("Liza Iza", "Website / product copy - Wholesale line sheet & lookbook copy", "communication", "communication-copy"),
+    "QP-MU9BEM9FRNAP": ("Liza Iza", "Website / product copy - Retail stockist outreach sequence", "communication", "communication-copy"),
+    "T083852538976491": ("Issa Cuevas", "Technical documentation - Pediatric speech clinic intake agreement & HIPAA consent pack", "studio", "studio-technical"),
+    "T267443039046790": ("Issa Cuevas", "Technical documentation - Pediatric speech clinic intake agreement & HIPAA consent pack", "studio", "studio-technical"),
+    "T549133644408552": ("Estella Williams", "Presentation & executive writing - Q4 Executive board briefing memo & 16-slide investor update deck", "studio", "studio-presentations"),
 }
 
 
@@ -6101,17 +6093,17 @@ def sanitize_csv_description(row: dict) -> tuple[str, str, str]:
     plan = (row.get("Plan") or "").strip()
 
     if ref.startswith("TC-") or ptype == "turnitin_check":
-        return "Editorial QA — Originality & phrasing check", "assurance", "assurance-originality"
+        return "Editorial QA - Originality & phrasing check", "assurance", "assurance-originality"
     if ref.startswith("SLOT-"):
-        return "Editorial QA — Multi-document check pass bundle", "assurance", "assurance-originality"
+        return "Editorial QA - Multi-document check pass bundle", "assurance", "assurance-originality"
     if "subscription" in ref or "upgrade" in ref or "monthly" in ref or plan:
         label = raw_desc or plan or "Standard monthly plan"
-        return f"Humanize & refine — {label.capitalize()}", "text-intelligence", "text-humanize"
+        return f"Humanize & refine - {label.capitalize()}", "text-intelligence", "text-humanize"
     if "addon" in ref:
-        return "Humanize & refine — Workspace quota top-up pass", "text-intelligence", "text-humanize"
+        return "Humanize & refine - Workspace quota top-up pass", "text-intelligence", "text-humanize"
     if ref.startswith("QP-") or ref.startswith("HP-"):
-        return "Rewrite & adapt — Website & commercial copy revision", "text-intelligence", "text-rewrite"
-    return "Humanize & refine — Workspace platform access", "text-intelligence", "text-humanize"
+        return "Rewrite & adapt - Website & commercial copy revision", "text-intelligence", "text-rewrite"
+    return "Humanize & refine - Workspace platform access", "text-intelligence", "text-humanize"
 
 
 class Command(BaseCommand):

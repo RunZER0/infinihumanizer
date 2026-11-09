@@ -302,7 +302,7 @@ class QuickPayTests(TestCase):
             email=self.user.email,
             currency="USD",
             amount_due=Decimal("40"),
-            description="QuickPay — Copy edit",
+            description="QuickPay - Copy edit",
         )
         with self.settings(PAYSTACK_SECRET_KEY="test-secret"):
             response = self.client.post(reverse("platformhub:start_checkout"), {
@@ -334,7 +334,7 @@ class PaymentCompletionTests(TestCase):
             email=self.user.email,
             currency="USD",
             amount_due=Decimal("40.00"),
-            description="QuickPay — Copy edit",
+            description="QuickPay - Copy edit",
         )
         with self.settings(PAYSTACK_SECRET_KEY="test-secret", PUBLIC_BASE_URL="https://byinfini.online"):
             response = self.client.post(reverse("platformhub:start_checkout"), {
@@ -358,7 +358,7 @@ class PaymentCompletionTests(TestCase):
             email=self.user.email,
             currency="USD",
             amount_due=Decimal("40.00"),
-            description="QuickPay — Copy edit",
+            description="QuickPay - Copy edit",
         )
         payment = PaymentRecord.objects.create(
             invoice=invoice,

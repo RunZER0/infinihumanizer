@@ -748,7 +748,7 @@ def quote_detail(request, quote_id):
                     email=quote.request.email,
                     currency=quote.currency,
                     amount_due=terms["due_now"],
-                    description=f'{terms["label"]} — {quote.request.title} — accepted quote {quote.number}',
+                    description=f'{terms["label"]} - {quote.request.title} - accepted quote {quote.number}',
                 )
             quote.request.status = "quoted"
             quote.request.save(update_fields=["status", "updated_at"])
@@ -906,7 +906,7 @@ def _ensure_demo_conversation(user):
             email=user.email,
             currency="USD",
             amount_due=Decimal("1250.00"),
-            description="Q4 market architecture brief — Milestone 1",
+            description="Q4 market architecture brief - Milestone 1",
             status="open",
         )
         m2 = ClientMessage.objects.create(
@@ -1841,7 +1841,7 @@ def operations_desk(request, conversation_id=None):
     ).prefetch_related("deliverables").distinct().order_by("-created_at")
 
     service_choices = [
-        (code, f'{item["family_name"]} — {item["name"]}')
+        (code, f'{item["family_name"]} - {item["name"]}')
         for code, item in SERVICE_INDEX.items()
     ]
 
@@ -1891,7 +1891,7 @@ def operations_invoices(request):
     open_invoices_count = sum(1 for inv in invoices if inv.status != "paid")
 
     service_choices = [
-        (code, f'{item["family_name"]} — {item["name"]}')
+        (code, f'{item["family_name"]} - {item["name"]}')
         for code, item in SERVICE_INDEX.items()
     ]
     conversations = list(
@@ -2091,12 +2091,12 @@ def admin_create_invoice(request):
     is_first_invoice = Invoice.objects.filter(email__iexact=target_user.email).exclude(pk=invoice.pk).count() == 0
     if is_first_invoice:
         notice_body = (
-            f"Invoice {invoice.number} ({invoice.currency} {invoice.amount_due:.2f}) — {invoice.description}\n\n"
+            f"Invoice {invoice.number} ({invoice.currency} {invoice.amount_due:.2f}) - {invoice.description}\n\n"
             f"You can settle directly via Card or Apple Pay on your dedicated checkout page: {custom_checkout_url}"
         )
     else:
         notice_body = (
-            f"Invoice {invoice.number} ({invoice.currency} {invoice.amount_due:.2f}) — {invoice.description}\n\n"
+            f"Invoice {invoice.number} ({invoice.currency} {invoice.amount_due:.2f}) - {invoice.description}\n\n"
             f"Direct payment link: {custom_checkout_url}"
         )
     notice_msg = ClientMessage.objects.create(
@@ -2256,11 +2256,11 @@ def quickpay(request):
                 email=request.user.email,
                 currency=currency,
                 amount_due=amount,
-                description=f"QuickPay — {purpose[:220]}",
+                description=f"QuickPay - {purpose[:220]}",
             )
             return redirect(f"{reverse('platformhub:checkout')}?invoice={invoice.id}")
 
-    recent = Invoice.objects.filter(user=request.user, description__startswith="QuickPay —").order_by("-created_at")[:10]
+    recent = Invoice.objects.filter(user=request.user, description__startswith="QuickPay -").order_by("-created_at")[:10]
     return render(request, "platformhub/quickpay.html", {"recent": recent})
 
 

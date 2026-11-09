@@ -80,7 +80,7 @@ Directional ranges are shown before scope. Quotes are authoritative after scope.
 
 The USD 10,000 monthly engagement reserves up to four concurrent workstreams and multidisciplinary capacity across research, production, communication, assurance, and scoped AI systems support. It is not a token bundle.
 
-Accepted project quotes create commercial events proportionally: focused work below USD 500 is normally paid in full; USD 500–4,999 starts with a 50% deposit; USD 5,000+ starts with 30% mobilisation and subsequent named milestones; monthly retainers are billed at the start of the service month.
+Accepted project quotes create commercial events proportionally: focused work below USD 500 is normally paid in full; USD 500-4,999 starts with a 50% deposit; USD 5,000+ starts with 30% mobilisation and subsequent named milestones; monthly retainers are billed at the start of the service month.
 
 ## Payment model
 
@@ -101,7 +101,7 @@ Every PaymentRecord stores:
 
 ## Historical ledger normalization
 
-The uploaded ledger contains 169 rows: 68 successful, 77 abandoned and 24 failed. Successful transactions span USD 1–500 and KSh 20–2,000. These historical amounts validate the need for usage payments, focused work, project payments and legacy product access, but they do not determine the current catalog.
+The uploaded ledger contains 169 rows: 68 successful, 77 abandoned and 24 failed. Successful transactions span USD 1-500 and KSh 20-2,000. These historical amounts validate the need for usage payments, focused work, project payments and legacy product access, but they do not determine the current catalog.
 
 Historical records are imported without rewriting the original description. A second normalized classification is added only where the reference or memo supports it. Ambiguous quick-pay transactions stay unclassified for manual review rather than being assigned a service from amount alone.
 

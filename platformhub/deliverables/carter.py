@@ -11,7 +11,7 @@ def build_carter_deliverables() -> dict[str, dict]:
     # 1. carter_storefront_launch_notes.docx: 1,800+ words of hardware DTC launch notes
     files["Storefront Launch Notes.docx"] = write_docx_file(
         "Storefront Launch Notes.docx",
-        "ApexDesk Hardware — Direct-to-Consumer Storefront Launch Architecture & Merchandising Notes",
+        "ApexDesk Hardware - Direct-to-Consumer Storefront Launch Architecture & Merchandising Notes",
         [
             "COMPANY: ApexDesk Hardware Technologies LLC · Austin & San Jose",
             "FOUNDER & PRODUCT LEAD: Carter Lemburg",
@@ -20,10 +20,10 @@ def build_carter_deliverables() -> dict[str, dict]:
             "--PAGE-BREAK--",
             "# SECTION 1: PRODUCT INDUSTRIAL DESIGN & ENGINEERING SPECIFICATIONS",
             "The ApexDesk system represents a premium direct-to-consumer hardware product engineered for design-conscious professionals, creative studios, and software engineers:",
-            "— Chassis Material: CNC-machined from solid single-block 6063 aerospace-grade aluminum alloy, bead-blasted with #180 micro-glass media, and finished with a durable type-II matte anodized coating (available in Matte Obsidian Black and Aerospace Space Silver).",
-            "— Charging Engine: Integrated Wireless Power Consortium (WPC) certified Qi2 15W MagSafe magnetic inductive charging puck with active thermal throttling. Compatible with iPhone 12 through iPhone 16 Pro Max.",
-            "— Modular Magnetic Architecture: High-gauss N52 neodymium magnetic snap-in rail allows instant attachment of modular accessories: 5W fast-charging Apple Watch puck, AirPods wireless charging induction pad, and solid American Walnut desktop pen and cable tray.",
-            "— Base Stability: Weighted solid chassis (980 grams total weight) equipped with high-friction silicone micro-suction base pads, enabling effortless 1-handed phone removal without lifting the dock.",
+            "- Chassis Material: CNC-machined from solid single-block 6063 aerospace-grade aluminum alloy, bead-blasted with #180 micro-glass media, and finished with a durable type-II matte anodized coating (available in Matte Obsidian Black and Aerospace Space Silver).",
+            "- Charging Engine: Integrated Wireless Power Consortium (WPC) certified Qi2 15W MagSafe magnetic inductive charging puck with active thermal throttling. Compatible with iPhone 12 through iPhone 16 Pro Max.",
+            "- Modular Magnetic Architecture: High-gauss N52 neodymium magnetic snap-in rail allows instant attachment of modular accessories: 5W fast-charging Apple Watch puck, AirPods wireless charging induction pad, and solid American Walnut desktop pen and cable tray.",
+            "- Base Stability: Weighted solid chassis (980 grams total weight) equipped with high-friction silicone micro-suction base pads, enabling effortless 1-handed phone removal without lifting the dock.",
             "--PAGE-BREAK--",
             "# SECTION 2: SHOPIFY PLUS E-COMMERCE MERCHANDISING ARCHITECTURE",
             "Storefront conversion architecture engineered to maximize Product Detail Page (PDP) conversion and Average Order Value (AOV):",
@@ -33,14 +33,14 @@ def build_carter_deliverables() -> dict[str, dict]:
             "--PAGE-BREAK--",
             "# SECTION 3: CORE WEB VITALS & TECHNICAL INFRASTRUCTURE",
             "Performance targets rigorously verified across emulated 4G cellular mobile profiles:",
-            "— Largest Contentful Paint (LCP): Engineered below 1.20 seconds using WebP responsive srcset and edge-cached Cloudflare Enterprise CDN.",
-            "— Cumulative Layout Shift (CLS): Maintained at 0.010 by declaring explicit image aspect ratios and CSS container reservations.",
-            "— Tracking Telemetry: Google Tag Manager container loading Google Analytics 4 (GA4) enhanced e-commerce events, Meta Conversions API (CAPI server-side), and PostHog session replay.",
+            "- Largest Contentful Paint (LCP): Engineered below 1.20 seconds using WebP responsive srcset and edge-cached Cloudflare Enterprise CDN.",
+            "- Cumulative Layout Shift (CLS): Maintained at 0.010 by declaring explicit image aspect ratios and CSS container reservations.",
+            "- Tracking Telemetry: Google Tag Manager container loading Google Analytics 4 (GA4) enhanced e-commerce events, Meta Conversions API (CAPI server-side), and PostHog session replay.",
             "--PAGE-BREAK--",
             "# SECTION 4: UNBOXING & POST-PURCHASE CUSTOMER JOURNEY",
-            "— Premium Packaging: 100% recyclable rigid paperboard gift box with precision die-cut foam inserts, braided 2-meter USB-C nylon power cable, and 65W GaN dual-port wall charger.",
-            "— Unboxing Card: 4x6-inch foil-stamped insert card featuring a QR code redirecting to an interactive video setup guide and 2-year warranty registration portal.",
-            "— Automated Post-Purchase Email Flow: Klaviyo 3-stage drip series: Email 1 (Immediate order confirmation & production batch update); Email 2 (CNC machining & anodizing behind-the-scenes video); Email 3 (Carrier tracking delivery notification with setup tips).",
+            "- Premium Packaging: 100% recyclable rigid paperboard gift box with precision die-cut foam inserts, braided 2-meter USB-C nylon power cable, and 65W GaN dual-port wall charger.",
+            "- Unboxing Card: 4x6-inch foil-stamped insert card featuring a QR code redirecting to an interactive video setup guide and 2-year warranty registration portal.",
+            "- Automated Post-Purchase Email Flow: Klaviyo 3-stage drip series: Email 1 (Immediate order confirmation & production batch update); Email 2 (CNC machining & anodizing behind-the-scenes video); Email 3 (Carrier tracking delivery notification with setup tips).",
         ],
         role="source",
     )
@@ -48,7 +48,7 @@ def build_carter_deliverables() -> dict[str, dict]:
     # 2. carter_storefront_assets_and_launch_kit.zip: Real substantial zip archive bundling real files
     files_dir = get_chat_files_dir()
     zip_manifest = {
-        "README_APEXDESK_LAUNCH.txt": "ApexDesk Hardware Technologies — Storefront Launch Kit\n"
+        "README_APEXDESK_LAUNCH.txt": "ApexDesk Hardware Technologies - Storefront Launch Kit\n"
                                      "Package Version: 2.4 Final Master Launch Kit\n"
                                      "Contents:\n"
                                      "1. ApexDesk_Storefront_Prototype.html (Interactive Production Storefront)\n"

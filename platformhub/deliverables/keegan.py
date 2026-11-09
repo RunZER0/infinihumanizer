@@ -67,7 +67,7 @@ def build_keegan_deliverables() -> dict[str, dict]:
     # 2. keegan_freight_duty_rates.pdf: 3-page ocean freight rate sheet & customs advisory
     files["Freight Duty Rates.pdf"] = write_pdf_file(
         "Freight Duty Rates.pdf",
-        "Trans-Pacific LCL Ocean Freight & Customs Broker Rate Sheet — Pacific Heritage Goods",
+        "Trans-Pacific LCL Ocean Freight & Customs Broker Rate Sheet - Pacific Heritage Goods",
         [
             "# 1. OCEAN FREIGHT SERVICE SPECIFICATIONS",
             "Freight Forwarding Partner: Apex Ocean Cargo Logistics · DB Schenker Network",
@@ -89,11 +89,11 @@ def build_keegan_deliverables() -> dict[str, dict]:
             "--PAGE-BREAK--",
             "# 3. CUSTOMS COMPLIANCE & SECTION 301 TARIFF ADVISORY",
             "Importers of home goods manufactured in China must evaluate Harmonized Tariff Schedule (HTS) Section 301 punitive tariff exclusions:",
-            "— Wood Products (HTS 4419 / 4420): Standard column-1 duty rate is 3.2% + Section 301 List 3 tariff (25.0%). Combined effective duty is 28.2%.",
-            "— Ceramic Stoneware (HTS 6912): Standard column-1 duty rate is 6.0% + Section 301 List 4A tariff (7.5%). Combined effective duty is 13.5%.",
-            "— Glass Barware (HTS 7013): Standard column-1 duty rate is 5.0% + Section 301 List 3 tariff (25.0%). Combined effective duty is 30.0%.",
-            "— Linen & Cotton Textiles (HTS 6302): Standard column-1 duty rate is 8.8% + Section 301 List 4A tariff (7.5%). Combined effective duty is 16.3%.",
-            "— Landed Cost Recommendation: Pacific Heritage Goods must budget for a blended 24.5% import tariff on FOB goods when calculating wholesale and Amazon FBA unit margins.",
+            "- Wood Products (HTS 4419 / 4420): Standard column-1 duty rate is 3.2% + Section 301 List 3 tariff (25.0%). Combined effective duty is 28.2%.",
+            "- Ceramic Stoneware (HTS 6912): Standard column-1 duty rate is 6.0% + Section 301 List 4A tariff (7.5%). Combined effective duty is 13.5%.",
+            "- Glass Barware (HTS 7013): Standard column-1 duty rate is 5.0% + Section 301 List 3 tariff (25.0%). Combined effective duty is 30.0%.",
+            "- Linen & Cotton Textiles (HTS 6302): Standard column-1 duty rate is 8.8% + Section 301 List 4A tariff (7.5%). Combined effective duty is 16.3%.",
+            "- Landed Cost Recommendation: Pacific Heritage Goods must budget for a blended 24.5% import tariff on FOB goods when calculating wholesale and Amazon FBA unit margins.",
         ],
         role="source",
         subtitle="3-Page Trans-Pacific Logistics Tariff Schedule & U.S. Customs Section 301 Advisory",

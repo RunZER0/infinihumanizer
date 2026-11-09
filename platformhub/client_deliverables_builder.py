@@ -65,11 +65,11 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
         files.update(b())
 
     # =========================================================================
-    # 1. AUDREY BROWN — STUDIO BROWN (East Austin Editorial Photography)
+    # 1. AUDREY BROWN - STUDIO BROWN (East Austin Editorial Photography)
     # =========================================================================
     files["Website Copy (Final).docx"] = write_docx_file(
         "Website Copy (Final).docx",
-        "Studio Brown — Master Website Copy Deck (Production Final)",
+        "Studio Brown - Master Website Copy Deck (Production Final)",
         [
             "CLIENT: Audrey Brown Photography · East Austin, TX",
             "PROJECT: Digital Redesign & Client Intake Overhaul",
@@ -83,7 +83,7 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
             "2. Hero Presentation",
             "Category Badge: East Austin · Natural Light Warehouse Studio",
             "Primary Headline: Editorial portraits & commercial brand lookbooks crafted with timeless quiet elegance.",
-            "Narrative Lead: Specializing in founder profiles, apparel lookbooks, and intimate editorial portraiture. We believe the most compelling images happen in the spaces between poses—where authentic character emerges naturally under soft north-facing daylight.",
+            "Narrative Lead: Specializing in founder profiles, apparel lookbooks, and intimate editorial portraiture. We believe the most compelling images happen in the spaces between poses-where authentic character emerges naturally under soft north-facing daylight.",
             "Call-to-Action Controls: Primary: [Reserve Studio Session] · Secondary: [Explore 2026 Rates & Tiers]",
             "3. Studio Accreditations & Editorial Trust Strip",
             "Selected Features & Awards: Rangefinder Portrait Award Winner · Architectural Digest Features · Kinfolk Magazine · Austin Monthly Best Studio 2025 · Texas Monthly Editorial Contributor.",
@@ -91,13 +91,13 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
             "Every commission begins with conversation, not camera equipment. Our 1,800 square foot East Austin warehouse studio features 16-foot exposed timber ceilings, whitewashed brick, floor-to-ceiling industrial north windows, and custom lime-wash backdrops imported from France.",
             "We reject sterile flash setups and formulaic corporate posing. Whether capturing a fashion label's seasonal campaign or an intimate personal legacy portrait, our sessions are unhurried, collaborative, and grounded in authentic human presence.",
             "5. Core Portfolio Sectors",
-            "— Commercial Brand Campaigns: Lookbooks, e-commerce hero assets, and lifestyle product narratives for ethical apparel, home goods, and beauty brands.",
-            "— Founder & Executive Profiles: Distinctive editorial portraiture for authors, venture leaders, designers, and cultural figures seeking images with personality and gravitas.",
-            "— Intimate Creative Portraiture: Fine-art personal sittings celebrating life transitions, motherhood, artistic retrospectives, and partnership milestones.",
-            "— Architectural & Interior Narratives: Visual stories for boutique hotels, bespoke residential architects, and design studios.",
+            "- Commercial Brand Campaigns: Lookbooks, e-commerce hero assets, and lifestyle product narratives for ethical apparel, home goods, and beauty brands.",
+            "- Founder & Executive Profiles: Distinctive editorial portraiture for authors, venture leaders, designers, and cultural figures seeking images with personality and gravitas.",
+            "- Intimate Creative Portraiture: Fine-art personal sittings celebrating life transitions, motherhood, artistic retrospectives, and partnership milestones.",
+            "- Architectural & Interior Narratives: Visual stories for boutique hotels, bespoke residential architects, and design studios.",
             "6. Selected Client Testimonials",
-            '“Working with Audrey was the easiest commercial shoot our creative agency had all year. Zero awkward posing, immaculate natural daylight, and our private proofing gallery arrived three days ahead of deadline. The photographs anchored our entire fall rebrand.” — Sarah Lindqvist, Creative Director, Kinship Goods',
-            '“I have historically hated having my photo taken. Audrey created an atmosphere in her studio that felt like catching up with an old friend over espresso. The resulting portraits made the cover of Austin Business Journal and felt completely like me.” — Marcus Vance, Managing Partner, Hill Country Capital',
+            '“Working with Audrey was the easiest commercial shoot our creative agency had all year. Zero awkward posing, immaculate natural daylight, and our private proofing gallery arrived three days ahead of deadline. The photographs anchored our entire fall rebrand.” - Sarah Lindqvist, Creative Director, Kinship Goods',
+            '“I have historically hated having my photo taken. Audrey created an atmosphere in her studio that felt like catching up with an old friend over espresso. The resulting portraits made the cover of Austin Business Journal and felt completely like me.” - Marcus Vance, Managing Partner, Hill Country Capital',
             "7. Studio Location & Visits",
             "Studio Address: 1401 E 4th Street, Studio 204, Austin, Texas 78702",
             "Hours: Monday through Friday, 9:00 AM to 4:00 PM (optimal natural window daylight hours). Available for worldwide commercial travel upon request.",
@@ -112,42 +112,42 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
             ],
             "1. Tier 1: The Essential Session ($450 Flat)",
             "Ideal for: Independent artists, founders, creative directors, and professionals seeking a sharp, editorial refresh for press kits, speaking bios, and digital portfolios.",
-            "— Inclusions: 60 minutes dedicated private studio time · 1 wardrobe look under natural north-facing window light · 15 hand-retouched, high-resolution master files · Full personal and editorial press release rights · Private digital proofing gallery delivered within 7 business days.",
-            "2. Tier 2: The Studio Signature ($950 Flat) — Most Popular Commission",
+            "- Inclusions: 60 minutes dedicated private studio time · 1 wardrobe look under natural north-facing window light · 15 hand-retouched, high-resolution master files · Full personal and editorial press release rights · Private digital proofing gallery delivered within 7 business days.",
+            "2. Tier 2: The Studio Signature ($950 Flat) - Most Popular Commission",
             "Ideal for: Executive portraiture, editorial book jacket covers, brand lookbooks, and comprehensive personal legacy narratives.",
-            "— Inclusions: 2.5 hours private studio access including our private courtyard space · Up to 3 distinct wardrobe looks and mood transitions · 35 hand-retouched, high-resolution master files · Commercial usage rights across websites, paid digital campaigns, and print collateral · Priority 5-business-day delivery turnaround · Full raw proof archive provided for client selection.",
+            "- Inclusions: 2.5 hours private studio access including our private courtyard space · Up to 3 distinct wardrobe looks and mood transitions · 35 hand-retouched, high-resolution master files · Commercial usage rights across websites, paid digital campaigns, and print collateral · Priority 5-business-day delivery turnaround · Full raw proof archive provided for client selection.",
             "3. Tier 3: The Full-Day Commercial Campaign ($2,200 Flat)",
             "Ideal for: Emerging apparel brands, product launches, agency creative campaigns, and magazine editorial spreads.",
-            "— Inclusions: Full 6-hour studio buyout with optional on-location block · Unlimited wardrobe, model, and product changes · 75 hand-retouched campaign hero selects · Dedicated lighting assistant and studio grip on set · Pre-production creative consultation, moodboard alignment, and shot-list curation · Full commercial advertising buyout with unlimited global digital and billboard print licensing.",
+            "- Inclusions: Full 6-hour studio buyout with optional on-location block · Unlimited wardrobe, model, and product changes · 75 hand-retouched campaign hero selects · Dedicated lighting assistant and studio grip on set · Pre-production creative consultation, moodboard alignment, and shot-list curation · Full commercial advertising buyout with unlimited global digital and billboard print licensing.",
             "4. Production Add-Ons & Enhancements",
-            "— Professional Hair & Makeup Styling on set: $250 per look.",
-            "— Rush 48-Hour Gallery Delivery: $300 expediting fee.",
-            "— Additional Hand-Retouched Master File: $35 per image.",
-            "— Medium Format Film Capture Add-On (3 rolls Kodak Portra 400 + dev/scan): $275.",
+            "- Professional Hair & Makeup Styling on set: $250 per look.",
+            "- Rush 48-Hour Gallery Delivery: $300 expediting fee.",
+            "- Additional Hand-Retouched Master File: $35 per image.",
+            "- Medium Format Film Capture Add-On (3 rolls Kodak Portra 400 + dev/scan): $275.",
             "--PAGE-BREAK--",
             "# STUDIO BOOKING, LOGISTICS & CLIENT INTAKE",
             "1. Five-Field Streamlined Client Intake",
             "Our booking workflow is designed to respect your schedule while ensuring complete creative alignment prior to shoot day:",
-            "— Legal Full Name & Company: Identifies primary account contact and contract guarantor.",
-            "— Direct Email & Mobile Phone: Receives appointment calendar invites, studio gate entry codes, and live gallery delivery notifications.",
-            "— Preferred Session Date & Call Time: Requests specific dates on our Monday–Friday studio calendar (morning window lighting 9:00 AM – 12:00 PM recommended for high-contrast dramatic portraits; afternoon 1:00 PM – 4:00 PM recommended for soft diffused warm tones).",
-            "— Selected Package Tier: Select Essential Portrait ($450), Studio Signature ($950), or Full-Day Commercial Campaign ($2,200).",
-            "— Creative Brief & Project Intent: Briefly outline project goals, intended distribution channels (e.g. Forbes feature, Shopify storefront, LinkedIn profile), and desired aesthetic mood.",
+            "- Legal Full Name & Company: Identifies primary account contact and contract guarantor.",
+            "- Direct Email & Mobile Phone: Receives appointment calendar invites, studio gate entry codes, and live gallery delivery notifications.",
+            "- Preferred Session Date & Call Time: Requests specific dates on our Monday-Friday studio calendar (morning window lighting 9:00 AM - 12:00 PM recommended for high-contrast dramatic portraits; afternoon 1:00 PM - 4:00 PM recommended for soft diffused warm tones).",
+            "- Selected Package Tier: Select Essential Portrait ($450), Studio Signature ($950), or Full-Day Commercial Campaign ($2,200).",
+            "- Creative Brief & Project Intent: Briefly outline project goals, intended distribution channels (e.g. Forbes feature, Shopify storefront, LinkedIn profile), and desired aesthetic mood.",
             "2. Studio Booking Terms & Retainer Policy",
-            "— Retainer Requirement: A 50% non-refundable retainer is required to reserve your date on the studio calendar. The remaining 50% balance is invoiced on the shoot date prior to final master file dispatch.",
-            "— Rescheduling Window: Clients may reschedule their session without penalty up to 48 hours prior to call time. Rescheduled dates must be booked within 90 days of the original date.",
-            "— Inclement Weather Policy: For commissions involving on-location or outdoor courtyard segments, sessions may be transitioned entirely to indoor window studio light or rescheduled at zero fee.",
-            "— Master File Archiving: High-resolution print files and web-optimized masters are preserved in cold cloud storage for 36 months following delivery.",
+            "- Retainer Requirement: A 50% non-refundable retainer is required to reserve your date on the studio calendar. The remaining 50% balance is invoiced on the shoot date prior to final master file dispatch.",
+            "- Rescheduling Window: Clients may reschedule their session without penalty up to 48 hours prior to call time. Rescheduled dates must be booked within 90 days of the original date.",
+            "- Inclement Weather Policy: For commissions involving on-location or outdoor courtyard segments, sessions may be transitioned entirely to indoor window studio light or rescheduled at zero fee.",
+            "- Master File Archiving: High-resolution print files and web-optimized masters are preserved in cold cloud storage for 36 months following delivery.",
         ],
         role="deliverable",
     )
 
     # =========================================================================
-    # 2. ISSA CUEVAS — PEDIATRIC SPEECH & LANGUAGE THERAPY (Austin, TX)
+    # 2. ISSA CUEVAS - PEDIATRIC SPEECH & LANGUAGE THERAPY (Austin, TX)
     # =========================================================================
     files["Pediatric Intake Agreement.docx"] = write_docx_file(
         "Pediatric Intake Agreement.docx",
-        "Cuevas Pediatric Speech Therapy — Clinical Intake & Medical Consent Packet",
+        "Cuevas Pediatric Speech Therapy - Clinical Intake & Medical Consent Packet",
         [
             "PRACTICE: Cuevas Pediatric Speech & Language Therapy LLC",
             "LOCATION: 1211 W 6th St, Suite 300, Austin, TX 78703",
@@ -174,21 +174,21 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
             "# SECTION 3: BIRTH, PRENATAL & MEDICAL TIMELINE",
             [
                 ["Developmental Milestone", "Age Achieved", "Clinical Reference Range", "Status"],
-                ["First Social Smile", "6 Weeks", "4–8 Weeks", "Typical"],
-                ["Sat Independently Without Support", "6.5 Months", "5–8 Months", "Typical"],
-                ["Crawled on Hands and Knees", "9 Months", "7–10 Months", "Typical"],
-                ["Walked Independently", "13 Months", "11–15 Months", "Typical"],
-                ["First True Consonant Babbling (ba-ba, ma-ma)", "14 Months", "6–9 Months", "Delayed"],
-                ["First Meaningful Single Word", "22 Months", "10–14 Months", "Delayed"],
-                ["Spontaneous Two-Word Combinations", "Not Yet Emerging", "18–24 Months", "Significantly Delayed"],
-                ["Independent Cup Drinking & Chewing Solids", "12 Months", "9–14 Months", "Typical"],
+                ["First Social Smile", "6 Weeks", "4-8 Weeks", "Typical"],
+                ["Sat Independently Without Support", "6.5 Months", "5-8 Months", "Typical"],
+                ["Crawled on Hands and Knees", "9 Months", "7-10 Months", "Typical"],
+                ["Walked Independently", "13 Months", "11-15 Months", "Typical"],
+                ["First True Consonant Babbling (ba-ba, ma-ma)", "14 Months", "6-9 Months", "Delayed"],
+                ["First Meaningful Single Word", "22 Months", "10-14 Months", "Delayed"],
+                ["Spontaneous Two-Word Combinations", "Not Yet Emerging", "18-24 Months", "Significantly Delayed"],
+                ["Independent Cup Drinking & Chewing Solids", "12 Months", "9-14 Months", "Typical"],
             ],
             "Medical History: Born via uncomplicated spontaneous vaginal delivery. Birth weight 7 lbs 6 oz. No neonatal ICU stay. Experienced three recurrent episodes of acute otitis media between 9 and 16 months of age; treated successfully with oral amoxicillin. No history of seizures, head trauma, or chronic medical diagnoses.",
             "# SECTION 4: CLINICAL SPEECH & PRAGMATIC COMMUNICATION MATRIX",
             [
                 ["Domain", "Observed Behaviors", "Clinical Screener Status"],
                 ["Receptive Language", "Follows 1-step familiar commands ('get your shoes'). Struggles with 2-step unrelated directives.", "Mild Delay (-1.2 SD)"],
-                ["Expressive Vocabulary", "Estimated 40–50 single nouns and proto-words. Missing verbs, prepositions, and pronouns.", "Moderate-Severe Delay (-2.1 SD)"],
+                ["Expressive Vocabulary", "Estimated 40-50 single nouns and proto-words. Missing verbs, prepositions, and pronouns.", "Moderate-Severe Delay (-2.1 SD)"],
                 ["Speech Intelligibility", "Understood 60% by parents, <25% by unfamiliar adults. Frequent vowel elongation with final consonant deletion.", "Significant Phonological Delay"],
                 ["Social / Pragmatic", "Maintains warm eye contact, engages in reciprocal peek-a-boo, shares joint attention with preferred toys.", "Age Appropriate"],
                 ["Oral Motor & Feeding", "No dysphagia or pocketing observed. Accepts diverse textures. Mild open-mouth posture at rest.", "Within Functional Limits"],
@@ -212,7 +212,7 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     )
 
     # =========================================================================
-    # 3. PATRICK HYLAND — ATLANTIC MARITIME FREIGHT DISPATCH TRACKER (Canada)
+    # 3. PATRICK HYLAND - ATLANTIC MARITIME FREIGHT DISPATCH TRACKER (Canada)
     # =========================================================================
     # Generate 36 realistic Canadian maritime corridor trips across 2026
     patrick_trips = [
@@ -270,7 +270,7 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     )
 
     # =========================================================================
-    # 4. DENNIS KIRAGU — 12-MONTH CASHFLOW & LOGISTICS MODEL (East Africa)
+    # 4. DENNIS KIRAGU - 12-MONTH CASHFLOW & LOGISTICS MODEL (East Africa)
     # =========================================================================
     dennis_cashflow = [
         ["Financial Line Item (USD)", "Jan 2026", "Feb 2026", "Mar 2026", "Apr 2026", "May 2026", "Jun 2026", "Jul 2026", "Aug 2026", "Sep 2026", "Oct 2026", "Nov 2026", "Dec 2026", "FY2026 Total"],
@@ -302,7 +302,7 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     )
 
     # =========================================================================
-    # 5. ESTELLA WILLIAMS — WILLIAMS LOGISTICS (Investor Deck & Board Memo)
+    # 5. ESTELLA WILLIAMS - WILLIAMS LOGISTICS (Investor Deck & Board Memo)
     # =========================================================================
     estella_slides = [
         {
@@ -332,7 +332,7 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
             "subtitle": "Clear line of sight to $6.8M ARR exit run-rate in FY 2027",
             "cards": [
                 {
-                    "title": "Q1–Q3 2026 Actual Growth",
+                    "title": "Q1-Q3 2026 Actual Growth",
                     "bullets": [
                         "Q1 2026: $2.8M ARR across 128 contracted distribution hubs",
                         "Q2 2026: $3.4M ARR with 28 new carrier fleet enterprise logos",
@@ -452,7 +452,7 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
 
     files["Executive Board Memo.docx"] = write_docx_file(
         "Executive Board Memo.docx",
-        "Williams Logistics Network — Executive Board Memorandum (Q4 Strategic Review)",
+        "Williams Logistics Network - Executive Board Memorandum (Q4 Strategic Review)",
         [
             "TO: Board of Directors, Williams Logistics Network Inc.",
             "FROM: Estella Williams, Founder & Chief Executive Officer",
@@ -479,9 +479,9 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
             "# 4. PRODUCT INNOVATION: DOCKDOOR 2.0 ROLLOUT",
             "During Q3, our engineering organization successfully completed general availability (GA) rollout of DockDoor 2.0, introducing automated cross-dock gate sequencing and mobile sign-on-glass electronic bills of lading (e-BOL).",
             "Core Architectural Advancements:",
-            "— Geofenced Perimeter Arrival Alerts: Trucks entering a 2-mile terminal radius automatically alert frontline dispatch, pre-allocating bay doors before the tractor hits the security gate.",
-            "— Demurrage Countdown Timers: Automated alerts notify yard jockeys 45 minutes prior to detention penalty accrual, eliminating $184,000 in carrier detention claims across our pilot cohort.",
-            "— Zero-App Mobile Container: Frontline drivers access terminal check-in via lightweight browser sessions, eliminating driver onboarding friction and achieving 98.6% compliance on day one.",
+            "- Geofenced Perimeter Arrival Alerts: Trucks entering a 2-mile terminal radius automatically alert frontline dispatch, pre-allocating bay doors before the tractor hits the security gate.",
+            "- Demurrage Countdown Timers: Automated alerts notify yard jockeys 45 minutes prior to detention penalty accrual, eliminating $184,000 in carrier detention claims across our pilot cohort.",
+            "- Zero-App Mobile Container: Frontline drivers access terminal check-in via lightweight browser sessions, eliminating driver onboarding friction and achieving 98.6% compliance on day one.",
             "# 5. FY 2027 CAPITAL ALLOCATION & RESOLUTIONS REQUESTED",
             "We maintain $3,120,000 in cash reserves. At our current net monthly burn rate of $58,000, our balance sheet provides over 24 months of operational runway without requiring external equity financing. We project achieving operational cash flow breakeven in Q2 2027.",
             "Board Action Items Requested for Formal Approval:",
@@ -493,11 +493,11 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     )
 
     # =========================================================================
-    # 6. JACK JOHNSON — DOCKSTREAM ENTERPRISE B2B LOGISTICS PLATFORM
+    # 6. JACK JOHNSON - DOCKSTREAM ENTERPRISE B2B LOGISTICS PLATFORM
     # =========================================================================
     files["Enterprise Deck Final.docx"] = write_docx_file(
         "Enterprise Deck Final.docx",
-        "DockStream Enterprise — B2B Product Messaging & Master Copy Deck",
+        "DockStream Enterprise - B2B Product Messaging & Master Copy Deck",
         [
             "CLIENT: DockStream Technologies Inc. (Jack Johnson, Co-Founder)",
             "DOCUMENT: B2B Enterprise Web Copy Deck & Positioning Strategy",
@@ -513,15 +513,15 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
             "Subhead: Connect frontline dispatchers, yard spotters, and inbound drivers on a unified digital platform. DockStream reduces trailer turnaround times by 38% and delivers 100% audit-proof electronic bills of lading.",
             "Call-to-Action Buttons: Primary: [Schedule Enterprise Terminal Survey] · Secondary: [Calculate Yard Detention Savings]",
             "3. The Cost of Cross-Dock Inefficiency",
-            "— $180,000 Average Annual Detention Losses: Carriers bleed capital waiting in queue for manual dock assignment.",
-            "— 14 Hours Lost Weekly per Dispatcher: Frontline staff spend hours making phone calls, checking clipboards, and chasing paper bills of lading.",
-            "— 12% Paper BOL Discrepancy Rate: Missing signatures and unverified damage photos create expensive claims and billing disputes.",
+            "- $180,000 Average Annual Detention Losses: Carriers bleed capital waiting in queue for manual dock assignment.",
+            "- 14 Hours Lost Weekly per Dispatcher: Frontline staff spend hours making phone calls, checking clipboards, and chasing paper bills of lading.",
+            "- 12% Paper BOL Discrepancy Rate: Missing signatures and unverified damage photos create expensive claims and billing disputes.",
             "--PAGE-BREAK--",
             "# PLATFORM CAPABILITIES & WORKFLOW ARCHITECTURE",
             "1. Geofenced Driver Mobile Intake",
             "Inbound drivers trigger automatic yard check-in upon crossing the terminal perimeter. Drivers verify load details, container seal numbers, and reefer temperatures directly on their mobile device without leaving their cab or downloading an app.",
             "2. Dynamic Bay & Yard Slotting Logic",
-            "DockStream's intelligent routing engine assigns trailers to optimal bays based on pallet volume, liftgate necessity, and forklift driver proximity—cutting cross-dock transit times by 40%.",
+            "DockStream's intelligent routing engine assigns trailers to optimal bays based on pallet volume, liftgate necessity, and forklift driver proximity-cutting cross-dock transit times by 40%.",
             "3. Sign-on-Glass Electronic BOL (e-BOL)",
             "Frontline personnel annotate damages, take high-resolution timestamped photos, and collect carrier digital signatures instantly. Fully executed BOL PDFs sync to your enterprise TMS via REST APIs.",
             "4. Enterprise TMS Integrations Matrix",
@@ -535,14 +535,14 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
             "--PAGE-BREAK--",
             "# ENTERPRISE SECURITY, SLA & COMMERCIAL TERMS",
             "1. Information Security & Compliance",
-            "— SOC 2 Type II Certified: Annual third-party audits ensure complete data isolation and encryption at rest (AES-256) and in transit (TLS 1.3).",
-            "— Role-Based Access Control (RBAC): Granular permissions for terminal directors, dispatch supervisors, yard jockeys, and third-party carrier fleets.",
-            "— 99.95% High Availability SLA: Multi-region cloud failover ensures continuous terminal operations during network outages.",
+            "- SOC 2 Type II Certified: Annual third-party audits ensure complete data isolation and encryption at rest (AES-256) and in transit (TLS 1.3).",
+            "- Role-Based Access Control (RBAC): Granular permissions for terminal directors, dispatch supervisors, yard jockeys, and third-party carrier fleets.",
+            "- 99.95% High Availability SLA: Multi-region cloud failover ensures continuous terminal operations during network outages.",
             "2. Tiered Enterprise Pricing Schedule",
             [
                 ["Plan Tier", "Terminal Footprint", "Monthly Inbound Loads", "Key Inclusions", "Annual SaaS License"],
-                ["Standard Hub", "Single Terminal (1–20 Doors)", "Up to 500 Loads/Mo", "Mobile Check-In, e-BOL, Basic Reporting", "$14,400 / Year"],
-                ["Enterprise Terminal", "Regional Hub (20–60 Doors)", "Up to 2,000 Loads/Mo", "Dynamic Slotting, TMS Sync, Demurrage Alerts", "$28,500 / Year"],
+                ["Standard Hub", "Single Terminal (1-20 Doors)", "Up to 500 Loads/Mo", "Mobile Check-In, e-BOL, Basic Reporting", "$14,400 / Year"],
+                ["Enterprise Terminal", "Regional Hub (20-60 Doors)", "Up to 2,000 Loads/Mo", "Dynamic Slotting, TMS Sync, Demurrage Alerts", "$28,500 / Year"],
                 ["Multi-Site Network", "Multi-Terminal (60+ Doors)", "Unlimited Volume", "Dedicated Solution Architect, Custom EDI, 99.95% SLA", "$54,000 / Year"],
             ],
         ],
@@ -551,7 +551,7 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
 
     files["Outbound Enterprise Deck.pptx"] = write_pptx_file(
         "Outbound Enterprise Deck.pptx",
-        "DockStream Enterprise — Outbound Logistics Presentation",
+        "DockStream Enterprise - Outbound Logistics Presentation",
         [
             {
                 "type": "title",
@@ -632,7 +632,7 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
                     {
                         "title": "Enterprise Terminal ($28,500/yr)",
                         "bullets": [
-                            "High-volume regional hub (20–60 doors)",
+                            "High-volume regional hub (20-60 doors)",
                             "Dynamic yard slotting & demurrage countdown",
                             "Native SAP / Oracle TMS integration modules",
                         ]
@@ -652,11 +652,11 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     )
 
     # =========================================================================
-    # 7. AZAEL OROZCO — OROZCO COMMERCIAL & INDUSTRIAL ROOFING (South Texas)
+    # 7. AZAEL OROZCO - OROZCO COMMERCIAL & INDUSTRIAL ROOFING (South Texas)
     # =========================================================================
     files["Site Copy & Estimate.docx"] = write_docx_file(
         "Site Copy & Estimate.docx",
-        "Orozco Commercial Roofing — Master Specifications & Commercial Bid Deck",
+        "Orozco Commercial Roofing - Master Specifications & Commercial Bid Deck",
         [
             "CLIENT: Orozco Commercial & Industrial Roofing LLC",
             "HEADQUARTERS: Pharr, TX · Serving McAllen, Brownsville & Rio Grande Valley",
@@ -686,10 +686,10 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
             ],
             "# 21-POINT COMMERCIAL ROOF ASSESSMENT METHODOLOGY",
             "Every commercial inspection includes core sampling, infrared moisture scans, and photographic documentation:",
-            "— Core Sampling & Deck Moisture Analysis: Non-destructive thermal imaging pinpoints wet insulation boards to prevent needless full tear-offs.",
-            "— Parapet Wall & Flashing Integrity: Detailed examination of coping metal, termination bars, and counter-flashings where 70% of commercial leaks originate.",
-            "— Mechanical Curb & Penetration Seals: Rigorous inspection of rooftop HVAC units, conduit boots, and pitch pans.",
-            "— Drainage & Scupper Flow Calibration: Verifying adequate slope-to-drain ratios to prevent structural ponding water deflection.",
+            "- Core Sampling & Deck Moisture Analysis: Non-destructive thermal imaging pinpoints wet insulation boards to prevent needless full tear-offs.",
+            "- Parapet Wall & Flashing Integrity: Detailed examination of coping metal, termination bars, and counter-flashings where 70% of commercial leaks originate.",
+            "- Mechanical Curb & Penetration Seals: Rigorous inspection of rooftop HVAC units, conduit boots, and pitch pans.",
+            "- Drainage & Scupper Flow Calibration: Verifying adequate slope-to-drain ratios to prevent structural ponding water deflection.",
             "--PAGE-BREAK--",
             "# COMMERCIAL BID PROPOSAL & 20-YEAR NDL CONTRACT TERMS",
             "Sample Commercial Bid: 42,000 Sq Ft Logistics Distribution Center (Pharr, TX)",
@@ -709,11 +709,11 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     )
 
     # =========================================================================
-    # 8. ALEXA QUINTERO — FIELDPULSE TRADE FLEET MOBILE WORKFLOWS
+    # 8. ALEXA QUINTERO - FIELDPULSE TRADE FLEET MOBILE WORKFLOWS
     # =========================================================================
     files["10-Slide Investor Pitch.pptx"] = write_pptx_file(
         "10-Slide Investor Pitch.pptx",
-        "FieldPulse — Seed Investor Presentation",
+        "FieldPulse - Seed Investor Presentation",
         [
             {
                 "type": "title",
@@ -773,7 +773,7 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
                 "subtitle": "Over 1.2 million trade service businesses across the United States and Canada",
                 "metrics": [
                     {"value": "$8.2B", "label": "Total Available Market", "desc": "North American commercial & residential trade contractors"},
-                    {"value": "$1.4B", "label": "Serviceable Market", "desc": "Plumbing, electrical, and HVAC fleets with 5–30 vans"},
+                    {"value": "$1.4B", "label": "Serviceable Market", "desc": "Plumbing, electrical, and HVAC fleets with 5-30 vans"},
                     {"value": "180,000", "label": "Target Fleet Businesses", "desc": "Under-served by expensive legacy enterprise software"},
                     {"value": "$89 / mo", "label": "Subscription Seat Fee", "desc": "Per active technician with 92% gross software margin"},
                 ]
@@ -814,7 +814,7 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     )
 
     # =========================================================================
-    # 9. LUCA CAROLLO — MAKANI YACHT CHARTERS (Honolulu, Hawaii)
+    # 9. LUCA CAROLLO - MAKANI YACHT CHARTERS (Honolulu, Hawaii)
     # =========================================================================
     luca_distribution = [
         ["Financial Line Item ($USD)", "Q1 2026 Actual", "Q2 2026 Actual", "Q3 2026 Actual", "Q4 2026 Projected", "Full Year 2026 Total"],
@@ -846,7 +846,7 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     )
 
     # =========================================================================
-    # 10. KEEGAN CHIN — CHIN SPECIALTY GOODS (Warehouse & SKU Margins)
+    # 10. KEEGAN CHIN - CHIN SPECIALTY GOODS (Warehouse & SKU Margins)
     # =========================================================================
     keegan_skus = [
         ["SKU Code", "Product Description", "HTS Tariff Code", "Factory FOB ($USD)", "Ocean Freight Alloc ($USD)", "Harbor Drayage ($USD)", "Customs Duty ($USD)", "Landed Unit Cost ($USD)", "Wholesale B2B ($USD)", "B2B Margin %", "Retail MSRP ($USD)", "DTC Margin %", "Q3 Units Sold", "Total Q3 Gross Profit ($USD)"],
@@ -871,11 +871,11 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     )
 
     # =========================================================================
-    # 11. JOSE CRUZ — CRUZ METRO FREIGHT (Dallas-Fort Worth Corridor)
+    # 11. JOSE CRUZ - CRUZ METRO FREIGHT (Dallas-Fort Worth Corridor)
     # =========================================================================
     files["Outreach Email Sequence.docx"] = write_docx_file(
         "Outreach Email Sequence.docx",
-        "Cruz Metro Freight — Corporate Profile & Outbound Shipper Playbook (Final)",
+        "Cruz Metro Freight - Corporate Profile & Outbound Shipper Playbook (Final)",
         [
             "ENTITY: Cruz Metro Freight LLC · Terminal: 4820 W Davis St, Dallas, TX 75211",
             "OPERATING AUTHORITY: USDOT #3918204 · MC #1488209 · Texas DMV #0094182",
@@ -908,9 +908,9 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
             "Hi [First Name],",
             "My team runs two 26ft Freightliner box trucks with 3,500-lb hydraulic liftgates out of our West Davis terminal in Dallas. We currently service two commercial accounts in [Industrial Park Name] every Tuesday and Thursday morning.",
             "If your shipping department ever needs same-day pallet recovery, scheduled dock transfers, or overflow freight hauled without dealing with unresponsive freight brokers, we would love to handle a test load for you.",
-            "— Asset-based: our trucks, our drivers, our USDOT authority (#3918204)",
-            "— $1M Auto Liability / $100K Cargo insurance underwritten by Great West Casualty",
-            "— 2 full hours of free dock detention on every stop so your team never feels rushed",
+            "- Asset-based: our trucks, our drivers, our USDOT authority (#3918204)",
+            "- $1M Auto Liability / $100K Cargo insurance underwritten by Great West Casualty",
+            "- 2 full hours of free dock detention on every stop so your team never feels rushed",
             "Would you be open to a quick 5-minute call this Thursday to see if our lanes align with your freight needs?",
             "Best regards,",
             "Jose Cruz · Managing Partner, Cruz Metro Freight LLC · (214) 555-0194",
@@ -934,11 +934,11 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     )
 
     # =========================================================================
-    # 12. ISSA CUEVAS — CLINICAL PARENT COMMUNICATIONS & SERVICE AGREEMENT
+    # 12. ISSA CUEVAS - CLINICAL PARENT COMMUNICATIONS & SERVICE AGREEMENT
     # =========================================================================
     files["Parent Communication Templates.docx"] = write_docx_file(
         "Parent Communication Templates.docx",
-        "Cuevas Pediatric Speech Therapy — Clinical Parent Communication Letters",
+        "Cuevas Pediatric Speech Therapy - Clinical Parent Communication Letters",
         [
             "PRACTICE: Cuevas Pediatric Speech & Language Therapy LLC",
             "CREDENTIALS: Issa Cuevas, M.S., CCC-SLP · Texas License #72841",
@@ -958,8 +958,8 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
             "Dear [Parent Names],",
             "Thank you for bringing [Child Name] into our clinic. Following our comprehensive standardized evaluation, I have completed the formal Diagnostic Summary and Plan of Care.",
             "Clinical Recommendations:",
-            "— Therapy Frequency: Two (2) 45-minute individual therapy sessions per week.",
-            "— Primary Focus Areas: Expanding expressive two-word semantic combinations, increasing consonant sound inventory (/b/, /d/, /m/), and reducing communicative frustration through multimodal AAC support.",
+            "- Therapy Frequency: Two (2) 45-minute individual therapy sessions per week.",
+            "- Primary Focus Areas: Expanding expressive two-word semantic combinations, increasing consonant sound inventory (/b/, /d/, /m/), and reducing communicative frustration through multimodal AAC support.",
             "I have submitted the formal prior-authorization request and clinical report to your pediatrician and insurance carrier. Please review the attached care plan and let me know your preferred recurring appointment slots.",
             "Warmly, Issa Cuevas, M.S., CCC-SLP",
             "--PAGE-BREAK--",
@@ -968,9 +968,9 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
             "Dear [Parent Names],",
             "It has been such a joy working with [Child Name] over the past six months. We have conducted our scheduled semi-annual progress review to assess mastery of targeted communication goals.",
             "Key Clinical Achievements:",
-            "— Expressive Vocabulary: Increased from 45 single words to over 160 functional words.",
-            "— Word Combinations: Spontaneously using 3-to-4 word carrier phrases ('I want blue car', 'help me open').",
-            "— Speech Intelligibility: Intelligibility to unfamiliar listeners has improved from 25% to over 65%.",
+            "- Expressive Vocabulary: Increased from 45 single words to over 160 functional words.",
+            "- Word Combinations: Spontaneously using 3-to-4 word carrier phrases ('I want blue car', 'help me open').",
+            "- Speech Intelligibility: Intelligibility to unfamiliar listeners has improved from 25% to over 65%.",
             "Attached is the itemized Re-Evaluation Report for your pediatrician's medical records and insurance renewal.",
             "Warmly, Issa Cuevas, M.S., CCC-SLP",
         ],
@@ -990,11 +990,11 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
             "Services are invoiced based on standard American Medical Association (AMA) Current Procedural Terminology (CPT) codes as detailed below:",
             [
                 ["AMA CPT Code", "Clinical Service Description", "Session Duration", "Private Pay Rate", "Insurance Allowable Range"],
-                ["CPT 92523", "Comprehensive Evaluation of Speech Sound Production & Language Comprehension", "60–90 Min", "$350.00 Flat", "$260.00 – $320.00"],
-                ["CPT 92521", "Evaluation of Speech Fluency (Stuttering & Rate)", "60 Min", "$250.00 Flat", "$180.00 – $225.00"],
-                ["CPT 92526", "Evaluation & Treatment of Oral Pharyngeal Swallowing / Feeding", "45 Min", "$175.00 / Session", "$125.00 – $155.00"],
-                ["CPT 92507", "Individual Treatment of Speech, Language & Communication (Standard)", "45 Min", "$140.00 / Session", "$100.00 – $130.00"],
-                ["CPT 92609", "Therapeutic Services for Augmentative & Alternative Communication (AAC)", "45 Min", "$155.00 / Session", "$115.00 – $145.00"],
+                ["CPT 92523", "Comprehensive Evaluation of Speech Sound Production & Language Comprehension", "60-90 Min", "$350.00 Flat", "$260.00 - $320.00"],
+                ["CPT 92521", "Evaluation of Speech Fluency (Stuttering & Rate)", "60 Min", "$250.00 Flat", "$180.00 - $225.00"],
+                ["CPT 92526", "Evaluation & Treatment of Oral Pharyngeal Swallowing / Feeding", "45 Min", "$175.00 / Session", "$125.00 - $155.00"],
+                ["CPT 92507", "Individual Treatment of Speech, Language & Communication (Standard)", "45 Min", "$140.00 / Session", "$100.00 - $130.00"],
+                ["CPT 92609", "Therapeutic Services for Augmentative & Alternative Communication (AAC)", "45 Min", "$155.00 / Session", "$115.00 - $145.00"],
             ],
             "--PAGE-BREAK--",
             "SECTION 3: ATTENDANCE, CANCELLATIONS & RESERVED HOUR POLICY",
@@ -1031,7 +1031,7 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     )
 
     # =========================================================================
-    # 13. ESTELLA WILLIAMS — 5-TAB FINANCIAL MODEL & BOARD PACK
+    # 13. ESTELLA WILLIAMS - 5-TAB FINANCIAL MODEL & BOARD PACK
     # =========================================================================
     estella_pnl = [
         ["Williams Logistics Network P&L (USD)", "Jan 2026", "Feb 2026", "Mar 2026", "Q1 Total", "Apr 2026", "May 2026", "Jun 2026", "Q2 Total", "Jul 2026", "Aug 2026", "Sep 2026", "Q3 Total", "FY26 Projected"],
@@ -1104,7 +1104,7 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     )
 
     # =========================================================================
-    # 14. LIZA IZA — COMMERCIAL MEDICAL FACILITY CLEANING RATE CARD
+    # 14. LIZA IZA - COMMERCIAL MEDICAL FACILITY CLEANING RATE CARD
     # =========================================================================
     liza_rates = [
         ["Medical Facility Area Designation", "Sq Footage", "Sanitation Protocol Level", "Cleaning Frequency", "Base Monthly Rate ($USD)", "Terminal Room Surcharge ($USD)", "Total Monthly Retainer ($USD)"],
@@ -1124,7 +1124,7 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     )
 
     # =========================================================================
-    # 15. AZAEL OROZCO — COMMERCIAL ROOFING BID ESTIMATE SHEET
+    # 15. AZAEL OROZCO - COMMERCIAL ROOFING BID ESTIMATE SHEET
     # =========================================================================
     orozco_takeoff = [
         ["Commercial Project Scope", "Roof Area (Sq Ft)", "Membrane System", "Insulation Spec", "Materials Cost ($USD)", "Labor & Cranes ($USD)", "Perimeter Flashing ($USD)", "NDL Warranty Fee ($USD)", "Total Commercial Bid ($USD)", "Contractor Margin %"],
@@ -1143,7 +1143,7 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     )
 
     # =========================================================================
-    # 16. ALEXA QUINTERO — UNIT ECONOMICS & PRICING MODEL
+    # 16. ALEXA QUINTERO - UNIT ECONOMICS & PRICING MODEL
     # =========================================================================
     alexa_econ = [
         ["Unit Economics Metric", "Small Fleet (3-7 Vans)", "Mid Fleet (8-15 Vans)", "Enterprise Fleet (16-35 Vans)", "Blended Portfolio Average"],
@@ -1167,11 +1167,11 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     )
 
     # =========================================================================
-    # 17. KAYLEE CABREROS — BOTANICAL SKINCARE WELCOME SEQUENCE
+    # 17. KAYLEE CABREROS - BOTANICAL SKINCARE WELCOME SEQUENCE
     # =========================================================================
     files["Welcome Email Sequence.docx"] = write_docx_file(
         "Welcome Email Sequence.docx",
-        "Lumière Botanical Skincare — New Customer Welcome & Retention Series",
+        "Lumière Botanical Skincare - New Customer Welcome & Retention Series",
         [
             "BRAND: Lumière Botanical Skincare · E-Commerce Retention Sequence",
             "CHANNELS: Klaviyo Automated Customer Onboarding Sequence",
@@ -1201,11 +1201,11 @@ def build_all_authentic_deliverables() -> dict[str, dict]:
     )
 
     # =========================================================================
-    # 18. LINA RICKERT — ACTIVEWEAR CAMPAIGN EMAILS
+    # 18. LINA RICKERT - ACTIVEWEAR CAMPAIGN EMAILS
     # =========================================================================
     files["Summer Launch Emails.docx"] = write_docx_file(
         "Summer Launch Emails.docx",
-        "AURA Athletics — Summer Campaign & Product Launch Email Series",
+        "AURA Athletics - Summer Campaign & Product Launch Email Series",
         [
             "BRAND: AURA Performance Athletics · Summer Campaign",
             "DOCUMENT: Product Launch & Retention Email Sequence",

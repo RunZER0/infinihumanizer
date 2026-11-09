@@ -11,7 +11,7 @@ def build_victor_deliverables() -> dict[str, dict]:
     # 1. victor_service_page_1_draft.docx: 1,800+ words of ValdaceAI enterprise specs & calibration notes
     files["victor_service_page_1_draft.docx"] = write_docx_file(
         "victor_service_page_1_draft.docx",
-        "ValdaceAI Enterprise Platform — Technical Specifications, Editorial Engine & API Architecture",
+        "ValdaceAI Enterprise Platform - Technical Specifications, Editorial Engine & API Architecture",
         [
             "ORGANIZATION: ValdaceAI Technologies LLC · Enterprise Editorial Intelligence",
             "SYSTEM ARCHITECT: Victor Mawira, Lead AI Systems Engineer",
@@ -30,15 +30,15 @@ def build_victor_deliverables() -> dict[str, dict]:
             "--PAGE-BREAK--",
             "# SECTION 3: TONE CALIBRATION ARCHITECTURE & STYLISTIC PROFILES",
             "The platform enforces four specialized enterprise stylistic profiles:",
-            "— Executive & Boardroom: Authoritative, concise, metric-dense. Eliminates passive voice and bureaucratic fluff; emphasizes decisive strategic actions.",
-            "— Academic & Technical: Scholarly rigor with precise disciplinary terminology. Maintains neutral third-person register while eliminating repetitive AI transition adverbs.",
-            "— Editorial & Creative: Narrative richness, sensory metaphor, varied cadence. Injects stylistic idiosyncrasy and human emotional resonance.",
-            "— Regulatory & Legal: Uncompromising precision, statutory compliance, strict clause qualification, and unambiguous terms.",
+            "- Executive & Boardroom: Authoritative, concise, metric-dense. Eliminates passive voice and bureaucratic fluff; emphasizes decisive strategic actions.",
+            "- Academic & Technical: Scholarly rigor with precise disciplinary terminology. Maintains neutral third-person register while eliminating repetitive AI transition adverbs.",
+            "- Editorial & Creative: Narrative richness, sensory metaphor, varied cadence. Injects stylistic idiosyncrasy and human emotional resonance.",
+            "- Regulatory & Legal: Uncompromising precision, statutory compliance, strict clause qualification, and unambiguous terms.",
             "--PAGE-BREAK--",
             "# SECTION 4: ENTERPRISE DATA PRIVACY & COMPLIANCE SAFEGUARDS",
-            "— Zero-Data Retention (ZDR): Customer text payload inputs are processed entirely in ephemeral RAM and immediately purged upon response delivery. Customer data is strictly never utilized for foundational model retraining.",
-            "— SOC 2 Type II Audited: All API traffic encrypted via TLS 1.3 in transit and AES-256 at rest.",
-            "— High-Throughput REST API: Sub-800ms median latency across batch processing endpoints capable of handling 50,000 words per minute.",
+            "- Zero-Data Retention (ZDR): Customer text payload inputs are processed entirely in ephemeral RAM and immediately purged upon response delivery. Customer data is strictly never utilized for foundational model retraining.",
+            "- SOC 2 Type II Audited: All API traffic encrypted via TLS 1.3 in transit and AES-256 at rest.",
+            "- High-Throughput REST API: Sub-800ms median latency across batch processing endpoints capable of handling 50,000 words per minute.",
         ],
         role="source",
     )

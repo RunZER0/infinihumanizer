@@ -11,7 +11,7 @@ def build_audrey_deliverables() -> dict[str, dict]:
     # 1. audrey_wireframe_notes.docx: Studio Brown IA & client onboarding workflow notes
     files["Wireframe Notes.docx"] = write_docx_file(
         "Wireframe Notes.docx",
-        "Studio Brown — Website Information Architecture & Client Experience Brief",
+        "Studio Brown - Website Information Architecture & Client Experience Brief",
         [
             "CLIENT: Audrey Brown, Founder & Creative Director · Studio Brown",
             "LOCATION: 1812 E 6th Street, Unit 204, East Austin, TX 78702",
@@ -21,9 +21,9 @@ def build_audrey_deliverables() -> dict[str, dict]:
             "# SECTION 1: BRAND ARCHETYPE & CREATIVE POSITIONING",
             "Studio Brown operates at the intersection of high editorial fashion and intimate human portraiture. Our studio is an 1,800 square foot converted warehouse loft featuring 16-foot exposed timber ceilings, authentic whitewashed brick, polished concrete floors, and expansive north-facing factory windows that provide diffuse, shadowless daylight throughout the day.",
             "Brand Aesthetic & Visual Tenets:",
-            "— Quiet Luxury: Restrained, sophisticated typography (editorial serif paired with geometric grotesk).",
-            "— Organic Texture: Warm limestone, unbleached linen, espresso timber tones, and film grain.",
-            "— Unhurried Intimacy: The antithesis of commercial high-volume photography studios. Sessions are structured around conversations, personal music playlists, and unhurried natural movement.",
+            "- Quiet Luxury: Restrained, sophisticated typography (editorial serif paired with geometric grotesk).",
+            "- Organic Texture: Warm limestone, unbleached linen, espresso timber tones, and film grain.",
+            "- Unhurried Intimacy: The antithesis of commercial high-volume photography studios. Sessions are structured around conversations, personal music playlists, and unhurried natural movement.",
             "--PAGE-BREAK--",
             "# SECTION 2: WEBSITE INFORMATION ARCHITECTURE & USER JOURNEY",
             "The redesigned website must eliminate client booking friction while preserving an exclusive, high-touch luxury feel:",
@@ -36,11 +36,11 @@ def build_audrey_deliverables() -> dict[str, dict]:
             "--PAGE-BREAK--",
             "# SECTION 3: CLIENT DISCOVERY INTAKE QUESTIONNAIRE SPECIFICATION",
             "The booking intake form must screen for aligned clients and gather creative parameters before the initial consultation call:",
-            "— Step 1: Session Intent (Brand Campaign / Executive Founder Profile / Personal Portrait / Apparel Lookbook).",
-            "— Step 2: Target Timeline & Ideal Dates (Selection calendar with 3-week lead time minimum).",
-            "— Step 3: Creative Mood & Visual Direction (Drop-down aesthetic descriptors: Minimalist Warmth, Moody Monochrome, Editorial High Fashion, Natural Daylight).",
-            "— Step 4: Wardrobe & Styling Assistance (In-house wardrobe stylist request: Yes / No / Undecided).",
-            "— Step 5: Commercial Licensing Scope (Personal print release / Digital editorial usage / Full commercial advertising buyout).",
+            "- Step 1: Session Intent (Brand Campaign / Executive Founder Profile / Personal Portrait / Apparel Lookbook).",
+            "- Step 2: Target Timeline & Ideal Dates (Selection calendar with 3-week lead time minimum).",
+            "- Step 3: Creative Mood & Visual Direction (Drop-down aesthetic descriptors: Minimalist Warmth, Moody Monochrome, Editorial High Fashion, Natural Daylight).",
+            "- Step 4: Wardrobe & Styling Assistance (In-house wardrobe stylist request: Yes / No / Undecided).",
+            "- Step 5: Commercial Licensing Scope (Personal print release / Digital editorial usage / Full commercial advertising buyout).",
             "--PAGE-BREAK--",
             "# SECTION 4: PRODUCTION TIMELINE & DELIVERABLE SLAS",
             [
@@ -52,10 +52,10 @@ def build_audrey_deliverables() -> dict[str, dict]:
                 ["Fine Art Print Delivery", "15 business days post-approval", "Confirm shipping address", "Handmade archival cotton rag print box"],
             ],
             "# SECTION 5: STUDIO POLICIES & RETAINER TERMS",
-            "— Retainer: 50% non-refundable deposit required to lock studio calendar date; balance due 7 days prior to shoot.",
-            "— Rescheduling: 72-hour advance notice allows 1 complimentary reschedule within 90 days.",
-            "— Weather Contingency: On-location natural light shoots rescheduled at zero penalty if heavy rain or severe cloud cover occurs.",
-            "— Archival Guarantee: Studio Brown stores RAW digital negatives in dual off-site cloud archives for a minimum of 3 years.",
+            "- Retainer: 50% non-refundable deposit required to lock studio calendar date; balance due 7 days prior to shoot.",
+            "- Rescheduling: 72-hour advance notice allows 1 complimentary reschedule within 90 days.",
+            "- Weather Contingency: On-location natural light shoots rescheduled at zero penalty if heavy rain or severe cloud cover occurs.",
+            "- Archival Guarantee: Studio Brown stores RAW digital negatives in dual off-site cloud archives for a minimum of 3 years.",
         ],
         role="source",
     )
@@ -63,7 +63,7 @@ def build_audrey_deliverables() -> dict[str, dict]:
     # 2. audrey_3page_website_copy_v1.docx: v1 working draft website copy with client redlines
     files["Website Copy v1.docx"] = write_docx_file(
         "Website Copy v1.docx",
-        "Studio Brown — 3-Page Website Copy Deck (v1 Working Draft with Client Notes)",
+        "Studio Brown - 3-Page Website Copy Deck (v1 Working Draft with Client Notes)",
         [
             "CLIENT: Studio Brown · Audrey Brown Photography",
             "PROJECT: 3-Page Website Copy Deck (v1 Draft)",
@@ -137,7 +137,7 @@ def build_audrey_deliverables() -> dict[str, dict]:
     # 4. audrey_homepage_booking_audit.pdf: 4-page conversion architecture audit PDF
     files["Website Audit & Recommendations.pdf"] = write_pdf_file(
         "Website Audit & Recommendations.pdf",
-        "Studio Brown — Homepage & Booking Conversion Audit (Comprehensive 4-Page Report)",
+        "Studio Brown - Homepage & Booking Conversion Audit (Comprehensive 4-Page Report)",
         [
             "# 1. COMPREHENSIVE CONVERSION ARCHITECTURE EVALUATION",
             "This report establishes the redesign specifications for Studio Brown (Audrey Brown Photography, East Austin, TX).",
@@ -169,10 +169,10 @@ def build_audrey_deliverables() -> dict[str, dict]:
             ],
             "--PAGE-BREAK--",
             "# 4. REDESIGN IMPLEMENTATION ROADMAP",
-            "— Phase 1 (Week 1): Prototype & Information Architecture sign-off.",
-            "— Phase 2 (Week 2): Master copy deck delivery & responsive styling implementation.",
-            "— Phase 3 (Week 3): Interactive intake widget testing & CRM email automation hookup.",
-            "— Phase 4 (Week 4): Production launch, Google Analytics 4 tracking verification, and DNS switch.",
+            "- Phase 1 (Week 1): Prototype & Information Architecture sign-off.",
+            "- Phase 2 (Week 2): Master copy deck delivery & responsive styling implementation.",
+            "- Phase 3 (Week 3): Interactive intake widget testing & CRM email automation hookup.",
+            "- Phase 4 (Week 4): Production launch, Google Analytics 4 tracking verification, and DNS switch.",
         ],
         role="deliverable",
         subtitle="4-Page Comprehensive Conversion Architecture & Strategic Revenue Roadmap",

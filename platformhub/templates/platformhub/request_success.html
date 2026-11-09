@@ -1,10 +1,10 @@
 
 {% extends "base.html" %}
-{% block title %}Request {{ item.reference }} — InfiniAI{% endblock %}
+{% block title %}Request {{ item.reference }} - InfiniAI{% endblock %}
 {% block content %}
 <div class="page-shell"><div class="eyebrow">Request received</div><h1 class="h1">{{ item.reference }}</h1><p class="lede">{{ item.title }}</p></div>
 <section class="section"><div class="shell form-layout">
-<div><table class="proof-table"><tr><th>Service</th><td>{{ item.metadata.service_name }}</td></tr><tr><th>Research</th><td>{{ item.get_research_depth_display }}</td></tr><tr><th>Timing</th><td>{{ item.get_turnaround_display }}</td></tr><tr><th>Estimate</th><td>USD {{ item.estimate_low|floatformat:0 }}–{{ item.estimate_high|floatformat:0 }}</td></tr><tr><th>Status</th><td><span class="status status-pending">{{ item.get_status_display }}</span></td></tr></table><p style="color:var(--text-muted);margin-top:22px">We’ll confirm the final scope before anything is billed.</p></div>
+<div><table class="proof-table"><tr><th>Service</th><td>{{ item.metadata.service_name }}</td></tr><tr><th>Research</th><td>{{ item.get_research_depth_display }}</td></tr><tr><th>Timing</th><td>{{ item.get_turnaround_display }}</td></tr><tr><th>Estimate</th><td>USD {{ item.estimate_low|floatformat:0 }}-{{ item.estimate_high|floatformat:0 }}</td></tr><tr><th>Status</th><td><span class="status status-pending">{{ item.get_status_display }}</span></td></tr></table><p style="color:var(--text-muted);margin-top:22px">We’ll confirm the final scope before anything is billed.</p></div>
 <aside class="summary-rail">
   <div class="eyebrow">Project discussion started</div>
   <p>Your dedicated project discussion thread is open. You can chat with our operations team, attach additional files, or review quotes anytime.</p>

@@ -1,5 +1,5 @@
 {% extends "platformhub/operations_base.html" %}
-{% block title %}Transactions — InfiniAI Operations{% endblock %}
+{% block title %}Transactions - InfiniAI Operations{% endblock %}
 
 {% block breadcrumbs %}
 <span>Operations</span>
@@ -104,14 +104,14 @@
               {% if tx.metadata.paystack_fees and tx.metadata.paystack_fees != "0" %}
               {{ tx.currency }} {{ tx.metadata.paystack_fees }}
               {% else %}
-              —
+              -
               {% endif %}
             </td>
             <td class="ops-col-num ops-mono">
               {% if tx.metadata.net_amount and tx.status == "success" %}
               {{ tx.currency }} {{ tx.metadata.net_amount }}
               {% else %}
-              —
+              -
               {% endif %}
             </td>
             <td>
@@ -123,7 +123,7 @@
               {% if tx.user and tx.user.client_conversation %}
               <a class="ops-text-action" href="{% url 'platformhub:operations_desk_conversation' tx.user.client_conversation.id %}">Open</a>
               {% else %}
-              —
+              -
               {% endif %}
             </td>
           </tr>

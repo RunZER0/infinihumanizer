@@ -11,7 +11,7 @@ def build_kaylee_deliverables() -> dict[str, dict]:
     # 1. kaylee_welcome_emails_draft.docx: 1,800+ words of 4-part email marketing sequence
     files["Welcome Email Sequence Draft.docx"] = write_docx_file(
         "Welcome Email Sequence Draft.docx",
-        "Lumina Botanical Skincare — Automated Email Welcome Journey (v1 Copy Draft & Flow Architecture)",
+        "Lumina Botanical Skincare - Automated Email Welcome Journey (v1 Copy Draft & Flow Architecture)",
         [
             "BRAND: Lumina Botanical Skincare LLC · San Diego & Ojai, CA",
             "FOUNDER & FORMULATOR: Kaylee Cabreros",
@@ -20,10 +20,10 @@ def build_kaylee_deliverables() -> dict[str, dict]:
             "--PAGE-BREAK--",
             "# SECTION 1: WELCOME FLOW OBJECTIVES & SEGMENTATION LOGIC",
             "The Lumina welcome sequence engages new direct-to-consumer email subscribers immediately after they opt in via the site popup. Key business goals:",
-            "— Achieve a 55%+ open rate and 12%+ click-through rate across the first 4 touches.",
-            "— Educate customers on the 'Waterless Botanical' formulation philosophy (replacing cheap water filler with organic botanical hydrosols and cold-pressed plant oils).",
-            "— Guide subscribers to take the 60-second 'Skin Barrier Ritual Quiz' to personalize product recommendations.",
-            "— Deliver a 15% first-order conversion incentive with a strict 48-hour expiration urgency window.",
+            "- Achieve a 55%+ open rate and 12%+ click-through rate across the first 4 touches.",
+            "- Educate customers on the 'Waterless Botanical' formulation philosophy (replacing cheap water filler with organic botanical hydrosols and cold-pressed plant oils).",
+            "- Guide subscribers to take the 60-second 'Skin Barrier Ritual Quiz' to personalize product recommendations.",
+            "- Deliver a 15% first-order conversion incentive with a strict 48-hour expiration urgency window.",
             "--PAGE-BREAK--",
             "# EMAIL 1: WELCOME TO LUMINA + FOUNDER NOTE (IMMEDIATE SEND)",
             "PREVIEW TEXT: Your 15% botanical gift is inside. Here is why we formulate without water.",
@@ -32,7 +32,7 @@ def build_kaylee_deliverables() -> dict[str, dict]:
             "BODY COPY:",
             "Dear Friend,",
             "Welcome to the Lumina family. When I started formulating botanical skincare in my Ojai kitchen six years ago, I was frustrated by an industry secret: over 80% of standard skincare bottles are filled with plain distilled water, synthetic emulsifiers, and harsh preservatives that actually strip your natural skin barrier.",
-            "At Lumina, we refuse to dilute nature. In every bottle we craft, plain water is replaced by 100% active organic botanical hydrosols—wild chamomile, Bulgarian rosewater, and cold-pressed golden jojoba. The result? Formulas that nourish, calm, and restore radiant skin barrier function.",
+            "At Lumina, we refuse to dilute nature. In every bottle we craft, plain water is replaced by 100% active organic botanical hydrosols-wild chamomile, Bulgarian rosewater, and cold-pressed golden jojoba. The result? Formulas that nourish, calm, and restore radiant skin barrier function.",
             "To welcome you to our community, please enjoy 15% off your first order with code: BOTANICAL15.",
             "PRIMARY CTA BUTTON: [Discover The Botanical Collection]",
             "--PAGE-BREAK--",

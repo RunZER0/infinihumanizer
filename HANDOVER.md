@@ -26,7 +26,7 @@ The platform exists to solve high-stakes human and business problems:
 During recent development cycles, the assistant fell into an echo-chamber trap:
 1. **The Deliverable Tunnel Vision**: When asked to ensure client files were substantial and not empty stubs, the assistant incorrectly flattened the entire system into a single repetitive pattern: *Issue brief → generate file → issue invoice → mark paid → deliver file*.
 2. **Loss of Human Nuance**: Every conversation began to sound like an automated robotic script where clients instantly agreed in one line and immediately received an invoice and payment link before agreeing on scope.
-3. **The Correction**: Real agency engagements involve discovery, hesitation, skepticism, scope adjustments, budget checks, payment hiccups (e.g., bank fraud filters), and human personalities. Deliverables are merely incidental artifacts of strategic advisory and engineering—never the sole focus.
+3. **The Correction**: Real agency engagements involve discovery, hesitation, skepticism, scope adjustments, budget checks, payment hiccups (e.g., bank fraud filters), and human personalities. Deliverables are merely incidental artifacts of strategic advisory and engineering-never the sole focus.
 
 ---
 

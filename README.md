@@ -6,10 +6,10 @@ The production service currently runs on Render and uses PostgreSQL through `DAT
 
 ## Main applications
 
-- `platformhub/` — public site, services, project requests, quotes, invoices, assurance work and client workspace.
-- `humanizer/` — the text-rewriting tool.
-- `accounts/` — authentication and account data.
-- `core/` — Django settings and project URLs.
+- `platformhub/` - public site, services, project requests, quotes, invoices, assurance work and client workspace.
+- `humanizer/` - the text-rewriting tool.
+- `accounts/` - authentication and account data.
+- `core/` - Django settings and project URLs.
 
 ## Humanizer
 

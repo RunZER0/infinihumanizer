@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}QuickPay — InfiniAI{% endblock %}
+{% block title %}QuickPay - InfiniAI{% endblock %}
 {% block description %}Pay an agreed InfiniAI amount from your account.{% endblock %}
 {% block content %}
 <div class="page-shell quickpay-head">
@@ -56,7 +56,7 @@
       {% for invoice in recent %}
       <div class="list-item quickpay-history-row">
         <div>
-          <strong>{{ invoice.description|cut:"QuickPay — " }}</strong>
+          <strong>{{ invoice.description|cut:"QuickPay - " }}</strong>
           <small>{{ invoice.number }} · {{ invoice.created_at|date:"M j, Y" }}</small>
         </div>
         <div>

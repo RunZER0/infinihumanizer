@@ -23,9 +23,9 @@ def backfill_closure_messages(apps, schema_editor):
         "Thank you for working with InfiniAI!"
     )
 
-    # 1. Clean up informal "Thread closed—" in EW03 and similar phrases
-    for msg in ClientMessage.objects.filter(body__icontains="Thread closed—"):
-        msg.body = msg.body.replace("Thread closed—", "").strip()
+    # 1. Clean up informal "Thread closed-" in EW03 and similar phrases
+    for msg in ClientMessage.objects.filter(body__icontains="Thread closed-"):
+        msg.body = msg.body.replace("Thread closed-", "").strip()
         msg.save(update_fields=["body"])
 
     for msg in ClientMessage.objects.filter(body__icontains="I'll go ahead and close this conversation thread."):

@@ -1,5 +1,5 @@
 {% extends "platformhub/client_portal_base.html" %}
-{% block title %}Messages — InfiniAI{% endblock %}
+{% block title %}Messages - InfiniAI{% endblock %}
 {% block body_class %}cp-body-chat{% endblock %}
 {% block main_class %}cp-main-chat{% endblock %}
 {% block nav_messages %}is-active{% endblock %}
@@ -174,7 +174,7 @@
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
           </svg>
-          <span id="client-closed-text">{% if is_reopen_pending %}Reopen request submitted — awaiting operations review.{% else %}This conversation was marked as closed consequent to task completion.{% endif %}</span>
+          <span id="client-closed-text">{% if is_reopen_pending %}Reopen request submitted - awaiting operations review.{% else %}This conversation was marked as closed consequent to task completion.{% endif %}</span>
         </div>
         <button type="button" class="client-btn-request-reopen" id="client-open-reopen-modal-btn" {% if is_reopen_pending %}hidden{% endif %}>Request to reopen</button>
       </div>
@@ -937,7 +937,7 @@
         if (clientClosedBanner) {
           clientClosedBanner.hidden = false;
           const closedText = document.getElementById("client-closed-text");
-          if (closedText) closedText.textContent = "Reopen request submitted — awaiting operations review.";
+          if (closedText) closedText.textContent = "Reopen request submitted - awaiting operations review.";
           if (clientOpenReopenBtn) clientOpenReopenBtn.hidden = true;
         }
       } else if (data && data.error) {
@@ -986,7 +986,7 @@
         if (isClosed) {
           if (closedText) {
             closedText.textContent = isPending
-              ? "Reopen request submitted — awaiting operations review."
+              ? "Reopen request submitted - awaiting operations review."
               : "This conversation was marked as closed consequent to task completion.";
           }
           if (reopenBtn) reopenBtn.hidden = isPending;

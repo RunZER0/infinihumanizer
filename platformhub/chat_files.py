@@ -238,9 +238,9 @@ def write_docx_file(filename: str, title: str, paragraphs: list[str | list | tup
             or text.startswith("ROLE ")
             or text.startswith("PAGE ")
             or text.startswith("EMAIL ")
-            or (text.isupper() and len(text) < 70 and not text.startswith("—"))
+            or (text.isupper() and len(text) < 70 and not text.startswith("-"))
         )
-        is_bullet = text.startswith(("—", "•", "-", "*")) or (len(text) > 2 and text[:2].isdigit() and text[2:4] in (". ", ") "))
+        is_bullet = text.startswith(("-", "•", "-", "*")) or (len(text) > 2 and text[:2].isdigit() and text[2:4] in (". ", ") "))
 
         if is_heading:
             clean_heading = text.lstrip("# ").strip()
@@ -254,7 +254,7 @@ def write_docx_file(filename: str, title: str, paragraphs: list[str | list | tup
             r_h.font.size = Pt(13)
             r_h.font.color.rgb = RGBColor(15, 23, 42)
         elif is_bullet:
-            clean_b = text.lstrip("—•-* ").strip()
+            clean_b = text.lstrip("-•-* ").strip()
             p_b = doc.add_paragraph(style='List Bullet')
             p_b.paragraph_format.space_before = Pt(0)
             p_b.paragraph_format.space_after = Pt(3)
@@ -778,7 +778,7 @@ def write_zip_file(filename: str, files_map: dict[str, str | bytes], role: str =
         with zipfile.ZipFile(dest, "a", zipfile.ZIP_DEFLATED) as zf:
             if "ASSET_VERIFICATION_MANIFEST.txt" not in zf.namelist():
                 lines = [
-                    "INFINIAI OPERATIONS — CLIENT DELIVERABLE VERIFICATION ARCHIVE",
+                    "INFINIAI OPERATIONS - CLIENT DELIVERABLE VERIFICATION ARCHIVE",
                     f"Archive Package: {filename}",
                     "Status: VERIFIED & SEALED",
                     "=" * 70,

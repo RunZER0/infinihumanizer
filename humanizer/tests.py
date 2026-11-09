@@ -160,9 +160,9 @@ class SentenceRuntimeTests(SimpleTestCase):
         self.assertLessEqual(model_temperature(10), 0.68)
 
     def test_em_dash_is_removed_at_every_strength(self):
-        source = "Layered safeguards—from backup systems to trained operators—reduce risk."
+        source = "Layered safeguards-from backup systems to trained operators-reduce risk."
         cleaned = remove_em_dashes(source)
-        self.assertNotIn("—", cleaned)
+        self.assertNotIn("-", cleaned)
         self.assertEqual(cleaned, "Layered safeguards, from backup systems to trained operators, reduce risk.")
 
     @override_settings(

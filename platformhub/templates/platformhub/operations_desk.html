@@ -1,5 +1,5 @@
 {% extends "platformhub/operations_base.html" %}
-{% block title %}Inbox · {{ conversation.user.get_full_name|default:conversation.user.email }} — InfiniAI Operations{% endblock %}
+{% block title %}Inbox · {{ conversation.user.get_full_name|default:conversation.user.email }} - InfiniAI Operations{% endblock %}
 {% block body_class %}ops-body-locked{% endblock %}
 {% block viewport_class %}ops-viewport-locked{% endblock %}
 
@@ -863,7 +863,7 @@
     root.dataset.conversationId = data.conversation_id;
     clientLabel = data.client_name;
 
-    document.title = "Inbox · " + data.client_name + " — InfiniAI Operations";
+    document.title = "Inbox · " + data.client_name + " - InfiniAI Operations";
     const crumb = document.querySelector(".ops-crumb-current");
     if (crumb) crumb.textContent = data.client_name;
 

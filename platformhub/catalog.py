@@ -71,7 +71,7 @@ SERVICE_INDEX = {
 
 PACKAGES = {
     "humanizer-individual": {
-        "name": "Text Intelligence — Individual",
+        "name": "Text Intelligence - Individual",
         "description": "Ongoing self-service humanization and rewriting.",
         "usd": Decimal("12.00"),
         "kes": Decimal("1500.00"),
@@ -82,7 +82,7 @@ PACKAGES = {
         "max_devices": 1,
     },
     "humanizer-pro": {
-        "name": "Text Intelligence — Pro",
+        "name": "Text Intelligence - Pro",
         "description": "Higher-volume text work and priority processing.",
         "usd": Decimal("25.00"),
         "kes": Decimal("3200.00"),
@@ -93,7 +93,7 @@ PACKAGES = {
         "max_devices": 2,
     },
     "humanizer-team": {
-        "name": "Text Intelligence — Team",
+        "name": "Text Intelligence - Team",
         "description": "Shared access for small teams handling recurring content.",
         "usd": Decimal("50.00"),
         "kes": Decimal("6400.00"),
@@ -141,31 +141,31 @@ RETAINERS = [
 PRICE_BANDS = [
     {
         "label": "Quick professional task",
-        "range": "$35–$75",
+        "range": "$35-$75",
         "examples": "Focused review, spreadsheet work, concise research, document refinement.",
         "logic": "Small scope and limited research.",
     },
     {
         "label": "Scoped research / production",
-        "range": "$75–$250",
+        "range": "$75-$250",
         "examples": "Research brief, technical deliverable, deck, structured review, multi-source synthesis.",
         "logic": "Research plus one main deliverable.",
     },
     {
         "label": "Full deliverable / project milestone",
-        "range": "$250–$750",
+        "range": "$250-$750",
         "examples": "Report, white paper, complete presentation, website copy package, or a deposit/milestone on a larger engagement.",
         "logic": "More research, editing, formatting and revisions.",
     },
     {
         "label": "Strategic engagement",
-        "range": "$750–$3,000+",
+        "range": "$750-$3,000+",
         "examples": "Multi-page communication work, content systems, larger research programs, dataset work.",
         "logic": "More workstreams, people and review.",
     },
     {
         "label": "Embedded partner",
-        "range": "$5,000–$10,000+ / month",
+        "range": "$5,000-$10,000+ / month",
         "examples": "Continuous research, production, content assurance, communication design and AI systems support.",
         "logic": "Reserved monthly capacity across several kinds of work.",
     },

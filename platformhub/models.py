@@ -75,7 +75,7 @@ class ServiceRequest(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.reference} — {self.title}"
+        return f"{self.reference} - {self.title}"
 
 
 class Consultation(models.Model):
@@ -241,7 +241,7 @@ class AssuranceJob(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.reference} — {self.title}"
+        return f"{self.reference} - {self.title}"
 
 
 class SocialPoster(models.Model):
@@ -277,7 +277,7 @@ class SocialPoster(models.Model):
         verbose_name_plural = "Story Posters"
 
     def __str__(self):
-        return f"Poster {self.number} — {self.tag_badge} ({self.eyebrow})"
+        return f"Poster {self.number} - {self.tag_badge} ({self.eyebrow})"
 
     @property
     def png_url(self):
