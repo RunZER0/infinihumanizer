@@ -1,5 +1,7 @@
 import csv
+import os
 import re
+import time
 from datetime import datetime, timedelta, timezone as dt_timezone
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
@@ -7,7 +9,7 @@ from pathlib import Path
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
-from django.db import transaction
+from django.db import models, transaction
 
 from humanizer.models import ClientConversation, ClientMessage
 from platformhub.chat_files import (

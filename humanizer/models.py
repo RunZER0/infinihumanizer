@@ -2,6 +2,7 @@ import uuid
 
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 
 class Humanization(models.Model):
@@ -48,7 +49,7 @@ class ClientConversation(models.Model):
     subject = models.CharField(max_length=220, default="Workspace chat")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="open")
     is_deleted_by_admin = models.BooleanField(default=False, db_index=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -134,7 +135,7 @@ class ClientMessage(models.Model):
     sender = models.CharField(max_length=20, choices=SENDER_CHOICES)
     body = models.TextField(blank=True)
     attachments = models.JSONField(default=list, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now, db_index=True)
     read_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:

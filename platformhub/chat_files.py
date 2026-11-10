@@ -123,16 +123,18 @@ def save_uploaded_chat_files(uploaded_files):
     return saved
 
 
-def write_docx_file(filename: str, title: str, paragraphs: list[str | list | tuple], role: str = "file") -> dict:
+def write_docx_file(filename: str, title: str, paragraphs: list[str | list | tuple], role: str = "file", force: bool = False) -> dict:
+    files_dir = get_chat_files_dir()
+    dest = files_dir / filename
+    if dest.exists() and dest.stat().st_size > 0 and not force and not os.getenv("FORCE_CHAT_FILES_REBUILD"):
+        return build_attachment_meta(filename=filename, display_name=filename, role=role)
+
     import docx
     from docx.shared import Inches, Pt, RGBColor
     from docx.enum.text import WD_ALIGN_PARAGRAPH
     from docx.enum.table import WD_TABLE_ALIGNMENT
     from docx.oxml import parse_xml, OxmlElement
     from docx.oxml.ns import nsdecls, qn
-
-    files_dir = get_chat_files_dir()
-    dest = files_dir / filename
 
     doc = docx.Document()
     for section in doc.sections:
@@ -282,13 +284,16 @@ def write_xlsx_file(
     sheet_name_or_dict,
     rows: list[list] = None,
     role: str = "file",
+    force: bool = False,
 ) -> dict:
+    files_dir = get_chat_files_dir()
+    dest = files_dir / filename
+    if dest.exists() and dest.stat().st_size > 0 and not force and not os.getenv("FORCE_CHAT_FILES_REBUILD"):
+        return build_attachment_meta(filename=filename, display_name=filename, role=role)
+
     import openpyxl
     from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
     from openpyxl.utils import get_column_letter
-
-    files_dir = get_chat_files_dir()
-    dest = files_dir / filename
 
     if isinstance(sheet_name_or_dict, dict):
         sheets_map = sheet_name_or_dict
@@ -472,7 +477,13 @@ def write_pdf_file(
     role: str = "file",
     subtitle: str = "",
     meta_tag: str = "",
+    force: bool = False,
 ) -> dict:
+    files_dir = get_chat_files_dir()
+    dest = files_dir / filename
+    if dest.exists() and dest.stat().st_size > 0 and not force and not os.getenv("FORCE_CHAT_FILES_REBUILD"):
+        return build_attachment_meta(filename=filename, display_name=filename, role=role)
+
     from reportlab.lib.pagesizes import letter
     from reportlab.platypus import (
         SimpleDocTemplate,
@@ -718,9 +729,11 @@ def write_pdf_file(
     return build_attachment_meta(filename=filename, display_name=filename, role=role)
 
 
-def write_csv_file(filename: str, rows: list[list], role: str = "file") -> dict:
+def write_csv_file(filename: str, rows: list[list], role: str = "file", force: bool = False) -> dict:
     files_dir = get_chat_files_dir()
     dest = files_dir / filename
+    if dest.exists() and dest.stat().st_size > 0 and not force and not os.getenv("FORCE_CHAT_FILES_REBUILD"):
+        return build_attachment_meta(filename=filename, display_name=filename, role=role)
     with dest.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.writer(handle)
         writer.writerows(rows)
@@ -751,9 +764,11 @@ def write_csv_file(filename: str, rows: list[list], role: str = "file") -> dict:
     return build_attachment_meta(filename=filename, display_name=filename, role=role)
 
 
-def write_zip_file(filename: str, files_map: dict[str, str | bytes], role: str = "file") -> dict:
+def write_zip_file(filename: str, files_map: dict[str, str | bytes], role: str = "file", force: bool = False) -> dict:
     files_dir = get_chat_files_dir()
     dest = files_dir / filename
+    if dest.exists() and dest.stat().st_size > 0 and not force and not os.getenv("FORCE_CHAT_FILES_REBUILD"):
+        return build_attachment_meta(filename=filename, display_name=filename, role=role)
     with zipfile.ZipFile(dest, "w", zipfile.ZIP_DEFLATED) as zf:
         for inner_name, content in files_map.items():
             if isinstance(content, str):
@@ -793,15 +808,13 @@ def write_zip_file(filename: str, files_map: dict[str, str | bytes], role: str =
     return build_attachment_meta(filename=filename, display_name=filename, role=role)
 
 
-def write_pptx_file(filename: str, title: str, slides: list[dict], role: str = "file") -> dict:
-    import pptx
-    from pptx.util import Inches, Pt
-    from pptx.dml.color import RGBColor
-    from pptx.enum.text import PP_ALIGN
-    from pptx.enum.shapes import MSO_SHAPE
-
+def write_pptx_file(filename: str, title: str, slides: list[dict], role: str = "file", force: bool = False) -> dict:
     files_dir = get_chat_files_dir()
     dest = files_dir / filename
+    if dest.exists() and dest.stat().st_size > 0 and not force and not os.getenv("FORCE_CHAT_FILES_REBUILD"):
+        return build_attachment_meta(filename=filename, display_name=filename, role=role)
+
+    import pptx
 
     prs = pptx.Presentation()
     prs.slide_width = Inches(13.333)
