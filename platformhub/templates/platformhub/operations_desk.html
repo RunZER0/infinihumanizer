@@ -352,10 +352,12 @@
     const replySubmit = document.getElementById("desk-reply-submit");
     const replyInput = document.getElementById("desk-reply-input");
     const fileInput = document.getElementById("desk-file-input");
+    const termsCheck = document.getElementById("desk-terms-check");
     if (!replySubmit) return;
     const hasText = Boolean(replyInput && replyInput.value.trim().length > 0);
     const hasFiles = Boolean(fileInput && fileInput.files && fileInput.files.length > 0);
-    const canSend = hasText || hasFiles;
+    const isTermsAccepted = Boolean(termsCheck && termsCheck.checked);
+    const canSend = (hasText || hasFiles) && isTermsAccepted;
     replySubmit.disabled = !canSend;
     if (canSend) {
       replySubmit.classList.add("is-active");
@@ -608,6 +610,11 @@
     if (attachBtn && fileInput) {
       attachBtn.onclick = function () { fileInput.click(); };
       fileInput.onchange = updateFilePreview;
+    }
+
+    const deskTermsCheck = document.getElementById("desk-terms-check");
+    if (deskTermsCheck) {
+      deskTermsCheck.onchange = updateSendButtonState;
     }
 
     if (replyInput) {

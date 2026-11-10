@@ -173,6 +173,14 @@
     <!-- Staged Attachments (Chips list) -->
     <div class="wa-staged-files" id="desk-file-preview" hidden></div>
 
+    <!-- Terms of Service checkbox -->
+    <div class="wa-terms-bar" id="desk-terms-wrap" {% if conversation.status == 'closed' %}hidden{% endif %}>
+      <input type="checkbox" id="desk-terms-check" name="accept_terms" value="1" required>
+      <label for="desk-terms-check">
+        I accept the <a href="{% url 'platformhub:terms' %}" target="_blank" rel="noopener">Terms of Service</a>
+      </label>
+    </div>
+
     <!-- WhatsApp Composer Bottom Bar -->
     <div class="wa-composer-bar" id="desk-composer-card" {% if conversation.status == 'closed' %}hidden{% endif %}>
       <button type="button" class="wa-tool-btn" id="desk-attach-btn" title="Attach documents, images, or audio" aria-label="Attach file">

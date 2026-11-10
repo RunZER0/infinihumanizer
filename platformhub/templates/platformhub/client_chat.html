@@ -194,6 +194,14 @@
         </div>
       </div>
 
+      <!-- Terms of Service checkbox -->
+      <div class="wa-terms-bar" id="client-terms-wrap" {% if conversation.status == 'closed' %}hidden{% endif %}>
+        <input type="checkbox" id="client-terms-check" name="accept_terms" value="1" required>
+        <label for="client-terms-check">
+          I accept the <a href="{% url 'platformhub:terms' %}" target="_blank" rel="noopener">Terms of Service</a>
+        </label>
+      </div>
+
       <!-- Bottom toolbar controls -->
       <div id="client-send-status" style="padding: 4px 16px; font-size: 12px; color: var(--text-muted); display: none;" aria-live="polite"></div>
       <div class="wa-composer-bar" id="client-composer-card" {% if conversation.status == 'closed' %}hidden{% endif %}>
@@ -499,17 +507,24 @@
     return AUDIO_EXTS.includes(ext);
   }
 
+  const termsCheck = document.getElementById("client-terms-check");
+
   function updateSendButtonState() {
     if (!submitBtn) return;
     const hasText = Boolean(input && input.value.trim().length > 0);
     const hasFiles = Boolean(fileInput && fileInput.files && fileInput.files.length > 0);
-    const canSend = hasText || hasFiles;
+    const isTermsAccepted = Boolean(termsCheck && termsCheck.checked);
+    const canSend = (hasText || hasFiles) && isTermsAccepted;
     submitBtn.disabled = !canSend;
     if (canSend) {
       submitBtn.classList.add("is-active");
     } else {
       submitBtn.classList.remove("is-active");
     }
+  }
+
+  if (termsCheck) {
+    termsCheck.addEventListener("change", updateSendButtonState);
   }
 
   function getFileIconSvg(isAudio, isImage) {

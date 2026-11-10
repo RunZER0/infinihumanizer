@@ -4831,6 +4831,42 @@ body.modal-open{overflow:hidden}
   box-sizing: border-box;
 }
 
+.wa-terms-bar {
+  padding: 6px 16px 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #54656f;
+  background: transparent;
+}
+
+.wa-terms-bar input[type="checkbox"] {
+  accent-color: #e25822;
+  cursor: pointer;
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.wa-terms-bar label {
+  cursor: pointer;
+  user-select: none;
+  line-height: 1.4;
+  color: #54656f;
+}
+
+.wa-terms-bar a {
+  color: #e25822;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.wa-terms-bar a:hover {
+  color: #c84132;
+}
+
 .wa-composer-bar {
   padding: 8px 16px;
   display: flex;
