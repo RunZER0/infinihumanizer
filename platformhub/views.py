@@ -120,12 +120,18 @@ def request_service(request, service_code=None):
     if request.method == "POST":
         code = request.POST.get("service_code", "").strip()
         service = service_by_code(code)
+        init_name = request.user.get_full_name() if request.user.is_authenticated else ""
+        init_email = request.user.email if request.user.is_authenticated else ""
+
         if not service:
             messages.error(request, "Choose the service that best matches the work.")
             return render(request, "platformhub/request_form.html", {
                 "families": SERVICE_FAMILIES,
                 "service_index": SERVICE_INDEX,
                 "selected": selected,
+                "selected_code": selected["code"] if selected else "",
+                "initial_name": init_name,
+                "initial_email": init_email,
                 "values": request.POST,
             })
 
@@ -143,6 +149,21 @@ def request_service(request, service_code=None):
                 "families": SERVICE_FAMILIES,
                 "service_index": SERVICE_INDEX,
                 "selected": service,
+                "selected_code": service["code"] if service else "",
+                "initial_name": init_name,
+                "initial_email": init_email,
+                "values": request.POST,
+            })
+
+        if not request.POST.get("accept_terms"):
+            messages.error(request, "Please accept the Terms of Service to submit your brief.")
+            return render(request, "platformhub/request_form.html", {
+                "families": SERVICE_FAMILIES,
+                "service_index": SERVICE_INDEX,
+                "selected": service,
+                "selected_code": service["code"] if service else "",
+                "initial_name": init_name,
+                "initial_email": init_email,
                 "values": request.POST,
             })
 
@@ -213,6 +234,8 @@ def request_service(request, service_code=None):
             status="open",
         )
         request.session["conversation_id"] = str(conv.id)
+        request.session["chat_user_email"] = target_user.email
+        request.session.modified = True
 
         # Handle uploaded attachments if provided on the brief
         saved_attachments = []
@@ -940,6 +963,12 @@ def _resolve_chat_user(request):
             u = User.objects.filter(email__iexact=consult.email).first()
             if u:
                 return u
+    chat_email = request.session.get("chat_user_email")
+    if chat_email:
+        User = get_user_model()
+        u = User.objects.filter(email__iexact=chat_email).first()
+        if u:
+            return u
     if request.user.is_authenticated:
         return request.user
     existing_conv = ClientConversation.objects.select_related("user").order_by("-updated_at").first()

@@ -6138,8 +6138,8 @@ class Command(BaseCommand):
             return
 
         User = get_user_model()
-        User.objects.filter(username="client_workspace", email="client@infiniai.local").delete()
         if options.get("reset"):
+            User.objects.filter(username="client_workspace", email="client@infiniai.local").delete()
             PaymentRecord.objects.all().delete()
             Invoice.objects.all().delete()
             ServiceRequest.objects.all().delete()
@@ -6440,155 +6440,157 @@ class Command(BaseCommand):
 
                 seeded_conv_ids.add(conv.id)
 
-                conv.messages.all().delete()
-                first_msg_dt = c_msgs[0][1]
-                last_msg_dt = c_msgs[-1][1]
+                should_seed_msgs = options.get("reset") or (conv.messages.count() == 0)
+                if should_seed_msgs:
+                    conv.messages.all().delete()
+                    first_msg_dt = c_msgs[0][1]
+                    last_msg_dt = c_msgs[-1][1]
 
-                for idx, msg_tuple in enumerate(c_msgs):
-                    sender, msg_dt, body = msg_tuple[0], msg_tuple[1], msg_tuple[2]
-                    att_keys = msg_tuple[3] if len(msg_tuple) > 3 else []
-                    att_objs = [seed_files[k] for k in att_keys if k in seed_files]
+                    for idx, msg_tuple in enumerate(c_msgs):
+                        sender, msg_dt, body = msg_tuple[0], msg_tuple[1], msg_tuple[2]
+                        att_keys = msg_tuple[3] if len(msg_tuple) > 3 else []
+                        att_objs = [seed_files[k] for k in att_keys if k in seed_files]
 
-                    req = None
-                    if idx == 0:
-                        req_key = cs.get("request_key")
-                        if req_key and req_key in request_map:
-                            req = request_map[req_key]
-                        elif spec.get("requests"):
-                            req = spec["requests"][0]
+                        req = None
+                        if idx == 0:
+                            req_key = cs.get("request_key")
+                            if req_key and req_key in request_map:
+                                req = request_map[req_key]
+                            elif spec.get("requests"):
+                                req = spec["requests"][0]
 
-                    if idx == 0:
-                        if c_cat == "consultation":
-                            client_name = f"{spec.get('first_name', '')} {spec.get('last_name', '')}".strip() or "Client"
-                            consult_lines = [
-                                "Consultation Inquiry Submitted via /consultation/",
-                                "--------------------------------------------------",
-                                f"Reference: {c_ref or 'INF-CONSULT'}",
-                                f"Client: {client_name} <{primary_email}>",
-                            ]
-                            company = spec.get("company")
-                            if company:
-                                consult_lines.append(f"Company / Team: {company}")
-                            consult_lines.extend([
-                                "",
-                                "Message:",
-                                body.strip(),
-                            ])
-                            body = "\n".join(consult_lines).strip()
-                        elif req is not None:
-                            from platformhub.catalog import SERVICE_INDEX
-                            req_svc_code = getattr(req, "service_code", None) or (req.get("service_code") if isinstance(req, dict) else "")
-                            req_title = getattr(req, "title", None) or (req.get("title") if isinstance(req, dict) else "Service Request")
-                            req_ref = getattr(req, "reference", None) or (req.get("reference") if isinstance(req, dict) else "INF-REQ")
-                            req_obj = getattr(req, "objective", None) or (req.get("objective") if isinstance(req, dict) else "")
-                            req_scope = getattr(req, "scope", None) or (req.get("scope") if isinstance(req, dict) else "")
-                            req_deliv = getattr(req, "deliverable", None) or (req.get("deliverable") if isinstance(req, dict) else "")
-                            req_turn = (req.get("turnaround") if isinstance(req, dict) else getattr(req, "turnaround", None)) or "Priority"
-                            req_res = (req.get("research_depth") if isinstance(req, dict) else getattr(req, "research_depth", None)) or "Standard"
-                            req_budget = (req.get("budget_band") if isinstance(req, dict) else getattr(req, "budget_band", None)) or "Standard"
-
-                            svc = SERVICE_INDEX.get(req_svc_code, {})
-                            svc_name = svc.get("name") or req_svc_code or "Custom Project"
-                            client_name = f"{spec.get('first_name', '')} {spec.get('last_name', '')}".strip() or "Client"
-
-                            brief_lines = [
-                                "Project Brief Submitted via /request/",
-                                "--------------------------------------------------",
-                                f"Project Name: {req_title}",
-                                f"Reference: {req_ref}",
-                                f"Service: {svc_name} ({req_svc_code})",
-                                f"Client: {client_name} <{primary_email}>",
-                            ]
-                            company = spec.get("company")
-                            if company:
-                                brief_lines.append(f"Company / Team: {company}")
-                            brief_lines.extend([
-                                "",
-                                "Objective:",
-                                str(req_obj).strip(),
-                            ])
-                            audience = getattr(req, "audience", None) or (req.get("audience") if isinstance(req, dict) else "")
-                            if audience:
-                                brief_lines.extend([
+                        if idx == 0:
+                            if c_cat == "consultation":
+                                client_name = f"{spec.get('first_name', '')} {spec.get('last_name', '')}".strip() or "Client"
+                                consult_lines = [
+                                    "Consultation Inquiry Submitted via /consultation/",
+                                    "--------------------------------------------------",
+                                    f"Reference: {c_ref or 'INF-CONSULT'}",
+                                    f"Client: {client_name} <{primary_email}>",
+                                ]
+                                company = spec.get("company")
+                                if company:
+                                    consult_lines.append(f"Company / Team: {company}")
+                                consult_lines.extend([
                                     "",
-                                    "Audience:",
-                                    str(audience).strip(),
-                                ])
-                            brief_lines.extend([
-                                "",
-                                "Current Materials & Scope:",
-                                str(req_scope).strip(),
-                            ])
-                            if body:
-                                brief_lines.extend([
-                                    "",
-                                    "Intake Notes:",
+                                    "Message:",
                                     body.strip(),
                                 ])
-                            brief_lines.extend([
-                                "",
-                                "Requested Deliverables:",
-                                str(req_deliv).strip(),
-                                "",
-                                f"Turnaround: {str(req_turn).capitalize()} · Research: {str(req_res).capitalize()} · Budget Band: {req_budget}",
-                            ])
-                            body = "\n".join(brief_lines).strip()
+                                body = "\n".join(consult_lines).strip()
+                            elif req is not None:
+                                from platformhub.catalog import SERVICE_INDEX
+                                req_svc_code = getattr(req, "service_code", None) or (req.get("service_code") if isinstance(req, dict) else "")
+                                req_title = getattr(req, "title", None) or (req.get("title") if isinstance(req, dict) else "Service Request")
+                                req_ref = getattr(req, "reference", None) or (req.get("reference") if isinstance(req, dict) else "INF-REQ")
+                                req_obj = getattr(req, "objective", None) or (req.get("objective") if isinstance(req, dict) else "")
+                                req_scope = getattr(req, "scope", None) or (req.get("scope") if isinstance(req, dict) else "")
+                                req_deliv = getattr(req, "deliverable", None) or (req.get("deliverable") if isinstance(req, dict) else "")
+                                req_turn = (req.get("turnaround") if isinstance(req, dict) else getattr(req, "turnaround", None)) or "Priority"
+                                req_res = (req.get("research_depth") if isinstance(req, dict) else getattr(req, "research_depth", None)) or "Standard"
+                                req_budget = (req.get("budget_band") if isinstance(req, dict) else getattr(req, "budget_band", None)) or "Standard"
 
-                    is_read_override = msg_tuple[4] if len(msg_tuple) > 4 else None
-                    if is_read_override is False:
-                        m_read_at = None
-                    else:
-                        m_read_at = msg_dt + timedelta(minutes=2)
+                                svc = SERVICE_INDEX.get(req_svc_code, {})
+                                svc_name = svc.get("name") or req_svc_code or "Custom Project"
+                                client_name = f"{spec.get('first_name', '')} {spec.get('last_name', '')}".strip() or "Client"
 
-                    msg = ClientMessage.objects.create(
-                        conversation=conv,
-                        author=user if sender == "client" else None,
-                        sender=sender,
-                        body=body,
-                        attachments=att_objs,
-                        read_at=m_read_at,
+                                brief_lines = [
+                                    "Project Brief Submitted via /request/",
+                                    "--------------------------------------------------",
+                                    f"Project Name: {req_title}",
+                                    f"Reference: {req_ref}",
+                                    f"Service: {svc_name} ({req_svc_code})",
+                                    f"Client: {client_name} <{primary_email}>",
+                                ]
+                                company = spec.get("company")
+                                if company:
+                                    brief_lines.append(f"Company / Team: {company}")
+                                brief_lines.extend([
+                                    "",
+                                    "Objective:",
+                                    str(req_obj).strip(),
+                                ])
+                                audience = getattr(req, "audience", None) or (req.get("audience") if isinstance(req, dict) else "")
+                                if audience:
+                                    brief_lines.extend([
+                                        "",
+                                        "Audience:",
+                                        str(audience).strip(),
+                                    ])
+                                brief_lines.extend([
+                                    "",
+                                    "Current Materials & Scope:",
+                                    str(req_scope).strip(),
+                                ])
+                                if body:
+                                    brief_lines.extend([
+                                        "",
+                                        "Intake Notes:",
+                                        body.strip(),
+                                    ])
+                                brief_lines.extend([
+                                    "",
+                                    "Requested Deliverables:",
+                                    str(req_deliv).strip(),
+                                    "",
+                                    f"Turnaround: {str(req_turn).capitalize()} · Research: {str(req_res).capitalize()} · Budget Band: {req_budget}",
+                                ])
+                                body = "\n".join(brief_lines).strip()
+
+                        is_read_override = msg_tuple[4] if len(msg_tuple) > 4 else None
+                        if is_read_override is False:
+                            m_read_at = None
+                        else:
+                            m_read_at = msg_dt + timedelta(minutes=2)
+
+                        msg = ClientMessage.objects.create(
+                            conversation=conv,
+                            author=user if sender == "client" else None,
+                            sender=sender,
+                            body=body,
+                            attachments=att_objs,
+                            read_at=m_read_at,
+                        )
+                        ClientMessage.objects.filter(pk=msg.pk).update(created_at=msg_dt)
+                        created_messages += 1
+
+                    if c_status == "closed":
+                        closure_dt = last_msg_dt + timedelta(minutes=2)
+                        closure_body = (
+                            "This conversation has been closed consequent to the completion of the requested task "
+                            "and delivery of all agreed scope items.\n\n"
+                            "What this means:\n"
+                            "• All delivered files, work products, and billing receipts remain permanently accessible in your workspace history.\n"
+                            "• The composer for this thread is now paused to keep records organized and focused by engagement.\n"
+                            "• If you have follow-up questions, require revisions, or need further assistance, you can request to reopen this thread at any time.\n\n"
+                            "Thank you for working with InfiniAI!"
+                        )
+                        unread_closure_refs = {
+                            "EW03", "IC01", "PH01", "LI01", "JC01", "LC01", "AQ01", "CL01", "JJ01", "EW02", "AB01"
+                        }
+                        if c_ref in unread_closure_refs or cs.get("unread_closure", False):
+                            closure_read_at = None
+                        else:
+                            closure_read_at = closure_dt + timedelta(minutes=1)
+
+                        closure_msg = ClientMessage.objects.create(
+                            conversation=conv,
+                            author=None,
+                            sender="admin",
+                            body=closure_body,
+                            attachments=[],
+                            read_at=closure_read_at,
+                        )
+                        ClientMessage.objects.filter(pk=closure_msg.pk).update(created_at=closure_dt)
+                        last_msg_dt = closure_dt
+                        created_messages += 1
+
+                    ClientConversation.objects.filter(pk=conv.pk).update(
+                        created_at=first_msg_dt,
+                        updated_at=last_msg_dt,
                     )
-                    ClientMessage.objects.filter(pk=msg.pk).update(created_at=msg_dt)
-                    created_messages += 1
-
-                if c_status == "closed":
-                    closure_dt = last_msg_dt + timedelta(minutes=2)
-                    closure_body = (
-                        "This conversation has been closed consequent to the completion of the requested task "
-                        "and delivery of all agreed scope items.\n\n"
-                        "What this means:\n"
-                        "• All delivered files, work products, and billing receipts remain permanently accessible in your workspace history.\n"
-                        "• The composer for this thread is now paused to keep records organized and focused by engagement.\n"
-                        "• If you have follow-up questions, require revisions, or need further assistance, you can request to reopen this thread at any time.\n\n"
-                        "Thank you for working with InfiniAI!"
-                    )
-                    unread_closure_refs = {
-                        "EW03", "IC01", "PH01", "LI01", "JC01", "LC01", "AQ01", "CL01", "JJ01", "EW02", "AB01"
-                    }
-                    if c_ref in unread_closure_refs or cs.get("unread_closure", False):
-                        closure_read_at = None
-                    else:
-                        closure_read_at = closure_dt + timedelta(minutes=1)
-
-                    closure_msg = ClientMessage.objects.create(
-                        conversation=conv,
-                        author=None,
-                        sender="admin",
-                        body=closure_body,
-                        attachments=[],
-                        read_at=closure_read_at,
-                    )
-                    ClientMessage.objects.filter(pk=closure_msg.pk).update(created_at=closure_dt)
-                    last_msg_dt = closure_dt
-                    created_messages += 1
-
-                ClientConversation.objects.filter(pk=conv.pk).update(
-                    created_at=first_msg_dt,
-                    updated_at=last_msg_dt,
-                )
 
             # Prune any stale, unreferenced, or duplicate conversations for this client user
-            if seeded_conv_ids:
+            if seeded_conv_ids and options.get("reset"):
                 ClientConversation.objects.filter(user=user).exclude(id__in=seeded_conv_ids).delete()
 
             # Set realistic account-level last_login for the client user (14 mins after latest message)
@@ -6770,15 +6772,16 @@ class Command(BaseCommand):
         except Exception:
             pass
 
-        # Strictly purge any test conversations, messages, invoices, requests, deliverables, and payments for admin
-        admin_emails = ["valdaceai@gmail.com", "victormawira00@gmail.com"]
-        ClientConversation.objects.filter(user__email__in=admin_emails).delete()
-        ClientMessage.objects.filter(author__email__in=admin_emails).delete()
-        ClientMessage.objects.filter(conversation__user__email__in=admin_emails).delete()
-        Invoice.objects.filter(email__in=admin_emails).delete()
-        ServiceRequest.objects.filter(email__in=admin_emails).delete()
-        PaymentRecord.objects.filter(email__in=admin_emails).delete()
-        Deliverable.objects.filter(request__email__in=admin_emails).delete()
+        # Purge admin test conversations only on explicit full reset
+        if options.get("reset"):
+            admin_emails = ["valdaceai@gmail.com", "victormawira00@gmail.com"]
+            ClientConversation.objects.filter(user__email__in=admin_emails).delete()
+            ClientMessage.objects.filter(author__email__in=admin_emails).delete()
+            ClientMessage.objects.filter(conversation__user__email__in=admin_emails).delete()
+            Invoice.objects.filter(email__in=admin_emails).delete()
+            ServiceRequest.objects.filter(email__in=admin_emails).delete()
+            PaymentRecord.objects.filter(email__in=admin_emails).delete()
+            Deliverable.objects.filter(request__email__in=admin_emails).delete()
 
         from platformhub.engaging_posters_data import sync_social_posters_db
 

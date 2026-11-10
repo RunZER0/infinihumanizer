@@ -4867,6 +4867,16 @@ body.modal-open{overflow:hidden}
   color: #c84132;
 }
 
+.btn-submit-brief:disabled,
+#rail-submit-btn:disabled {
+  background: #d1d7db !important;
+  color: #8696a0 !important;
+  cursor: not-allowed !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  opacity: 0.8 !important;
+}
+
 .wa-composer-bar {
   padding: 8px 16px;
   display: flex;

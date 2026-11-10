@@ -203,11 +203,87 @@ class PublicJourneyTests(TestCase):
             "deliverable": "Board-ready report",
             "research_depth": "standard",
             "turnaround": "standard",
+            "accept_terms": "1",
         })
         self.assertEqual(response.status_code, 302)
         item = ServiceRequest.objects.get(email="buyer@example.com")
         self.assertEqual(item.invoices.count(), 0)
         self.assertGreater(item.estimate_high, item.estimate_low)
+
+    def test_brief_requires_terms_acceptance_and_relays_to_chat(self):
+        from humanizer.models import ClientConversation, ClientMessage
+
+        response = self.client.post(reverse("platformhub:request_service"), {
+            "service_code": "studio-deck",
+            "full_name": "Relay Buyer",
+            "email": "relay@example.com",
+            "title": "Board Deck Brief",
+            "objective": "Q4 Strategy",
+            "scope": "Draft presentation",
+            "deliverable": "16-slide deck",
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Please accept the Terms of Service to submit your brief.")
+        self.assertFalse(ServiceRequest.objects.filter(email="relay@example.com").exists())
+
+        response = self.client.post(reverse("platformhub:request_service"), {
+            "service_code": "studio-deck",
+            "full_name": "Relay Buyer",
+            "email": "relay@example.com",
+            "title": "Board Deck Brief",
+            "objective": "Q4 Strategy",
+            "scope": "Draft presentation",
+            "deliverable": "16-slide deck",
+            "accept_terms": "1",
+        })
+        self.assertEqual(response.status_code, 302)
+        item = ServiceRequest.objects.get(email="relay@example.com")
+        conv = ClientConversation.objects.filter(user=item.user).first()
+        self.assertIsNotNone(conv)
+        self.assertEqual(conv.subject, "Board Deck Brief")
+        self.assertEqual(conv.category, "job")
+        msg = conv.messages.first()
+        self.assertIsNotNone(msg)
+        self.assertEqual(msg.sender, "client")
+        self.assertIn("Project Brief Submitted via /request/", msg.body)
+
+    def test_user_threads_and_messages_persist_across_seeding(self):
+        from humanizer.models import ClientConversation, ClientMessage
+        from django.core.management import call_command
+
+        test_user = User.objects.create_user(username="persistent_user", email="persistent@example.com")
+        user_conv = ClientConversation.objects.create(
+            user=test_user,
+            reference="PU01",
+            subject="Important Persistent Job",
+            status="open",
+        )
+        msg1 = ClientMessage.objects.create(
+            conversation=user_conv,
+            author=test_user,
+            sender="client",
+            body="Here is my persistent work note.",
+        )
+        admin_user, _ = User.objects.get_or_create(username="val_admin", email="valdaceai@gmail.com")
+        admin_conv = ClientConversation.objects.create(
+            user=admin_user,
+            reference="VA01",
+            subject="Admin Discussion",
+            status="open",
+        )
+        msg2 = ClientMessage.objects.create(
+            conversation=admin_conv,
+            author=admin_user,
+            sender="admin",
+            body="Admin thread note that must not be deleted.",
+        )
+
+        call_command("seed_orbit_production")
+
+        self.assertTrue(ClientConversation.objects.filter(id=user_conv.id).exists())
+        self.assertTrue(ClientMessage.objects.filter(id=msg1.id).exists())
+        self.assertTrue(ClientConversation.objects.filter(id=admin_conv.id).exists())
+        self.assertTrue(ClientMessage.objects.filter(id=msg2.id).exists())
 
     def test_client_can_request_revision_and_approve(self):
         user = User.objects.create_user(username="buyer", email="buyer@example.com", password="pw-strong-123")
